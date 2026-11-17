@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+:root {
+  /* Terraço — Paleta Ipê & Grafite */
+  --color-bg-canvas: #FAF7F0;
+  --color-bg-surface: #EFEAE0;
+  --color-bg-elevated: #FFFDF9;
+
+  --color-text-primary: #1E1D1B;
+  --color-text-secondary: #57534E;
+  --color-text-inverse: #FAF7F0;
+
+  --color-brand-primary: #265C4B;
+  --color-brand-primary-hover: #1D473A;
+  --color-brand-accent: #F2B705;
+  --color-brand-highlight: #F07167;
+
+  --color-border-subtle: #E2DCD0;
+
+  /* Estados Semânticos */
+  --color-success-fg: #265C4B;
+  --color-success-bg: #E3F1EB;
+  --color-warning-fg: #8A6500;
+  --color-warning-bg: #FEF3C7;
+  --color-error-fg: #B9382E;
+  --color-error-bg: #FDE8E6;
+
+  /* Raios de Borda */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+
+  /* Sombras Quentes */
+  --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.08);
+  --shadow-floating: 0 16px 40px -8px rgba(30, 29, 27, 0.12);
+}
+
+@theme inline {
+  --color-canvas: var(--color-bg-canvas);
+  --color-surface: var(--color-bg-surface);
+  --color-elevated: var(--color-bg-elevated);
+
+  --color-ink: var(--color-text-primary);
+  --color-ink-muted: var(--color-text-secondary);
+  --color-ink-inverse: var(--color-text-inverse);
+
+  --color-brand: var(--color-brand-primary);
+  --color-brand-hover: var(--color-brand-primary-hover);
+  --color-accent: var(--color-brand-accent);
+  --color-highlight: var(--color-brand-highlight);
+  --color-border-subtle: var(--color-border-subtle);
+
+  --color-success-fg: var(--color-success-fg);
+  --color-success-bg: var(--color-success-bg);
+  --color-warning-fg: var(--color-warning-fg);
+  --color-warning-bg: var(--color-warning-bg);
+  --color-error-fg: var(--color-error-fg);
+  --color-error-bg: var(--color-error-bg);
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-floating: var(--shadow-floating);
+}
+
+body {
+  background-color: var(--color-bg-canvas);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}

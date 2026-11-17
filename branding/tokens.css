@@ -1,0 +1,56 @@
+:root {
+  /* Terraço — Paleta Ipê & Grafite */
+  --color-bg-canvas: #FAF7F0;
+  --color-bg-surface: #EFEAE0;
+  --color-bg-elevated: #FFFDF9;
+
+  --color-text-primary: #1E1D1B;
+  --color-text-secondary: #57534E;
+  --color-text-inverse: #FAF7F0;
+
+  --color-brand-primary: #265C4B;
+  --color-brand-primary-hover: #1D473A;
+  --color-brand-accent: #F2B705;
+  --color-brand-highlight: #F07167;
+
+  --color-border-subtle: #E2DCD0;
+
+  /* Estados Semânticos */
+  --color-success-fg: #265C4B;
+  --color-success-bg: #E3F1EB;
+  --color-warning-fg: #8A6500;
+  --color-warning-bg: #FEF3C7;
+  --color-error-fg: #B9382E;
+  --color-error-bg: #FDE8E6;
+
+  /* Tipografia */
+  --font-display: 'Recoleta', 'Fraunces', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', 'DM Sans', system-ui, -apple-system, sans-serif;
+
+  --text-display-xl: 3rem;     /* 48px */
+  --text-display-lg: 2.25rem;  /* 36px */
+  --text-heading-md: 1.5rem;   /* 24px */
+  --text-body-lg: 1.125rem;    /* 18px */
+  --text-body-md: 1rem;        /* 16px */
+  --text-ui-label: 0.875rem;   /* 14px */
+  --text-ui-badge: 0.75rem;    /* 12px */
+
+  /* Raios de Borda */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+
+  /* Espaçamento */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Sombras Quentes */
+  --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.08);
+  --shadow-floating: 0 16px 40px -8px rgba(30, 29, 27, 0.12);
+}
