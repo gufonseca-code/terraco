@@ -1,0 +1,11 @@
+{
+ "page": null,
+ "url": "http://localhost:3000/",
+ "root": null,
+ "kind": "service",
+ "category": "Curadoria de lançamentos imobiliários",
+ "primary": "Agendar visita",
+ "rounds": 3,
+ "start": "2026-11-18T14:48:28.154Z",
+ "by": "gate.mjs --start"
+}

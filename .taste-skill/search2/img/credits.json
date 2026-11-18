@@ -1,0 +1,34 @@
+{
+ "note": "Credits for the photographs in this folder: photos.mjs credits prints the footer block for the ones the pages use.",
+ "photos": [
+  {
+   "file": "photo-f96451332.jpg",
+   "files": [
+    "photo-f96451332-500.jpg",
+    "photo-f96451332-960.jpg",
+    "photo-f96451332.jpg"
+   ],
+   "id": "f96451332",
+   "alt": "Living Room in Henderson House",
+   "by": "Noah Wulf",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Living_Room_in_Henderson_House.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f156466220-960.jpg",
+   "files": [
+    "photo-f156466220-500.jpg",
+    "photo-f156466220-960.jpg"
+   ],
+   "id": "f156466220",
+   "alt": "IKEA store, IKEA living room, Rostov-on-Don, Russia",
+   "by": "Vyacheslav Argenberg",
+   "licence": "CC BY 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by/4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:IKEA_store,_IKEA_living_room,_Rostov-on-Don,_Russia.jpg",
+   "source": "Wikimedia Commons"
+  }
+ ]
+}

@@ -1,311 +1,231 @@
 @import "tailwindcss";
 
 :root {
-  /* Terraço — Paleta Ipê & Grafite mapeada para os tokens do sistema */
-  --p-bg: #FAF5E2;
-  --p-surface: #EFEAE0;
-  --p-ink: #1E1D1B;
-  --p-muted: #57534E;
-  --p-accent: #265C4B;
-  --p-accent-ink: #FAF7F0;
-  --p-action: #265C4B;
-  --p-action-ink: #FAF7F0;
-
-  --p-inv-bg: #1E1D1B;
-  --p-inv-surface: #2B2926;
-  --p-inv-ink: #FAF7F0;
-  --p-inv-muted: #C2BCB0;
-  --p-inv-accent: #F2B705;
-  --p-inv-accent-ink: #1E1D1B;
-  --p-inv-action: #F2B705;
-  --p-inv-action-ink: #1E1D1B;
-
-  /* Tipografia da marca Terraço */
-  --font-display: var(--font-fraunces), Georgia, serif;
-  --font-text: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
-  --display-weight: 500;
-  --display-tracking: -0.025em;
-  --display-tracking-xl: -0.03em;
-  --display-axes: "SOFT" 100, "WONK" 1;
-  --ly-scale: 0.85;
-
-  /* Tokens legados preservados para compatibilidade */
+  /* Terraço — Paleta Ipê & Grafite */
   --color-bg-canvas: #FAF5E2;
   --color-bg-surface: #EFEAE0;
   --color-bg-elevated: #FFFDF9;
+
   --color-text-primary: #1E1D1B;
   --color-text-secondary: #57534E;
   --color-text-inverse: #FAF7F0;
+
   --color-brand-primary: #265C4B;
   --color-brand-primary-hover: #1D473A;
   --color-brand-accent: #F2B705;
   --color-brand-highlight: #F07167;
+
   --color-border-subtle: #E2DCD0;
+
+  /* Estados Semânticos */
+  --color-success-fg: #265C4B;
+  --color-success-bg: #E3F1EB;
+  --color-warning-fg: #8A6500;
+  --color-warning-bg: #FEF3C7;
+  --color-error-fg: #B9382E;
+  --color-error-bg: #FDE8E6;
+
+  /* Raios de Borda */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+
+  /* Sombras Quentes */
   --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.08);
   --shadow-floating: 0 16px 40px -8px rgba(30, 29, 27, 0.12);
+
+  /* Curvas e tempos de microinteração */
+  --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
   --color-canvas: var(--color-bg-canvas);
   --color-surface: var(--color-bg-surface);
   --color-elevated: var(--color-bg-elevated);
+
   --color-ink: var(--color-text-primary);
   --color-ink-muted: var(--color-text-secondary);
   --color-ink-inverse: var(--color-text-inverse);
+
   --color-brand: var(--color-brand-primary);
   --color-brand-hover: var(--color-brand-primary-hover);
   --color-accent: var(--color-brand-accent);
   --color-highlight: var(--color-brand-highlight);
   --color-border-subtle: var(--color-border-subtle);
+
+  --color-success-fg: var(--color-success-fg);
+  --color-success-bg: var(--color-success-bg);
+  --color-warning-fg: var(--color-warning-fg);
+  --color-warning-bg: var(--color-warning-bg);
+  --color-error-fg: var(--color-error-fg);
+  --color-error-bg: var(--color-error-bg);
+
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-sans: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-floating: var(--shadow-floating);
 }
 
-/* Ilustração do hero na split */
-.hero--split .hero__text {
-  min-width: 0;
+html {
+  scroll-padding-top: 6rem;
 }
 
-.hero--split .hero__media img {
-  object-position: 50% 8%;
+body {
+  background-color: var(--color-bg-canvas);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
 }
 
-/* Barra de busca em pílula do hero */
-.terraco-search-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-2);
-  width: 100%;
-  min-width: 0;
+.font-display {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 1;
 }
 
-.terraco-search__label {
-  font-size: var(--t-small);
-  font-weight: 500;
-  color: var(--ink);
-}
-
-.terraco-search {
-  display: flex;
-  align-items: center;
-  gap: var(--s-2);
-  min-width: 0;
-  padding: 4px 4px 4px var(--s-4);
-  border-radius: 9999px;
-  border: 1px solid var(--color-border-subtle);
-  background: var(--color-bg-elevated);
-  box-shadow: var(--shadow-card);
-}
-
-.terraco-search__input {
-  flex: 1 1 auto;
-  min-width: 0;
-  border: 0;
-  background: transparent;
-  color: var(--ink);
-  font-family: var(--font-text);
-  font-size: var(--t-body);
-  min-height: 44px;
-}
-
-.terraco-search__input::placeholder {
-  color: var(--muted);
-}
-
-.terraco-search__input:focus-visible {
-  outline: 2px solid var(--action);
+/* Anel de foco consistente e imediato (sem atraso/transição no contorno) */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
-  border-radius: var(--r-sm);
 }
 
-@media (max-width: 639px) {
-  .terraco-search {
-    flex-direction: column;
-    align-items: stretch;
-    border-radius: var(--r-md);
-    padding: var(--s-2);
+/* Link de salto para navegação por teclado: oculto até o foco, alinhado sobre o logo na barra */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  z-index: 40;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+
+@media (min-width: 640px) {
+  .skip-link {
+    left: 1.75rem;
   }
-  .terraco-search__input {
-    padding-inline: var(--s-3);
-  }
 }
 
-/* Filtros de lançamentos */
-.terraco-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-2);
-}
-
-.terraco-filter {
+.skip-link:focus,
+.skip-link:focus-visible {
+  width: auto;
+  height: auto;
   min-height: 44px;
-  padding: 0 var(--s-4);
-  border-radius: 9999px;
-  border: 1px solid var(--hair);
-  background: transparent;
-  color: var(--ink);
-  font-family: var(--font-text);
-  font-size: var(--t-small);
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.terraco-filter[aria-pressed="true"] {
-  background: var(--action);
-  border-color: var(--action);
-  color: var(--action-ink);
-}
-
-/* Cards de lançamentos */
-.launch-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
-}
-
-.launch-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-card);
-}
-
-.launch-card__media {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: var(--surface);
-}
-
-.launch-card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.launch-card:hover .launch-card__media img {
-  transform: scale(1.03);
-}
-
-.launch-card__body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: var(--s-2);
-  padding: var(--s-4);
-}
-
-.launch-card__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-2);
-  font-size: var(--t-label);
-  font-weight: 500;
-  color: var(--muted);
-}
-
-.launch-card__badge {
+  padding: 0 1.25rem;
+  clip-path: none;
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  background: var(--surface);
-  color: var(--ink);
-  font-size: var(--t-label);
-  font-weight: 500;
-}
-
-.launch-card__title {
-  font-family: var(--font-display);
-  font-size: var(--t-h3);
-  font-weight: var(--display-weight);
-  line-height: 1.2;
-  color: var(--ink);
-}
-
-.launch-card__specs {
-  font-size: var(--t-small);
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-
-.section__photo {
-  margin: 0;
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  aspect-ratio: 4 / 3;
-  background: var(--surface);
-}
-
-.section__photo--compact {
-  aspect-ratio: 16 / 9;
-  margin-top: var(--s-5);
-}
-
-.section__photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.launch-card__foot {
-  margin-top: auto;
-  padding-top: var(--s-4);
-  border-top: 1px solid var(--hair);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-3);
-}
-
-.launch-card__price {
-  font-size: var(--t-lead);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+  font-size: 0.875rem;
   font-weight: 600;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  box-shadow: var(--shadow-floating);
 }
 
-/* Painel do formulário de agendamento */
-.booking-panel {
-  background: var(--surface);
-  border-radius: var(--r-lg);
-  padding: var(--s-7);
+/* Botões CTA com resposta tátil sutil (hover em ponteiro fino + press em 90ms) */
+.terraco-btn {
+  transition:
+    background-color 150ms var(--ease-ui),
+    border-color 150ms var(--ease-ui),
+    color 150ms var(--ease-ui),
+    transform 120ms var(--ease-ui),
+    box-shadow 150ms var(--ease-ui);
 }
 
-@media (max-width: 639px) {
-  .booking-panel {
-    padding: var(--s-5);
+@media (hover: hover) and (pointer: fine) {
+  .terraco-btn:hover {
+    transform: translateY(-1px);
   }
 }
 
-/* Tabela / lista de diferenciais */
-.rows .rows__name small {
-  display: block;
-  font-weight: 400;
-  color: var(--muted);
-  font-size: var(--t-small);
-  margin-top: var(--s-1);
+.terraco-btn:active {
+  transform: translateY(1px) scale(0.985);
+  transition-duration: 90ms;
 }
 
-/* Tablet e mobile height adjustment when 3 launch cards wrap */
-@media (max-width: 1023px) {
-  #lancamentos {
-    --h: 2;
-    --hm: 2;
-  }
-  #agendar {
-    --h: 2;
-    --hm: 2;
+/* Link de navegação puro com brilho sutil no texto (Ipê & Musgo) no hover */
+.terraco-nav-glow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  transition:
+    color 150ms var(--ease-ui),
+    text-shadow 180ms var(--ease-ui);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-nav-glow:hover {
+    color: var(--color-brand-primary);
+    text-shadow:
+      0 0 14px rgba(38, 92, 75, 0.35),
+      0 0 6px rgba(242, 183, 5, 0.3);
   }
 }
 
-/* Animação suave do wordmark preservada */
+.terraco-nav-glow[aria-current="page"] {
+  color: var(--color-brand-primary);
+  font-weight: 600;
+}
+
+/* Cards com elevação suave de 2px e zoom interno contido na imagem */
+.terraco-card {
+  transition:
+    transform 180ms var(--ease-ui),
+    border-color 180ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-floating);
+  }
+}
+
+.terraco-card-media {
+  transition: transform 600ms var(--ease-ui);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-card:hover .terraco-card-media {
+    transform: scale(1.03);
+  }
+}
+
+/* Entrada sutil do hero na carga inicial (nunca oculta o conteúdo sem animação) */
+@keyframes terraco-rise {
+  from {
+    opacity: 0.01;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-enter-title {
+  animation: terraco-rise 520ms var(--ease-enter) both;
+}
+
+.hero-enter-form {
+  animation: terraco-rise 520ms var(--ease-enter) 90ms both;
+}
+
 @keyframes terraco-letter-jump {
   0% {
     transform: translateY(0);
@@ -320,15 +240,65 @@
 
 .animate-letter-jump {
   display: inline-block;
-  animation: terraco-letter-jump 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: terraco-letter-jump 460ms var(--ease-enter) both;
+}
+
+@keyframes terraco-steam {
+  0% {
+    transform: translateY(4px) translateX(0px) scaleX(0.95);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.65;
+  }
+  65% {
+    transform: translateY(-14px) translateX(2.5px) scaleX(1.05);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translateY(-28px) translateX(-1.5px) scaleX(1.1);
+    opacity: 0;
+  }
+}
+
+.animate-coffee-steam-1 {
+  animation: terraco-steam 3.8s ease-in-out infinite;
+}
+
+.animate-coffee-steam-2 {
+  animation: terraco-steam 4.4s ease-in-out 1.1s infinite;
+}
+
+.animate-coffee-steam-3 {
+  animation: terraco-steam 4.1s ease-in-out 2.2s infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-letter-jump {
-    animation: none !important;
+  html {
+    scroll-behavior: auto;
   }
-  .launch-card,
-  .launch-card__media img {
-    transition: none !important;
+
+  .animate-coffee-steam-1,
+  .animate-coffee-steam-2,
+  .animate-coffee-steam-3 {
+    animation: none;
+    opacity: 0.45;
+  }
+
+  .animate-letter-jump,
+  .hero-enter-title,
+  .hero-enter-form {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .terraco-btn,
+  .terraco-card,
+  .terraco-card-media,
+  .terraco-nav-glow {
+    transition-property: color, background-color, border-color, opacity !important;
+    transition-duration: 120ms !important;
+    transform: none !important;
   }
 }

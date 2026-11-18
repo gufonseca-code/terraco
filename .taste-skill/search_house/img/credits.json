@@ -1,0 +1,34 @@
+{
+ "note": "Credits for the photographs in this folder: photos.mjs credits prints the footer block for the ones the pages use.",
+ "photos": [
+  {
+   "file": "photo-f40344812-960.jpg",
+   "files": [
+    "photo-f40344812-500.jpg",
+    "photo-f40344812-960.jpg"
+   ],
+   "id": "f40344812",
+   "alt": "Mid-century modern house in Palm Springs",
+   "by": "(User: Wgreaves )",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Mid-century_modern_house_in_Palm_Springs.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f19041498.jpg",
+   "files": [
+    "photo-f19041498-500.jpg",
+    "photo-f19041498-960.jpg",
+    "photo-f19041498.jpg"
+   ],
+   "id": "f19041498",
+   "alt": "Modern house Bronte",
+   "by": "Charlie Brewer",
+   "licence": "CC BY-SA 2.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Modern_house_Bronte.jpg",
+   "source": "Wikimedia Commons"
+  }
+ ]
+}

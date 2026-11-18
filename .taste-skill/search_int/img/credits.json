@@ -1,0 +1,64 @@
+{
+ "note": "Credits for the photographs in this folder: photos.mjs credits prints the footer block for the ones the pages use.",
+ "photos": [
+  {
+   "file": "photo-f154597551-960.jpg",
+   "files": [
+    "photo-f154597551-500.jpg",
+    "photo-f154597551-960.jpg"
+   ],
+   "id": "f154597551",
+   "alt": "Intérieur Villa Aalto",
+   "by": "Ninara",
+   "licence": "CC BY 2.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by/2.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Int%C3%A9rieur_Villa_Aalto.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f126438537.jpg",
+   "files": [
+    "photo-f126438537-500.jpg",
+    "photo-f126438537-960.jpg",
+    "photo-f126438537.jpg"
+   ],
+   "id": "f126438537",
+   "alt": "Interior design by IRchitect",
+   "by": "Bmbrozig",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Interior_design_by_IRchitect.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f172863811.jpg",
+   "files": [
+    "photo-f172863811-500.jpg",
+    "photo-f172863811-960.jpg",
+    "photo-f172863811.jpg"
+   ],
+   "id": "f172863811",
+   "alt": "Interior of a house for rent",
+   "by": "Sneha G Gupta",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Interior_of_a_house_for_rent.jpg",
+   "source": "Wikimedia Commons"
+  },
+  {
+   "file": "photo-f109979598.jpg",
+   "files": [
+    "photo-f109979598-500.jpg",
+    "photo-f109979598-960.jpg",
+    "photo-f109979598.jpg"
+   ],
+   "id": "f109979598",
+   "alt": "Interior Design Sultan Alkhatib4",
+   "by": "TFSBS",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+   "page": "https://commons.wikimedia.org/wiki/File:Interior_Design_Sultan_Alkhatib4.jpg",
+   "source": "Wikimedia Commons"
+  }
+ ]
+}

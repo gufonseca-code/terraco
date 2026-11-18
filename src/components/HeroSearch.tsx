@@ -1,91 +1,28 @@
-"use client";
+import { HeroIllustration } from "./HeroIllustration";
+import { HeroSearchForm } from "./HeroSearchForm";
 
-import { Search } from "lucide-react";
-
-interface HeroSearchProps {
-  query: string;
-  onQueryChange: (value: string) => void;
-  onSearchSubmit: () => void;
-}
-
-export function HeroSearch({
-  query,
-  onQueryChange,
-  onSearchSubmit,
-}: HeroSearchProps) {
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    onSearchSubmit();
-  }
-
+export function HeroSearch() {
   return (
     <section
-      className="hero hero--split"
-      data-enter=""
-      aria-labelledby="hero-h"
+      aria-labelledby="hero-heading"
+      className="relative flex-1 overflow-hidden"
     >
-      <div className="wrap">
-        <div className="hero-text grid hero__grid">
-          <div className="hero__text span-5">
-            <p className="hero__kicker">
-              <span className="dot" aria-hidden="true" />
-              Vila Madalena, Pinheiros e Perdizes · 3 lançamentos
-            </p>
-            <h1 id="hero-h">
-              Lançamentos imobiliários em São Paulo, sem burocracia.
-            </h1>
-            <p className="hero__lead">
-              Curadoria de apartamentos na planta a partir de R$ 485.000, com
-              planta clara e visita marcada no WhatsApp.
-            </p>
+      <div className="mx-auto grid h-full max-w-7xl items-center gap-6 sm:gap-8 pl-6 pr-0 pt-4 lg:grid-cols-12 lg:gap-4 lg:pl-12 lg:pt-0">
+        {/* Coluna esquerda: Headline + Search Bar em pílula */}
+        <div className="lg:col-span-6 pr-6 lg:pr-4 space-y-6 sm:space-y-8 z-10 pt-24 pb-4 sm:pb-8 lg:py-0">
+          <h1
+            id="hero-heading"
+            className="hero-enter-title font-display text-4xl sm:text-5xl lg:text-[3.75rem] font-bold tracking-tight text-ink leading-[1.06] max-w-[13ch] text-balance"
+          >
+            Seu próximo canto, sem burocracia.
+          </h1>
 
-            <form
-              onSubmit={handleSubmit}
-              className="terraco-search-wrap"
-              role="search"
-              aria-label="Buscar lançamentos"
-            >
-              <label htmlFor="hero-search" className="terraco-search__label">
-                Buscar por bairro ou imóvel
-              </label>
-              <div className="terraco-search">
-                <Search
-                  className="h-5 w-5 shrink-0 text-ink-muted"
-                  aria-hidden="true"
-                />
-                <input
-                  id="hero-search"
-                  type="text"
-                  value={query}
-                  onChange={(e) => onQueryChange(e.target.value)}
-                  placeholder="Ex.: Vila Madalena, 2 quartos, varanda..."
-                  className="terraco-search__input"
-                />
-                <button type="submit" className="btn btn--primary">
-                  Ver imóveis
-                </button>
-              </div>
-            </form>
-          </div>
+          <HeroSearchForm />
+        </div>
 
-          <div className="hero__media span-6 start-7">
-            <img
-              src="/images/hero-terraco.jpg"
-              alt="Ilustração isométrica de uma mulher tomando café no terraço de um prédio brasileiro com cobogós e varandas"
-              width={1142}
-              height={2048}
-              fetchPriority="high"
-            />
-            <div className="ly-float">
-              <div className="ly-float__row">
-                <span>Vila Madalena</span>
-                <span>Entrega 2027</span>
-              </div>
-              <div className="ly-float__title">
-                Residencial Ipê Amarelo · 2 quartos
-              </div>
-            </div>
-          </div>
+        {/* Coluna direita: Parte superior da ilustração preenchendo a tela */}
+        <div className="lg:col-span-6 self-end">
+          <HeroIllustration />
         </div>
       </div>
     </section>
