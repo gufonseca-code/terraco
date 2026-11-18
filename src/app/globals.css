@@ -2,7 +2,7 @@
 
 :root {
   /* Terraço — Paleta Ipê & Grafite */
-  --color-bg-canvas: #FAF7F0;
+  --color-bg-canvas: #FAF5E2;
   --color-bg-surface: #EFEAE0;
   --color-bg-elevated: #FFFDF9;
 
@@ -79,4 +79,43 @@ body {
 .font-display {
   font-family: var(--font-display);
   font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+@keyframes terraco-steam {
+  0% {
+    transform: translateY(4px) translateX(0px) scaleX(0.95);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.65;
+  }
+  65% {
+    transform: translateY(-14px) translateX(2.5px) scaleX(1.05);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translateY(-28px) translateX(-1.5px) scaleX(1.1);
+    opacity: 0;
+  }
+}
+
+.animate-coffee-steam-1 {
+  animation: terraco-steam 3.8s ease-in-out infinite;
+}
+
+.animate-coffee-steam-2 {
+  animation: terraco-steam 4.4s ease-in-out 1.1s infinite;
+}
+
+.animate-coffee-steam-3 {
+  animation: terraco-steam 4.1s ease-in-out 2.2s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-coffee-steam-1,
+  .animate-coffee-steam-2,
+  .animate-coffee-steam-3 {
+    animation: none;
+    opacity: 0.45;
+  }
 }
