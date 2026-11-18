@@ -3,6 +3,7 @@ import Link from "next/link";
 interface TerracoLogoProps {
   inverted?: boolean;
   showSteps?: boolean;
+  href?: string;
 }
 
 const WORDMARK_LETTERS = ["T", "e", "r", "r", "a", "ç", "o"];
@@ -10,14 +11,15 @@ const WORDMARK_LETTERS = ["T", "e", "r", "r", "a", "ç", "o"];
 export function TerracoLogo({
   inverted = false,
   showSteps = true,
+  href = "#top",
 }: TerracoLogoProps) {
   const textColor = inverted ? "text-ink-inverse" : "text-ink";
   const stepColor = inverted ? "text-accent" : "text-ink";
 
   return (
     <Link
-      href="/"
-      className="inline-flex items-center gap-1 group focus:outline-none"
+      href={href}
+      className="nav__logo inline-flex items-center gap-1.5 group"
       aria-label="Terraço — Página inicial"
     >
       {showSteps && (
@@ -25,7 +27,9 @@ export function TerracoLogo({
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 64 64"
           fill="none"
-          className={`h-7 w-7 transition-transform duration-200 group-hover:-translate-y-0.5 ${stepColor}`}
+          width="24"
+          height="24"
+          className={`transition-transform duration-200 group-hover:-translate-y-0.5 ${stepColor}`}
           aria-hidden="true"
         >
           <rect x="30" y="13" width="26" height="9" rx="2.5" fill="currentColor" />
@@ -34,7 +38,7 @@ export function TerracoLogo({
         </svg>
       )}
       <span
-        className={`font-display text-2xl font-bold tracking-tight leading-none ${textColor}`}
+        className={`font-display text-xl font-bold tracking-tight leading-none ${textColor}`}
       >
         <span className="sr-only">Terraço</span>
         <span aria-hidden="true" className="inline-flex">

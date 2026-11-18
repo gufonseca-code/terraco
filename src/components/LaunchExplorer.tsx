@@ -103,7 +103,7 @@ export function LaunchExplorer() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Buscar por bairro, cidade ou lançamento..."
-                  className="w-full bg-transparent text-sm sm:text-base text-ink placeholder:text-ink-muted/80 focus:outline-none"
+                  className="w-full bg-transparent text-sm sm:text-base text-ink placeholder:text-ink-muted/80"
                 />
               </div>
               <button

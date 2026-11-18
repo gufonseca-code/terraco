@@ -1,53 +1,101 @@
-import Link from "next/link";
+"use client";
+
+import { useEffect, useState } from "react";
 import { TerracoLogo } from "./TerracoLogo";
-import { buildWhatsAppUrl } from "@/data/lancamentos";
 
 export function Navbar() {
-  const whatsappHref = buildWhatsAppUrl(
-    "Oi! Vim pelo site da Terraço e gostaria de saber mais sobre os lançamentos."
-  );
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.classList.toggle("nav-locked", isOpen);
+    return () => {
+      document.body.classList.remove("nav-locked");
+    };
+  }, [isOpen]);
+
+  function handleLinkClick() {
+    setIsOpen(false);
+  }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-30 px-4 pt-6 sm:px-6 sm:pt-8">
-      <div className="mx-auto flex max-w-6xl items-center justify-between rounded-pill border border-border-subtle/90 bg-elevated/95 px-5 py-2.5 shadow-card backdrop-blur-md sm:px-7">
-        <TerracoLogo />
+    <header className={`nav nav--centre${isOpen ? " is-open" : ""}`}>
+      <div className="wrap nav__bar">
+        <a className="skip-link" href="#top">
+          Ir para o conteúdo
+        </a>
 
-        <div className="flex items-center gap-6 lg:gap-8">
-          <nav
-            aria-label="Navegação principal"
-            className="hidden md:flex items-center gap-7 text-sm font-medium text-ink-muted"
-          >
-            <Link
-              href="/lancamentos"
-              className="transition-colors hover:text-ink"
+        <TerracoLogo href="#top" />
+
+        <nav className="nav__links" aria-label="Navegação principal">
+          <div className="nav__item">
+            <a
+              className="nav__link"
+              href="#lancamentos"
+              onClick={handleLinkClick}
             >
               Lançamentos
-            </Link>
-            <Link
-              href="/lancamentos?tag=Varanda"
-              className="transition-colors hover:text-ink"
-            >
-              Com varanda
-            </Link>
+            </a>
+          </div>
+          <div className="nav__item">
             <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-ink"
+              className="nav__link"
+              href="#como-funciona"
+              onClick={handleLinkClick}
             >
+              Processo
+            </a>
+          </div>
+          <div className="nav__item">
+            <a
+              className="nav__link"
+              href="#diferenciais"
+              onClick={handleLinkClick}
+            >
+              Diferenciais
+            </a>
+          </div>
+          <div className="nav__item">
+            <a className="nav__link" href="#contato" onClick={handleLinkClick}>
               Contato
             </a>
-          </nav>
+          </div>
+        </nav>
 
+        <div className="nav__actions">
           <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-pill bg-brand px-5 py-2 text-sm font-semibold text-ink-inverse transition-colors hover:bg-brand-hover"
+            className="btn btn--primary"
+            href="#agendar"
+            onClick={handleLinkClick}
           >
-            Falar no WhatsApp
+            Agendar visita
           </a>
         </div>
+
+        <button
+          className="nav__toggle"
+          type="button"
+          aria-expanded={isOpen}
+          aria-label="Menu"
+          onClick={() => setIsOpen((prev) => !prev)}
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+            {isOpen ? (
+              <path
+                d="M4 4l10 10M14 4L4 14"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+            ) : (
+              <path
+                d="M2 5h14M2 13h14"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+            )}
+          </svg>
+        </button>
       </div>
     </header>
   );

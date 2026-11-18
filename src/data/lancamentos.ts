@@ -13,6 +13,8 @@ export interface Lancamento {
   entrega: string;
   resumo: string;
   corCapa: "moss" | "ipe" | "guava";
+  imagem: string;
+  imagemAlt: string;
 }
 
 export const WHATSAPP_NUMBER = "5511999999999"; // Substituir pelo número real com DDI + DDD
@@ -46,6 +48,9 @@ export const LANCAMENTOS: Lancamento[] = [
     resumo:
       "Plantas inteligentes com varanda integrada, cobogós na fachada e lazer no rooftop a poucos minutos do metrô.",
     corCapa: "ipe",
+    imagem: "/images/standins/photo-f40344812-960.jpg",
+    imagemAlt:
+      "Entrada residencial ensolarada com parede branca, porta amarela e palmeiras",
   },
   {
     slug: "edifico-cobogo-sul",
@@ -63,6 +68,9 @@ export const LANCAMENTOS: Lancamento[] = [
     resumo:
       "Arquitetura brasileira contemporânea em rua arborizada, com iluminação natural abundante e áreas comuns acolhedoras.",
     corCapa: "moss",
+    imagem: "/images/standins/photo-f114225113-960.jpg",
+    imagemAlt:
+      "Conjunto residencial com terraços escalonados e jardins integrados",
   },
   {
     slug: "casa-das-samambaias",
@@ -80,5 +88,8 @@ export const LANCAMENTOS: Lancamento[] = [
     resumo:
       "Condomínio boutique com poucas unidades, terraço verde compartilhado e acabamento em materiais naturais.",
     corCapa: "guava",
+    imagem: "/images/standins/photo-f151566371-960.jpg",
+    imagemAlt:
+      "Edifício residencial cercado por área verde arborizada sob céu claro",
   },
 ];
