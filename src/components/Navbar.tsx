@@ -10,7 +10,7 @@ export function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-30 px-4 pt-6 sm:px-6 sm:pt-8">
       <div className="mx-auto flex max-w-6xl items-center justify-between rounded-pill border border-border-subtle/90 bg-elevated/95 px-5 py-2.5 shadow-card backdrop-blur-md sm:px-7">
-        <TerracoLogo showSteps={false} />
+        <TerracoLogo />
 
         <div className="flex items-center gap-6 lg:gap-8">
           <nav

@@ -5,6 +5,8 @@ interface TerracoLogoProps {
   showSteps?: boolean;
 }
 
+const WORDMARK_LETTERS = ["T", "e", "r", "r", "a", "ç", "o"];
+
 export function TerracoLogo({
   inverted = false,
   showSteps = true,
@@ -15,7 +17,7 @@ export function TerracoLogo({
   return (
     <Link
       href="/"
-      className="inline-flex items-center gap-2.5 group focus:outline-none"
+      className="inline-flex items-center gap-1 group focus:outline-none"
       aria-label="Terraço — Página inicial"
     >
       {showSteps && (
@@ -34,7 +36,18 @@ export function TerracoLogo({
       <span
         className={`font-display text-2xl font-bold tracking-tight leading-none ${textColor}`}
       >
-        Terraço
+        <span className="sr-only">Terraço</span>
+        <span aria-hidden="true" className="inline-flex">
+          {WORDMARK_LETTERS.map((letter, index) => (
+            <span
+              key={index}
+              className="animate-letter-jump"
+              style={{ animationDelay: `${120 + index * 55}ms` }}
+            >
+              {letter}
+            </span>
+          ))}
+        </span>
       </span>
     </Link>
   );

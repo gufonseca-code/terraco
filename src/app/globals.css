@@ -118,4 +118,24 @@ body {
     animation: none;
     opacity: 0.45;
   }
+  .animate-letter-jump {
+    animation: none !important;
+  }
+}
+
+@keyframes terraco-letter-jump {
+  0% {
+    transform: translateY(0);
+  }
+  45% {
+    transform: translateY(-4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-letter-jump {
+  display: inline-block;
+  animation: terraco-letter-jump 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
