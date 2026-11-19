@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const exposeTestingApi = process.env.EXPOSE_TESTING_API === "1";
+
 const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
@@ -7,6 +9,13 @@ const nextConfig: NextConfig = {
   },
   cacheComponents: true,
   partialPrefetching: true,
+  ...(exposeTestingApi
+    ? {
+        experimental: {
+          exposeTestingApiInProductionBuild: true,
+        },
+      }
+    : {}),
   turbopack: {
     rules: {
       "*.css": {

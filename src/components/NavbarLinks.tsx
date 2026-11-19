@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export function NavbarLinks() {
-  const pathname = usePathname();
-  const isCurrent = pathname.startsWith("/lancamentos");
-
+function NavbarNav({ isCurrent }: { isCurrent?: boolean }) {
   return (
-    <nav aria-label="Navegação principal" className="flex items-center">
+    <nav
+      data-testid="site-navbar"
+      aria-label="Navegação principal"
+      className="flex items-center"
+    >
       <Link
         href="/lancamentos"
         aria-current={isCurrent ? "page" : undefined}
@@ -18,4 +19,13 @@ export function NavbarLinks() {
       </Link>
     </nav>
   );
+}
+
+export function NavbarLinksFallback() {
+  return <NavbarNav />;
+}
+
+export function NavbarLinks() {
+  const pathname = usePathname();
+  return <NavbarNav isCurrent={pathname.startsWith("/lancamentos")} />;
 }

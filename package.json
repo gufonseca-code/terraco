@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "lucide-react": "^1.74.0",
@@ -15,6 +16,8 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@next/playwright": "^16.4.6",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",

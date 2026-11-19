@@ -29,15 +29,17 @@ export function LaunchExplorer() {
         <div className="relative aspect-[16/10] overflow-hidden border-b border-border-subtle bg-surface">
           <Link
             href={`/lancamentos/${launch.slug}`}
+            prefetch={true}
             className="block h-full w-full"
             aria-label={`Conhecer ${launch.nome}`}
           >
             <Image
+              data-testid="lancamentos-cover-image"
               src={launch.imagem}
               alt={launch.imagemAlt}
               width={launch.imagemWidth}
               height={launch.imagemHeight}
-              priority
+              preload
               sizes="(min-width: 640px) 576px, 100vw"
               className="h-full w-full object-cover object-center"
             />
@@ -56,6 +58,7 @@ export function LaunchExplorer() {
             <h2 className="font-display text-2xl font-bold leading-[1.15] tracking-[-0.02em] text-ink sm:text-[1.75rem]">
               <Link
                 href={`/lancamentos/${launch.slug}`}
+                prefetch={true}
                 className="transition-colors duration-150 hover:text-brand"
               >
                 {launch.nome}
@@ -65,6 +68,7 @@ export function LaunchExplorer() {
 
           <Link
             href={`/lancamentos/${launch.slug}`}
+            prefetch={true}
             className="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-sm font-semibold leading-[1.35] text-ink-inverse hover:bg-brand-hover"
           >
             Conhecer lançamento

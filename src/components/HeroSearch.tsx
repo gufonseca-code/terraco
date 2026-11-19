@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LANCAMENTOS } from "@/data/lancamentos";
+import { LANCAMENTOS, SEARCH_SUGGESTIONS } from "@/data/lancamentos";
 import { HeroIllustration } from "./HeroIllustration";
 import { HeroSearchForm } from "./HeroSearchForm";
 
@@ -30,7 +30,7 @@ export function HeroSearch() {
           </div>
 
           <div className="terraco-reveal-delay space-y-3">
-            <HeroSearchForm />
+            <HeroSearchForm suggestions={SEARCH_SUGGESTIONS} />
 
             <nav
               aria-label="Bairros em destaque"

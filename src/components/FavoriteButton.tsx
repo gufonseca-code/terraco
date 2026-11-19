@@ -1,7 +1,6 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { Heart } from "lucide-react";
 
 const STORAGE_KEY = "terraco:favoritos";
 const FAVORITES_EVENT = "terraco-favorites-change";
@@ -122,12 +121,23 @@ export function FavoriteButton({ slug, nome }: FavoriteButtonProps) {
           : "border-border-subtle bg-elevated/92 text-ink shadow-card hover:border-ink/25 hover:bg-elevated hover:text-highlight"
       }`}
     >
-      <Heart
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
         className={`h-4 w-4 transition-transform duration-200 ease-out group-active:scale-90 motion-reduce:transition-none ${
           isFavorited ? "scale-110 fill-current" : "scale-100"
         }`}
-        aria-hidden="true"
-      />
+      >
+        <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+      </svg>
     </button>
   );
 }

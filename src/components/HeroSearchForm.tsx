@@ -2,9 +2,12 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { SEARCH_SUGGESTIONS } from "@/data/lancamentos";
 
-export function HeroSearchForm() {
+interface HeroSearchFormProps {
+  suggestions: string[];
+}
+
+export function HeroSearchForm({ suggestions }: HeroSearchFormProps) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -63,7 +66,7 @@ export function HeroSearchForm() {
         <span className="hidden sm:inline">&nbsp;imóveis</span>
       </button>
       <datalist id="terraco-sugestoes">
-        {SEARCH_SUGGESTIONS.map((item) => (
+        {suggestions.map((item) => (
           <option key={item} value={item} />
         ))}
       </datalist>

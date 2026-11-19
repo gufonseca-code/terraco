@@ -28,12 +28,12 @@ export function PrimeViewLanding({ item }: PrimeViewLandingProps) {
           <div className="grid lg:grid-cols-12">
             <div className="relative aspect-[5/3] w-full overflow-hidden border-b border-border-subtle bg-surface lg:col-span-7 lg:aspect-auto lg:min-h-[480px] lg:border-b-0 lg:border-r lg:border-border-subtle">
               <Image
+                data-testid="launch-hero-image"
                 src={item.imagem}
                 alt={item.imagemAlt}
                 width={item.imagemWidth}
                 height={item.imagemHeight}
-                priority
-                fetchPriority="high"
+                preload
                 sizes="(min-width: 1024px) 600px, 94vw"
                 className="h-full w-full object-cover object-center"
               />
