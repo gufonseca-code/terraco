@@ -22,7 +22,16 @@
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
+*.log
+*.swp
+*.swo
+
+# ide / editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
 
 # debug
 npm-debug.log*
@@ -39,3 +48,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ai agent / skill artifacts & unused template assets
+/.agents/
+/.taste-skill/
+/public/assets/
+/public/images/standins/
+skills-lock.json
