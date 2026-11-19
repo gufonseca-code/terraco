@@ -96,8 +96,8 @@ npm run dev
 # Run vinext development server (Vite + Cloudflare Workers runtime)
 npm run dev:vinext
 
-# Lint and type-check (including generated Cloudflare Worker types)
-npm run lint && npx tsc --noEmit
+# Lint and type-check (including Next.js generated route types)
+npm run lint && npx next typegen && npx tsc --noEmit
 
 # Production builds
 npm run build         # Standard Next.js production build

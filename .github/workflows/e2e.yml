@@ -24,7 +24,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Lint and typecheck
-        run: npm run lint && npx tsc --noEmit
+        run: npm run lint && npx next typegen && npx tsc --noEmit
 
       - name: Run Playwright instant() tests
         run: npm run test:e2e
