@@ -24,14 +24,22 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Lint and typecheck
-        run: npm run lint && npx next typegen && npx tsc --noEmit
+        run: npm run lint && npx cf workers types && npx next typegen && npx tsc --noEmit
+
+      - name: Run Workers Vitest suite
+        run: npm run test:workers
 
       - name: Run Playwright instant() tests
         run: npm run test:e2e
+
+      - name: Run Playwright Workers tests
+        run: npm run test:e2e:workers
 
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-report
-          path: playwright-report/
+          path: |
+            playwright-report/
+            playwright-report-workers/
           retention-days: 7
