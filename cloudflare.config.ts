@@ -12,6 +12,7 @@ export default defineConfig({
         "/*",
         "!/_next/static/*",
         "!/*/_next/static/*",
+        "!/images/*",
         "!/favicon.ico",
         "!/icon.svg",
         "!/apple-touch-icon.png",
@@ -19,8 +20,13 @@ export default defineConfig({
     },
     observability: {
       enabled: true,
+      logs: {
+        enabled: true,
+        headSamplingRate: 1,
+      },
       traces: {
         enabled: true,
+        headSamplingRate: 0.01,
       },
     },
     env: {

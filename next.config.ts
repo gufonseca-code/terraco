@@ -4,6 +4,7 @@ const exposeTestingApi = process.env.EXPOSE_TESTING_API === "1";
 
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     qualities: [75, 85, 95],
   },
