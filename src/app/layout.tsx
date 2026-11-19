@@ -31,6 +31,14 @@ export const metadata: Metadata = {
   },
   description:
     "Curadoria de lançamentos imobiliários residenciais, com informações claras e atendimento direto no WhatsApp.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
     type: "website",
     locale: "pt_BR",
