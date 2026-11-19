@@ -1,16 +1,20 @@
 export interface Lancamento {
   slug: string;
   nome: string;
+  construtora: string;
+  tagline: string;
   bairro: string;
   cidade: string;
   uf: string;
+  endereco: string;
   badge: string;
   tags: string[];
   quartos: string;
   metragem: string;
+  tipologias: string;
   vagas: string;
-  precoAPartirDe: number;
-  entrega: string;
+  precoAPartirDe?: number;
+  entrega?: string;
   resumo: string;
   corCapa: "moss" | "ipe" | "guava";
   imagem: string;
@@ -18,6 +22,7 @@ export interface Lancamento {
   imagemHeight: number;
   imagemAlt: string;
   diferenciais: string[];
+  whatsappMensagem: string;
 }
 
 export const WHATSAPP_NUMBER = "5511999999999"; // Substituir pelo número real com DDI + DDD
@@ -36,88 +41,36 @@ export function formatCurrencyBRL(value: number): string {
 
 export const LANCAMENTOS: Lancamento[] = [
   {
-    slug: "residencial-ipe-amarelo",
-    nome: "Residencial Ipê Amarelo",
-    bairro: "Vila Madalena",
-    cidade: "São Paulo",
-    uf: "SP",
+    slug: "novolar-prime-view",
+    nome: "Novolar Prime View",
+    construtora: "Novolar (uma empresa do Grupo Patrimar)",
+    tagline: "Vista para sua nova vida.",
+    bairro: "Estoril",
+    cidade: "Belo Horizonte",
+    uf: "MG",
+    endereco: "Rua Paulo Piedade Campos, 2160 - Estoril, Belo Horizonte - MG",
     badge: "Lançamento",
-    tags: ["Sol da manhã", "Varanda", "Aceita pet"],
-    quartos: "2 quartos",
-    metragem: "58 a 72 m²",
-    vagas: "1 vaga",
-    precoAPartirDe: 540000,
-    entrega: "Entrega em 2027",
+    tags: ["Vista panorâmica", "Lazer completo", "Portaria 24h"],
+    quartos: "2 quartos com suíte",
+    metragem: "49 a 103 m²",
+    tipologias: "Tipo, Garden e Coberturas Lineares",
+    vagas: "1 e 2 vagas",
     resumo:
-      "Plantas inteligentes com varanda integrada, cobogós na fachada e lazer no rooftop a poucos minutos do metrô.",
-    corCapa: "ipe",
-    imagem: "/images/standins/photo-f40344812-960.jpg",
-    imagemWidth: 960,
-    imagemHeight: 640,
-    imagemAlt:
-      "Fachada residencial ensolarada com parede clara, porta amarela e palmeiras",
-    diferenciais: [
-      "Varanda nivelada integrada à sala com guarda-corpo leve",
-      "Fachada com cobogós para ventilação cruzada e sombra natural",
-      "Rooftop arborizado com churrasqueira, estar e horta compartilhada",
-      "Infraestrutura pronta para carro elétrico e bicicletário no térreo",
-    ],
-  },
-  {
-    slug: "edifico-cobogo-sul",
-    nome: "Edifício Cobogó Sul",
-    bairro: "Pinheiros",
-    cidade: "São Paulo",
-    uf: "SP",
-    badge: "Novo",
-    tags: ["2 quartos", "3 quartos", "Bicicletário"],
-    quartos: "2 e 3 quartos",
-    metragem: "64 a 92 m²",
-    vagas: "1 a 2 vagas",
-    precoAPartirDe: 690000,
-    entrega: "Obras iniciadas",
-    resumo:
-      "Arquitetura brasileira contemporânea em rua arborizada, com iluminação natural abundante e áreas comuns acolhedoras.",
+      "Vista panorâmica para a cidade e lazer completíssimo mobiliado e decorado no Estoril, a poucos minutos do Buritis.",
     corCapa: "moss",
-    imagem: "/images/standins/photo-f114225113-960.jpg",
-    imagemWidth: 960,
-    imagemHeight: 640,
+    imagem: "/images/lancamentos/novolar-prime-view.webp",
+    imagemWidth: 1024,
+    imagemHeight: 614,
     imagemAlt:
-      "Conjunto residencial contemporâneo com terraços escalonados e vegetação",
+      "Fachada contemporânea do residencial Novolar Prime View no Estoril, Belo Horizonte",
     diferenciais: [
-      "Janelas piso-teto nos dormitórios e sala com ótima entrada de luz",
-      "Espaço de trabalho compartilhado voltado para jardim interno",
-      "Acesso rápido a ciclovias, cafés de bairro e estações da linha amarela",
-      "Plantas flexíveis que permitem ampliar o estar ou criar home office",
+      "Vista panorâmica para a cidade",
+      "Lazer completíssimo entregue mobiliado e decorado (piscinas, espaço gourmet com vista, academia, coworking, pet place, espaço fogo e minimercado)",
+      "Condomínio fechado com portaria 24h e eclusa",
+      "Localização estratégica a 2 min da Av. Barão Homem de Melo, a poucos minutos do Buritis",
     ],
-  },
-  {
-    slug: "casa-das-samambaias",
-    nome: "Casa das Samambaias",
-    bairro: "Perdizes",
-    cidade: "São Paulo",
-    uf: "SP",
-    badge: "Últimas unidades",
-    tags: ["Sol da manhã", "Varanda", "2 quartos"],
-    quartos: "2 quartos",
-    metragem: "54 a 68 m²",
-    vagas: "1 vaga",
-    precoAPartirDe: 485000,
-    entrega: "Entrega em 2026",
-    resumo:
-      "Condomínio boutique com poucas unidades, terraço verde compartilhado e acabamento em materiais naturais.",
-    corCapa: "guava",
-    imagem: "/images/standins/photo-f151566371-960.jpg",
-    imagemWidth: 960,
-    imagemHeight: 716,
-    imagemAlt:
-      "Edifício residencial cercado por árvores e jardins em dia claro",
-    diferenciais: [
-      "Torre única com poucas unidades por andar e baixo custo de condomínio",
-      "Terraço comum no último pavimento com vista aberta para o bairro",
-      "Acabamento em madeira, tijolo aparente e esquadrias acústicas",
-      "Pet place sombreado no jardim térreo e lavanderia compartilhada",
-    ],
+    whatsappMensagem:
+      "Oi! Gostaria de receber as plantas, valores e condições do Novolar Prime View (Estoril).",
   },
 ];
 
@@ -125,12 +78,14 @@ export const SEARCH_SUGGESTIONS = Array.from(
   new Set([
     ...LANCAMENTOS.map((item) => item.bairro),
     ...LANCAMENTOS.map((item) => item.nome),
-    "Varanda",
-    "Sol da manhã",
+    ...LANCAMENTOS.flatMap((item) => item.tags),
   ])
 );
 
-export function filterLancamentos(query: string, activeFilter: string): Lancamento[] {
+export function filterLancamentos(
+  query: string,
+  activeFilter: string
+): Lancamento[] {
   const normalized = query.trim().toLowerCase();
 
   return LANCAMENTOS.filter((item) => {
@@ -144,9 +99,11 @@ export function filterLancamentos(query: string, activeFilter: string): Lancamen
 
     const searchable = [
       item.nome,
+      item.construtora,
       item.bairro,
       item.cidade,
       item.quartos,
+      item.tipologias,
       item.resumo,
       ...item.tags,
     ]

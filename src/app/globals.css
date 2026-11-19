@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  /* Terraço — Paleta Ipê & Grafite */
-  --color-bg-canvas: #FAF5E2;
+  /* Terraço — Paleta Ipê & Grafite (Creme Papel #FAF7F0 global) */
+  --color-bg-canvas: #FAF7F0;
   --color-bg-surface: #EFEAE0;
   --color-bg-elevated: #FFFDF9;
 
@@ -31,9 +31,14 @@
   --radius-lg: 24px;
   --radius-pill: 9999px;
 
-  /* Sombras Quentes */
-  --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.08);
-  --shadow-floating: 0 16px 40px -8px rgba(30, 29, 27, 0.12);
+  /* Sombras Quentes (nunca cinza frio ou preto puro) */
+  --shadow-chip: 0 2px 8px -2px rgba(30, 29, 27, 0.08);
+  --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.07);
+  --shadow-card-hover: 0 14px 32px -10px rgba(30, 29, 27, 0.11);
+  --shadow-moss: 0 10px 24px -8px rgba(38, 92, 75, 0.32);
+  --shadow-floating:
+    0 24px 56px -14px rgba(30, 29, 27, 0.14),
+    0 4px 12px -2px rgba(30, 29, 27, 0.05);
 
   /* Curvas e tempos de microinteração */
   --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -53,6 +58,7 @@
   --color-brand-hover: var(--color-brand-primary-hover);
   --color-accent: var(--color-brand-accent);
   --color-highlight: var(--color-brand-highlight);
+  --color-border: var(--color-border-subtle);
   --color-border-subtle: var(--color-border-subtle);
 
   --color-success-fg: var(--color-success-fg);
@@ -70,12 +76,13 @@
   --radius-lg: var(--radius-lg);
   --radius-pill: var(--radius-pill);
 
+  --shadow-chip: var(--shadow-chip);
   --shadow-card: var(--shadow-card);
   --shadow-floating: var(--shadow-floating);
 }
 
 html {
-  scroll-padding-top: 6rem;
+  scroll-padding-top: 5.5rem;
 }
 
 body {
@@ -90,16 +97,16 @@ body {
   font-variation-settings: "SOFT" 100, "WONK" 1;
 }
 
-/* Anel de foco consistente e imediato (sem atraso/transição no contorno) */
+/* Anel de foco consistente e imediato */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
 }
 
-/* Link de salto para navegação por teclado: oculto até o foco, alinhado sobre o logo na barra */
+/* Link de salto para navegação por teclado */
 .skip-link {
   position: absolute;
-  left: 1rem;
+  left: 1.5rem;
   top: 50%;
   z-index: 40;
   width: 1px;
@@ -108,12 +115,6 @@ body {
   clip-path: inset(50%);
   white-space: nowrap;
   transform: translateY(-50%);
-}
-
-@media (min-width: 640px) {
-  .skip-link {
-    left: 1.75rem;
-  }
 }
 
 .skip-link:focus,
@@ -131,86 +132,153 @@ body {
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1;
-  box-shadow: var(--shadow-floating);
+  box-shadow: var(--shadow-card);
 }
 
-/* Botões CTA com resposta tátil sutil (hover em ponteiro fino + press em 90ms) */
+/* Botões CTA com resposta tátil contida (sem hover float genérico) */
 .terraco-btn {
   transition:
     background-color 150ms var(--ease-ui),
     border-color 150ms var(--ease-ui),
     color 150ms var(--ease-ui),
-    transform 120ms var(--ease-ui),
-    box-shadow 150ms var(--ease-ui);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .terraco-btn:hover {
-    transform: translateY(-1px);
-  }
+    box-shadow 180ms var(--ease-ui),
+    transform 90ms var(--ease-ui);
 }
 
 .terraco-btn:active {
-  transform: translateY(1px) scale(0.985);
-  transition-duration: 90ms;
+  transform: scale(0.985);
 }
 
-/* Link de navegação puro com brilho sutil no texto (Ipê & Musgo) no hover */
-.terraco-nav-glow {
+/* Sombra Moss sutil para CTAs primários em Verde Musgo */
+.terraco-btn-moss:focus-visible {
+  box-shadow: var(--shadow-moss);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-btn-moss:hover {
+    box-shadow: var(--shadow-moss);
+  }
+}
+
+.terraco-btn-moss:active {
+  box-shadow: none;
+}
+
+/* Navegação editorial com indicador inferior arquitetônico */
+.terraco-nav-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  border-radius: var(--radius-sm);
   color: var(--color-text-secondary);
-  transition:
-    color 150ms var(--ease-ui),
-    text-shadow 180ms var(--ease-ui);
+  transition: color 150ms var(--ease-ui);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .terraco-nav-glow:hover {
-    color: var(--color-brand-primary);
-    text-shadow:
-      0 0 14px rgba(38, 92, 75, 0.35),
-      0 0 6px rgba(242, 183, 5, 0.3);
+  .terraco-nav-link:hover {
+    color: var(--color-text-primary);
   }
 }
 
-.terraco-nav-glow[aria-current="page"] {
-  color: var(--color-brand-primary);
-  font-weight: 600;
+.terraco-nav-link[aria-current="page"] {
+  color: var(--color-text-primary);
 }
 
-/* Cards com elevação suave de 2px e zoom interno contido na imagem */
+.terraco-nav-link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  height: 2px;
+  background-color: var(--color-brand-primary);
+}
+
+/* Sublinhado animado contido para links de texto (min-h 44px) */
+.terraco-link-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.terraco-link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 180ms var(--ease-ui);
+}
+
+.terraco-link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-link-underline:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Superfície de card quieta (mudança sutil de borda, sem salto ou zoom) */
 .terraco-card {
+  transition: border-color 180ms var(--ease-ui);
+}
+
+/* Placa de galeria (/lancamentos) com elevação e borda arquitetônica */
+.terraco-plate {
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-card);
   transition:
-    transform 180ms var(--ease-ui),
     border-color 180ms var(--ease-ui),
-    box-shadow 180ms var(--ease-ui);
+    box-shadow 220ms var(--ease-ui);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .terraco-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-floating);
+  .terraco-plate:hover {
+    border-color: rgba(30, 29, 27, 0.22);
+    box-shadow: var(--shadow-card-hover);
   }
 }
 
-.terraco-card-media {
-  transition: transform 600ms var(--ease-ui);
+/* Card flutuante (/lancamentos/[slug]) com destaque interno e profundidade quente */
+.terraco-floating-card {
+  border: 1px solid var(--color-border-subtle);
+  box-shadow:
+    var(--shadow-floating),
+    inset 0 1px 0 rgba(255, 253, 249, 0.85);
+}
+
+/* Interação sutil dos Degraus no logotipo */
+.terraco-logo-step {
+  transition: transform 180ms var(--ease-ui);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .terraco-card:hover .terraco-card-media {
-    transform: scale(1.03);
+  .terraco-logo:hover .terraco-logo-step--1,
+  .terraco-logo:focus-visible .terraco-logo-step--1 {
+    transform: translateX(1px);
+  }
+
+  .terraco-logo:hover .terraco-logo-step--2,
+  .terraco-logo:focus-visible .terraco-logo-step--2 {
+    transform: translateX(2.5px);
+  }
+
+  .terraco-logo:hover .terraco-logo-step--3,
+  .terraco-logo:focus-visible .terraco-logo-step--3 {
+    transform: translateX(4px);
   }
 }
 
-/* Entrada sutil do hero na carga inicial (nunca oculta o conteúdo sem animação) */
+/* Entrada arquitetônica única e contida */
 @keyframes terraco-rise {
   from {
     opacity: 0.01;
-    transform: translateY(10px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -218,12 +286,14 @@ body {
   }
 }
 
+.terraco-reveal,
 .hero-enter-title {
-  animation: terraco-rise 520ms var(--ease-enter) both;
+  animation: terraco-rise 420ms var(--ease-enter) both;
 }
 
+.terraco-reveal-delay,
 .hero-enter-form {
-  animation: terraco-rise 520ms var(--ease-enter) 90ms both;
+  animation: terraco-rise 420ms var(--ease-enter) 90ms both;
 }
 
 @keyframes terraco-letter-jump {
@@ -243,49 +313,14 @@ body {
   animation: terraco-letter-jump 460ms var(--ease-enter) both;
 }
 
-@keyframes terraco-steam {
-  0% {
-    transform: translateY(4px) translateX(0px) scaleX(0.95);
-    opacity: 0;
-  }
-  25% {
-    opacity: 0.65;
-  }
-  65% {
-    transform: translateY(-14px) translateX(2.5px) scaleX(1.05);
-    opacity: 0.45;
-  }
-  100% {
-    transform: translateY(-28px) translateX(-1.5px) scaleX(1.1);
-    opacity: 0;
-  }
-}
-
-.animate-coffee-steam-1 {
-  animation: terraco-steam 3.8s ease-in-out infinite;
-}
-
-.animate-coffee-steam-2 {
-  animation: terraco-steam 4.4s ease-in-out 1.1s infinite;
-}
-
-.animate-coffee-steam-3 {
-  animation: terraco-steam 4.1s ease-in-out 2.2s infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  .animate-coffee-steam-1,
-  .animate-coffee-steam-2,
-  .animate-coffee-steam-3 {
-    animation: none;
-    opacity: 0.45;
-  }
-
   .animate-letter-jump,
+  .terraco-reveal,
+  .terraco-reveal-delay,
   .hero-enter-title,
   .hero-enter-form {
     animation: none !important;
@@ -294,9 +329,12 @@ body {
   }
 
   .terraco-btn,
+  .terraco-btn-moss,
   .terraco-card,
-  .terraco-card-media,
-  .terraco-nav-glow {
+  .terraco-plate,
+  .terraco-nav-link,
+  .terraco-link-underline::after,
+  .terraco-logo-step {
     transition-property: color, background-color, border-color, opacity !important;
     transition-duration: 120ms !important;
     transform: none !important;

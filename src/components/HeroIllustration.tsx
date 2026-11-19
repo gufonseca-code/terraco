@@ -1,19 +1,29 @@
 import Image from "next/image";
-import heroTerracoImg from "../../public/images/hero-terraco.jpg";
+import heroTerracoBg from "../../public/images/hero-terraco-bg.jpg";
 
 export function HeroIllustration() {
   return (
-    <div className="relative w-full h-[430px] sm:h-[540px] lg:h-dvh overflow-hidden select-none flex items-start justify-end">
+    <div className="terraco-reveal-delay relative ml-auto flex min-h-[300px] w-[92%] flex-1 overflow-hidden select-none sm:min-h-[380px] sm:w-[80%] lg:pointer-events-none lg:absolute lg:inset-y-0 lg:right-0 lg:ml-0 lg:min-h-0 lg:w-[44vw] lg:max-w-[720px] xl:w-[45vw]">
       <Image
-        src={heroTerracoImg}
-        alt="Ilustração isométrica de uma mulher tomando café no terraço de um prédio brasileiro com cobogós e varandas"
-        sizes="(min-width: 1024px) 1200px, (min-width: 640px) 1080px, 750px"
+        src={heroTerracoBg}
+        alt="Ilustração editorial de fachada residencial brasileira com varandas ensolaradas, portas em amarelo ipê e rosa goiaba, guarda-corpos em grafite e plantas tropicais"
+        fill
+        sizes="(min-width: 1280px) 45vw, (min-width: 1024px) 44vw, (min-width: 640px) 80vw, 92vw"
         priority
         loading="eager"
         decoding="sync"
         fetchPriority="high"
         quality={95}
-        className="w-full max-w-[520px] lg:max-w-[600px] xl:max-w-[660px] h-[155%] sm:h-[160%] lg:h-[165%] object-cover object-top"
+        className="object-cover object-left-top"
+      />
+      {/* Transição sutil na borda esquerda para fusão limpa com o fundo Creme Papel */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-canvas via-canvas/30 to-transparent sm:w-14"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-canvas to-transparent lg:hidden"
       />
     </div>
   );

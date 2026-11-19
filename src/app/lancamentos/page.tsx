@@ -1,45 +1,20 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { LaunchExplorer } from "@/components/LaunchExplorer";
 
 export const metadata: Metadata = {
-  title: "Lançamentos selecionados em São Paulo",
+  title: "Lançamentos",
   description:
-    "Explore lançamentos residenciais na Vila Madalena, Pinheiros e Perdizes com plantas claras e visita marcada no WhatsApp.",
+    "Novolar Prime View no Estoril, Belo Horizonte: 2 quartos com suíte, 49 a 103 m² e lazer completo.",
 };
 
-async function LaunchExplorerWithParams({
-  searchParams,
-}: Pick<PageProps<"/lancamentos">, "searchParams">) {
-  const params = await searchParams;
-  const q = typeof params.q === "string" ? params.q : "";
-  const tag = typeof params.tag === "string" ? params.tag : "";
-
-  return (
-    <LaunchExplorer
-      key={`${q}::${tag}`}
-      initialQuery={q}
-      initialTag={tag}
-    />
-  );
-}
-
-export default function LancamentosPage({
-  searchParams,
-}: PageProps<"/lancamentos">) {
+export default function LancamentosPage() {
   return (
     <div className="flex min-h-dvh flex-col bg-canvas">
       <Navbar />
-      <main
-        id="conteudo-principal"
-        tabIndex={-1}
-        className="flex-1 flex flex-col"
-      >
-        <Suspense fallback={<LaunchExplorer />}>
-          <LaunchExplorerWithParams searchParams={searchParams} />
-        </Suspense>
+      <main id="homepage" tabIndex={-1} className="flex flex-1 flex-col">
+        <LaunchExplorer />
       </main>
       <Footer />
     </div>

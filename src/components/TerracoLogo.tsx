@@ -17,8 +17,8 @@ export function TerracoLogo({
   return (
     <Link
       href="/"
-      className="terraco-btn inline-flex items-center gap-1 rounded-sm py-1 shrink-0"
-      aria-label="Terraço — Página inicial"
+      className="terraco-logo terraco-btn inline-flex items-center gap-1.5 rounded-sm py-1 shrink-0"
+      aria-label="Terraço, página inicial"
     >
       {showSteps && (
         <svg
@@ -28,9 +28,33 @@ export function TerracoLogo({
           className={`h-7 w-7 ${stepColor}`}
           aria-hidden="true"
         >
-          <rect x="30" y="13" width="26" height="9" rx="2.5" fill="currentColor" />
-          <rect x="19" y="27.5" width="37" height="9" rx="2.5" fill="currentColor" />
-          <rect x="8" y="42" width="48" height="9" rx="2.5" fill="currentColor" />
+          <rect
+            x="30"
+            y="13"
+            width="26"
+            height="9"
+            rx="2.5"
+            fill="currentColor"
+            className="terraco-logo-step terraco-logo-step--1"
+          />
+          <rect
+            x="19"
+            y="27.5"
+            width="37"
+            height="9"
+            rx="2.5"
+            fill="currentColor"
+            className="terraco-logo-step terraco-logo-step--2"
+          />
+          <rect
+            x="8"
+            y="42"
+            width="48"
+            height="9"
+            rx="2.5"
+            fill="currentColor"
+            className="terraco-logo-step terraco-logo-step--3"
+          />
         </svg>
       )}
       <span

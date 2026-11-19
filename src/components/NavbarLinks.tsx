@@ -12,7 +12,7 @@ export function NavbarLinks() {
       <Link
         href="/lancamentos"
         aria-current={isCurrent ? "page" : undefined}
-        className="terraco-nav-glow text-sm font-medium"
+        className="terraco-nav-link px-1 text-sm font-semibold leading-[1.35]"
       >
         Lançamentos
       </Link>

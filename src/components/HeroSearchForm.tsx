@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, X } from "lucide-react";
 import { SEARCH_SUGGESTIONS } from "@/data/lancamentos";
 
 export function HeroSearchForm() {
   const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   function handleSubmit(e: React.FormEvent) {
@@ -19,42 +19,48 @@ export function HeroSearchForm() {
     }
   }
 
+  function handleClear() {
+    setQuery("");
+    inputRef.current?.focus();
+  }
+
   return (
     <form
       onSubmit={handleSubmit}
       role="search"
       aria-label="Buscar lançamentos"
-      className="hero-enter-form flex items-center gap-1.5 sm:gap-2 rounded-pill border border-border-subtle bg-elevated p-1.5 pl-3.5 sm:pl-4 shadow-card max-w-md sm:max-w-lg transition-[border-color,box-shadow] duration-150 focus-within:border-brand/60 focus-within:ring-2 focus-within:ring-brand/25"
+      className="flex items-center gap-2 rounded-pill border border-border-subtle bg-elevated p-1.5 pl-5 max-w-lg shadow-chip transition-[border-color,box-shadow] duration-150 hover:border-ink/25 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 focus-within:shadow-card"
     >
       <label htmlFor="hero-search" className="sr-only">
-        Buscar por bairro ou imóvel
+        Buscar por bairro ou lançamento
       </label>
-      <Search className="h-5 w-5 shrink-0 text-ink-muted" aria-hidden="true" />
       <input
+        ref={inputRef}
         id="hero-search"
         type="search"
         enterKeyHint="search"
         list="terraco-sugestoes"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Bairro ou imóvel..."
-        className="w-full min-w-0 rounded-pill bg-transparent px-2 py-2.5 text-sm sm:text-base text-ink placeholder:text-ink-muted [&::-webkit-search-cancel-button]:hidden"
+        placeholder="Bairro ou lançamento"
+        className="w-full min-w-0 bg-transparent py-2.5 pr-2 text-sm sm:text-base text-ink placeholder:text-ink-muted focus-visible:outline-none [&::-webkit-search-cancel-button]:hidden"
       />
       {query.length > 0 && (
         <button
           type="button"
-          onClick={() => setQuery("")}
+          onClick={handleClear}
           aria-label="Limpar busca"
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-pill text-ink-muted transition-colors hover:bg-surface hover:text-ink cursor-pointer"
+          className="inline-flex min-h-[40px] shrink-0 items-center rounded-pill px-3 text-xs font-medium text-ink-muted transition-colors duration-150 hover:bg-surface/70 hover:text-ink cursor-pointer"
         >
-          <X className="h-4 w-4" aria-hidden="true" />
+          Limpar
         </button>
       )}
       <button
         type="submit"
-        className="terraco-btn inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-4 sm:px-5 py-2.5 text-sm font-semibold text-ink-inverse hover:bg-brand-hover cursor-pointer"
+        className="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 sm:px-6 py-2.5 text-sm font-semibold leading-[1.35] text-ink-inverse hover:bg-brand-hover cursor-pointer"
       >
-        Explorar imóveis
+        <span>Explorar</span>
+        <span className="hidden sm:inline">&nbsp;imóveis</span>
       </button>
       <datalist id="terraco-sugestoes">
         {SEARCH_SUGGESTIONS.map((item) => (

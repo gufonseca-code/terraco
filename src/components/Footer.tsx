@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
 import { TerracoLogo } from "./TerracoLogo";
 import { buildWhatsAppUrl } from "@/data/lancamentos";
 
@@ -11,37 +10,40 @@ export function Footer() {
   return (
     <footer
       id="contato"
-      className="border-t border-border-subtle bg-surface/60 mt-16 scroll-mt-24"
+      className="mt-auto border-t border-border-subtle bg-surface scroll-mt-24"
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-12 md:flex-row md:items-center md:justify-between">
-        <div className="space-y-2 max-w-md">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-12 lg:px-8 md:flex-row md:items-end md:justify-between">
+        <div className="max-w-md space-y-3">
           <TerracoLogo />
-          <p className="text-sm sm:text-base text-ink-muted leading-relaxed">
-            Entra, a casa é sua. Curadoria de lançamentos imobiliários em São
-            Paulo com informações claras e visita marcada no WhatsApp.
+          <p className="text-sm sm:text-base leading-[1.55] text-ink-muted">
+            Curadoria de lançamentos residenciais em Belo Horizonte, com
+            atendimento direto no WhatsApp.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-6">
           <Link
             href="/lancamentos"
-            className="terraco-btn inline-flex min-h-[44px] items-center justify-center rounded-pill border border-border-subtle bg-elevated px-5 py-2.5 text-sm font-semibold text-ink hover:bg-surface"
+            className="terraco-link-underline inline-flex min-h-[44px] items-center px-1 text-sm font-semibold leading-[1.35] text-ink-muted transition-colors duration-150 hover:text-ink"
           >
-            Ver lançamentos
+            Lançamentos
           </Link>
           <a
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="terraco-btn inline-flex min-h-[44px] items-center gap-2 rounded-pill bg-brand px-5 py-2.5 text-sm font-semibold text-ink-inverse hover:bg-brand-hover"
+            className="terraco-btn terraco-btn-moss inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-6 py-3 text-sm font-semibold leading-[1.35] text-ink-inverse hover:bg-brand-hover"
           >
-            <MessageCircle className="h-4 w-4" aria-hidden="true" />
-            <span>Atendimento via WhatsApp</span>
+            Falar no WhatsApp
           </a>
         </div>
       </div>
-      <div className="border-t border-border-subtle/70 py-4 px-6 text-center text-xs text-ink-muted">
-        © 2026 Terraço. São Paulo, SP · Todos os direitos reservados.
+
+      <div className="border-t border-border-subtle/80">
+        <div className="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4 text-xs text-ink-muted sm:flex-row sm:items-center sm:justify-between lg:px-8 tabular-nums">
+          <span>© 2026 Terraço</span>
+          <span>Belo Horizonte, MG</span>
+        </div>
       </div>
     </footer>
   );

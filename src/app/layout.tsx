@@ -21,7 +21,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#FAF5E2",
+  themeColor: "#FAF7F0",
 };
 
 export const metadata: Metadata = {
@@ -31,13 +31,13 @@ export const metadata: Metadata = {
     template: "%s | Terraço",
   },
   description:
-    "Curadoria de lançamentos imobiliários residenciais em São Paulo, com informações claras e atendimento direto no WhatsApp.",
+    "Curadoria de lançamentos imobiliários residenciais, com informações claras e atendimento direto no WhatsApp.",
   openGraph: {
     type: "website",
     locale: "pt_BR",
     title: "Terraço — Seu próximo canto, sem burocracia",
     description:
-      "Curadoria de lançamentos imobiliários selecionados em São Paulo, com plantas claras e visita marcada no WhatsApp.",
+      "Curadoria de lançamentos imobiliários selecionados, com plantas claras e visita marcada no WhatsApp.",
     images: [
       {
         url: "/images/hero-terraco.jpg",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Terraço — Seu próximo canto, sem burocracia",
     description:
-      "Curadoria de lançamentos imobiliários selecionados em São Paulo.",
+      "Curadoria de lançamentos imobiliários selecionados, com preço claro e zero enrolação.",
     images: ["/images/hero-terraco.jpg"],
   },
   robots: {
