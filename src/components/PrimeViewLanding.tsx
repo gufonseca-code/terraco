@@ -1,19 +1,92 @@
 import Image from "next/image";
 import Link from "next/link";
 import { buildWhatsAppUrl, type Lancamento } from "@/data/lancamentos";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 interface PrimeViewLandingProps {
   item: Lancamento;
 }
 
+function buildJsonLd(item: Lancamento) {
+  const pageUrl = `${SITE_URL}/lancamentos/${item.slug}`;
+  const imageUrl = `${SITE_URL}${item.imagem}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Início",
+            item: SITE_URL,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Lançamentos",
+            item: `${SITE_URL}/lancamentos`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: item.nome,
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "RealEstateListing",
+        name: `${item.nome} — ${item.bairro}, ${item.cidade}`,
+        description: item.resumo,
+        url: pageUrl,
+        image: imageUrl,
+        mainEntity: {
+          "@type": "ApartmentComplex",
+          name: item.nome,
+          description: `${item.quartos}, ${item.metragem} (${item.tipologias}), ${item.vagas}. ${item.resumo}`,
+          url: pageUrl,
+          image: imageUrl,
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: item.endereco,
+            addressLocality: item.cidade,
+            addressRegion: item.uf,
+            addressCountry: "BR",
+          },
+          amenityFeature: item.diferenciais.map((diferencial) => ({
+            "@type": "LocationFeatureSpecification",
+            name: diferencial,
+            value: true,
+          })),
+        },
+        provider: {
+          "@type": "RealEstateAgent",
+          name: SITE_NAME,
+          url: SITE_URL,
+        },
+      },
+    ],
+  };
+}
+
 export function PrimeViewLanding({ item }: PrimeViewLandingProps) {
   const whatsappHref = buildWhatsAppUrl(item.whatsappMensagem);
+  const jsonLd = buildJsonLd(item);
 
   return (
     <section
       aria-labelledby="launch-heading"
       className="flex flex-1 flex-col justify-center bg-canvas py-10 sm:py-14"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <div className="mx-auto w-full max-w-5xl px-6 lg:px-8">
         <div className="terraco-reveal mb-5">
           <Link

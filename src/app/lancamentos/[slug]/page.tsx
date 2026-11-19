@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PrimeViewLanding } from "@/components/PrimeViewLanding";
 import { LANCAMENTOS, getLancamentoBySlug } from "@/data/lancamentos";
+import { SITE_NAME } from "@/lib/site";
 
 export function generateStaticParams() {
   return LANCAMENTOS.map((item) => ({
@@ -21,16 +22,30 @@ export async function generateMetadata({
   if (!item) {
     return {
       title: "Lançamento não encontrado",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
-  const description = `${item.nome} no ${item.bairro}, ${item.cidade}: ${item.quartos}, ${item.metragem}, ${item.vagas} e lazer completo com vista panorâmica. Fale no WhatsApp para receber plantas e condições.`;
+  const canonicalPath = `/lancamentos/${item.slug}`;
+  const title = `${item.nome}, ${item.bairro}, ${item.cidade}`;
+  const description = `${item.nome} no ${item.bairro}, ${item.cidade}: ${item.quartos}, ${item.metragem} e lazer completo. Receba plantas e condições no WhatsApp.`;
+  const socialTitle = `${item.nome}, ${item.bairro} | ${SITE_NAME}`;
 
   return {
-    title: `${item.nome}, ${item.bairro}, ${item.cidade}`,
+    title,
     description,
+    alternates: {
+      canonical: canonicalPath,
+    },
     openGraph: {
-      title: `${item.nome}, ${item.bairro} | Terraço`,
+      type: "website",
+      locale: "pt_BR",
+      siteName: SITE_NAME,
+      url: canonicalPath,
+      title: socialTitle,
       description,
       images: [
         {
@@ -40,6 +55,12 @@ export async function generateMetadata({
           alt: item.imagemAlt,
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: socialTitle,
+      description,
+      images: [item.imagem],
     },
   };
 }

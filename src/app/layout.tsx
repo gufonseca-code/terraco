@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -15,8 +16,6 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -25,17 +24,18 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Terraço — Seu próximo canto, sem burocracia",
-    template: "%s | Terraço",
+    default: `${SITE_NAME} — Seu próximo canto, sem burocracia`,
+    template: `%s | ${SITE_NAME}`,
   },
   description:
     "Curadoria de lançamentos imobiliários residenciais, com informações claras e atendimento direto no WhatsApp.",
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    title: "Terraço — Seu próximo canto, sem burocracia",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Seu próximo canto, sem burocracia`,
     description:
       "Curadoria de lançamentos imobiliários selecionados, com plantas claras e visita marcada no WhatsApp.",
     images: [

@@ -25,7 +25,9 @@ export interface Lancamento {
   whatsappMensagem: string;
 }
 
-export const WHATSAPP_NUMBER = "5511999999999"; // Substituir pelo número real com DDI + DDD
+export const WHATSAPP_NUMBER = (
+  process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? ""
+).replace(/\D/g, "");
 
 export function buildWhatsAppUrl(mensagem: string): string {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensagem)}`;
