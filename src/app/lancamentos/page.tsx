@@ -6,7 +6,7 @@ import { LaunchExplorer } from "@/components/LaunchExplorer";
 export const metadata: Metadata = {
   title: "Lançamentos",
   description:
-    "Novolar Prime View no Estoril, Belo Horizonte: 2 quartos com suíte, 49 a 103 m² e lazer completo.",
+    "Prime View no Estoril, Belo Horizonte: 2 quartos com suíte, 49 a 103 m² e lazer completo.",
 };
 
 export default function LancamentosPage() {

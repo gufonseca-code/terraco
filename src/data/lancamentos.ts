@@ -41,8 +41,8 @@ export function formatCurrencyBRL(value: number): string {
 
 export const LANCAMENTOS: Lancamento[] = [
   {
-    slug: "novolar-prime-view",
-    nome: "Novolar Prime View",
+    slug: "prime-view",
+    nome: "Prime View",
     construtora: "Novolar (uma empresa do Grupo Patrimar)",
     tagline: "Vista para sua nova vida.",
     bairro: "Estoril",
@@ -58,11 +58,11 @@ export const LANCAMENTOS: Lancamento[] = [
     resumo:
       "Vista panorâmica para a cidade e lazer completíssimo mobiliado e decorado no Estoril, a poucos minutos do Buritis.",
     corCapa: "moss",
-    imagem: "/images/lancamentos/novolar-prime-view.webp",
+    imagem: "/images/lancamentos/prime-view.webp",
     imagemWidth: 1024,
     imagemHeight: 614,
     imagemAlt:
-      "Fachada contemporânea do residencial Novolar Prime View no Estoril, Belo Horizonte",
+      "Fachada contemporânea do residencial Prime View no Estoril, Belo Horizonte",
     diferenciais: [
       "Vista panorâmica para a cidade",
       "Lazer completíssimo entregue mobiliado e decorado (piscinas, espaço gourmet com vista, academia, coworking, pet place, espaço fogo e minimercado)",
@@ -70,7 +70,7 @@ export const LANCAMENTOS: Lancamento[] = [
       "Localização estratégica a 2 min da Av. Barão Homem de Melo, a poucos minutos do Buritis",
     ],
     whatsappMensagem:
-      "Oi! Gostaria de receber as plantas, valores e condições do Novolar Prime View (Estoril).",
+      "Oi! Gostaria de receber as plantas, valores e condições do Prime View (Estoril).",
   },
 ];
 

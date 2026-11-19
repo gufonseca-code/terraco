@@ -67,7 +67,7 @@ test.describe("Instant navigation", () => {
           page.getByRole("heading", { level: 1, name: "Lançamentos" })
         ).toBeVisible();
         await expect(
-          page.getByRole("heading", { level: 2, name: "Novolar Prime View" })
+          page.getByRole("heading", { level: 2, name: "Prime View" })
         ).toBeVisible();
         await expect(
           page.getByRole("link", { name: "Conhecer lançamento" })
@@ -77,14 +77,14 @@ test.describe("Instant navigation", () => {
     );
   });
 
-  test("renders prerendered /lancamentos/novolar-prime-view immediately on initial load", async ({
+  test("renders prerendered /lancamentos/prime-view immediately on initial load", async ({
     page,
     baseURL,
   }) => {
     await instant(
       page,
       async () => {
-        await page.goto("/lancamentos/novolar-prime-view");
+        await page.goto("/lancamentos/prime-view");
         await expect(page.getByTestId("site-header")).toBeVisible();
         await expect(
           page
@@ -99,7 +99,7 @@ test.describe("Instant navigation", () => {
         ).toHaveAttribute("aria-current", "page");
         await expect(page.getByTestId("launch-hero-image")).toBeVisible();
         await expect(
-          page.getByRole("heading", { level: 1, name: "Novolar Prime View" })
+          page.getByRole("heading", { level: 1, name: "Prime View" })
         ).toBeVisible();
         await expect(
           page.getByText("Estoril, Belo Horizonte, MG")
@@ -139,12 +139,12 @@ test.describe("Instant navigation", () => {
         page.getByRole("heading", { level: 1, name: "Lançamentos" })
       ).toBeVisible();
       await expect(
-        page.getByRole("heading", { level: 2, name: "Novolar Prime View" })
+        page.getByRole("heading", { level: 2, name: "Prime View" })
       ).toBeVisible();
     });
   });
 
-  test("prefetches product title when navigating from /lancamentos CTA link to /lancamentos/novolar-prime-view", async ({
+  test("prefetches product title when navigating from /lancamentos CTA link to /lancamentos/prime-view", async ({
     page,
   }) => {
     await page.goto("/lancamentos", { waitUntil: "networkidle" });
@@ -157,7 +157,7 @@ test.describe("Instant navigation", () => {
     await instant(page, async () => {
       await link.click();
       await page.waitForURL(
-        (url) => url.pathname === "/lancamentos/novolar-prime-view"
+        (url) => url.pathname === "/lancamentos/prime-view"
       );
       await expect(
         page.getByRole("link", { name: "Terraço, página inicial" }).first()
@@ -166,18 +166,18 @@ test.describe("Instant navigation", () => {
         page.getByRole("contentinfo").getByText("Belo Horizonte, MG")
       ).toBeVisible();
       await expect(
-        page.getByRole("heading", { level: 1, name: "Novolar Prime View" })
+        page.getByRole("heading", { level: 1, name: "Prime View" })
       ).toBeVisible();
       await expect(page.getByLabel("Carregando lançamento")).toHaveCount(0);
     });
   });
 
-  test("prefetches product title when navigating from /lancamentos title link to /lancamentos/novolar-prime-view", async ({
+  test("prefetches product title when navigating from /lancamentos title link to /lancamentos/prime-view", async ({
     page,
   }) => {
     await page.goto("/lancamentos", { waitUntil: "networkidle" });
     const link = page.getByRole("link", {
-      name: "Novolar Prime View",
+      name: "Prime View",
       exact: true,
     });
     await expect(link).toBeVisible();
@@ -185,7 +185,7 @@ test.describe("Instant navigation", () => {
     await instant(page, async () => {
       await link.click();
       await page.waitForURL(
-        (url) => url.pathname === "/lancamentos/novolar-prime-view"
+        (url) => url.pathname === "/lancamentos/prime-view"
       );
       await expect(
         page.getByRole("link", { name: "Terraço, página inicial" }).first()
@@ -194,18 +194,18 @@ test.describe("Instant navigation", () => {
         page.getByRole("contentinfo").getByText("Belo Horizonte, MG")
       ).toBeVisible();
       await expect(
-        page.getByRole("heading", { level: 1, name: "Novolar Prime View" })
+        page.getByRole("heading", { level: 1, name: "Prime View" })
       ).toBeVisible();
       await expect(page.getByLabel("Carregando lançamento")).toHaveCount(0);
     });
   });
 
-  test("prefetches product title when navigating from /lancamentos image link to /lancamentos/novolar-prime-view", async ({
+  test("prefetches product title when navigating from /lancamentos image link to /lancamentos/prime-view", async ({
     page,
   }) => {
     await page.goto("/lancamentos", { waitUntil: "networkidle" });
     const link = page.getByRole("link", {
-      name: "Conhecer Novolar Prime View",
+      name: "Conhecer Prime View",
       exact: true,
     });
     await expect(link).toBeVisible();
@@ -213,7 +213,7 @@ test.describe("Instant navigation", () => {
     await instant(page, async () => {
       await link.click();
       await page.waitForURL(
-        (url) => url.pathname === "/lancamentos/novolar-prime-view"
+        (url) => url.pathname === "/lancamentos/prime-view"
       );
       await expect(
         page.getByRole("link", { name: "Terraço, página inicial" }).first()
@@ -222,16 +222,16 @@ test.describe("Instant navigation", () => {
         page.getByRole("contentinfo").getByText("Belo Horizonte, MG")
       ).toBeVisible();
       await expect(
-        page.getByRole("heading", { level: 1, name: "Novolar Prime View" })
+        page.getByRole("heading", { level: 1, name: "Prime View" })
       ).toBeVisible();
       await expect(page.getByLabel("Carregando lançamento")).toHaveCount(0);
     });
   });
 
-  test("navigates instantly from /lancamentos/novolar-prime-view back to /lancamentos", async ({
+  test("navigates instantly from /lancamentos/prime-view back to /lancamentos", async ({
     page,
   }) => {
-    await page.goto("/lancamentos/novolar-prime-view", {
+    await page.goto("/lancamentos/prime-view", {
       waitUntil: "networkidle",
     });
 

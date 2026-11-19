@@ -11,11 +11,16 @@ export function HeroSearch() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative flex flex-1 flex-col overflow-x-clip lg:justify-center"
+      className="relative flex flex-1 flex-col overflow-hidden lg:justify-center"
     >
       {/* Rail editorial alinhado à Navbar */}
       <div className="relative z-10 mx-auto w-full max-w-6xl px-6 lg:px-8">
-        <div className="space-y-9 py-10 sm:py-14 lg:max-w-[50%] lg:py-20">
+        <div className="relative space-y-6 py-6 sm:space-y-8 sm:py-10 lg:max-w-[50%] lg:space-y-9 lg:py-20">
+          {/* Véu sutil de Creme Papel no mobile para preservar contraste sobre a fachada */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-x-6 top-0 -bottom-20 -z-10 bg-gradient-to-b from-canvas/95 via-canvas/92 via-78% to-transparent md:hidden"
+          />
           <div className="terraco-reveal space-y-4">
             <h1
               id="hero-heading"
@@ -24,7 +29,7 @@ export function HeroSearch() {
               Seu próximo canto, sem burocracia.
             </h1>
 
-            <p className="text-base sm:text-lg leading-[1.55] text-ink-muted max-w-[42ch]">
+            <p className="text-base sm:text-lg leading-[1.55] text-ink-muted max-w-[42ch] md:max-w-[30ch] lg:max-w-[42ch]">
               Lançamentos em Belo Horizonte, direto no WhatsApp.
             </p>
           </div>

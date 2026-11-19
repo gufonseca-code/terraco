@@ -14,7 +14,7 @@ export function Footer() {
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-12 lg:px-8 md:flex-row md:items-end md:justify-between">
         <div className="max-w-md space-y-3">
-          <TerracoLogo />
+          <TerracoLogo animate={false} />
           <p className="text-sm sm:text-base leading-[1.55] text-ink-muted">
             Curadoria de lançamentos residenciais em Belo Horizonte, com
             atendimento direto no WhatsApp.
