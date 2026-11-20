@@ -25,7 +25,7 @@ const angularApp = new AngularNodeAppEngine({
 const SITE_URL = (
   process.env['NEXT_PUBLIC_SITE_URL'] ??
   process.env['SITE_URL'] ??
-  'http://localhost:3000'
+  'https://terraco-a5ff7.web.app'
 ).replace(/\/+$/, '');
 
 app.get('/robots.txt', (_req, res) => {

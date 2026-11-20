@@ -24,10 +24,7 @@
       "rewrites": [
         {
           "source": "**",
-          "run": {
-            "serviceId": "terraco-web-seo-ssr",
-            "region": "southamerica-east1"
-          }
+          "destination": "/index.html"
         }
       ]
     },

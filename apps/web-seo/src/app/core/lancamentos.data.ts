@@ -25,7 +25,7 @@ export interface Lancamento {
   whatsappMensagem: string;
 }
 
-export const WHATSAPP_NUMBER = '';
+export const WHATSAPP_NUMBER = '5531997469588';
 
 export function buildWhatsAppUrl(mensagem: string): string {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensagem)}`;

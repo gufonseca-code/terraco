@@ -2,7 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 export const SITE_NAME = 'Terraço';
 
-export const SITE_URL = 'http://localhost:3000';
+export const SITE_URL = 'https://terraco-a5ff7.web.app';
 
 export const FLUTTER_APP_URL = 'https://app.terraco.com.br';
 
@@ -26,11 +26,11 @@ export interface FirebaseEnvironmentConfig {
 
 export const DEFAULT_FIREBASE_CONFIG: FirebaseEnvironmentConfig = {
   apiKey: 'demo-terraco-api-key',
-  authDomain: 'terraco-platform.firebaseapp.com',
-  projectId: 'terraco-platform',
-  storageBucket: 'terraco-platform.firebasestorage.app',
-  messagingSenderId: '000000000000',
-  appId: '1:000000000000:web:terraco000000',
+  authDomain: 'terraco-a5ff7.firebaseapp.com',
+  projectId: 'terraco-a5ff7',
+  storageBucket: 'terraco-a5ff7.firebasestorage.app',
+  messagingSenderId: '781209113133',
+  appId: '1:781209113133:web:terraco000000',
   useEmulators: false,
   emulators: {
     authHost: 'http://127.0.0.1:9099',
