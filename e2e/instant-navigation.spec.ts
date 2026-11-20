@@ -415,4 +415,55 @@ test.describe("Instant navigation", () => {
     );
     expect(storedFavorites).toEqual(["prime-view"]);
   });
+
+  test("shows Falar no WhatsApp button above the fold on mobile for /lancamentos/prime-view", async ({
+    page,
+    baseURL,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await instant(
+      page,
+      async () => {
+        await page.goto("/lancamentos/prime-view");
+        const whatsappBtn = page
+          .locator("#homepage")
+          .getByRole("link", {
+            name: "Falar no WhatsApp",
+          });
+        await expect(whatsappBtn).toBeVisible();
+        const box = await whatsappBtn.boundingBox();
+        expect(box).not.toBeNull();
+        expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(667);
+
+        const footerBox = await page.locator("#contato").boundingBox();
+        expect(footerBox).not.toBeNull();
+        expect(footerBox?.y ?? 0).toBeGreaterThanOrEqual(667);
+      },
+      { baseURL }
+    );
+  });
+
+  test("keeps footer below the fold without scrolling on desktop and mobile", async ({
+    page,
+    baseURL,
+  }) => {
+    for (const viewport of [
+      { width: 1280, height: 720 },
+      { width: 375, height: 667 },
+    ]) {
+      await page.setViewportSize(viewport);
+      for (const route of ["/lancamentos", "/lancamentos/prime-view"]) {
+        await instant(
+          page,
+          async () => {
+            await page.goto(route);
+            const footerBox = await page.locator("#contato").boundingBox();
+            expect(footerBox).not.toBeNull();
+            expect(footerBox?.y ?? 0).toBeGreaterThanOrEqual(viewport.height);
+          },
+          { baseURL }
+        );
+      }
+    }
+  });
 });

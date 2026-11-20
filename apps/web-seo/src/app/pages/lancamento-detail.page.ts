@@ -26,7 +26,7 @@ import { NotFoundPageComponent } from './not-found.page';
     @if (item(); as currentItem) {
       <div class="flex min-h-dvh flex-col bg-canvas">
         <app-navbar />
-        <main id="homepage" tabindex="-1" class="flex flex-1 flex-col">
+        <main id="homepage" tabindex="-1" class="flex min-h-dvh flex-1 flex-col">
           <app-prime-view-landing [item]="currentItem" />
         </main>
         <app-footer />

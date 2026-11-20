@@ -18,7 +18,7 @@ import { SeoService } from '../core';
       <main
         id="homepage"
         tabindex="-1"
-        class="flex flex-1 flex-col items-center justify-center px-6 py-20 text-center"
+        class="flex min-h-dvh flex-1 flex-col items-center justify-center px-6 py-20 text-center"
       >
         <div class="max-w-md space-y-4">
           <h1 class="font-display text-5xl font-bold tracking-tight text-ink">
