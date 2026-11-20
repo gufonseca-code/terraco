@@ -1,4 +1,16 @@
 {
+  "apphosting": {
+    "backendId": "terraco-web-seo",
+    "rootDir": "/apps/web-seo",
+    "ignore": [
+      "node_modules",
+      ".git",
+      "dist",
+      ".angular",
+      "firebase-debug.log",
+      "firebase-debug.*.log"
+    ]
+  },
   "hosting": [
     {
       "target": "web-seo",
