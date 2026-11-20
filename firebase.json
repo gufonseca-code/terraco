@@ -1,6 +1,6 @@
 {
   "apphosting": {
-    "backendId": "terraco-web-seo",
+    "backendId": "terraco",
     "rootDir": "/apps/web-seo",
     "ignore": [
       "node_modules",
