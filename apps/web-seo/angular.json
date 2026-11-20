@@ -61,6 +61,7 @@
                 "127.0.0.1",
                 "terraco.com.br",
                 "*.terraco.com.br",
+                "*.hosted.app",
                 "*.web.app",
                 "*.firebaseapp.com",
                 "*.run.app"
