@@ -23,7 +23,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `EXPOSE_TESTING_API=1 npm run build && npm run start -- --port ${port}`,
+    command: `npm run build && npm run start -- --port ${port}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

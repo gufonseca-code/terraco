@@ -1,6 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
+node_modules/
 /node_modules
 /.pnp
 .pnp.*
@@ -9,6 +10,14 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+
+# angular & firebase
+.angular/
+dist/
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
 
 # testing
 /coverage

@@ -1,5 +1,52 @@
-import { expect, test } from "@playwright/test";
-import { instant } from "@next/playwright";
+import { expect, test, type Page } from "@playwright/test";
+
+declare global {
+  interface Window {
+    __terracoSpaMarker?: boolean;
+  }
+}
+
+/**
+ * Angular-native instant navigation & prerendered shell verification helper.
+ * - For initial hard loads (`options?.baseURL` provided): verifies that Angular SSR/Prerendering
+ *   renders the static shell and route content immediately with zero loading skeletons and zero page errors.
+ * - For client-side SPA navigations (`options?.baseURL` omitted): sets a window marker before the navigation
+ *   action and asserts that Angular Router transitions in-place without a full document reload, with zero
+ *   loading skeletons and zero runtime errors.
+ */
+async function instant(
+  page: Page,
+  action: () => Promise<void>,
+  options?: { baseURL?: string }
+): Promise<void> {
+  const pageErrors: string[] = [];
+  const onPageError = (error: Error) => {
+    pageErrors.push(error.message);
+  };
+  page.on("pageerror", onPageError);
+
+  try {
+    if (!options?.baseURL) {
+      await page.evaluate(() => {
+        window.__terracoSpaMarker = true;
+      });
+    }
+
+    await action();
+
+    if (!options?.baseURL) {
+      const spaMarkerPreserved = await page.evaluate(
+        () => window.__terracoSpaMarker === true
+      );
+      expect(spaMarkerPreserved).toBe(true);
+    }
+
+    await expect(page.getByLabel("Carregando lançamento")).toHaveCount(0);
+    expect(pageErrors).toEqual([]);
+  } finally {
+    page.off("pageerror", onPageError);
+  }
+}
 
 test.describe("Instant navigation", () => {
   test("renders / static shell immediately on initial load", async ({
@@ -244,5 +291,128 @@ test.describe("Instant navigation", () => {
         page.getByRole("heading", { level: 1, name: "Lançamentos" })
       ).toBeVisible();
     });
+  });
+
+  test("serves prerendered SSR HTML and SEO metadata for routes, robots.txt, and sitemap.xml", async ({
+    request,
+  }) => {
+    const homeRes = await request.get("/");
+    expect(homeRes.status()).toBe(200);
+    const homeHtml = await homeRes.text();
+    expect(homeHtml).toContain("<title>Terraço — Seu próximo canto, sem burocracia</title>");
+    expect(homeHtml).toContain('property="og:title"');
+    expect(homeHtml).toContain("Seu próximo canto, sem burocracia.");
+
+    const lancamentosRes = await request.get("/lancamentos");
+    expect(lancamentosRes.status()).toBe(200);
+    const lancamentosHtml = await lancamentosRes.text();
+    expect(lancamentosHtml).toMatch(/<title>.*Terraço.*<\/title>/);
+    expect(lancamentosHtml).toContain('property="og:title"');
+    expect(lancamentosHtml).toContain("Prime View");
+
+    const detailRes = await request.get("/lancamentos/prime-view");
+    expect(detailRes.status()).toBe(200);
+    const detailHtml = await detailRes.text();
+    expect(detailHtml).toMatch(/<title>.*Prime View.*<\/title>/);
+    expect(detailHtml).toContain('property="og:title"');
+    expect(detailHtml).toContain("Estoril, Belo Horizonte, MG");
+    expect(detailHtml).toContain("application/ld+json");
+
+    const robotsRes = await request.get("/robots.txt");
+    expect(robotsRes.status()).toBe(200);
+    const robotsTxt = await robotsRes.text();
+    expect(robotsTxt).toMatch(/User-Agent:\s*\*/i);
+    expect(robotsTxt).toMatch(/Sitemap:\s*https?:\/\/.+\/sitemap\.xml/i);
+
+    const sitemapRes = await request.get("/sitemap.xml");
+    expect(sitemapRes.status()).toBe(200);
+    const sitemapXml = await sitemapRes.text();
+    expect(sitemapXml).toContain("<urlset");
+    expect(sitemapXml).toContain("/lancamentos");
+    expect(sitemapXml).toContain("/lancamentos/prime-view");
+  });
+
+  test("renders 4-layer SVG hero in SVG namespace, submits hero search, and persists favorites toggle", async ({
+    page,
+  }) => {
+    await page.goto("/", { waitUntil: "networkidle" });
+
+    // Verify all 4 architectural SVG layers render in the http://www.w3.org/2000/svg namespace with non-zero geometry
+    const svgCheck = await page.evaluate(() => {
+      const svg = document.querySelector('[data-testid="hero-backdrop"] svg');
+      if (!svg) return null;
+      const layers = [
+        "g[appFacadeBackdrop]",
+        "g[appBalconyFoliage]",
+        "g[appFacadeForegroundStructure]",
+        "g[appForegroundFoliage]",
+      ];
+      return {
+        svgNamespace: svg.namespaceURI,
+        rectWidth: svg.getBoundingClientRect().width,
+        rectHeight: svg.getBoundingClientRect().height,
+        layerChecks: layers.map((sel) => {
+          const el = svg.querySelector(sel);
+          return {
+            selector: sel,
+            exists: Boolean(el),
+            namespace: el?.namespaceURI ?? null,
+            childCount: el?.children.length ?? 0,
+          };
+        }),
+      };
+    });
+
+    expect(svgCheck).not.toBeNull();
+    expect(svgCheck?.svgNamespace).toBe("http://www.w3.org/2000/svg");
+    expect(svgCheck?.rectWidth).toBeGreaterThan(200);
+    expect(svgCheck?.rectHeight).toBeGreaterThan(200);
+    for (const layer of svgCheck?.layerChecks ?? []) {
+      expect(layer.exists).toBe(true);
+      expect(layer.namespace).toBe("http://www.w3.org/2000/svg");
+      expect(layer.childCount).toBeGreaterThan(0);
+    }
+
+    // Verify hero search input, clear button, and submission to /lancamentos?q=Estoril
+    const searchInput = page.getByRole("combobox", {
+      name: "Buscar por bairro ou lançamento",
+    });
+    await searchInput.fill("Buritis");
+    const clearBtn = page.getByRole("button", { name: "Limpar busca" });
+    await expect(clearBtn).toBeVisible();
+    await clearBtn.click();
+    await expect(searchInput).toHaveValue("");
+
+    await searchInput.fill("Estoril");
+    await instant(page, async () => {
+      await page.getByRole("button", { name: /Explorar/i }).click();
+      await page.waitForURL(
+        (url) =>
+          url.pathname === "/lancamentos" &&
+          url.searchParams.get("q") === "Estoril"
+      );
+      await expect(
+        page.getByRole("heading", { level: 2, name: "Prime View" })
+      ).toBeVisible();
+    });
+
+    // Verify Favorites toggle button updates aria-pressed and localStorage('terraco:favoritos')
+    const favButton = page.getByRole("button", {
+      name: "Salvar Prime View nos favoritos",
+    });
+    await expect(favButton).toBeVisible();
+    await expect(favButton).toHaveAttribute("aria-pressed", "false");
+    await favButton.click();
+
+    const activeFavButton = page.getByRole("button", {
+      name: "Remover Prime View dos favoritos",
+    });
+    await expect(activeFavButton).toBeVisible();
+    await expect(activeFavButton).toHaveAttribute("aria-pressed", "true");
+
+    const storedFavorites = await page.evaluate(() =>
+      JSON.parse(window.localStorage.getItem("terraco:favoritos") ?? "[]")
+    );
+    expect(storedFavorites).toEqual(["prime-view"]);
   });
 });
