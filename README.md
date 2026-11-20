@@ -1,144 +1,94 @@
-# Terraço Website
+# Terraço Platform (`terraco-platform`)
 
-Curated residential real estate launches platform for Belo Horizonte, MG, built with Next.js App Router and direct WhatsApp lead conversion.
-
-## Tech Stack
-
-- **Framework:** Next.js `16.4.6` (App Router, Turbopack, Cache Components & Partial Prefetching)
-- **UI & Language:** React `19.3.0`, TypeScript `5`, Tailwind CSS `4.3.3` (`@tailwindcss/turbopack`)
-- **Typography:** `Fraunces` (display) and `Plus Jakarta Sans` (body) via `next/font/google`
-- **Testing:** Playwright (`@playwright/test`) + `@next/playwright` `instant()` regression suite
+Curated residential real estate launches platform for Belo Horizonte, MG, architected as a **Google-First Split Architecture** monorepo combining an **Angular SSR & Prerendered SEO Vitrine** (`apps/web-seo/`), shared **Sunlit Terracotta / Warm Brutalism** design tokens (`branding/`), **Firebase Multi-Site Hosting & Backend Infrastructure** (`firebase.json`, `.firebaserc`), and a planned **Flutter Cross-Platform Interactive App** (`apps/mobile-app/`).
 
 ---
 
-## Project Architecture
+## Tech Stack
 
-### App Router & Rendering Strategy
+- **Web SEO Vitrine (`apps/web-seo/`):** Angular `22.3.0` (100% Standalone Components, Zoneless Change Detection, Signals-first Reactivity, `@angular/ssr` Hybrid Rendering & Static Prerendering, Incremental Hydration + Event Replay, Router View Transitions)
+- **Styling & Design System (`branding/`):** Tailwind CSS `4` (`@tailwindcss/postcss`), canonical design tokens (`branding/tokens.json`, `branding/tokens.css`, `branding/DESIGN.md`)
+- **Typography:** `Fraunces` (variable display serif) and `Plus Jakarta Sans` (body & geometric UI sans)
+- **Cloud & Hosting (`firebase.json`, `.firebaserc`):** Firebase Multi-Site Hosting (`web-seo` and `mobile-app` targets), Firebase App Hosting / Cloud Run SSR (`server.ts`), and Firebase Emulator Suite (`auth`, `firestore`, `hosting`, `storage`)
+- **Verification (`e2e/`):** Playwright (`@playwright/test`) E2E & Instant Navigation regression suite (`e2e/instant-navigation.spec.ts`)
 
-The application uses Next.js `cacheComponents: true` and `partialPrefetching: true` in [next.config.ts](next.config.ts). All primary routes prerender cleanly into static HTML shells:
+---
 
-| Route | Source | Rendering | Purpose |
-| --- | --- | --- | --- |
-| `/` | `src/app/page.tsx` | Static (`○`) | Editorial hero with neighborhood/launch search and layered SVG facade |
-| `/lancamentos` | `src/app/lancamentos/page.tsx` | Static (`○`) | Curated launch catalog with `FavoriteButton` and eager `prefetch={true}` links |
-| `/lancamentos/[slug]` | `src/app/lancamentos/[slug]/page.tsx` | Partial Prerender (`◐`) / Static (`○` for `prime-view`) | Launch detail page; `generateStaticParams()` prerenders `/lancamentos/prime-view` |
-| `/robots.txt` | `src/app/robots.ts` | Static | Crawler directives and sitemap reference |
-| `/sitemap.xml` | `src/app/sitemap.ts` | Static | Dynamic sitemap generated from `LANCAMENTOS` |
-| `/icon.svg` | `src/app/icon.svg` | Static | Brand staircase app icon |
-
-`src/app/lancamentos/[slug]/page.tsx` wraps `LancamentoDetalheContent` in a `<Suspense>` boundary (`LancamentoDetalheFallback`) to keep the navigation shell instant while resolving route `params` and validating slugs via `notFound()`.
-
-### Directory Structure
+## Monorepo Architecture
 
 ```text
 .
-├── .github/workflows/e2e.yml      # CI pipeline: lint, tsc, Playwright instant() E2E
-├── e2e/instant-navigation.spec.ts # Instant navigation & prefetching E2E assertions
+├── AGENTS.md                      # Engineering conventions & monorepo rules
+├── MIGRATION_NOTES.md             # Complete Next.js/Cloudflare -> Angular/Firebase migration report
+├── firebase.json                  # Multi-site Firebase Hosting (web-seo + mobile-app) & Emulator Suite
+├── .firebaserc                    # Firebase project alias (terraco-platform) & hosting targets
 ├── instant-nav.rig.md             # Test rig contract for local Playwright verification
-├── next.config.ts                 # Cache Components, Partial Prefetching, images, Turbopack CSS
-├── playwright.config.ts           # Starts production build with EXPOSE_TESTING_API=1
-├── public/
-│   ├── images/lancamentos/        # Property photography (e.g. prime-view.webp)
-│   └── videos/                    # Optional hero backdrop video assets
-└── src/
-    ├── app/
-    │   ├── globals.css            # Tailwind v4 theme tokens, shadows, keyframe animations
-    │   ├── layout.tsx             # Root metadata, viewport, Google fonts, pt-BR shell
-    │   ├── page.tsx               # Home route
-    │   ├── robots.ts              # robots.txt metadata route
-    │   ├── sitemap.ts             # sitemap.xml metadata route
-    │   └── lancamentos/
-    │       ├── page.tsx           # /lancamentos catalog route
-    │       └── [slug]/page.tsx    # /lancamentos/[slug] detail route + generateMetadata
-    ├── components/
-    │   ├── hero-svg/              # Layered animated SVG architecture & foliage components
-    │   ├── FavoriteButton.tsx     # Client favorite toggle synced to localStorage via useSyncExternalStore
-    │   ├── Footer.tsx             # Site footer with static TerracoLogo and WhatsApp CTA
-    │   ├── HeroAnimatedBackdrop.tsx # Motion- and visibility-aware video backdrop component
-    │   ├── HeroIllustration.tsx   # Positioned hero SVG backdrop with edge gradient masks
-    │   ├── HeroSearch.tsx         # Server hero layout + quick neighborhood links
-    │   ├── HeroSearchForm.tsx     # Client search bar with datalist suggestions
-    │   ├── HeroSvgPrototype.tsx   # Composes hero-svg layers into a responsive SVG scene
-    │   ├── LaunchExplorer.tsx     # Catalog card for LANCAMENTOS with eager prefetching
-    │   ├── Navbar.tsx             # Sticky pill header with skip link and Suspense-wrapped links
-    │   ├── NavbarLinks.tsx        # Client active-route link indicator (usePathname)
-    │   ├── PrimeViewLanding.tsx   # Launch detail card, specs list, WhatsApp CTA, and JSON-LD
-    │   └── TerracoLogo.tsx        # TerracoStairsMark + animated/static wordmark
-    ├── data/
-    │   └── lancamentos.ts         # Static catalog (LANCAMENTOS), search helpers, WhatsApp URL builder
-    └── lib/
-        └── site.ts                # Centralized SITE_NAME and SITE_URL resolution
+├── playwright.config.ts           # Builds & launches the Angular SSR server for E2E verification
+├── branding/
+│   ├── DESIGN.md                  # Visual direction, typography scale & anti-slop guardrails
+│   ├── tokens.css                 # Canonical CSS custom properties (Ipê & Grafite / Sunlit Terracotta)
+│   └── tokens.json                # Cross-platform JSON design tokens for Angular & Flutter
+├── e2e/
+│   └── instant-navigation.spec.ts # Instant navigation, SSR metadata, SVG namespace & interaction E2E tests
+└── apps/
+    └── web-seo/                   # Angular SSR/Prerendered SEO & High-Conversion Vitrine (terraco.com.br)
+        ├── angular.json           # Angular CLI build, SSR & prerender configuration
+        ├── public/                # Static assets (images/lancamentos/prime-view.webp, robots.txt, sitemap.xml)
+        └── src/
+            ├── index.html         # Root pt-BR shell, Google Fonts & default OpenGraph/Twitter tags
+            ├── styles.css         # Tailwind CSS v4 @theme inline tokens, component primitives & 60fps keyframes
+            ├── main.ts            # Client bootstrap with Zoneless & Incremental Hydration
+            ├── main.server.ts     # Server bootstrap for Angular SSR & build-time Prerendering
+            ├── server.ts          # Express SSR entry point (--port support, /robots.txt & /sitemap.xml routes)
+            └── app/
+                ├── app.ts                 # Root AppComponent (<router-outlet />)
+                ├── app.config.ts          # Zoneless, View Transitions, PreloadAllModules & Event Replay
+                ├── app.config.server.ts   # Server rendering providers (provideServerRendering(withRoutes(...)))
+                ├── app.routes.ts          # Client routes (/, /lancamentos, /lancamentos/:slug, **)
+                ├── app.routes.server.ts   # Hybrid ServerRoutes (RenderMode.Prerender + getPrerenderParams)
+                ├── core/                  # Signals-first services (LancamentosService, FavoritesService, SeoService)
+                ├── components/
+                │   ├── hero/              # 4-layer architectural SVG scene (g[app...] selectors + .svg templates) & search
+                │   ├── layout/            # Navbar, NavbarLinks, Footer & animated TerracoLogo
+                │   └── launches/          # LaunchExplorer, PrimeViewLanding (with JSON-LD) & FavoriteButton
+                └── pages/                 # HomePage, LancamentosPage, LancamentoDetailPage & NotFoundPage
 ```
 
-### Data & State Model
+### Hybrid Rendering & Prerender Strategy (`apps/web-seo`)
 
-- **Static Catalog (`src/data/lancamentos.ts`):** Launch entries (`Lancamento`) are stored in-memory in `LANCAMENTOS` and queried via `getLancamentoBySlug()` and `filterLancamentos()`. No database or external API is required at runtime.
-- **Client Persistence (`src/components/FavoriteButton.tsx`):** Favorite toggles persist slugs in `localStorage` under `terraco:favoritos` using `useSyncExternalStore` with cross-tab `storage` and custom `terraco-favorites-change` event listeners.
-- **Lead Conversion:** CTAs construct pre-filled `https://wa.me/...` links via `buildWhatsAppUrl()`. Note that `WHATSAPP_NUMBER` is currently a placeholder (`5511999999999`) to be replaced before production launch.
+All public discovery routes are configured in `apps/web-seo/src/app/app.routes.server.ts` to prerender into static HTML at build time (`RenderMode.Prerender`), while dynamic unknown paths fall back to server rendering (`RenderMode.Server`):
 
-### SEO Architecture
-
-- **Site URL & Canonical Links:** `src/lib/site.ts` reads `NEXT_PUBLIC_SITE_URL` (defaulting to `http://localhost:3000`) for `metadataBase`, canonical links (`alternates.canonical`), `robots.txt`, `sitemap.xml`, and JSON-LD URLs.
-- **Social & Search Metadata:** `src/app/lancamentos/[slug]/page.tsx` generates per-launch `title`, `description`, `alternates.canonical`, `openGraph`, and `twitter` metadata (`summary_large_image` using the launch's `.webp` image). Unknown slugs return `robots: { index: false, follow: false }` and `404`.
-- **Structured Data:** `src/components/PrimeViewLanding.tsx` embeds sanitized Schema.org JSON-LD (`BreadcrumbList` + `RealEstateListing` / `ApartmentComplex`) directly in the prerendered HTML.
+| Route | Component | Rendering Mode | Purpose |
+| :--- | :--- | :--- | :--- |
+| `/` | `HomePageComponent` | `RenderMode.Prerender` (SSG) | Editorial hero with neighborhood/launch search and 4-layer animated SVG facade |
+| `/lancamentos` | `LancamentosPageComponent` | `RenderMode.Prerender` (SSG) | Curated launch catalog with `FavoriteButtonComponent` and instant SPA links |
+| `/lancamentos/:slug` | `LancamentoDetailPageComponent` | `RenderMode.Prerender` (`prime-view`) | Launch detail page with specs `<dl>`, WhatsApp CTA, and `RealEstateListing` JSON-LD |
+| `/**` | `NotFoundPageComponent` | `RenderMode.Server` (SSR) | Custom `404 / This page could not be found.` handling |
+| `/robots.txt` | Static + `server.ts` | Static / Express | Crawler directives and sitemap reference |
+| `/sitemap.xml` | Static + `server.ts` | Static / Express | XML sitemap listing `/`, `/lancamentos`, and `/lancamentos/prime-view` |
 
 ---
 
 ## Local Development & Verification
 
+Run all commands from the monorepo root:
+
 ```bash
 # Install dependencies
 npm install
+npm --prefix apps/web-seo install
 
-# Run Next.js development server (Turbopack)
+# Start Angular development server (http://localhost:4200)
 npm run dev
 
-# Run vinext development server (Vite + Cloudflare Workers runtime)
-npm run dev:vinext
+# Build production browser + SSR + prerendered bundles (apps/web-seo/dist/web-seo/)
+npm run build
 
-# Lint and type-check (including Next.js generated route types)
-npm run lint && npx next typegen && npx tsc --noEmit
+# Start production Angular SSR Express server on a custom port
+npm run start -- --port 3105
 
-# Production builds
-npm run build         # Standard Next.js production build
-npm run build:vinext  # Vite + Cloudflare Workers production build (prerenders static routes)
-
-# Preview built Cloudflare Worker locally in workerd
-npm run start:vinext
-
-# Run Playwright instant() E2E suite (builds with EXPOSE_TESTING_API=1)
-npm run test:e2e
+# Run the Playwright Instant Navigation & SSR E2E suite
+PLAYWRIGHT_PORT=3105 npm run test:e2e -- --workers=1
 ```
 
-### Environment Variables
-
-| Variable | Required in Production | Default | Description |
-| --- | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Yes | `http://localhost:3000` | Public origin used for `metadataBase`, canonicals, OpenGraph, JSON-LD, `sitemap.xml`, and `robots.txt` |
-| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Yes | `""` | WhatsApp destination number (digits only, DDI + DDD + number) used by `buildWhatsAppUrl()` |
-| `EXPOSE_TESTING_API` | No (`1` for E2E only) | Unset | Enables `experimental.exposeTestingApiInProductionBuild` in `next.config.ts` for `@next/playwright` |
-
----
-
-## Cloudflare Workers Deployment
-
-This project is configured to run on **Cloudflare Workers** via `vinext`, `@vinext/cloudflare`, and the Cloudflare CLI (`cf`), while keeping standard `next dev` / `next build` / `next start` intact:
-
-- **`cloudflare.config.ts`:** Defines Worker `terraco-website` (`vinext/server/fetch-handler`, `compatibilityDate: "2026-11-19"`), `ASSETS` binding, static assets routing, and Workers Logs & Traces observability (`observability.enabled` + `observability.traces.enabled`).
-- **`vite.config.ts`:** Configures `vinext` with `staticAssetsAdapter()` (`--cdn-cache=static-assets`, `--data-cache=none`, `--image-optimization=none`, `prerender: { routes: "*" }`) and `@cloudflare/vite-plugin`.
-- **`postcss.config.mjs`:** Compiles Tailwind CSS v4 (`@tailwindcss/postcss`) under Vite (since Vite does not execute `turbopack.rules`).
-- **`tsconfig.json` & `eslint.config.mjs`:** Include `.cloudflare/types` for Worker type-checking and ignore `.cloudflare/**`, `.vinext/**`, and `dist/**`.
-
-### Deploy Steps
-
-1. Authenticate with Cloudflare (or set `CLOUDFLARE_API_TOKEN` in CI):
-   ```bash
-   npx cf auth login
-   ```
-2. Set `NEXT_PUBLIC_SITE_URL` to your production domain and replace the placeholder `WHATSAPP_NUMBER` in `src/data/lancamentos.ts`.
-3. If deploying directly from a local workspace, ensure unused gitignored template folders (`public/assets/`, `public/images/standins/`) are not present in `public/` so they are not uploaded as Worker assets.
-4. Build and deploy:
-   ```bash
-   npm run deploy:vinext
-   ```
-
+For full technical details on the architectural migration from Next.js + Vinext/Cloudflare Workers to Angular + Firebase + Flutter, see [MIGRATION_NOTES.md](MIGRATION_NOTES.md).

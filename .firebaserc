@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "terraco-platform"
+  },
+  "targets": {
+    "terraco-platform": {
+      "hosting": {
+        "web-seo": [
+          "terraco-web-seo"
+        ],
+        "mobile-app": [
+          "terraco-mobile-app"
+        ]
+      }
+    }
+  }
+}
