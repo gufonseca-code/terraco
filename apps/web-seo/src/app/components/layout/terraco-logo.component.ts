@@ -124,7 +124,7 @@ export class TerracoLogoComponent {
 
   readonly linkClasses = computed(() =>
     [
-      'terraco-logo terraco-stairs terraco-btn inline-flex items-center gap-1.5 rounded-sm py-1 shrink-0',
+      'terraco-logo terraco-stairs terraco-btn inline-flex items-center gap-1.5 rounded-sm py-0.5 shrink-0',
       this.className(),
     ]
       .filter(Boolean)

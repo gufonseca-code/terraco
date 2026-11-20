@@ -11,7 +11,7 @@ import { FavoriteButtonComponent } from './favorite-button.component';
     @if (launch) {
       <section
         aria-labelledby="lancamentos-heading"
-        class="mx-auto w-full max-w-5xl px-6 py-10 sm:py-14 lg:px-8"
+        class="mx-auto w-full max-w-5xl px-4 py-4 sm:px-6 sm:py-7 lg:px-8"
       >
         <h1
           id="lancamentos-heading"
@@ -22,7 +22,7 @@ import { FavoriteButtonComponent } from './favorite-button.component';
 
         <article
           id="resultados-lancamentos"
-          class="terraco-reveal terraco-reveal-delay terraco-plate mt-6 max-w-xl overflow-hidden rounded-lg bg-elevated sm:mt-8 scroll-mt-24"
+          class="terraco-reveal terraco-reveal-delay terraco-plate mt-4 max-w-xl overflow-hidden rounded-lg bg-elevated sm:mt-5 scroll-mt-24"
         >
           <div
             class="relative aspect-[16/10] overflow-hidden border-b border-border-subtle bg-surface"

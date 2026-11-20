@@ -88,13 +88,13 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
   template: `
     <section
       aria-labelledby="launch-heading"
-      class="flex flex-1 flex-col justify-center bg-canvas py-10 sm:py-14"
+      class="flex flex-1 flex-col justify-start bg-canvas py-3 sm:justify-center sm:py-6 lg:py-8"
     >
-      <div class="mx-auto w-full max-w-5xl px-6 lg:px-8">
-        <div class="terraco-reveal mb-5">
+      <div class="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div class="terraco-reveal mb-2 sm:mb-4">
           <a
             routerLink="/lancamentos"
-            class="terraco-link-underline inline-flex min-h-[44px] items-center text-sm font-medium text-ink-muted transition-colors duration-150 hover:text-ink"
+            class="terraco-link-underline inline-flex min-h-[40px] items-center text-sm font-medium text-ink-muted transition-colors duration-150 hover:text-ink sm:min-h-[44px]"
           >
             Voltar para lançamentos
           </a>
@@ -105,7 +105,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         >
           <div class="grid lg:grid-cols-12">
             <div
-              class="relative aspect-[5/3] w-full overflow-hidden border-b border-border-subtle bg-surface lg:col-span-7 lg:aspect-auto lg:min-h-[480px] lg:border-b-0 lg:border-r lg:border-border-subtle"
+              class="relative aspect-[2/1] w-full overflow-hidden border-b border-border-subtle bg-surface sm:aspect-[5/3] lg:col-span-7 lg:aspect-auto lg:min-h-[460px] lg:border-b-0 lg:border-r lg:border-border-subtle"
             >
               <img
                 data-testid="launch-hero-image"
@@ -120,9 +120,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </div>
 
             <div
-              class="flex flex-col justify-between gap-8 p-6 sm:p-8 lg:col-span-5 lg:p-10"
+              class="flex flex-col justify-between gap-4 p-4 sm:gap-6 sm:p-6 lg:col-span-5 lg:gap-8 lg:p-8"
             >
-              <div class="space-y-3">
+              <div class="space-y-1.5 sm:space-y-2.5">
                 <div aria-hidden="true" class="h-[3px] w-10 bg-accent"></div>
 
                 <p class="text-sm font-medium text-ink-muted">
@@ -131,14 +131,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                 <h1
                   id="launch-heading"
-                  class="font-display text-[clamp(1.875rem,3.2vw,2.75rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ink text-balance"
+                  class="font-display text-[clamp(1.625rem,3.2vw,2.75rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ink text-balance"
                 >
                   {{ item().nome }}
                 </h1>
               </div>
 
               <dl
-                class="grid grid-cols-2 gap-x-6 gap-y-5 border-y border-border-subtle py-5"
+                class="grid grid-cols-2 gap-x-4 gap-y-3 border-y border-border-subtle py-3 sm:gap-x-6 sm:gap-y-4 sm:py-4"
               >
                 <div class="space-y-1">
                   <dt class="text-xs font-medium text-ink-muted">
@@ -177,8 +177,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 </div>
               </dl>
 
-              <div class="space-y-3.5">
-                <p class="text-sm leading-[1.55] text-ink-muted">
+              <div class="space-y-2 sm:space-y-3">
+                <p class="text-xs leading-[1.45] text-ink-muted sm:text-sm sm:leading-[1.55]">
                   Plantas, valores e condições direto no WhatsApp.
                 </p>
 
@@ -186,7 +186,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   [href]="whatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="terraco-btn terraco-btn-moss flex min-h-[52px] w-full items-center justify-center rounded-pill bg-brand px-6 py-3.5 text-base font-semibold leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+                  class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-base font-semibold leading-[1.35] text-ink-inverse hover:bg-brand-hover sm:min-h-[52px] sm:py-3.5"
                 >
                   Falar no WhatsApp
                 </a>
