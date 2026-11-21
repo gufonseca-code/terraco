@@ -9,8 +9,8 @@ Curated residential real estate launches platform for Belo Horizonte, MG, archit
 - **Web SEO Vitrine (`apps/web-seo/`):** Angular `22.3.0` (100% Standalone Components, Zoneless Change Detection, Signals-first Reactivity, `@angular/ssr` Hybrid Rendering & Static Prerendering, Incremental Hydration + Event Replay, Router View Transitions)
 - **Styling & Design System (`branding/`):** Tailwind CSS `4` (`@tailwindcss/postcss`), canonical design tokens (`branding/tokens.json`, `branding/tokens.css`, `branding/DESIGN.md`)
 - **Typography:** `Fraunces` (variable display serif) and `Plus Jakarta Sans` (body & geometric UI sans)
-- **Cloud & Hosting (`firebase.json`, `.firebaserc`):** Firebase Multi-Site Hosting (`web-seo` and `mobile-app` targets), Firebase App Hosting / Cloud Run SSR (`server.ts`), and Firebase Emulator Suite (`auth`, `firestore`, `hosting`, `storage`)
-- **Verification (`e2e/`):** Playwright (`@playwright/test`) E2E & Instant Navigation regression suite (`e2e/instant-navigation.spec.ts`)
+- **Cloud & Hosting (`firebase.json`, `.firebaserc`, `apps/web-seo/apphosting.yaml`):** Firebase project `terraco-a5ff7`, **Firebase App Hosting** (`terraco` backend in `us-east4` at `https://terraco--terraco-a5ff7.us-east4.hosted.app`, connected to `gufonseca-code/terraco`), Firebase Multi-Site Hosting (`web-seo` and `mobile-app` targets), and Firebase Emulator Suite (`auth`, `firestore`, `hosting`, `storage`)
+- **CI & Verification (`.github/workflows/e2e.yml`, `e2e/`):** GitHub Actions CI running Angular TypeScript typecheck + Playwright (`@playwright/test`) E2E & Instant Navigation regression suite (13 tests in `e2e/instant-navigation.spec.ts`, including mobile above-the-fold CTA and below-the-fold footer checks)
 
 ---
 
@@ -18,10 +18,13 @@ Curated residential real estate launches platform for Belo Horizonte, MG, archit
 
 ```text
 .
+├── .github/
+│   └── workflows/
+│       └── e2e.yml                # GitHub Actions CI: Angular typecheck + Playwright E2E suite
 ├── AGENTS.md                      # Engineering conventions & monorepo rules
 ├── MIGRATION_NOTES.md             # Complete Next.js/Cloudflare -> Angular/Firebase migration report
-├── firebase.json                  # Multi-site Firebase Hosting (web-seo + mobile-app) & Emulator Suite
-├── .firebaserc                    # Firebase project alias (terraco-platform) & hosting targets
+├── firebase.json                  # App Hosting (terraco), Multi-site Hosting & Emulator Suite
+├── .firebaserc                    # Firebase project (terraco-a5ff7) & hosting targets
 ├── instant-nav.rig.md             # Test rig contract for local Playwright verification
 ├── playwright.config.ts           # Builds & launches the Angular SSR server for E2E verification
 ├── branding/
@@ -29,10 +32,11 @@ Curated residential real estate launches platform for Belo Horizonte, MG, archit
 │   ├── tokens.css                 # Canonical CSS custom properties (Ipê & Grafite / Sunlit Terracotta)
 │   └── tokens.json                # Cross-platform JSON design tokens for Angular & Flutter
 ├── e2e/
-│   └── instant-navigation.spec.ts # Instant navigation, SSR metadata, SVG namespace & interaction E2E tests
+│   └── instant-navigation.spec.ts # Instant navigation, SSR metadata, SVG, mobile CTA & footer E2E tests
 └── apps/
     └── web-seo/                   # Angular SSR/Prerendered SEO & High-Conversion Vitrine (terraco.com.br)
-        ├── angular.json           # Angular CLI build, SSR & prerender configuration
+        ├── apphosting.yaml        # Firebase App Hosting Cloud Run runtime configuration
+        ├── angular.json           # Angular CLI build, SSR, prerender & allowedHosts (*.hosted.app, etc.)
         ├── public/                # Static assets (images/lancamentos/prime-view.webp, robots.txt, sitemap.xml)
         └── src/
             ├── index.html         # Root pt-BR shell, Google Fonts & default OpenGraph/Twitter tags
@@ -80,6 +84,9 @@ npm --prefix apps/web-seo install
 
 # Start Angular development server (http://localhost:4200)
 npm run dev
+
+# Typecheck Angular app
+npx tsc -p apps/web-seo/tsconfig.app.json --noEmit
 
 # Build production browser + SSR + prerendered bundles (apps/web-seo/dist/web-seo/)
 npm run build
