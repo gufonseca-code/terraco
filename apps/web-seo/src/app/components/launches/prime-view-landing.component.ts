@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
+  CardResizeDirective,
   SITE_NAME,
   SITE_URL,
   buildWhatsAppUrl,
@@ -90,7 +91,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
 @Component({
   selector: 'app-prime-view-landing',
-  imports: [RouterLink, ImageLightboxComponent],
+  imports: [RouterLink, ImageLightboxComponent, CardResizeDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
@@ -108,6 +109,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         </div>
 
         <article
+          appCardResize
           animate.enter="terraco-reveal-delay"
           class="terraco-floating-card overflow-hidden rounded-lg bg-elevated"
         >

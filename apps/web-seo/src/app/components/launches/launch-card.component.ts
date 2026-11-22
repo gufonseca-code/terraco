@@ -11,18 +11,19 @@ import {
   viewChild,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { type Lancamento } from '../../core';
+import { CardResizeDirective, type Lancamento } from '../../core';
 import { FavoriteButtonComponent } from './favorite-button.component';
 
 @Component({
   selector: 'app-launch-card',
-  imports: [RouterLink, FavoriteButtonComponent],
+  imports: [RouterLink, FavoriteButtonComponent, CardResizeDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block h-full',
   },
   template: `
     <article
+      appCardResize
       [attr.id]="cardId()"
       animate.enter="terraco-reveal-delay"
       (click)="onCardClick($event)"

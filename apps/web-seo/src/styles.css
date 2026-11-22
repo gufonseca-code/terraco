@@ -46,6 +46,8 @@
   /* Curvas e tempos de microinteração */
   --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  --resize-dur: 300ms;
+  --resize-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
@@ -269,6 +271,13 @@ h4 {
 /* Superfície de card quieta (mudança sutil de borda, sem salto ou zoom) */
 .terraco-card {
   transition: border-color 180ms var(--ease-ui);
+}
+
+.terraco-resize {
+  transition:
+    width var(--resize-dur) var(--resize-ease),
+    height var(--resize-dur) var(--resize-ease);
+  will-change: width, height;
 }
 
 /* Placa de galeria (/lancamentos) com elevação e borda arquitetônica */
@@ -782,6 +791,7 @@ h4 {
   .terraco-btn,
   .terraco-btn-moss,
   .terraco-card,
+  .terraco-resize,
   .terraco-plate,
   .terraco-card-media-img,
   .terraco-card-media-scrim,

@@ -5,3 +5,4 @@ export * from './lancamentos.service';
 export * from './leads.service';
 export * from './favorites.service';
 export * from './seo.service';
+export * from './card-resize.directive';

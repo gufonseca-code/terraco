@@ -1,13 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CardResizeDirective } from '../../core';
 
 @Component({
   selector: 'app-launch-card-skeleton',
+  imports: [CardResizeDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block h-full',
   },
   template: `
     <article
+      appCardResize
       role="status"
       aria-busy="true"
       aria-label="Carregando lançamento"
@@ -55,6 +58,7 @@ export class LaunchCardSkeletonComponent {}
 
 @Component({
   selector: 'app-launch-detail-skeleton',
+  imports: [CardResizeDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
@@ -71,12 +75,13 @@ export class LaunchCardSkeletonComponent {}
         </div>
 
         <article
+          appCardResize
           aria-hidden="true"
           class="terraco-floating-card overflow-hidden rounded-lg bg-elevated"
         >
           <div class="grid lg:grid-cols-12">
             <div
-              class="terraco-skeleton aspect-[2/1] w-full rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle sm:aspect-[5/3] lg:col-span-7 lg:aspect-auto lg:min-h-[460px] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] lg:border-b-0 lg:border-r lg:border-border-subtle"
+              class="terraco-skeleton aspect-[2/1] w-full rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle sm:aspect-[5/3] lg:col-span-7 lg:aspect-auto lg:h-[460px] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] lg:border-b-0 lg:border-r lg:border-border-subtle"
             ></div>
 
             <div
