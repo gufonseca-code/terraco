@@ -19,6 +19,7 @@ import {
   buildWhatsAppUrl,
   type Lancamento,
 } from '../../core';
+import { ImageLightboxComponent } from './image-lightbox.component';
 
 function buildJsonLd(item: Lancamento): Record<string, unknown> {
   const pageUrl = `${SITE_URL}/lancamentos/${item.slug}`;
@@ -89,7 +90,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
 @Component({
   selector: 'app-prime-view-landing',
-  imports: [RouterLink],
+  imports: [RouterLink, ImageLightboxComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
@@ -113,22 +114,57 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           <div class="grid lg:grid-cols-12">
             <div
               [class.terraco-skeleton]="!imageLoaded()"
-              class="relative aspect-[2/1] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface sm:aspect-[5/3] lg:col-span-7 lg:aspect-auto lg:min-h-[460px] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] lg:border-b-0 lg:border-r lg:border-border-subtle"
+              class="relative aspect-[2/1] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface sm:aspect-[5/3] lg:col-span-7 lg:aspect-auto lg:h-[460px] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] lg:border-b-0 lg:border-r lg:border-border-subtle"
             >
-              <img
-                #heroImg
-                data-testid="launch-hero-image"
-                [src]="item().imagem"
-                [alt]="item().imagemAlt"
-                [width]="item().imagemWidth"
-                [height]="item().imagemHeight"
-                [style.view-transition-name]="'launch-image-' + item().slug"
-                (load)="markImageLoaded()"
-                (error)="markImageLoaded()"
-                fetchpriority="high"
-                decoding="async"
-                class="relative z-[1] h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-[center_25%] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
-              />
+              <button
+                #heroTrigger
+                type="button"
+                data-testid="launch-hero-trigger"
+                (click)="openLightbox()"
+                [attr.aria-label]="'Ampliar foto de ' + item().nome"
+                class="terraco-card-media-trigger relative z-[1] block h-full w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] text-left lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] cursor-zoom-in"
+              >
+                <img
+                  #heroImg
+                  data-testid="launch-hero-image"
+                  [src]="item().imagem"
+                  [alt]="item().imagemAlt"
+                  [width]="item().imagemWidth"
+                  [height]="item().imagemHeight"
+                  [style.view-transition-name]="'launch-image-' + item().slug"
+                  (load)="markImageLoaded()"
+                  (error)="markImageLoaded()"
+                  fetchpriority="high"
+                  decoding="async"
+                  class="terraco-card-media-img h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-[center_25%] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
+                />
+
+                <span
+                  aria-hidden="true"
+                  class="terraco-card-media-scrim pointer-events-none absolute inset-0 bg-ink/18 opacity-0"
+                ></span>
+
+                <span
+                  aria-hidden="true"
+                  class="terraco-card-media-hint pointer-events-none absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-pill border border-ink-inverse/20 bg-ink/75 px-3 py-1.5 text-[13px] font-medium leading-none text-ink-inverse opacity-0 backdrop-blur-xs"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-3.5 w-3.5"
+                  >
+                    <path d="M15 3h6v6" />
+                    <path d="M9 21H3v-6" />
+                    <path d="m21 3-7 7" />
+                    <path d="m3 21 7-7" />
+                  </svg>
+                  <span>Ampliar</span>
+                </span>
+              </button>
             </div>
 
             <div
@@ -209,6 +245,16 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         </article>
       </div>
     </section>
+
+    @if (isLightboxOpen()) {
+      <app-image-lightbox
+        [src]="item().imagem"
+        [alt]="item().imagemAlt"
+        [title]="item().nome"
+        [originElement]="heroTrigger"
+        (closed)="closeLightbox()"
+      />
+    }
   `,
 })
 export class PrimeViewLandingComponent {
@@ -217,7 +263,10 @@ export class PrimeViewLandingComponent {
 
   readonly item = input.required<Lancamento>();
   readonly imageLoaded = signal<boolean>(false);
+  readonly isLightboxOpen = signal<boolean>(false);
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
+  protected readonly heroTrigger =
+    viewChild<ElementRef<HTMLButtonElement>>('heroTrigger');
 
   readonly whatsappHref = computed(() =>
     buildWhatsAppUrl(this.item().whatsappMensagem)
@@ -262,5 +311,14 @@ export class PrimeViewLandingComponent {
 
   markImageLoaded(): void {
     this.imageLoaded.set(true);
+  }
+
+  openLightbox(): void {
+    this.isLightboxOpen.set(true);
+  }
+
+  closeLightbox(): void {
+    this.isLightboxOpen.set(false);
+    this.heroTrigger()?.nativeElement.focus();
   }
 }

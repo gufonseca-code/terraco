@@ -5,18 +5,18 @@ import {
   afterNextRender,
   computed,
   effect,
+  inject,
   input,
   signal,
   viewChild,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { type Lancamento } from '../../core';
 import { FavoriteButtonComponent } from './favorite-button.component';
-import { ImageLightboxComponent } from './image-lightbox.component';
 
 @Component({
   selector: 'app-launch-card',
-  imports: [RouterLink, FavoriteButtonComponent, ImageLightboxComponent],
+  imports: [RouterLink, FavoriteButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block h-full',
@@ -25,63 +25,29 @@ import { ImageLightboxComponent } from './image-lightbox.component';
     <article
       [attr.id]="cardId()"
       animate.enter="terraco-reveal-delay"
-      class="terraco-plate flex h-full flex-col overflow-hidden rounded-lg bg-elevated scroll-mt-24"
+      (click)="onCardClick($event)"
+      class="terraco-plate group relative flex h-full flex-col overflow-hidden rounded-lg bg-elevated scroll-mt-24 cursor-pointer"
     >
       <div
         [class.terraco-skeleton]="!imageLoaded()"
         class="relative h-60 w-full shrink-0 overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface sm:h-64"
       >
-        <button
-          #coverTrigger
-          type="button"
-          data-testid="lancamentos-cover-trigger"
-          (click)="openLightbox()"
-          class="terraco-card-media-trigger relative z-[1] block h-full w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] text-left cursor-zoom-in"
-          [attr.aria-label]="'Ampliar foto de ' + launch().nome"
-        >
-          <img
-            #coverImg
-            data-testid="lancamentos-cover-image"
-            [attr.data-slug]="launch().slug"
-            [src]="launch().imagem"
-            [alt]="launch().imagemAlt"
-            [width]="launch().imagemWidth"
-            [height]="launch().imagemHeight"
-            [style.view-transition-name]="'launch-image-' + launch().slug"
-            [attr.fetchpriority]="priority() ? 'high' : 'auto'"
-            [attr.loading]="priority() ? 'eager' : 'lazy'"
-            (load)="markImageLoaded()"
-            (error)="markImageLoaded()"
-            decoding="async"
-            class="terraco-card-media-img h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-[center_25%]"
-          />
-
-          <span
-            aria-hidden="true"
-            class="terraco-card-media-scrim pointer-events-none absolute inset-0 bg-ink/18 opacity-0"
-          ></span>
-
-          <span
-            aria-hidden="true"
-            class="terraco-card-media-hint pointer-events-none absolute bottom-3.5 left-3.5 inline-flex items-center gap-1.5 rounded-pill border border-ink-inverse/20 bg-ink/75 px-3 py-1.5 text-[13px] font-medium leading-none text-ink-inverse opacity-0 backdrop-blur-xs"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-3.5 w-3.5"
-            >
-              <path d="M15 3h6v6" />
-              <path d="M9 21H3v-6" />
-              <path d="m21 3-7 7" />
-              <path d="m3 21 7-7" />
-            </svg>
-            <span>Ampliar</span>
-          </span>
-        </button>
+        <img
+          #coverImg
+          data-testid="lancamentos-cover-image"
+          [attr.data-slug]="launch().slug"
+          [src]="launch().imagem"
+          [alt]="launch().imagemAlt"
+          [width]="launch().imagemWidth"
+          [height]="launch().imagemHeight"
+          [style.view-transition-name]="'launch-image-' + launch().slug"
+          [attr.fetchpriority]="priority() ? 'high' : 'auto'"
+          [attr.loading]="priority() ? 'eager' : 'lazy'"
+          (load)="markImageLoaded()"
+          (error)="markImageLoaded()"
+          decoding="async"
+          class="h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-[center_25%] transition-transform duration-300 ease-out group-hover:scale-[1.02]"
+        />
 
         <div class="absolute top-3.5 right-3.5 z-10 sm:top-4 sm:right-4">
           <app-favorite-button [slug]="launch().slug" [nome]="launch().nome" />
@@ -101,7 +67,7 @@ import { ImageLightboxComponent } from './image-lightbox.component';
           >
             <a
               [routerLink]="['/lancamentos', launch().slug]"
-              class="transition-colors duration-150 hover:text-brand"
+              class="transition-colors duration-150 hover:text-brand group-hover:text-brand"
             >
               {{ launch().nome }}
             </a>
@@ -145,29 +111,18 @@ import { ImageLightboxComponent } from './image-lightbox.component';
         </div>
       </dl>
     </article>
-
-    @if (isLightboxOpen()) {
-      <app-image-lightbox
-        [src]="launch().imagem"
-        [alt]="launch().imagemAlt"
-        [title]="launch().nome"
-        [originElement]="coverTrigger"
-        (closed)="closeLightbox()"
-      />
-    }
   `,
 })
 export class LaunchCardComponent {
+  private readonly router = inject(Router);
+
   readonly launch = input.required<Lancamento>();
   readonly priority = input<boolean>(false);
   readonly cardId = input<string | null>(null);
 
   readonly imageLoaded = signal<boolean>(false);
-  readonly isLightboxOpen = signal<boolean>(false);
   private readonly coverImg =
     viewChild<ElementRef<HTMLImageElement>>('coverImg');
-  protected readonly coverTrigger =
-    viewChild<ElementRef<HTMLButtonElement>>('coverTrigger');
 
   readonly lazerLabel = computed(() => {
     const lazerTag = this.launch().tags.find((tag) =>
@@ -195,12 +150,11 @@ export class LaunchCardComponent {
     this.imageLoaded.set(true);
   }
 
-  openLightbox(): void {
-    this.isLightboxOpen.set(true);
-  }
-
-  closeLightbox(): void {
-    this.isLightboxOpen.set(false);
-    this.coverTrigger()?.nativeElement.focus();
+  onCardClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('a, button')) {
+      return;
+    }
+    void this.router.navigate(['/lancamentos', this.launch().slug]);
   }
 }

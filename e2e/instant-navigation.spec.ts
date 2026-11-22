@@ -562,26 +562,32 @@ test.describe("Instant navigation", () => {
     }
   });
 
-  test("expands fixed-size card image to lightbox with desktop click zoom and mobile pinch zoom", async ({
+  test("navigates to product page when clicking anywhere on launch card and opens lightbox zoom only on product page", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/lancamentos", { waitUntil: "networkidle" });
 
-    const triggers = page.getByTestId("lancamentos-cover-trigger");
-    await expect(triggers).toHaveCount(2);
+    // Clicking the card cover image on /lancamentos navigates to the product page (no lightbox on listing)
+    const upsideCard = page
+      .locator("article")
+      .filter({ has: page.getByRole("heading", { level: 2, name: "Upside Square" }) });
+    await upsideCard.getByTestId("lancamentos-cover-image").click();
+    await page.waitForURL(
+      (url) => url.pathname === "/lancamentos/upside-square"
+    );
+    await expect(page.getByTestId("image-lightbox")).toHaveCount(0);
 
-    // Fixed consistent card image height across products
-    const box0 = await triggers.nth(0).boundingBox();
-    const box1 = await triggers.nth(1).boundingBox();
-    expect(box0).not.toBeNull();
-    expect(box1).not.toBeNull();
-    expect(Math.abs(box0!.height - box1!.height)).toBeLessThanOrEqual(1);
-    expect(box0!.height).toBeGreaterThanOrEqual(254);
-    expect(box0!.height).toBeLessThanOrEqual(256);
+    // Product page hero image has fixed cropped height on desktop (does not expand to full portrait height)
+    const heroTrigger = page.getByTestId("launch-hero-trigger");
+    await expect(heroTrigger).toBeVisible();
+    const heroBox = await heroTrigger.boundingBox();
+    expect(heroBox).not.toBeNull();
+    expect(heroBox!.height).toBeGreaterThanOrEqual(455);
+    expect(heroBox!.height).toBeLessThanOrEqual(465);
 
-    // Open lightbox on click
-    await triggers.nth(0).click();
+    // Open lightbox on product page click
+    await heroTrigger.click();
     const lightbox = page.getByTestId("image-lightbox");
     const fullImg = page.getByTestId("image-lightbox-img");
     await expect(lightbox).toBeVisible();
@@ -601,9 +607,9 @@ test.describe("Instant navigation", () => {
     await page.getByTestId("image-lightbox-close").click();
     await expect(lightbox).toHaveCount(0);
 
-    // Mobile two-finger pinch-to-zoom
+    // Mobile two-finger pinch-to-zoom on product page
     await page.setViewportSize({ width: 375, height: 812 });
-    await triggers.nth(1).click();
+    await heroTrigger.click();
     await expect(lightbox).toBeVisible();
     await expect(fullImg).toHaveAttribute("data-zoomed", "false");
 
