@@ -1,0 +1,191 @@
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import {
+  Injectable,
+  PLATFORM_ID,
+  TransferState,
+  inject,
+  makeStateKey,
+} from '@angular/core';
+import {
+  type FirebaseApp,
+  getApp,
+  getApps,
+  initializeApp,
+} from 'firebase/app';
+import {
+  type AppCheck,
+  ReCaptchaEnterpriseProvider,
+  initializeAppCheck,
+} from 'firebase/app-check';
+import {
+  type Firestore,
+  connectFirestoreEmulator,
+  getFirestore,
+} from 'firebase/firestore';
+import {
+  FIREBASE_CONFIG,
+  type FirebaseEnvironmentConfig,
+  isFirebaseConfigured,
+} from './site.config';
+
+const FIREBASE_CONFIG_STATE_KEY = makeStateKey<FirebaseEnvironmentConfig>(
+  'terraco:firebase-config'
+);
+
+const EMULATOR_CONNECTED_INSTANCES = new WeakSet<Firestore>();
+
+function parseHostAndPort(
+  hostPort: string,
+  defaultPort: number
+): { host: string; port: number } {
+  const cleaned = hostPort.replace(/^https?:\/\//, '');
+  const [hostPart, portPart] = cleaned.split(':');
+  const parsedPort = portPart ? Number.parseInt(portPart, 10) : defaultPort;
+  return {
+    host: hostPart || '127.0.0.1',
+    port: Number.isFinite(parsedPort) ? parsedPort : defaultPort,
+  };
+}
+
+@Injectable({ providedIn: 'root' })
+export class FirebaseService {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly transferState = inject(TransferState);
+  private readonly injectedConfig = inject(FIREBASE_CONFIG);
+
+  readonly config: FirebaseEnvironmentConfig;
+  readonly isConfigured: boolean;
+
+  private appInstance: FirebaseApp | null = null;
+  private firestoreInstance: Firestore | null = null;
+  private appCheckInstance: AppCheck | null = null;
+
+  constructor() {
+    if (
+      isPlatformBrowser(this.platformId) &&
+      this.transferState.hasKey(FIREBASE_CONFIG_STATE_KEY)
+    ) {
+      const transferred = this.transferState.get(
+        FIREBASE_CONFIG_STATE_KEY,
+        this.injectedConfig
+      );
+      this.transferState.remove(FIREBASE_CONFIG_STATE_KEY);
+      this.config = transferred;
+    } else {
+      this.config = this.injectedConfig;
+      if (isPlatformServer(this.platformId)) {
+        // Transfer public client config from SSR server env to browser hydration.
+        this.transferState.set(FIREBASE_CONFIG_STATE_KEY, {
+          apiKey: this.config.apiKey,
+          authDomain: this.config.authDomain,
+          projectId: this.config.projectId,
+          storageBucket: this.config.storageBucket,
+          messagingSenderId: this.config.messagingSenderId,
+          appId: this.config.appId,
+          measurementId: this.config.measurementId,
+          firestoreDatabaseId: this.config.firestoreDatabaseId,
+          recaptchaEnterpriseSiteKey: this.config.recaptchaEnterpriseSiteKey,
+          useEmulators: this.config.useEmulators,
+          emulators: this.config.emulators,
+        });
+      }
+    }
+
+    this.isConfigured = isFirebaseConfigured(this.config);
+  }
+
+  getFirebaseApp(): FirebaseApp | null {
+    if (!this.isConfigured) {
+      return null;
+    }
+
+    if (this.appInstance) {
+      return this.appInstance;
+    }
+
+    const existingApps = getApps();
+    this.appInstance =
+      existingApps.length > 0
+        ? getApp()
+        : initializeApp({
+            apiKey: this.config.apiKey,
+            authDomain: this.config.authDomain,
+            projectId: this.config.projectId,
+            storageBucket: this.config.storageBucket,
+            messagingSenderId: this.config.messagingSenderId,
+            appId: this.config.appId,
+            measurementId: this.config.measurementId,
+          });
+
+    return this.appInstance;
+  }
+
+  getFirestore(): Firestore | null {
+    if (!this.isConfigured) {
+      return null;
+    }
+
+    if (this.firestoreInstance) {
+      return this.firestoreInstance;
+    }
+
+    const app = this.getFirebaseApp();
+    if (!app) {
+      return null;
+    }
+
+    const databaseId = this.config.firestoreDatabaseId;
+    const db =
+      databaseId && databaseId !== '(default)'
+        ? getFirestore(app, databaseId)
+        : getFirestore(app);
+
+    if (this.config.useEmulators && !EMULATOR_CONNECTED_INSTANCES.has(db)) {
+      const { host, port } = parseHostAndPort(
+        this.config.emulators?.firestoreHost ?? '127.0.0.1:8080',
+        8080
+      );
+      connectFirestoreEmulator(db, host, port);
+      EMULATOR_CONNECTED_INSTANCES.add(db);
+    }
+
+    this.firestoreInstance = db;
+    return db;
+  }
+
+  /**
+   * Initializes Firebase App Check with reCAPTCHA Enterprise strictly in the browser.
+   * Safe no-op on SSR server and when site key / Firebase config is absent.
+   */
+  initAppCheck(): AppCheck | null {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
+
+    if (this.appCheckInstance) {
+      return this.appCheckInstance;
+    }
+
+    const siteKey = this.config.recaptchaEnterpriseSiteKey?.trim();
+    if (!siteKey) {
+      return null;
+    }
+
+    const app = this.getFirebaseApp();
+    if (!app) {
+      return null;
+    }
+
+    if (this.config.appCheckDebugToken) {
+      (globalThis as Record<string, unknown>)['FIREBASE_APPCHECK_DEBUG_TOKEN'] =
+        this.config.appCheckDebugToken;
+    }
+
+    this.appCheckInstance = initializeAppCheck(app, {
+      provider: new ReCaptchaEnterpriseProvider(siteKey),
+      isTokenAutoRefreshEnabled: true,
+    });
+
+    return this.appCheckInstance;
+  }
+}

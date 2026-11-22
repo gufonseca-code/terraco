@@ -8,7 +8,10 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { PrimeViewLandingComponent } from '../components/launches';
+import {
+  LaunchDetailSkeletonComponent,
+  PrimeViewLandingComponent,
+} from '../components/launches';
 import { FooterComponent, NavbarComponent } from '../components/layout';
 import { LancamentosService, SeoService } from '../core';
 import { NotFoundPageComponent } from './not-found.page';
@@ -18,12 +21,21 @@ import { NotFoundPageComponent } from './not-found.page';
   imports: [
     NavbarComponent,
     PrimeViewLandingComponent,
+    LaunchDetailSkeletonComponent,
     FooterComponent,
     NotFoundPageComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (item(); as currentItem) {
+    @if (isLoading() && !item()) {
+      <div class="flex min-h-dvh flex-col bg-canvas">
+        <app-navbar />
+        <main id="homepage" tabindex="-1" class="flex min-h-dvh flex-1 flex-col">
+          <app-launch-detail-skeleton />
+        </main>
+        <app-footer />
+      </div>
+    } @else if (item(); as currentItem) {
       <div class="flex min-h-dvh flex-col bg-canvas">
         <app-navbar />
         <main id="homepage" tabindex="-1" class="flex min-h-dvh flex-1 flex-col">
@@ -40,6 +52,8 @@ export class LancamentoDetailPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly lancamentosService = inject(LancamentosService);
   private readonly seoService = inject(SeoService);
+
+  readonly isLoading = this.lancamentosService.isLoadingDetail;
 
   readonly slug = input<string>('');
   private readonly routeParamMap = toSignal(this.route.paramMap);

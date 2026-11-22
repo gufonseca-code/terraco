@@ -1,5 +1,7 @@
 import {
   ApplicationConfig,
+  inject,
+  provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
@@ -18,6 +20,7 @@ import {
 } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { routes } from './app.routes';
+import { FirebaseService } from './core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,7 +28,16 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(
       routes,
-      withViewTransitions(),
+      withViewTransitions({
+        onViewTransitionCreated: ({ transition }) => {
+          if (
+            typeof window !== 'undefined' &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ) {
+            transition.skipTransition();
+          }
+        },
+      }),
       withComponentInputBinding(),
       withInMemoryScrolling({
         anchorScrolling: 'enabled',
@@ -35,5 +47,9 @@ export const appConfig: ApplicationConfig = {
     ),
     provideClientHydration(withEventReplay(), withIncrementalHydration()),
     provideHttpClient(withFetch()),
+    provideAppInitializer(() => {
+      // Browser-guarded inside FirebaseService (no-op on SSR server).
+      inject(FirebaseService).initAppCheck();
+    }),
   ],
 };

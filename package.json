@@ -8,11 +8,19 @@
     "build": "npm --prefix apps/web-seo run build",
     "start": "node apps/web-seo/dist/web-seo/server/server.mjs",
     "test": "npm --prefix apps/web-seo run test",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "media:optimize": "node scripts/optimize-and-upload-media.mjs --local-only",
+    "media:upload": "node scripts/optimize-and-upload-media.mjs",
+    "media:upload:emulator": "node scripts/optimize-and-upload-media.mjs --emulator",
+    "firestore:seed": "node scripts/migrate-launches-to-firestore.mjs",
+    "firestore:seed:dry-run": "node scripts/migrate-launches-to-firestore.mjs --dry-run",
+    "firestore:seed:emulator": "node scripts/migrate-launches-to-firestore.mjs --emulator"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
     "@types/node": "^22.12.0",
+    "firebase-admin": "^14.5.1",
+    "sharp": "^0.35.5",
     "typescript": "~6.0.2"
   }
 }

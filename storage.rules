@@ -1,0 +1,27 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Public read-only access for launch WebP images and PDF books/floorplans
+    match /launches/{slug}/images/{fileName} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /launches/{slug}/docs/{fileName} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Public read-only access for general site WebP assets
+    match /site/images/{fileName} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Default deny everything else (uploads happen exclusively via Admin SDK / CI scripts)
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

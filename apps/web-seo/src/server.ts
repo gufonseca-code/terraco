@@ -28,14 +28,22 @@ const SITE_URL = (
   'https://terraco-a5ff7.web.app'
 ).replace(/\/+$/, '');
 
+const SSR_HTML_CACHE_CONTROL =
+  'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400';
+const SSR_NOT_FOUND_CACHE_CONTROL = 'public, max-age=60, s-maxage=300';
+const SEO_STATIC_CACHE_CONTROL =
+  'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400';
+
 app.get('/robots.txt', (_req, res) => {
   res
+    .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
     .type('text/plain')
     .send(`User-Agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 });
 
 app.get('/sitemap.xml', (_req, res) => {
   res
+    .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
     .type('application/xml')
     .send(
       `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${SITE_URL}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>1</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/prime-view</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n</urlset>\n`,
@@ -55,13 +63,31 @@ app.use(
 
 /**
  * Handle all other requests by rendering the Angular application.
+ * Sets Blaze free-tier CDN Cache-Control headers on SSR HTML responses so
+ * Firebase Hosting / Cloud CDN absorbs traffic and prevents repeated Firestore reads.
  */
 app.use((req, res, next) => {
   angularApp
     .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
+    .then((response) => {
+      if (!response) {
+        return next();
+      }
+      const headers = new Headers(response.headers);
+      if (!headers.has('cache-control')) {
+        if (response.status >= 200 && response.status < 300) {
+          headers.set('Cache-Control', SSR_HTML_CACHE_CONTROL);
+        } else if (response.status === 404) {
+          headers.set('Cache-Control', SSR_NOT_FOUND_CACHE_CONTROL);
+        }
+      }
+      const cachedResponse = new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+      return writeResponseToNodeResponse(cachedResponse, res);
+    })
     .catch(next);
 });
 

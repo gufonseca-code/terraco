@@ -18,19 +18,19 @@ import { SeoService } from '../core';
       <main
         id="homepage"
         tabindex="-1"
-        class="flex min-h-dvh flex-1 flex-col items-center justify-center px-6 py-20 text-center"
+        class="flex min-h-dvh flex-1 flex-col items-center justify-center px-6 py-12 text-center"
       >
-        <div class="max-w-md space-y-4">
-          <h1 class="font-display text-5xl font-bold tracking-tight text-ink">
+        <div animate.enter="terraco-reveal" class="max-w-md space-y-4">
+          <h1 class="font-display text-[clamp(2.25rem,4.5vw,3.25rem)] font-medium leading-[1.06] tracking-[-0.03em] text-ink text-balance">
             404
           </h1>
-          <h2 class="text-lg font-medium text-ink-muted">
+          <p class="text-base font-normal leading-[1.55] text-ink-muted">
             This page could not be found.
-          </h2>
+          </p>
           <div class="pt-4">
             <a
               routerLink="/lancamentos"
-              class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-6 py-3 text-sm font-semibold leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+              class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-6 py-3 text-[15px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
             >
               Ver lançamentos
             </a>

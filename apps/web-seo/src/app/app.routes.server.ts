@@ -1,4 +1,6 @@
-import { RenderMode, ServerRoute } from '@angular/ssr';
+import { inject } from '@angular/core';
+import { PrerenderFallback, RenderMode, ServerRoute } from '@angular/ssr';
+import { LancamentosService } from './core';
 
 export const serverRoutes: ServerRoute[] = [
   {
@@ -12,8 +14,11 @@ export const serverRoutes: ServerRoute[] = [
   {
     path: 'lancamentos/:slug',
     renderMode: RenderMode.Prerender,
+    fallback: PrerenderFallback.Server,
     async getPrerenderParams() {
-      return [{ slug: 'prime-view' }];
+      const lancamentosService = inject(LancamentosService);
+      const items = await lancamentosService.loadLancamentos();
+      return items.map((item) => ({ slug: item.slug }));
     },
   },
   {

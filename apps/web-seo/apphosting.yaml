@@ -7,3 +7,10 @@ runConfig:
   minInstances: 0
   maxInstances: 10
   concurrency: 80
+
+env:
+  - variable: NG_APP_RECAPTCHA_ENTERPRISE_SITE_KEY
+    value: "6LeStysuAAAAAMLothdZ4Fb4-DHKvDMqt35IZLtM"
+    availability:
+      - BUILD
+      - RUNTIME

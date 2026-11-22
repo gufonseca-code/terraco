@@ -14,7 +14,7 @@ import { SeoService } from '../core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="flex min-h-dvh flex-col bg-canvas">
-      <app-navbar />
+      <app-navbar [animateLogo]="true" />
       <main id="homepage" tabindex="-1" class="flex flex-1 flex-col">
         <app-hero-search />
       </main>
