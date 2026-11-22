@@ -24,9 +24,9 @@ import { SeoService } from '../core';
           <h1 class="font-display text-[clamp(2.25rem,4.5vw,3.25rem)] font-medium leading-[1.06] tracking-[-0.03em] text-ink text-balance">
             404
           </h1>
-          <p class="text-base font-normal leading-[1.55] text-ink-muted">
+          <h2 class="text-base font-normal leading-[1.55] text-ink-muted">
             This page could not be found.
-          </p>
+          </h2>
           <div class="pt-4">
             <a
               routerLink="/lancamentos"

@@ -94,10 +94,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
   template: `
     <section
       aria-labelledby="launch-heading"
-      class="flex flex-1 flex-col justify-start bg-canvas py-8 sm:py-12 lg:py-16"
+      class="flex flex-1 flex-col justify-start bg-canvas py-4 sm:py-12 lg:py-16"
     >
       <div class="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div animate.enter="terraco-reveal" class="mb-5 sm:mb-6">
+        <div animate.enter="terraco-reveal" class="mb-3 sm:mb-6">
           <a
             routerLink="/lancamentos"
             class="terraco-link-underline inline-flex min-h-[40px] items-center text-sm font-normal text-ink-muted transition-colors duration-150 hover:text-ink sm:min-h-[44px]"
@@ -132,7 +132,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </div>
 
             <div
-              class="flex flex-col justify-between gap-4 p-4 sm:gap-5 sm:p-6 lg:col-span-5 lg:gap-6 lg:p-6"
+              class="flex flex-col justify-between gap-3 p-4 sm:gap-5 sm:p-6 lg:col-span-5 lg:gap-6 lg:p-6"
             >
               <div class="space-y-1.5 sm:space-y-2">
                 <p class="text-[13px] font-normal text-ink-muted">
