@@ -3,10 +3,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
+  afterNextRender,
   computed,
   effect,
   inject,
   input,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
@@ -18,7 +22,9 @@ import {
 
 function buildJsonLd(item: Lancamento): Record<string, unknown> {
   const pageUrl = `${SITE_URL}/lancamentos/${item.slug}`;
-  const imageUrl = `${SITE_URL}${item.imagem}`;
+  const imageUrl = /^https?:\/\//i.test(item.imagem)
+    ? item.imagem
+    : `${SITE_URL}${item.imagem}`;
 
   return {
     '@context': 'https://schema.org',
@@ -88,50 +94,55 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
   template: `
     <section
       aria-labelledby="launch-heading"
-      class="flex flex-1 flex-col justify-start bg-canvas py-3 sm:justify-center sm:py-6 lg:py-8"
+      class="flex flex-1 flex-col justify-start bg-canvas py-8 sm:py-12 lg:py-16"
     >
       <div class="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div class="terraco-reveal mb-2 sm:mb-4">
+        <div animate.enter="terraco-reveal" class="mb-5 sm:mb-6">
           <a
             routerLink="/lancamentos"
-            class="terraco-link-underline inline-flex min-h-[40px] items-center text-sm font-medium text-ink-muted transition-colors duration-150 hover:text-ink sm:min-h-[44px]"
+            class="terraco-link-underline inline-flex min-h-[40px] items-center text-sm font-normal text-ink-muted transition-colors duration-150 hover:text-ink sm:min-h-[44px]"
           >
             Voltar para lançamentos
           </a>
         </div>
 
         <article
-          class="terraco-reveal terraco-reveal-delay terraco-floating-card overflow-hidden rounded-lg bg-elevated"
+          animate.enter="terraco-reveal-delay"
+          class="terraco-floating-card overflow-hidden rounded-lg bg-elevated"
         >
           <div class="grid lg:grid-cols-12">
             <div
-              class="relative aspect-[2/1] w-full overflow-hidden border-b border-border-subtle bg-surface sm:aspect-[5/3] lg:col-span-7 lg:aspect-auto lg:min-h-[460px] lg:border-b-0 lg:border-r lg:border-border-subtle"
+              [class.terraco-skeleton]="!imageLoaded()"
+              class="relative aspect-[2/1] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface sm:aspect-[5/3] lg:col-span-7 lg:aspect-auto lg:min-h-[460px] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] lg:border-b-0 lg:border-r lg:border-border-subtle"
             >
               <img
+                #heroImg
                 data-testid="launch-hero-image"
                 [src]="item().imagem"
                 [alt]="item().imagemAlt"
                 [width]="item().imagemWidth"
                 [height]="item().imagemHeight"
+                [style.view-transition-name]="'launch-image-' + item().slug"
+                (load)="markImageLoaded()"
+                (error)="markImageLoaded()"
                 fetchpriority="high"
                 decoding="async"
-                class="h-full w-full object-cover object-center"
+                class="relative z-[1] h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
               />
             </div>
 
             <div
-              class="flex flex-col justify-between gap-4 p-4 sm:gap-6 sm:p-6 lg:col-span-5 lg:gap-8 lg:p-8"
+              class="flex flex-col justify-between gap-4 p-4 sm:gap-5 sm:p-6 lg:col-span-5 lg:gap-6 lg:p-6"
             >
-              <div class="space-y-1.5 sm:space-y-2.5">
-                <div aria-hidden="true" class="h-[3px] w-10 bg-accent"></div>
-
-                <p class="text-sm font-medium text-ink-muted">
+              <div class="space-y-1.5 sm:space-y-2">
+                <p class="text-[13px] font-normal text-ink-muted">
                   {{ item().bairro }}, {{ item().cidade }}, {{ item().uf }}
                 </p>
 
                 <h1
                   id="launch-heading"
-                  class="font-display text-[clamp(1.625rem,3.2vw,2.75rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ink text-balance"
+                  [style.view-transition-name]="'launch-title-' + item().slug"
+                  class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink text-balance"
                 >
                   {{ item().nome }}
                 </h1>
@@ -141,44 +152,44 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 class="grid grid-cols-2 gap-x-4 gap-y-3 border-y border-border-subtle py-3 sm:gap-x-6 sm:gap-y-4 sm:py-4"
               >
                 <div class="space-y-1">
-                  <dt class="text-xs font-medium text-ink-muted">
+                  <dt class="text-[13px] font-normal text-ink-muted">
                     Dormitórios
                   </dt>
                   <dd
-                    class="text-sm font-semibold leading-[1.35] text-ink tabular-nums"
+                    class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
                   >
                     {{ item().quartos }}
                   </dd>
                 </div>
 
                 <div class="space-y-1">
-                  <dt class="text-xs font-medium text-ink-muted">Metragem</dt>
+                  <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
                   <dd
-                    class="text-sm font-semibold leading-[1.35] text-ink tabular-nums"
+                    class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
                   >
                     {{ item().metragem }}
                   </dd>
                 </div>
 
                 <div class="space-y-1">
-                  <dt class="text-xs font-medium text-ink-muted">Vagas</dt>
+                  <dt class="text-[13px] font-normal text-ink-muted">Vagas</dt>
                   <dd
-                    class="text-sm font-semibold leading-[1.35] text-ink tabular-nums"
+                    class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
                   >
                     {{ item().vagas }}
                   </dd>
                 </div>
 
                 <div class="space-y-1">
-                  <dt class="text-xs font-medium text-ink-muted">Lazer</dt>
-                  <dd class="text-sm font-semibold leading-[1.35] text-ink">
+                  <dt class="text-[13px] font-normal text-ink-muted">Lazer</dt>
+                  <dd class="text-[15px] font-normal leading-[1.4] text-ink">
                     Completo com vista panorâmica
                   </dd>
                 </div>
               </dl>
 
-              <div class="space-y-2 sm:space-y-3">
-                <p class="text-xs leading-[1.45] text-ink-muted sm:text-sm sm:leading-[1.55]">
+              <div class="space-y-2.5 sm:space-y-3">
+                <p class="text-[15px] font-normal leading-[1.5] text-ink-muted">
                   Plantas, valores e condições direto no WhatsApp.
                 </p>
 
@@ -186,7 +197,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   [href]="whatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-base font-semibold leading-[1.35] text-ink-inverse hover:bg-brand-hover sm:min-h-[52px] sm:py-3.5"
+                  class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-sm font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover sm:min-h-[50px] sm:py-3"
                 >
                   Falar no WhatsApp
                 </a>
@@ -203,12 +214,27 @@ export class PrimeViewLandingComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly item = input.required<Lancamento>();
+  readonly imageLoaded = signal<boolean>(false);
+  private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
 
   readonly whatsappHref = computed(() =>
     buildWhatsAppUrl(this.item().whatsappMensagem)
   );
 
   constructor() {
+    afterNextRender(() => {
+      const el = this.heroImg()?.nativeElement;
+      if (el?.complete && el.naturalWidth > 0) {
+        this.imageLoaded.set(true);
+      }
+    });
+
+    effect(() => {
+      // Reset image loaded state when navigating between different launch slugs.
+      this.item().slug;
+      const el = this.heroImg()?.nativeElement;
+      this.imageLoaded.set(Boolean(el?.complete && el.naturalWidth > 0));
+    });
     effect(() => {
       const currentItem = this.item();
       const jsonLd = buildJsonLd(currentItem);
@@ -230,5 +256,9 @@ export class PrimeViewLandingComponent {
       const scriptEl = this.document.getElementById('launch-jsonld');
       scriptEl?.remove();
     });
+  }
+
+  markImageLoaded(): void {
+    this.imageLoaded.set(true);
   }
 }

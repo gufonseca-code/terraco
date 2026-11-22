@@ -17,12 +17,12 @@ import { filter } from 'rxjs/operators';
     <nav
       data-testid="site-navbar"
       aria-label="Navegação principal"
-      class="flex items-center"
+      class="flex items-center gap-2"
     >
       <a
         routerLink="/lancamentos"
         [attr.aria-current]="isCurrent() ? 'page' : null"
-        class="terraco-nav-link px-1 text-sm font-semibold leading-[1.35]"
+        class="terraco-btn terraco-nav-link rounded-pill px-4 text-sm font-medium leading-[1.35]"
       >
         Lançamentos
       </a>

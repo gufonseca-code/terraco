@@ -1,3 +1,15 @@
+export interface LaunchMediaItem {
+  url: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
+export interface LaunchDocItem {
+  titulo: string;
+  url: string;
+}
+
 export interface Lancamento {
   slug: string;
   nome: string;
@@ -23,6 +35,12 @@ export interface Lancamento {
   imagemAlt: string;
   diferenciais: string[];
   whatsappMensagem: string;
+  galeria?: LaunchMediaItem[];
+  bookUrl?: string;
+  plantasUrls?: LaunchDocItem[];
+  published?: boolean;
+  order?: number;
+  updatedAt?: string | null;
 }
 
 export const WHATSAPP_NUMBER = '5531997469588';
@@ -39,52 +57,11 @@ export function formatCurrencyBRL(value: number): string {
   }).format(value);
 }
 
-export const LANCAMENTOS: Lancamento[] = [
-  {
-    slug: 'prime-view',
-    nome: 'Prime View',
-    construtora: 'Novolar (uma empresa do Grupo Patrimar)',
-    tagline: 'Vista para sua nova vida.',
-    bairro: 'Estoril',
-    cidade: 'Belo Horizonte',
-    uf: 'MG',
-    endereco: 'Rua Paulo Piedade Campos, 2160 - Estoril, Belo Horizonte - MG',
-    badge: 'Lançamento',
-    tags: ['Vista panorâmica', 'Lazer completo', 'Portaria 24h'],
-    quartos: '2 quartos com suíte',
-    metragem: '49 a 103 m²',
-    tipologias: 'Tipo, Garden e Coberturas Lineares',
-    vagas: '1 e 2 vagas',
-    resumo:
-      'Vista panorâmica para a cidade e lazer completíssimo mobiliado e decorado no Estoril, a poucos minutos do Buritis.',
-    corCapa: 'moss',
-    imagem: '/images/lancamentos/prime-view.webp',
-    imagemWidth: 1024,
-    imagemHeight: 614,
-    imagemAlt:
-      'Fachada contemporânea do residencial Prime View no Estoril, Belo Horizonte',
-    diferenciais: [
-      'Vista panorâmica para a cidade',
-      'Lazer completíssimo entregue mobiliado e decorado (piscinas, espaço gourmet com vista, academia, coworking, pet place, espaço fogo e minimercado)',
-      'Condomínio fechado com portaria 24h e eclusa',
-      'Localização estratégica a 2 min da Av. Barão Homem de Melo, a poucos minutos do Buritis',
-    ],
-    whatsappMensagem:
-      'Oi! Gostaria de receber as plantas, valores e condições do Prime View (Estoril).',
-  },
-];
+export const LANCAMENTOS: Lancamento[] = [];
 
-export const SEARCH_SUGGESTIONS: string[] = Array.from(
-  new Set([
-    ...LANCAMENTOS.map((item) => item.bairro),
-    ...LANCAMENTOS.map((item) => item.nome),
-    ...LANCAMENTOS.flatMap((item) => item.tags),
-  ])
-);
+export const SEARCH_SUGGESTIONS: string[] = [];
 
-export const QUICK_NEIGHBORHOODS: string[] = Array.from(
-  new Set(LANCAMENTOS.map((item) => item.bairro))
-);
+export const QUICK_NEIGHBORHOODS: string[] = [];
 
 export function filterLancamentos(
   query: string,

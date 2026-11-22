@@ -33,21 +33,23 @@ import { Router } from '@angular/router';
         [value]="query()"
         (input)="onInput($event)"
         placeholder="Bairro ou lançamento"
-        class="w-full min-w-0 bg-transparent py-2.5 pr-2 text-sm sm:text-base text-ink placeholder:text-ink-muted focus-visible:outline-none [&::-webkit-search-cancel-button]:hidden"
+        class="w-full min-w-0 bg-transparent py-2.5 pr-2 text-base font-normal text-ink placeholder:text-ink-muted focus-visible:outline-none [&::-webkit-search-cancel-button]:hidden"
       />
       @if (query().length > 0) {
         <button
           type="button"
           (click)="handleClear()"
           aria-label="Limpar busca"
-          class="inline-flex min-h-[40px] shrink-0 items-center rounded-pill px-3 text-xs font-medium text-ink-muted transition-colors duration-150 hover:bg-surface/70 hover:text-ink cursor-pointer"
+          animate.enter="terraco-chip-enter"
+          animate.leave="terraco-chip-leave"
+          class="inline-flex min-h-[40px] shrink-0 items-center rounded-pill px-3 text-[15px] font-normal text-ink-muted transition-colors duration-150 hover:bg-surface/70 hover:text-ink cursor-pointer"
         >
           Limpar
         </button>
       }
       <button
         type="submit"
-        class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 sm:px-6 py-2.5 text-sm font-semibold leading-[1.35] text-ink-inverse hover:bg-brand-hover cursor-pointer"
+        class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 sm:px-6 py-2.5 text-[15px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover cursor-pointer"
       >
         <span>Explorar</span>
         <span class="hidden sm:inline">&nbsp;imóveis</span>

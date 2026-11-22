@@ -94,7 +94,7 @@ export class TerracoStairsMarkComponent {
           <span aria-hidden="true" class="inline-flex items-baseline">
             @for (letter of wordmarkLetters; track $index) {
               <span
-                class="animate-letter-jump"
+                animate.enter="animate-letter-jump"
                 [style.animationDelay]="80 + $index * 100 + 'ms'"
               >{{ letter }}</span>
             }
@@ -119,12 +119,17 @@ export class TerracoLogoComponent {
   );
 
   readonly stepClasses = computed(
-    () => `h-7 w-7 ${this.inverted() ? 'text-accent' : 'text-ink'}`
+    () =>
+      `h-7 w-7 transition-colors duration-200 ${
+        this.inverted()
+          ? 'text-accent'
+          : 'text-ink group-hover:text-brand group-focus-visible:text-brand'
+      }`
   );
 
   readonly linkClasses = computed(() =>
     [
-      'terraco-logo terraco-stairs terraco-btn inline-flex items-center gap-1.5 rounded-sm py-0.5 shrink-0',
+      'terraco-logo group terraco-stairs terraco-btn inline-flex items-center gap-1.5 rounded-sm py-0.5 shrink-0',
       this.className(),
     ]
       .filter(Boolean)
@@ -133,6 +138,6 @@ export class TerracoLogoComponent {
 
   readonly wordmarkClasses = computed(
     () =>
-      `font-display text-2xl font-bold tracking-tight leading-[1.15] ${this.textColor()}`
+      `font-display text-2xl font-medium tracking-[-0.015em] leading-[1.15] ${this.textColor()}`
   );
 }

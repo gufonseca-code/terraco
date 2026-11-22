@@ -2,7 +2,11 @@ import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { Lancamento } from './lancamentos.data';
-import { SITE_NAME } from './site.config';
+import {
+  DEFAULT_LAUNCH_OG_IMAGE_URL,
+  SITE_HERO_IMAGE_URL,
+  SITE_NAME,
+} from './site.config';
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
@@ -31,7 +35,7 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:description', content: ogDescription });
     this.meta.updateTag({
       property: 'og:image',
-      content: '/images/hero-terraco.jpg',
+      content: SITE_HERO_IMAGE_URL,
     });
     this.meta.updateTag({ property: 'og:image:width', content: '1142' });
     this.meta.updateTag({ property: 'og:image:height', content: '2048' });
@@ -52,7 +56,7 @@ export class SeoService {
     });
     this.meta.updateTag({
       name: 'twitter:image',
-      content: '/images/hero-terraco.jpg',
+      content: SITE_HERO_IMAGE_URL,
     });
 
     this.setCanonical('/');
@@ -75,7 +79,7 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:description', content: description });
     this.meta.updateTag({
       property: 'og:image',
-      content: '/images/lancamentos/prime-view.webp',
+      content: DEFAULT_LAUNCH_OG_IMAGE_URL,
     });
     this.meta.updateTag({ property: 'og:image:width', content: '1024' });
     this.meta.updateTag({ property: 'og:image:height', content: '614' });
@@ -93,7 +97,7 @@ export class SeoService {
     this.meta.updateTag({ name: 'twitter:description', content: description });
     this.meta.updateTag({
       name: 'twitter:image',
-      content: '/images/lancamentos/prime-view.webp',
+      content: DEFAULT_LAUNCH_OG_IMAGE_URL,
     });
 
     this.setCanonical('/lancamentos');

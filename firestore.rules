@@ -1,0 +1,164 @@
+rules_version = '2';
+
+// ===============================================================
+// Terraço Platform — Cloud Firestore Security Rules
+// Project: terraco-a5ff7 (Cloud Firestore Standard Edition)
+// ===============================================================
+//
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: launches
+// Document ID: {slug} (URL-safe launch identifier, e.g., "ed-santo-agostinho")
+// Access: Public read-only catalog (contains no PII). All writes are
+//         performed exclusively via trusted server-side Firebase Admin SDK
+//         migration/sync scripts.
+// Fields (managed server-side):
+//   - slug: string (required) - URL slug matching document ID
+//   - nome: string (required) - Development name
+//   - construtora: string (required) - Developer / builder name
+//   - tagline: string (required) - Short marketing tagline
+//   - bairro: string (required) - Neighborhood
+//   - cidade: string (required) - City
+//   - uf: string (required) - State abbreviation
+//   - endereco: string (required) - Street address
+//   - badge: string (required) - Status badge label
+//   - tags: list<string> (required) - Filter tags
+//   - quartos: string (required) - Bedroom summary
+//   - metragem: string (required) - Area range summary
+//   - tipologias: string (required) - Unit typologies
+//   - vagas: string (required) - Parking spaces summary
+//   - precoAPartirDe: number (optional) - Starting price in BRL
+//   - entrega: string (optional) - Expected delivery date label
+//   - resumo: string (required) - Editorial description
+//   - corCapa: string (required) - Cover palette key ('moss' | 'ipe' | 'guava')
+//   - imagem: string (required) - Primary image URL
+//   - imagemWidth: number (required) - Primary image width in px
+//   - imagemHeight: number (required) - Primary image height in px
+//   - imagemAlt: string (required) - Primary image alt text
+//   - diferenciais: list<string> (required) - Key highlights
+//   - whatsappMensagem: string (required) - Pre-filled WhatsApp message
+//   - galeria: list<map> (optional) - Gallery media items
+//   - bookUrl: string (optional) - Brochure PDF URL
+//   - plantasUrls: list<map> (optional) - Floorplan document links
+//   - published: bool (optional) - Publication flag
+//   - order: number (optional) - Display sort order
+//   - updatedAt: timestamp | string | null (optional) - Last update marker
+//
+// Collection: leads
+// Document ID: {leadId} (auto-generated Firestore document ID)
+// Access: Write-only (create) from public website visitors submitting
+//         contact/interest forms. Strictly denies all client reads,
+//         updates, and deletes to protect customer PII.
+// Fields:
+//   - name: string (required, 2..120 chars) - Lead full name
+//   - email: string (required, 5..160 chars, valid email) - Lead email
+//   - phone: string (required, 8..25 chars) - Lead phone number
+//   - launchSlug: string (required, 1..100 chars) - Target launch slug
+//   - message: string (optional, 0..1000 chars) - Optional visitor message
+//   - source: string (optional, 1..60 chars) - Acquisition source (e.g., "web-seo")
+//   - createdAt: timestamp (required, must equal request.time) - Server timestamp
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Validate that the document contains only the allowed fields
+    function hasOnlyAllowedFields(data, fields) {
+      return data.keys().hasOnly(fields);
+    }
+
+    // Validate that all required fields exist on the document
+    function hasRequiredFields(data, fields) {
+      return data.keys().hasAll(fields);
+    }
+
+    // Validate required string field type and inclusive length bounds
+    function validStringLength(data, field, minLen, maxLen) {
+      return data[field] is string &&
+             data[field].size() >= minLen &&
+             data[field].size() <= maxLen;
+    }
+
+    // Validate optional string field (if present, must be string within bounds)
+    function isValidOptionalString(data, field, minLen, maxLen) {
+      return !(field in data) ||
+             (data[field] is string &&
+              data[field].size() >= minLen &&
+              data[field].size() <= maxLen);
+    }
+
+    // Validate email format and length bounds
+    function isValidEmail(email) {
+      return email is string &&
+             email.size() >= 5 &&
+             email.size() <= 160 &&
+             email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$');
+    }
+
+    // Validate that a field is a server-generated timestamp matching request.time
+    function isServerTimestamp(value) {
+      return value is timestamp && value == request.time;
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    // Validate incoming lead submission payload
+    function isValidLead(data) {
+      return hasOnlyAllowedFields(data, [
+               'name',
+               'email',
+               'phone',
+               'launchSlug',
+               'message',
+               'source',
+               'createdAt'
+             ]) &&
+             hasRequiredFields(data, [
+               'name',
+               'email',
+               'phone',
+               'launchSlug',
+               'createdAt'
+             ]) &&
+             validStringLength(data, 'name', 2, 120) &&
+             isValidEmail(data.email) &&
+             validStringLength(data, 'phone', 8, 25) &&
+             validStringLength(data, 'launchSlug', 1, 100) &&
+             isValidOptionalString(data, 'message', 0, 1000) &&
+             isValidOptionalString(data, 'source', 1, 60) &&
+             isServerTimestamp(data.createdAt);
+    }
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+
+    // Public catalog of real-estate launches (read-only for clients;
+    // writes occur exclusively via Firebase Admin SDK migration scripts).
+    match /launches/{slug} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Customer lead submissions (PII-sensitive):
+    // Public visitors may submit validated leads; all client reads,
+    // updates, and deletes are strictly denied.
+    match /leads/{leadId} {
+      allow create: if isValidLead(request.resource.data);
+      allow read, update, delete: if false;
+    }
+
+    // Default deny all unmatched paths and subcollections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-11-21T23:17:40.687Z",
+  "projectId": "terraco-a5ff7",
+  "bucket": "terraco-a5ff7.firebasestorage.app",
+  "mode": "production",
+  "launches": {
+    "prime-view": {
+      "cover": {
+        "storagePath": "launches/prime-view/images/prime-view.webp",
+        "publicUrl": "https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/launches%2Fprime-view%2Fimages%2Fprime-view.webp?alt=media",
+        "width": 1024,
+        "height": 614,
+        "originalBytes": 62658,
+        "webpBytes": 61572
+      },
+      "gallery": [],
+      "bookUrl": null,
+      "plantasUrls": []
+    }
+  },
+  "site": {
+    "hero-terraco": {
+      "storagePath": "site/images/hero-terraco.webp",
+      "publicUrl": "https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/site%2Fimages%2Fhero-terraco.webp?alt=media",
+      "width": 1142,
+      "height": 2048,
+      "originalBytes": 1036632,
+      "webpBytes": 301442
+    }
+  }
+}
