@@ -56,5 +56,34 @@
       "Certificação EDGE de sustentabilidade com placas fotovoltaicas no coração do Santa Efigênia"
     ],
     "whatsappMensagem": "Oi! Gostaria de receber as plantas, valores e condições do Upside Square (Santa Efigênia)."
+  },
+  {
+    "slug": "horizon",
+    "nome": "Horizon",
+    "construtora": "Novolar (uma empresa do Grupo Patrimar)",
+    "tagline": "Seu novo ponto alto.",
+    "bairro": "Serrano",
+    "cidade": "Belo Horizonte",
+    "uf": "MG",
+    "endereco": "Rua Imperial, 250 - Serrano, Belo Horizonte - MG",
+    "badge": "Lançamento",
+    "tags": ["2 quartos com suíte", "Lazer completo", "Portaria 24h"],
+    "quartos": "2 quartos com suíte",
+    "metragem": "52 a 83 m²",
+    "tipologias": "Tipo e Garden",
+    "vagas": "1 vaga",
+    "resumo": "Apartamentos de 2 quartos com suíte e varanda no Serrano, ao lado do Castelo, com lazer completo entregue montado e mobiliado.",
+    "corCapa": "moss",
+    "imagem": "https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/launches%2Fhorizon%2Fimages%2Fhorizon.webp?alt=media",
+    "imagemWidth": 641,
+    "imagemHeight": 576,
+    "imagemAlt": "Fachada contemporânea do residencial Horizon no Serrano, Belo Horizonte",
+    "diferenciais": [
+      "Vista privilegiada para a cidade em condomínio fechado cercado pela natureza",
+      "Lazer completo entregue montado e mobiliado (piscinas adulto e infantil, prainha, solarium, salão de festas, churrasqueira, espaço gourmet com varanda, academia, sauna e descanso, espaço kids e playground)",
+      "Comodidades e segurança: coworking, lavanderia, NovoMarket, espaço beauty, bicicletário, bike wash, portaria 24h e eclusa",
+      "Localização estratégica no Serrano, ao lado do Castelo, na continuidade da Av. Abílio Machado"
+    ],
+    "whatsappMensagem": "Oi! Gostaria de receber as plantas, valores e condições do Horizon (Serrano)."
   }
 ]

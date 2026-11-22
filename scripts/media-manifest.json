@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-21T23:17:40.687Z",
+  "generatedAt": "2026-11-22T19:30:51.295Z",
   "projectId": "terraco-a5ff7",
   "bucket": "terraco-a5ff7.firebasestorage.app",
   "mode": "production",
@@ -25,6 +25,19 @@
         "height": 1024,
         "originalBytes": 317893,
         "webpBytes": 76696
+      },
+      "gallery": [],
+      "bookUrl": null,
+      "plantasUrls": []
+    },
+    "horizon": {
+      "cover": {
+        "storagePath": "launches/horizon/images/horizon.webp",
+        "publicUrl": "https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/launches%2Fhorizon%2Fimages%2Fhorizon.webp?alt=media",
+        "width": 641,
+        "height": 576,
+        "originalBytes": 78614,
+        "webpBytes": 51624
       },
       "gallery": [],
       "bookUrl": null,
