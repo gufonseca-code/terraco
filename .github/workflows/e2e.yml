@@ -29,8 +29,8 @@ jobs:
       - name: Typecheck Angular app
         run: npx tsc -p apps/web-seo/tsconfig.app.json --noEmit
 
-      - name: Run Playwright E2E tests
-        run: npm run test:e2e
+      - name: Run Playwright E2E tests against Firestore Emulator
+        run: npx -y firebase-tools@latest emulators:exec --only firestore --project terraco-a5ff7 "npm run firestore:seed:emulator && npm run test:e2e"
 
       - uses: actions/upload-artifact@v4
         if: failure()
