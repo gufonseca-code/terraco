@@ -1,27 +1,32 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
-  afterNextRender,
+  computed,
+  effect,
   inject,
-  signal,
-  viewChildren,
+  untracked,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LancamentosService } from '../../core';
-import { FavoriteButtonComponent } from './favorite-button.component';
+import { LaunchCardComponent } from './launch-card.component';
+import { LaunchFilterBarComponent } from './launch-filter-bar.component';
 import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
 
 @Component({
   selector: 'app-launch-explorer',
-  imports: [RouterLink, FavoriteButtonComponent, LaunchCardSkeletonComponent],
+  imports: [
+    LaunchCardComponent,
+    LaunchFilterBarComponent,
+    LaunchCardSkeletonComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (isLoading() && lancamentos().length === 0) {
-      <section
-        aria-labelledby="lancamentos-heading"
-        class="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
-      >
+    <section
+      aria-labelledby="lancamentos-heading"
+      class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
+    >
+      <div class="space-y-6">
         <h1
           id="lancamentos-heading"
           animate.enter="terraco-reveal"
@@ -30,154 +35,140 @@ import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
           Lançamentos
         </h1>
 
-        <div class="mt-8 grid gap-8">
+        @if (!isLoading() || totalCount() > 0) {
+          <app-launch-filter-bar
+            [query]="searchQuery()"
+            [activeFilter]="activeFilter()"
+            [filters]="availableFilters()"
+            [suggestions]="suggestions()"
+            [totalCount]="totalCount()"
+            [filteredCount]="filteredCount()"
+            (queryChange)="onQueryChange($event)"
+            (filterChange)="onFilterChange($event)"
+            (clear)="onClearFilters()"
+          />
+        }
+      </div>
+
+      @if (isLoading() && totalCount() === 0) {
+        <div
+          class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8"
+        >
+          <app-launch-card-skeleton />
           <app-launch-card-skeleton />
         </div>
-      </section>
-    } @else if (lancamentos().length > 0) {
-      <section
-        aria-labelledby="lancamentos-heading"
-        class="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
-      >
-        <h1
-          id="lancamentos-heading"
-          animate.enter="terraco-reveal"
-          class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink text-balance"
+      } @else if (filteredCount() > 0) {
+        <div
+          data-testid="lancamentos-grid"
+          [class]="gridClass()"
         >
-          Lançamentos
-        </h1>
-
-        <div class="mt-8 grid gap-8">
-          @for (launch of lancamentos(); track launch.slug) {
-            <article
-              [attr.id]="$first ? 'resultados-lancamentos' : null"
-              animate.enter="terraco-reveal-delay"
-              class="terraco-plate max-w-xl overflow-hidden rounded-lg bg-elevated scroll-mt-24"
-            >
-              <div
-                [class.terraco-skeleton]="!isImageLoaded(launch.slug)"
-                class="relative aspect-[16/10] overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface"
-              >
-                <a
-                  [routerLink]="['/lancamentos', launch.slug]"
-                  class="relative z-[1] block h-full w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)]"
-                  [attr.aria-label]="'Conhecer ' + launch.nome"
-                >
-                  <img
-                    #coverImg
-                    data-testid="lancamentos-cover-image"
-                    [attr.data-slug]="launch.slug"
-                    [src]="launch.imagem"
-                    [alt]="launch.imagemAlt"
-                    [width]="launch.imagemWidth"
-                    [height]="launch.imagemHeight"
-                    [style.view-transition-name]="'launch-image-' + launch.slug"
-                    (load)="markImageLoaded(launch.slug)"
-                    (error)="markImageLoaded(launch.slug)"
-                    fetchpriority="high"
-                    decoding="async"
-                    class="h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center"
-                  />
-                </a>
-
-                <div class="absolute top-3.5 right-3.5 z-10 sm:top-4 sm:right-4">
-                  <app-favorite-button [slug]="launch.slug" [nome]="launch.nome" />
-                </div>
-              </div>
-
-              <div
-                class="flex flex-col gap-4 px-5 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-6 sm:py-5"
-              >
-                <div class="space-y-1">
-                  <p class="text-[13px] font-normal text-ink-muted">
-                    {{ launch.bairro }}, {{ launch.cidade }}
-                  </p>
-                  <h2
-                    [style.view-transition-name]="'launch-title-' + launch.slug"
-                    class="font-display text-[1.375rem] font-medium leading-[1.18] tracking-[-0.015em] text-ink text-balance sm:text-2xl"
-                  >
-                    <a
-                      [routerLink]="['/lancamentos', launch.slug]"
-                      class="transition-colors duration-150 hover:text-brand"
-                    >
-                      {{ launch.nome }}
-                    </a>
-                  </h2>
-                </div>
-
-                <a
-                  [routerLink]="['/lancamentos', launch.slug]"
-                  class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-sm font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
-                >
-                  Conhecer lançamento
-                </a>
-              </div>
-
-              <dl
-                class="grid grid-cols-1 divide-y divide-border-subtle border-t border-border-subtle bg-surface/45 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
-              >
-                <div class="space-y-0.5 px-5 py-3 sm:px-6">
-                  <dt class="text-[13px] font-normal text-ink-muted">Dormitórios</dt>
-                  <dd
-                    class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
-                  >
-                    {{ launch.quartos }}
-                  </dd>
-                </div>
-                <div class="space-y-0.5 px-5 py-3 sm:px-6">
-                  <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
-                  <dd
-                    class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
-                  >
-                    {{ launch.metragem }}
-                  </dd>
-                </div>
-                <div class="space-y-0.5 px-5 py-3 sm:px-6">
-                  <dt class="text-[13px] font-normal text-ink-muted">Lazer</dt>
-                  <dd class="text-[15px] font-normal leading-[1.4] text-ink">
-                    Lazer completo
-                  </dd>
-                </div>
-              </dl>
-            </article>
+          @for (launch of filteredLancamentos(); track launch.slug) {
+            <app-launch-card
+              [launch]="launch"
+              [priority]="$index < 2"
+              [cardId]="$first ? 'resultados-lancamentos' : null"
+            />
           }
         </div>
-      </section>
-    }
+      } @else {
+        <div
+          id="resultados-lancamentos"
+          role="status"
+          animate.enter="terraco-reveal"
+          class="mt-8 rounded-lg border border-border-subtle bg-elevated px-6 py-10 text-center sm:py-12"
+        >
+          <h2
+            class="font-display text-xl font-medium leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+          >
+            Nenhum lançamento encontrado
+          </h2>
+          <p class="mx-auto mt-2 max-w-md text-[15px] font-normal leading-[1.5] text-ink-muted">
+            Tente buscar por outro bairro, nome de empreendimento ou limpe os filtros ativos.
+          </p>
+          @if (hasActiveFilters()) {
+            <button
+              type="button"
+              (click)="onClearFilters()"
+              class="terraco-btn terraco-btn-moss mt-6 inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-sm font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover cursor-pointer"
+            >
+              Limpar filtros
+            </button>
+          }
+        </div>
+      }
+    </section>
   `,
 })
 export class LaunchExplorerComponent {
   private readonly lancamentosService = inject(LancamentosService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
   readonly lancamentos = this.lancamentosService.lancamentos;
+  readonly filteredLancamentos = this.lancamentosService.filteredLancamentos;
   readonly isLoading = this.lancamentosService.isLoadingList;
-  private readonly loadedSlugs = signal<ReadonlySet<string>>(new Set());
-  private readonly coverImages =
-    viewChildren<ElementRef<HTMLImageElement>>('coverImg');
+  readonly searchQuery = this.lancamentosService.searchQuery;
+  readonly activeFilter = this.lancamentosService.activeFilter;
+  readonly availableFilters = this.lancamentosService.availableFilters;
+  readonly hasActiveFilters = this.lancamentosService.hasActiveFilters;
+  readonly suggestions = this.lancamentosService.suggestions;
+
+  readonly totalCount = computed(() => this.lancamentos().length);
+  readonly filteredCount = computed(() => this.filteredLancamentos().length);
+  readonly gridClass = computed(() =>
+    this.filteredCount() >= 3
+      ? 'mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8'
+      : 'mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8'
+  );
+
+  private readonly queryParamMap = toSignal(this.route.queryParamMap, {
+    initialValue: this.route.snapshot.queryParamMap,
+  });
 
   constructor() {
-    afterNextRender(() => {
-      for (const ref of this.coverImages()) {
-        const el = ref.nativeElement;
-        const slug = el.dataset['slug'];
-        if (slug && el.complete && el.naturalWidth > 0) {
-          this.markImageLoaded(slug);
+    effect(() => {
+      const params = this.queryParamMap();
+      const urlQuery = params.get('q') ?? '';
+      const urlFilter = params.get('filtro') ?? 'Todos';
+
+      untracked(() => {
+        if (this.searchQuery() !== urlQuery) {
+          this.lancamentosService.setSearchQuery(urlQuery);
         }
-      }
+        if (this.activeFilter() !== urlFilter) {
+          this.lancamentosService.setActiveFilter(urlFilter);
+        }
+      });
     });
   }
 
-  isImageLoaded(slug: string): boolean {
-    return this.loadedSlugs().has(slug);
+  onQueryChange(query: string): void {
+    this.lancamentosService.setSearchQuery(query);
+    this.syncUrlParams(query, this.activeFilter());
   }
 
-  markImageLoaded(slug: string): void {
-    this.loadedSlugs.update((current) => {
-      if (current.has(slug)) {
-        return current;
-      }
-      const next = new Set(current);
-      next.add(slug);
-      return next;
+  onFilterChange(filter: string): void {
+    this.lancamentosService.setActiveFilter(filter);
+    this.syncUrlParams(this.searchQuery(), filter);
+  }
+
+  onClearFilters(): void {
+    this.lancamentosService.clearFilters();
+    this.syncUrlParams('', 'Todos');
+  }
+
+  private syncUrlParams(query: string, filter: string): void {
+    const trimmedQuery = query.trim();
+    const queryParams: Record<string, string | null> = {
+      q: trimmedQuery ? trimmedQuery : null,
+      filtro: filter && filter !== 'Todos' ? filter : null,
+    };
+
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
   }
 }

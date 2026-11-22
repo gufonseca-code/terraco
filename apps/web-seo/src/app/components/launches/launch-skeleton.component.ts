@@ -3,6 +3,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 @Component({
   selector: 'app-launch-card-skeleton',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'block h-full',
+  },
   template: `
     <article
       role="status"
@@ -10,16 +13,16 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       aria-label="Carregando lançamento"
       animate.enter="terraco-reveal"
       animate.leave="terraco-chip-leave"
-      class="terraco-plate max-w-xl overflow-hidden rounded-lg bg-elevated"
+      class="terraco-plate flex h-full flex-col overflow-hidden rounded-lg bg-elevated"
     >
       <div
         aria-hidden="true"
-        class="terraco-skeleton aspect-[16/10] w-full rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle"
+        class="terraco-skeleton h-60 w-full shrink-0 rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle sm:h-64"
       ></div>
 
       <div
         aria-hidden="true"
-        class="flex flex-col gap-4 px-5 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-6 sm:py-5"
+        class="flex flex-1 flex-col justify-between gap-4 px-5 py-4 sm:px-6 sm:py-5"
       >
         <div class="space-y-2">
           <div class="terraco-skeleton h-3.5 w-32 rounded-sm"></div>
@@ -30,17 +33,17 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
       <div
         aria-hidden="true"
-        class="grid grid-cols-1 divide-y divide-border-subtle border-t border-border-subtle bg-surface/45 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+        class="mt-auto grid grid-cols-1 divide-y divide-border-subtle border-t border-border-subtle bg-surface/45 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
       >
-        <div class="space-y-2 px-5 py-3 sm:px-6">
+        <div class="space-y-2 px-5 py-3 sm:px-5">
           <div class="terraco-skeleton h-3 w-20 rounded-sm"></div>
           <div class="terraco-skeleton h-4 w-24 rounded-sm"></div>
         </div>
-        <div class="space-y-2 px-5 py-3 sm:px-6">
+        <div class="space-y-2 px-5 py-3 sm:px-5">
           <div class="terraco-skeleton h-3 w-16 rounded-sm"></div>
           <div class="terraco-skeleton h-4 w-24 rounded-sm"></div>
         </div>
-        <div class="space-y-2 px-5 py-3 sm:px-6">
+        <div class="space-y-2 px-5 py-3 sm:px-5">
           <div class="terraco-skeleton h-3 w-14 rounded-sm"></div>
           <div class="terraco-skeleton h-4 w-28 rounded-sm"></div>
         </div>

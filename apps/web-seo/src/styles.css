@@ -480,6 +480,77 @@ h4 {
   animation: terraco-chip-out 130ms var(--ease-ui) both;
 }
 
+/* Hover interativo na imagem fixa do card (somente desktop / ponteiro fino) */
+.terraco-card-media-img {
+  transition: transform 320ms var(--ease-enter);
+}
+
+.terraco-card-media-scrim {
+  transition: opacity 220ms var(--ease-ui);
+}
+
+.terraco-card-media-hint {
+  transform: translate3d(0, 6px, 0);
+  transition:
+    opacity 200ms var(--ease-ui),
+    transform 240ms var(--ease-enter);
+}
+
+.terraco-card-media-trigger:focus-visible .terraco-card-media-img {
+  transform: scale(1.04);
+}
+
+.terraco-card-media-trigger:focus-visible .terraco-card-media-scrim {
+  opacity: 1;
+}
+
+.terraco-card-media-trigger:focus-visible .terraco-card-media-hint {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-card-media-trigger:hover .terraco-card-media-img {
+    transform: scale(1.04);
+  }
+
+  .terraco-card-media-trigger:hover .terraco-card-media-scrim {
+    opacity: 1;
+  }
+
+  .terraco-card-media-trigger:hover .terraco-card-media-hint {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Lightbox backdrop enter / leave via Angular animate.enter & animate.leave */
+@keyframes terraco-lightbox-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes terraco-lightbox-backdrop-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.terraco-lightbox-backdrop-enter {
+  animation: terraco-lightbox-backdrop-in 240ms var(--ease-enter) both;
+}
+
+.terraco-lightbox-backdrop-leave {
+  animation: terraco-lightbox-backdrop-out 220ms var(--ease-ui) both;
+}
+
 /* Skeleton loading quente (Areia Suave + brilho Creme Papel, GPU-composited) */
 @keyframes terraco-skeleton-shimmer {
   0% {
@@ -687,6 +758,8 @@ h4 {
   .terraco-reveal-delay,
   .terraco-chip-enter,
   .terraco-chip-leave,
+  .terraco-lightbox-backdrop-enter,
+  .terraco-lightbox-backdrop-leave,
   .terraco-skeleton::after,
   .hero-enter-title,
   .hero-enter-form,
@@ -710,6 +783,9 @@ h4 {
   .terraco-btn-moss,
   .terraco-card,
   .terraco-plate,
+  .terraco-card-media-img,
+  .terraco-card-media-scrim,
+  .terraco-card-media-hint,
   .terraco-nav-link,
   .terraco-link-underline::after,
   .terraco-stairs-step,

@@ -127,7 +127,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 (error)="markImageLoaded()"
                 fetchpriority="high"
                 decoding="async"
-                class="relative z-[1] h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
+                class="relative z-[1] h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-[center_25%] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
               />
             </div>
 
@@ -181,9 +181,11 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 </div>
 
                 <div class="space-y-1">
-                  <dt class="text-[13px] font-normal text-ink-muted">Lazer</dt>
+                  <dt class="text-[13px] font-normal text-ink-muted">
+                    Tipologias
+                  </dt>
                   <dd class="text-[15px] font-normal leading-[1.4] text-ink">
-                    Completo com vista panorâmica
+                    {{ item().tipologias || 'Lazer completo' }}
                   </dd>
                 </div>
               </dl>

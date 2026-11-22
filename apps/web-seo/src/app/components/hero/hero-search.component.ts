@@ -1,6 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { QUICK_NEIGHBORHOODS, SEARCH_SUGGESTIONS } from '../../core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  PendingTasks,
+  inject,
+} from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { LancamentosService } from '../../core';
 import { HeroIllustrationComponent } from './hero-illustration.component';
 import { HeroSearchFormComponent } from './hero-search-form.component';
 
@@ -41,16 +47,20 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
           </div>
 
           <div animate.enter="terraco-reveal-delay" class="space-y-3">
-            <app-hero-search-form [suggestions]="suggestions" />
+            <app-hero-search-form
+              [suggestions]="suggestions()"
+              (searchSubmit)="onSearchSubmit($event)"
+            />
 
             <nav
               aria-label="Bairros em destaque"
               class="flex flex-wrap items-center gap-x-6 gap-y-1 pl-1"
             >
-              @for (bairro of quickNeighborhoods; track bairro) {
+              @for (bairro of quickNeighborhoods(); track bairro) {
                 <a
                   [routerLink]="['/lancamentos']"
-                  [queryParams]="{ q: bairro }"
+                  [queryParams]="{ filtro: bairro }"
+                  (click)="onSelectNeighborhood(bairro)"
                   class="terraco-link-underline inline-flex min-h-[44px] items-center text-sm font-normal text-ink-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink"
                 >
                   {{ bairro }}
@@ -58,6 +68,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
               }
               <a
                 routerLink="/lancamentos"
+                (click)="onViewAll()"
                 class="terraco-link-underline inline-flex min-h-[44px] items-center text-sm font-medium text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
               >
                 Ver lançamentos
@@ -73,7 +84,34 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroSearchComponent {
-  readonly suggestions = SEARCH_SUGGESTIONS;
-  readonly quickNeighborhoods = QUICK_NEIGHBORHOODS;
+export class HeroSearchComponent implements OnInit {
+  private readonly lancamentosService = inject(LancamentosService);
+  private readonly router = inject(Router);
+  private readonly pendingTasks = inject(PendingTasks);
+
+  readonly suggestions = this.lancamentosService.suggestions;
+  readonly quickNeighborhoods = this.lancamentosService.quickNeighborhoods;
+
+  ngOnInit(): void {
+    void this.pendingTasks.run(() => this.lancamentosService.loadLancamentos());
+  }
+
+  onSearchSubmit(query: string): void {
+    const trimmed = query.trim();
+    this.lancamentosService.setSearchQuery(trimmed);
+    this.lancamentosService.setActiveFilter('Todos');
+    void this.router.navigate(
+      ['/lancamentos'],
+      trimmed ? { queryParams: { q: trimmed } } : undefined
+    );
+  }
+
+  onSelectNeighborhood(bairro: string): void {
+    this.lancamentosService.setSearchQuery('');
+    this.lancamentosService.setActiveFilter(bairro);
+  }
+
+  onViewAll(): void {
+    this.lancamentosService.clearFilters();
+  }
 }

@@ -63,36 +63,61 @@ export const SEARCH_SUGGESTIONS: string[] = [];
 
 export const QUICK_NEIGHBORHOODS: string[] = [];
 
+export function normalizeSearchText(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 export function filterLancamentos(
   query: string,
   activeFilter: string,
   items: readonly Lancamento[] = LANCAMENTOS
 ): Lancamento[] {
-  const normalized = query.trim().toLowerCase();
+  const normalizedQuery = normalizeSearchText(query);
+  const normalizedFilter = normalizeSearchText(activeFilter);
+  const queryTokens = normalizedQuery
+    ? normalizedQuery.split(/\s+/).filter(Boolean)
+    : [];
 
   return items.filter((item) => {
     const matchesFilter =
-      activeFilter === 'Todos' ||
-      item.quartos.toLowerCase().includes(activeFilter.toLowerCase()) ||
-      item.tags.some((tag) => tag.toLowerCase() === activeFilter.toLowerCase());
+      !normalizedFilter ||
+      normalizedFilter === 'todos' ||
+      normalizeSearchText(item.bairro) === normalizedFilter ||
+      normalizeSearchText(item.cidade) === normalizedFilter ||
+      normalizeSearchText(item.construtora) === normalizedFilter ||
+      normalizeSearchText(item.quartos).includes(normalizedFilter) ||
+      normalizeSearchText(item.tipologias).includes(normalizedFilter) ||
+      item.tags.some((tag) => {
+        const normalizedTag = normalizeSearchText(tag);
+        return (
+          normalizedTag === normalizedFilter ||
+          normalizedTag.includes(normalizedFilter)
+        );
+      });
 
     if (!matchesFilter) return false;
-    if (!normalized) return true;
+    if (queryTokens.length === 0) return true;
 
-    const searchable = [
-      item.nome,
-      item.construtora,
-      item.bairro,
-      item.cidade,
-      item.quartos,
-      item.tipologias,
-      item.resumo,
-      ...item.tags,
-    ]
-      .join(' ')
-      .toLowerCase();
+    const searchable = normalizeSearchText(
+      [
+        item.nome,
+        item.construtora,
+        item.bairro,
+        item.cidade,
+        item.quartos,
+        item.tipologias,
+        item.metragem,
+        item.resumo,
+        ...item.tags,
+        ...item.diferenciais,
+      ].join(' ')
+    );
 
-    return searchable.includes(normalized);
+    return queryTokens.every((token) => searchable.includes(token));
   });
 }
 

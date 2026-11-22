@@ -29,8 +29,18 @@ import {
   buildWhatsAppUrl,
   filterLancamentos,
   getLancamentoBySlug,
+  normalizeSearchText,
 } from './lancamentos.data';
 import { FLUTTER_APP_URL } from './site.config';
+
+export interface ServerLaunchesReader {
+  loadList(): Promise<Lancamento[]>;
+  loadBySlug(slug: string): Promise<Lancamento | undefined>;
+}
+
+export const SERVER_LAUNCHES_READER = new InjectionToken<ServerLaunchesReader>(
+  'terraco.server.launchesReader'
+);
 
 export const LANCAMENTOS_DATA_SOURCE = new InjectionToken<Lancamento[]>(
   'terraco.lancamentos.dataSource',
@@ -89,7 +99,7 @@ function serializeTimestamp(value: unknown): string | null | undefined {
   return undefined;
 }
 
-function normalizeLancamento(
+export function normalizeLancamento(
   slug: string,
   raw: Record<string, unknown>
 ): Lancamento {
@@ -152,6 +162,9 @@ export class LancamentosService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly transferState = inject(TransferState);
   private readonly firebase = inject(FirebaseService);
+  private readonly serverReader = inject(SERVER_LAUNCHES_READER, {
+    optional: true,
+  });
   private readonly initialData =
     inject(LANCAMENTOS_DATA_SOURCE, { optional: true }) ?? LANCAMENTOS;
 
@@ -167,11 +180,14 @@ export class LancamentosService {
       return SEARCH_SUGGESTIONS;
     }
     return Array.from(
-      new Set([
-        ...items.map((item) => item.bairro),
-        ...items.map((item) => item.nome),
-        ...items.flatMap((item) => item.tags),
-      ])
+      new Set(
+        [
+          ...items.map((item) => item.bairro.trim()),
+          ...items.map((item) => item.nome.trim()),
+          ...items.map((item) => item.construtora.trim()),
+          ...items.flatMap((item) => item.tags.map((tag) => tag.trim())),
+        ].filter(Boolean)
+      )
     );
   });
 
@@ -180,8 +196,21 @@ export class LancamentosService {
     if (items.length === 0) {
       return QUICK_NEIGHBORHOODS;
     }
-    return Array.from(new Set(items.map((item) => item.bairro)));
+    return Array.from(
+      new Set(items.map((item) => item.bairro.trim()).filter(Boolean))
+    );
   });
+
+  readonly availableFilters = computed<string[]>(() => [
+    'Todos',
+    ...this.quickNeighborhoods(),
+  ]);
+
+  readonly hasActiveFilters = computed<boolean>(
+    () =>
+      this.searchQuery().trim().length > 0 ||
+      normalizeSearchText(this.activeFilter()) !== 'todos'
+  );
 
   readonly filteredLancamentos = computed(() =>
     filterLancamentos(this.searchQuery(), this.activeFilter(), this.lancamentos())
@@ -307,7 +336,13 @@ export class LancamentosService {
   }
 
   setActiveFilter(filter: string): void {
-    this.activeFilter.set(filter);
+    const normalized = filter.trim();
+    this.activeFilter.set(normalized.length > 0 ? normalized : 'Todos');
+  }
+
+  clearFilters(): void {
+    this.searchQuery.set('');
+    this.activeFilter.set('Todos');
   }
 
   getBySlug(slug: string): Lancamento | undefined {
@@ -342,6 +377,23 @@ export class LancamentosService {
   }
 
   private async fetchLancamentosFromFirestore(): Promise<Lancamento[]> {
+    if (isPlatformServer(this.platformId) && this.serverReader) {
+      this.isLoadingList.set(true);
+      try {
+        const items = await withTimeout(
+          this.serverReader.loadList(),
+          FIRESTORE_READ_TIMEOUT_MS
+        );
+        return this.commitListResult(
+          items.length > 0 ? items : this.initialData
+        );
+      } catch {
+        // Fall through to Web SDK / initialData fallback if Admin ADC is unavailable locally.
+      } finally {
+        this.isLoadingList.set(false);
+      }
+    }
+
     const db = this.firebase.getFirestore();
     if (!db) {
       return this.commitListResult(this.initialData);
@@ -398,6 +450,21 @@ export class LancamentosService {
   private async fetchLaunchBySlugFromFirestore(
     slug: string
   ): Promise<Lancamento | undefined> {
+    if (isPlatformServer(this.platformId) && this.serverReader) {
+      this.isLoadingDetail.set(true);
+      try {
+        const item = await withTimeout(
+          this.serverReader.loadBySlug(slug),
+          FIRESTORE_READ_TIMEOUT_MS
+        );
+        return this.commitDetailResult(slug, item ?? null);
+      } catch {
+        // Fall through to Web SDK / initialData fallback if Admin ADC is unavailable locally.
+      } finally {
+        this.isLoadingDetail.set(false);
+      }
+    }
+
     const db = this.firebase.getFirestore();
     if (!db) {
       const fallback =

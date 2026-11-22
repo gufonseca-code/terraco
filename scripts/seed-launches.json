@@ -27,5 +27,34 @@
       "Localização estratégica a 2 min da Av. Barão Homem de Melo, a poucos minutos do Buritis"
     ],
     "whatsappMensagem": "Oi! Gostaria de receber as plantas, valores e condições do Prime View (Estoril)."
+  },
+  {
+    "slug": "upside-square",
+    "nome": "Upside Square",
+    "construtora": "Patrimar",
+    "tagline": "Essencial é viver bem.",
+    "bairro": "Santa Efigênia",
+    "cidade": "Belo Horizonte",
+    "uf": "MG",
+    "endereco": "Rua Domingos Vieira — Santa Efigênia, Belo Horizonte - MG",
+    "badge": "Lançamento",
+    "tags": ["Studios e 2 suítes", "Lazer completo", "Certificação EDGE"],
+    "quartos": "Studios, 1 quarto ou 2 suítes",
+    "metragem": "30 a 122 m²",
+    "tipologias": "Studios, Tipo, Garden e High Garden",
+    "vagas": "Sob consulta",
+    "resumo": "Studios, 1 quarto ou 2 suítes no Santa Efigênia, com lazer completo, serviços pay per use e certificação EDGE de sustentabilidade.",
+    "corCapa": "moss",
+    "imagem": "https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/launches%2Fupside-square%2Fimages%2Fupside-square.webp?alt=media",
+    "imagemWidth": 641,
+    "imagemHeight": 1024,
+    "imagemAlt": "Fachada contemporânea do residencial Upside Square no Santa Efigênia, Belo Horizonte",
+    "diferenciais": [
+      "Lazer completo (piscina climatizada, espaço grill, fitness interno e externo, gourmet com terraço, playground, pet place e espaço fogo)",
+      "Comodidades e serviços: coworking, lavanderia, i-storage, bicicletas e patinetes elétricos compartilhados e Grab & Go",
+      "Segurança com guarita 24h, antecâmara para pedestres, CFTV e acesso biométrico ou facial",
+      "Certificação EDGE de sustentabilidade com placas fotovoltaicas no coração do Santa Efigênia"
+    ],
+    "whatsappMensagem": "Oi! Gostaria de receber as plantas, valores e condições do Upside Square (Santa Efigênia)."
   }
 ]

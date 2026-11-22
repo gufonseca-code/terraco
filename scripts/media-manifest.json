@@ -16,6 +16,19 @@
       "gallery": [],
       "bookUrl": null,
       "plantasUrls": []
+    },
+    "upside-square": {
+      "cover": {
+        "storagePath": "launches/upside-square/images/upside-square.webp",
+        "publicUrl": "https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/launches%2Fupside-square%2Fimages%2Fupside-square.webp?alt=media",
+        "width": 641,
+        "height": 1024,
+        "originalBytes": 317893,
+        "webpBytes": 76696
+      },
+      "gallery": [],
+      "bookUrl": null,
+      "plantasUrls": []
     }
   },
   "site": {
