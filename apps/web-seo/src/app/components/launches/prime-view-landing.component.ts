@@ -200,10 +200,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               <div class="space-y-1.5 sm:space-y-2">
                 <p class="text-[13px] font-normal leading-[1.4] text-ink-muted">
                   {{ item().bairro }}, {{ item().cidade }}, {{ item().uf }}
-                  @if (item().construtora) {
-                    <span aria-hidden="true" class="mx-1.5 text-border-subtle">·</span>
-                    <span>{{ item().construtora }}</span>
-                  }
                 </p>
 
                 <h1
@@ -325,6 +321,63 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         </article>
 
         <div class="mt-8 space-y-8 sm:mt-10 sm:space-y-10">
+          @if (item().condicoesEspeciais?.length) {
+            <section
+              aria-labelledby="special-conditions-heading"
+              class="rounded-lg border border-brand/25 bg-surface/55 p-5 sm:p-8"
+            >
+              <h2
+                id="special-conditions-heading"
+                class="font-display text-[clamp(1.25rem,2vw,1.5rem)] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+              >
+                Condições especiais de pagamento
+              </h2>
+
+              <p
+                class="mt-2 max-w-3xl text-[15px] font-normal leading-[1.5] text-ink-muted"
+              >
+                Facilidades vigentes para entrada e financiamento — consulte a
+                disponibilidade da unidade.
+              </p>
+
+              <ul class="mt-5 space-y-3">
+                @for (
+                  condicao of item().condicoesEspeciais ?? [];
+                  track condicao
+                ) {
+                  <li
+                    class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.5] text-ink"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="mt-0.5 h-4 w-4 shrink-0 text-brand"
+                    >
+                      <path d="M4.5 10.5 8 14l7.5-8" />
+                    </svg>
+                    <span>{{ condicao }}</span>
+                  </li>
+                }
+              </ul>
+
+              <div class="mt-5 border-t border-border-subtle pt-4">
+                <a
+                  [href]="specialConditionsWhatsappHref()"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="terraco-link-underline inline-flex items-center text-[14px] font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+                >
+                  Simular essas condições no WhatsApp
+                </a>
+              </div>
+            </section>
+          }
+
           <section
             aria-labelledby="about-heading"
             class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
@@ -342,29 +395,18 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               {{ item().resumo }}
             </p>
 
-            <dl
-              class="mt-6 grid grid-cols-1 gap-4 border-t border-border-subtle pt-5 sm:grid-cols-2 sm:gap-6"
-            >
-              @if (item().endereco) {
+            @if (item().endereco) {
+              <dl
+                class="mt-6 grid grid-cols-1 gap-4 border-t border-border-subtle pt-5"
+              >
                 <div class="space-y-1">
                   <dt class="text-[13px] font-normal text-ink-muted">Endereço</dt>
                   <dd class="text-[15px] font-normal leading-[1.45] text-ink">
                     {{ item().endereco }}
                   </dd>
                 </div>
-              }
-
-              @if (item().construtora) {
-                <div class="space-y-1">
-                  <dt class="text-[13px] font-normal text-ink-muted">
-                    Realização
-                  </dt>
-                  <dd class="text-[15px] font-normal leading-[1.45] text-ink">
-                    {{ item().construtora }}
-                  </dd>
-                </div>
-              }
-            </dl>
+              </dl>
+            }
           </section>
 
           @if (item().diferenciais.length > 0) {
@@ -491,6 +533,13 @@ export class PrimeViewLandingComponent {
       LAUNCH_INTENT_OPTIONS.find((item) => item.key === currentKey) ??
       LAUNCH_INTENT_OPTIONS[0];
     return buildWhatsAppUrl(option.buildMessage(currentItem));
+  });
+
+  readonly specialConditionsWhatsappHref = computed(() => {
+    const currentItem = this.item();
+    return buildWhatsAppUrl(
+      `Oi! Quero simular as condições especiais de pagamento do ${currentItem.nome} (${currentItem.bairro}).`
+    );
   });
 
   constructor() {

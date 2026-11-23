@@ -197,20 +197,6 @@ import {
                     scope="row"
                     class="sticky left-0 z-10 bg-elevated px-4 py-3.5 align-top font-medium text-ink-muted sm:px-6"
                   >
-                    Construtora
-                  </th>
-                  @for (launch of savedLaunches(); track launch.slug) {
-                    <td class="px-4 py-3.5 align-top font-normal sm:px-5">
-                      {{ formatValue(launch.construtora) }}
-                    </td>
-                  }
-                </tr>
-
-                <tr>
-                  <th
-                    scope="row"
-                    class="sticky left-0 z-10 bg-elevated px-4 py-3.5 align-top font-medium text-ink-muted sm:px-6"
-                  >
                     Dormitórios
                   </th>
                   @for (launch of savedLaunches(); track launch.slug) {

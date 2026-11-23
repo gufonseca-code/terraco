@@ -34,6 +34,7 @@ export interface Lancamento {
   imagemHeight: number;
   imagemAlt: string;
   diferenciais: string[];
+  condicoesEspeciais?: string[];
   whatsappMensagem: string;
   galeria?: LaunchMediaItem[];
   bookUrl?: string;
@@ -61,7 +62,7 @@ export const LANCAMENTOS: Lancamento[] = [
   {
     slug: 'prime-view',
     nome: 'Prime View',
-    construtora: 'Novolar (uma empresa do Grupo Patrimar)',
+    construtora: '',
     tagline: 'Vista para sua nova vida.',
     bairro: 'Estoril',
     cidade: 'Belo Horizonte',
@@ -74,7 +75,7 @@ export const LANCAMENTOS: Lancamento[] = [
     tipologias: 'Tipo, Garden, PCD e Coberturas Lineares',
     vagas: '1 e 2 vagas',
     resumo:
-      'Condomínio fechado no Estoril com ampla vista panorâmica para Belo Horizonte, terreno de 5.855,90 m² e lazer completíssimo entregue mobiliado e decorado, a poucos minutos do Buritis.',
+      'Condomínio fechado no Estoril com ampla vista panorâmica para Belo Horizonte em terreno de 5.855,90 m² e 2 torres com 2 elevadores por torre. Apartamentos de 2 quartos com suíte, Garden (1 e 2 quartos), PCD e Coberturas Lineares de 49 a 103 m², com áreas comuns entregues mobiliadas e decoradas, a 2 minutos da Av. Barão Homem de Melo e poucos minutos do Buritis.',
     corCapa: 'moss',
     imagem: '/images/lancamentos/prime-view/cover.webp',
     imagemWidth: 1024,
@@ -82,11 +83,18 @@ export const LANCAMENTOS: Lancamento[] = [
     imagemAlt:
       'Fachada contemporânea do residencial Prime View no Estoril, Belo Horizonte',
     diferenciais: [
-      'Ampla vista panorâmica para a cidade em terreno de 5.855,90 m² com 2 elevadores por torre',
-      'Lazer completíssimo entregue mobiliado e decorado: piscinas adulto e infantil com prainha, espaço gourmet panorâmico, salão de festas, churrasqueira, academia, crossfit zone, praça dos esportes, espaço fogo, pet place e playground',
-      'Praticidade no dia a dia com coworking, espaço influencer, espaço beauty, ferramentas compartilhadas, bicicletário com bike wash, horta e pomar compartilhados, guarda-entregas e Novomarket',
+      'Terreno amplo de 5.855,90 m² com 2 torres, 2 elevadores por torre e vista panorâmica privilegiada para Belo Horizonte',
+      'Acabamento superior: piso em porcelanato na sala, cozinha e banheiros, bancadas em granito e previsão para ar-condicionado nos quartos',
+      'Lazer completíssimo entregue mobiliado e decorado: piscinas adulto e infantil, prainha, solarium, espaço gourmet com vista, salão de festas, churrasqueira, academia, crossfit zone, espaço fogo, mind space, pet place, playground e espaço kids',
+      'Praticidade e conveniência: coworking, espaço beauty, bicicletário com bike wash, ferramentas compartilhadas, minimercado no condomínio, guarda-entregas, horta, pomar e aplicativo exclusivo do condomínio para reservas, portaria e manutenções',
       'Condomínio fechado com portaria 24h, eclusas de pedestres e veículos e selo Sempre Verde de sustentabilidade',
-      'Localização estratégica a 2 min da Av. Barão Homem de Melo e poucos minutos do Buritis, escolas, supermercados e Shopping Paragem',
+      'Localização estratégica no Estoril a 2 min da Av. Barão Homem de Melo, próximo ao Shopping Paragem, Verdemar, EPA, UniBH, Newton Paiva, UPA Oeste e Av. Raja Gabaglia',
+    ],
+    condicoesEspeciais: [
+      'Repasse Caixa (10% × 90%): entrada parcelada em até 36x, com ITBI e registro grátis nessa modalidade (sujeito à aprovação CEF)',
+      'Repasse Futuro (30% × 70%): 30% pagos durante a obra em até 18x e 70% financiados na entrega',
+      'Opção de Parcela Fixa sem correção até dezembro de 2027 na modalidade 30% × 70%',
+      'Condições especiais de fechamento com bônus negociável de até R$ 10 mil',
     ],
     whatsappMensagem:
       'Oi! Gostaria de receber as plantas, valores e condições do Prime View (Estoril).',
@@ -116,10 +124,70 @@ export const LANCAMENTOS: Lancamento[] = [
         height: 1277,
       },
       {
+        url: '/images/lancamentos/prime-view/salao-festas.webp',
+        alt: 'Salão de festas entregue mobiliado e decorado com vista para a área verde do Prime View',
+        width: 1400,
+        height: 2016,
+      },
+      {
+        url: '/images/lancamentos/prime-view/pet-place.webp',
+        alt: 'Pet place gramado e cercado com equipamentos de agilidade no Prime View',
+        width: 1400,
+        height: 2038,
+      },
+      {
+        url: '/images/lancamentos/prime-view/academia.webp',
+        alt: 'Academia equipada com esteiras, bicicletas e vista panorâmica no Prime View',
+        width: 1400,
+        height: 1030,
+      },
+      {
+        url: '/images/lancamentos/prime-view/suite.webp',
+        alt: 'Suíte decorada com iluminação aconchegante dos apartamentos do Prime View',
+        width: 1400,
+        height: 2038,
+      },
+      {
+        url: '/images/lancamentos/prime-view/cozinha.webp',
+        alt: 'Cozinha e área de serviço integradas com bancada em granito no Prime View',
+        width: 1400,
+        height: 2038,
+      },
+      {
         url: '/images/lancamentos/prime-view/planta-tipo-49m2.webp',
         alt: 'Planta humanizada do apartamento tipo de 2 quartos com suíte (49,38 m²) do Prime View',
         width: 491,
         height: 489,
+      },
+      {
+        url: '/images/lancamentos/prime-view/planta-tipo-51m2.webp',
+        alt: 'Planta humanizada do apartamento tipo de 2 quartos com suíte (51,67 m²) do Prime View',
+        width: 1400,
+        height: 896,
+      },
+      {
+        url: '/images/lancamentos/prime-view/planta-garden-57m2.webp',
+        alt: 'Planta humanizada do apartamento Garden de 2 quartos com suíte e área privativa (57,57 m²) do Prime View',
+        width: 1220,
+        height: 1200,
+      },
+      {
+        url: '/images/lancamentos/prime-view/planta-garden-72m2.webp',
+        alt: 'Planta humanizada do apartamento Garden de 2 quartos com suíte e terraço amplo (72,27 m²) do Prime View',
+        width: 1400,
+        height: 992,
+      },
+      {
+        url: '/images/lancamentos/prime-view/planta-pcd-49m2.webp',
+        alt: 'Planta humanizada do apartamento PCD adaptado de 1 quarto e escritório (49,38 m²) do Prime View',
+        width: 1220,
+        height: 1158,
+      },
+      {
+        url: '/images/lancamentos/prime-view/planta-cobertura-103m2.webp',
+        alt: 'Planta humanizada da Cobertura Linear de 2 quartos com suíte e terraço panorâmico (103,54 m²) do Prime View',
+        width: 1400,
+        height: 726,
       },
     ],
     published: true,
@@ -128,7 +196,7 @@ export const LANCAMENTOS: Lancamento[] = [
   {
     slug: 'upside-square',
     nome: 'Upside Square',
-    construtora: 'Patrimar (Grupo Patrimar)',
+    construtora: '',
     tagline: 'Essencial é viver bem.',
     bairro: 'Santa Efigênia',
     cidade: 'Belo Horizonte',
@@ -143,7 +211,7 @@ export const LANCAMENTOS: Lancamento[] = [
     precoAPartirDe: 596403,
     entrega: 'Março/2030',
     resumo:
-      'Torre única da Patrimar no coração do Santa Efigênia, com certificado internacional EDGE de sustentabilidade, plantas versáteis de 30 a 122 m² e lazer completo a poucos minutos da Praça Floriano Peixoto, Shopping Boulevard e área hospitalar.',
+      'Torre única no coração do Santa Efigênia, com certificado internacional EDGE de sustentabilidade, plantas versáteis de 30 a 122 m² e lazer completo a poucos minutos da Praça Floriano Peixoto, Shopping Boulevard e área hospitalar.',
     corCapa: 'ipe',
     imagem: '/images/lancamentos/upside-square/cover.webp',
     imagemWidth: 641,
@@ -198,7 +266,7 @@ export const LANCAMENTOS: Lancamento[] = [
   {
     slug: 'horizon',
     nome: 'Horizon',
-    construtora: 'Novolar (uma empresa do Grupo Patrimar)',
+    construtora: '',
     tagline: 'Seu novo ponto alto.',
     bairro: 'Serrano',
     cidade: 'Belo Horizonte',
@@ -222,7 +290,7 @@ export const LANCAMENTOS: Lancamento[] = [
       'Torre única em terreno de 6.673 m² com 4 elevadores, cercada por Área de Preservação Permanente (APP) e vista privilegiada para a cidade',
       'Varanda em todas as unidades, opções Garden de até 83 m², piso em porcelanato, bancadas em granito e previsão de ar-condicionado na sala e suíte',
       'Lazer completo entregue montado e mobiliado: piscinas adulto e infantil com prainha, espaço gourmet com varanda, salão de festas com terraço, churrasqueira, academia, sauna com descanso, espaço kids e playground',
-      'Comodidades no condomínio com coworking, espaço beauty, espaço massagem, bicicletário com bike wash, ferramentas compartilhadas, guarda-entregas, lavanderia e Novomarket',
+      'Comodidades no condomínio com coworking, espaço beauty, espaço massagem, bicicletário com bike wash, ferramentas compartilhadas, guarda-entregas, lavanderia, minimercado no condomínio e aplicativo exclusivo do condomínio para reservas, portaria e manutenções',
       'Condomínio fechado com portaria 24h e eclusa para veículos e pedestres, em localização estratégica no Serrano conectando Belo Horizonte e Contagem',
     ],
     whatsappMensagem:

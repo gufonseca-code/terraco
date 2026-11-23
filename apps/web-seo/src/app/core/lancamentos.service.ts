@@ -129,6 +129,9 @@ function normalizeLancamento(
     diferenciais: Array.isArray(raw['diferenciais'])
       ? raw['diferenciais'].map(String)
       : [],
+    ...(Array.isArray(raw['condicoesEspeciais'])
+      ? { condicoesEspeciais: raw['condicoesEspeciais'].map(String) }
+      : {}),
     whatsappMensagem: String(raw['whatsappMensagem'] ?? ''),
     ...(Array.isArray(raw['galeria'])
       ? { galeria: raw['galeria'] as LaunchMediaItem[] }
