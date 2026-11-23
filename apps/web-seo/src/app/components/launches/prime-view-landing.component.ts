@@ -138,7 +138,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 data-testid="launch-hero-trigger"
                 (click)="openLightbox()"
                 [attr.aria-label]="'Ampliar foto de ' + item().nome"
-                class="terraco-card-media-trigger relative z-[1] block aspect-[4/3] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] text-left lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] cursor-zoom-in"
+                class="terraco-card-media-trigger relative z-[1] block aspect-square w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] text-left lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] cursor-zoom-in"
               >
                 <img
                   #heroImg
