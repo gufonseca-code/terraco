@@ -2,7 +2,7 @@
   {
     "slug": "prime-view",
     "nome": "Prime View",
-    "construtora": "",
+    "construtora": "Novolar (Grupo Patrimar)",
     "tagline": "Vista para sua nova vida.",
     "bairro": "Estoril",
     "cidade": "Belo Horizonte",
@@ -18,33 +18,52 @@
     "metragem": "49 a 103 m²",
     "tipologias": "Tipo, Garden, PCD e Coberturas Lineares",
     "vagas": "1 e 2 vagas",
-    "resumo": "Condomínio fechado no Estoril com ampla vista panorâmica para Belo Horizonte em terreno de 5.855,90 m² e 2 torres com 2 elevadores por torre. Apartamentos de 2 quartos com suíte, Garden (1 e 2 quartos), PCD e Coberturas Lineares de 49 a 103 m², com áreas comuns entregues mobiliadas e decoradas, a 2 minutos da Av. Barão Homem de Melo e poucos minutos do Buritis.",
+    "resumo": "Condomínio fechado da Novolar (Grupo Patrimar) no Estoril com ampla vista panorâmica para Belo Horizonte em terreno de 5.855,90 m² e 2 torres com 2 elevadores por torre. Apartamentos de 2 quartos com suíte, Garden (1 e 2 quartos), PCD e Coberturas Lineares de 49,38 a 103,54 m², com áreas comuns entregues mobiliadas e decoradas, a 2 minutos da Av. Barão Homem de Melo e próximo ao Buritis.",
     "corCapa": "moss",
     "imagem": "/images/lancamentos/prime-view/cover.webp",
     "imagemWidth": 1024,
     "imagemHeight": 614,
     "imagemAlt": "Fachada contemporânea do residencial Prime View no Estoril, Belo Horizonte",
     "diferenciais": [
-      "Terreno amplo de 5.855,90 m² com 2 torres, 2 elevadores por torre e vista panorâmica privilegiada para Belo Horizonte",
-      "Acabamento superior: piso em porcelanato na sala, cozinha e banheiros, bancadas em granito e previsão para ar-condicionado nos quartos",
-      "Lazer completíssimo entregue mobiliado e decorado: piscinas adulto e infantil, prainha, solarium, espaço gourmet com vista, salão de festas, churrasqueira, academia, crossfit zone, espaço fogo, mind space, pet place, playground e espaço kids",
-      "Praticidade e conveniência: coworking, espaço beauty, bicicletário com bike wash, ferramentas compartilhadas, minimercado no condomínio, guarda-entregas, horta, pomar e aplicativo exclusivo do condomínio para reservas, portaria e manutenções",
-      "Condomínio fechado com portaria 24h, eclusas de pedestres e veículos e selo Sempre Verde de sustentabilidade",
-      "Localização estratégica no Estoril a 2 min da Av. Barão Homem de Melo, próximo ao Shopping Paragem, Verdemar, EPA, UniBH, Newton Paiva, UPA Oeste e Av. Raja Gabaglia"
+      "Terreno amplo de 5.855,90 m² com 2 torres, 2 elevadores por torre e vista panorâmica privilegiada para Belo Horizonte (Registro R-4 matrícula nº 167.015 · Patrimônio de Afetação)",
+      "Acabamento superior nos apartamentos: piso laminado nos quartos, porcelanato na sala, cozinha e banheiros, bancadas em granito, tomadas USB e previsão para ar-condicionado nos quartos",
+      "Lazer completíssimo entregue mobiliado e decorado: piscinas adulto e infantil com prainha e solarium, espaço gourmet com vista, salão de festas, churrasqueira, academia, crossfit zone, praça de esportes, espaço fogo, mind space, pet place, playground e espaço kids",
+      "Conveniência inteligente: coworking, espaço influencer, espaço beauty, bicicletário com bike wash, ferramentas compartilhadas, minimercado Novomarket, guarda-entregas, horta, pomar e aplicativo exclusivo do condomínio",
+      "Segurança e sustentabilidade (Selo Sempre Verde): portaria 24h com eclusas de pedestres e veículos, ponto de recarga para carro elétrico, iluminação em LED, coleta seletiva e dispositivos economizadores de água",
+      "Localização estratégica no Estoril: a 2 min a pé da Av. Barão Homem de Melo e Arena Foot Beer, 3 min da Newton Paiva e UPA Oeste, 4 min do Shopping Paragem, 5 min da Av. Raja Gabaglia e EPA, e 7 min do UniBH e Mercado da Boca"
     ],
     "condicoesEspeciais": [
-      "Repasse Caixa (10% × 90%): entrada parcelada em até 36x, com ITBI e registro grátis nessa modalidade (sujeito à aprovação CEF)",
+      "Repasse Caixa (10% × 90%): entrada parcelada em até 36x, podendo dividir até 5% após a obra, com ITBI e registro grátis nessa modalidade (sujeito à aprovação CEF)",
+      "Opção de EMCASH em até 72x no Repasse Caixa, com até 2 intermediárias opcionais em dez/2027 e dez/2028",
       "Repasse Futuro (30% × 70%): 30% pagos durante a obra em até 18x e 70% financiados na entrega",
-      "Opção de Parcela Fixa sem correção até dezembro de 2027 na modalidade 30% × 70%",
-      "Condições especiais de fechamento com bônus negociável de até R$ 10 mil"
+      "Opção de Parcela Fixa sem correção até dez/2027 na modalidade 30% × 70% (saldo corrigido pelo INCC)",
+      "Bônus negociável de até R$ 10 mil em desconto ou opção de cashback de 50% do valor economizado"
     ],
     "whatsappMensagem": "Oi! Gostaria de receber as plantas, valores e condições do Prime View (Estoril).",
     "galeria": [
+      {
+        "url": "/images/lancamentos/prime-view/vista-aerea.webp",
+        "alt": "Vista aérea em perspectiva do Prime View no Estoril com vista panorâmica para Belo Horizonte",
+        "width": 800,
+        "height": 1280
+      },
       {
         "url": "/images/lancamentos/prime-view/piscina.webp",
         "alt": "Piscina adulto com solarium e vista da torre do Prime View no Estoril",
         "width": 800,
         "height": 550
+      },
+      {
+        "url": "/images/lancamentos/prime-view/deck-piscina.webp",
+        "alt": "Deck da piscina com espreguiçadeiras e paisagismo no Prime View",
+        "width": 800,
+        "height": 1280
+      },
+      {
+        "url": "/images/lancamentos/prime-view/piscina-infantil.webp",
+        "alt": "Piscina infantil integrada ao deck molhado e área de descanso do Prime View",
+        "width": 800,
+        "height": 1280
       },
       {
         "url": "/images/lancamentos/prime-view/espaco-gourmet.webp",
@@ -53,34 +72,28 @@
         "height": 1050
       },
       {
-        "url": "/images/lancamentos/prime-view/living-integrado.webp",
-        "alt": "Salas de estar e jantar integradas à cozinha do Prime View",
-        "width": 802,
-        "height": 1283
-      },
-      {
-        "url": "/images/lancamentos/prime-view/garden.webp",
-        "alt": "Área externa privativa de unidade Garden do Prime View",
-        "width": 800,
-        "height": 1277
-      },
-      {
         "url": "/images/lancamentos/prime-view/salao-festas.webp",
         "alt": "Salão de festas entregue mobiliado e decorado com vista para a área verde do Prime View",
         "width": 1400,
         "height": 2016
       },
       {
-        "url": "/images/lancamentos/prime-view/pet-place.webp",
-        "alt": "Pet place gramado e cercado com equipamentos de agilidade no Prime View",
-        "width": 1400,
-        "height": 2038
+        "url": "/images/lancamentos/prime-view/churrasqueira.webp",
+        "alt": "Espaço churrasqueira com bancada e banquetas altas no Prime View",
+        "width": 800,
+        "height": 1280
       },
       {
-        "url": "/images/lancamentos/prime-view/academia.webp",
-        "alt": "Academia equipada com esteiras, bicicletas e vista panorâmica no Prime View",
+        "url": "/images/lancamentos/prime-view/living-integrado.webp",
+        "alt": "Salas de estar e jantar integradas à cozinha do Prime View",
+        "width": 802,
+        "height": 1283
+      },
+      {
+        "url": "/images/lancamentos/prime-view/cozinha.webp",
+        "alt": "Cozinha e área de serviço integradas com bancada em granito no Prime View",
         "width": 1400,
-        "height": 1030
+        "height": 2038
       },
       {
         "url": "/images/lancamentos/prime-view/suite.webp",
@@ -89,10 +102,100 @@
         "height": 2038
       },
       {
-        "url": "/images/lancamentos/prime-view/cozinha.webp",
-        "alt": "Cozinha e área de serviço integradas com bancada em granito no Prime View",
+        "url": "/images/lancamentos/prime-view/quarto-decorado.webp",
+        "alt": "Segundo quarto decorado dos apartamentos de 2 quartos do Prime View",
+        "width": 800,
+        "height": 1280
+      },
+      {
+        "url": "/images/lancamentos/prime-view/garden.webp",
+        "alt": "Área externa privativa de unidade Garden do Prime View",
+        "width": 800,
+        "height": 1277
+      },
+      {
+        "url": "/images/lancamentos/prime-view/academia.webp",
+        "alt": "Academia equipada com esteiras, bicicletas e vista panorâmica no Prime View",
+        "width": 1400,
+        "height": 1030
+      },
+      {
+        "url": "/images/lancamentos/prime-view/crossfit-zone.webp",
+        "alt": "Crossfit Zone ao ar livre cercada por área verde no Prime View",
+        "width": 800,
+        "height": 1280
+      },
+      {
+        "url": "/images/lancamentos/prime-view/praca-esportes.webp",
+        "alt": "Praça de esportes com mesa de ping-pong e jogos ao ar livre no Prime View",
+        "width": 800,
+        "height": 652
+      },
+      {
+        "url": "/images/lancamentos/prime-view/espaco-fogo.webp",
+        "alt": "Espaço fogo ao ar livre para convivência ao entardecer no Prime View",
+        "width": 800,
+        "height": 1280
+      },
+      {
+        "url": "/images/lancamentos/prime-view/playground.webp",
+        "alt": "Playground colorido integrado à área de lazer térrea do Prime View",
+        "width": 800,
+        "height": 673
+      },
+      {
+        "url": "/images/lancamentos/prime-view/espaco-kids.webp",
+        "alt": "Espaço kids coberto, mobiliado e decorado para crianças no Prime View",
+        "width": 800,
+        "height": 607
+      },
+      {
+        "url": "/images/lancamentos/prime-view/pet-place.webp",
+        "alt": "Pet place gramado e cercado com equipamentos de agilidade no Prime View",
         "width": 1400,
         "height": 2038
+      },
+      {
+        "url": "/images/lancamentos/prime-view/coworking.webp",
+        "alt": "Coworking climatizado com estações de trabalho compartilhadas no Prime View",
+        "width": 800,
+        "height": 640
+      },
+      {
+        "url": "/images/lancamentos/prime-view/espaco-influencer.webp",
+        "alt": "Espaço Influencer equipado com iluminação e fundo chroma key no Prime View",
+        "width": 800,
+        "height": 1280
+      },
+      {
+        "url": "/images/lancamentos/prime-view/espaco-beauty.webp",
+        "alt": "Espaço Beauty privativo com lavatório e espelhos no Prime View",
+        "width": 800,
+        "height": 1278
+      },
+      {
+        "url": "/images/lancamentos/prime-view/ferramentas-compartilhadas.webp",
+        "alt": "Sala de ferramentas compartilhadas equipada para pequenos reparos no Prime View",
+        "width": 800,
+        "height": 640
+      },
+      {
+        "url": "/images/lancamentos/prime-view/novomarket.webp",
+        "alt": "Minimercado Novomarket de autoatendimento dentro do condomínio Prime View",
+        "width": 800,
+        "height": 1280
+      },
+      {
+        "url": "/images/lancamentos/prime-view/portaria.webp",
+        "alt": "Portaria contemporânea com guarita, eclusa de pedestres e acesso de veículos no Prime View",
+        "width": 800,
+        "height": 539
+      },
+      {
+        "url": "/images/lancamentos/prime-view/implantacao.webp",
+        "alt": "Planta de implantação do Prime View mostrando as duas torres e os 35 itens de lazer e conveniência",
+        "width": 801,
+        "height": 565
       }
     ],
     "plantas": [
@@ -103,7 +206,8 @@
         "metragem": "49,38 m²",
         "quartos": "2 quartos (1 suíte)",
         "banhos": "2 banhos",
-        "destaque": "Varanda integrada",
+        "unidades": "Finais 01, 02, 07 e 08 · Torres 1 e 2",
+        "destaque": "Salas integradas",
         "imagem": "/images/lancamentos/prime-view/planta-tipo-49m2.webp",
         "width": 491,
         "height": 489,
@@ -116,11 +220,26 @@
         "metragem": "51,67 m²",
         "quartos": "2 quartos (1 suíte)",
         "banhos": "2 banhos",
-        "destaque": "Sala e cozinha integradas",
+        "unidades": "Finais 03, 04, 05 e 06 · Torres 1 e 2",
+        "destaque": "Planta ampliada",
         "imagem": "/images/lancamentos/prime-view/planta-tipo-51m2.webp",
         "width": 1400,
         "height": 896,
         "alt": "Planta humanizada do apartamento tipo de 2 quartos com suíte (51,67 m²) do Prime View"
+      },
+      {
+        "id": "prime-view-garden-56",
+        "titulo": "Garden 1 Quarto",
+        "categoria": "Garden",
+        "metragem": "56,77 m²",
+        "quartos": "1 quarto",
+        "banhos": "1 banho",
+        "unidades": "Unidade 103 · Torres 1 e 2",
+        "destaque": "Terraço descoberto privativo",
+        "imagem": "/images/lancamentos/prime-view/planta-garden-56m2.webp",
+        "width": 491,
+        "height": 465,
+        "alt": "Planta humanizada do apartamento Garden de 1 quarto com terraço privativo (56,77 m²) do Prime View"
       },
       {
         "id": "prime-view-garden-57",
@@ -129,7 +248,8 @@
         "metragem": "57,57 m²",
         "quartos": "2 quartos (1 suíte)",
         "banhos": "2 banhos",
-        "destaque": "Área externa privativa",
+        "unidades": "Unidades 101, 102, 107 e 108 · Torres 1 e 2",
+        "destaque": "Terraço privativo descoberto",
         "imagem": "/images/lancamentos/prime-view/planta-garden-57m2.webp",
         "width": 1220,
         "height": 1200,
@@ -142,6 +262,7 @@
         "metragem": "72,27 m²",
         "quartos": "2 quartos (1 suíte)",
         "banhos": "2 banhos",
+        "unidades": "Unidades 104, 105 e 106 · Torres 1 e 2",
         "destaque": "Terraço descoberto amplo",
         "imagem": "/images/lancamentos/prime-view/planta-garden-72m2.webp",
         "width": 1400,
@@ -155,6 +276,7 @@
         "metragem": "49,38 m²",
         "quartos": "1 quarto + escritório",
         "banhos": "1 banho adaptado",
+        "unidades": "Unidades 801, 901, 902, 907 e 908 · Torre 1",
         "destaque": "Acessibilidade integral",
         "imagem": "/images/lancamentos/prime-view/planta-pcd-49m2.webp",
         "width": 1220,
@@ -168,6 +290,7 @@
         "metragem": "103,54 m²",
         "quartos": "2 quartos (1 suíte)",
         "banhos": "2 banhos",
+        "unidades": "Unidade 1004 · Torre 2",
         "destaque": "Terraço panorâmico",
         "imagem": "/images/lancamentos/prime-view/planta-cobertura-103m2.webp",
         "width": 1400,
