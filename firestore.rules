@@ -48,16 +48,22 @@ rules_version = '2';
 // Collection: leads
 // Document ID: {leadId} (auto-generated Firestore document ID)
 // Access: Write-only (create) from public website visitors submitting
-//         contact/interest forms. Strictly denies all client reads,
+//         full contact forms or quick 1-field WhatsApp demand-capture forms
+//         (e.g., zero-results search). Strictly denies all client reads,
 //         updates, and deletes to protect customer PII.
 // Fields:
-//   - name: string (required, 2..120 chars) - Lead full name
-//   - email: string (required, 5..160 chars, valid email) - Lead email
-//   - phone: string (required, 8..25 chars) - Lead phone number
-//   - launchSlug: string (required, 1..100 chars) - Target launch slug
-//   - message: string (optional, 0..1000 chars) - Optional visitor message
-//   - source: string (optional, 1..60 chars) - Acquisition source (e.g., "web-seo")
+//   - phone: string (required, 8..25 chars) - Lead phone / WhatsApp number
+//   - launchSlug: string (required, 1..100 chars) - Target launch slug or context (e.g., "prime-view", "busca-sem-resultado")
 //   - createdAt: timestamp (required, must equal request.time) - Server timestamp
+//   - name: string (optional, 2..120 chars) - Lead full name
+//   - email: string (optional, 5..160 chars, valid email) - Lead email
+//   - message: string (optional, 0..1000 chars) - Optional visitor message
+//   - source: string (optional, 1..60 chars) - Acquisition source (e.g., "web-seo", "zero-results-search")
+//   - intent: string (optional, 1..80 chars) - Visitor intent (e.g., "plantas_valores", "simular_entrada", "agendar_visita", "tirar_duvida", "busca_sem_resultado")
+//   - searchedTerm: string (optional, 1..120 chars) - Search query term for demand capture
+//   - utmSource: string (optional, 1..80 chars) - UTM source attribution
+//   - utmMedium: string (optional, 1..80 chars) - UTM medium attribution
+//   - utmCampaign: string (optional, 1..120 chars) - UTM campaign attribution
 //
 // ===============================================================
 
@@ -101,6 +107,11 @@ service cloud.firestore {
              email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$');
     }
 
+    // Validate optional email field (if present, must be valid email within bounds)
+    function isValidOptionalEmail(data, field) {
+      return !(field in data) || isValidEmail(data[field]);
+    }
+
     // Validate that a field is a server-generated timestamp matching request.time
     function isServerTimestamp(value) {
       return value is timestamp && value == request.time;
@@ -110,31 +121,40 @@ service cloud.firestore {
     // Domain Validators
     // ===============================================================
 
-    // Validate incoming lead submission payload
+    // Validate incoming lead submission payload (supports both full contact
+    // forms and quick 1-field WhatsApp demand-capture leads)
     function isValidLead(data) {
       return hasOnlyAllowedFields(data, [
-               'name',
-               'email',
                'phone',
                'launchSlug',
+               'createdAt',
+               'name',
+               'email',
                'message',
                'source',
-               'createdAt'
+               'intent',
+               'searchedTerm',
+               'utmSource',
+               'utmMedium',
+               'utmCampaign'
              ]) &&
              hasRequiredFields(data, [
-               'name',
-               'email',
                'phone',
                'launchSlug',
                'createdAt'
              ]) &&
-             validStringLength(data, 'name', 2, 120) &&
-             isValidEmail(data.email) &&
              validStringLength(data, 'phone', 8, 25) &&
              validStringLength(data, 'launchSlug', 1, 100) &&
+             isServerTimestamp(data.createdAt) &&
+             isValidOptionalString(data, 'name', 2, 120) &&
+             isValidOptionalEmail(data, 'email') &&
              isValidOptionalString(data, 'message', 0, 1000) &&
              isValidOptionalString(data, 'source', 1, 60) &&
-             isServerTimestamp(data.createdAt);
+             isValidOptionalString(data, 'intent', 1, 80) &&
+             isValidOptionalString(data, 'searchedTerm', 1, 120) &&
+             isValidOptionalString(data, 'utmSource', 1, 80) &&
+             isValidOptionalString(data, 'utmMedium', 1, 80) &&
+             isValidOptionalString(data, 'utmCampaign', 1, 120);
     }
 
     // ===============================================================
