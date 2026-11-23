@@ -47,95 +47,25 @@ rules_version = '2';
 //
 // Collection: leads
 // Document ID: {leadId} (auto-generated Firestore document ID)
-// Access: Write-only (create) from public website visitors submitting
-//         contact/interest forms. Strictly denies all client reads,
-//         updates, and deletes to protect customer PII.
-// Fields:
+// Access: Strictly server-only (no direct client reads or writes).
+//         All lead captures submit via the trusted Angular SSR route
+//         `POST /api/leads`, which validates/sanitizes input, persists to
+//         Firestore via Firebase Admin SDK, and syncs to Google Sheets.
+// Fields (managed server-side):
 //   - name: string (required, 2..120 chars) - Lead full name
-//   - email: string (required, 5..160 chars, valid email) - Lead email
-//   - phone: string (required, 8..25 chars) - Lead phone number
+//   - phone: string (required, 10..25 chars) - Brazilian phone/WhatsApp
 //   - launchSlug: string (required, 1..100 chars) - Target launch slug
-//   - message: string (optional, 0..1000 chars) - Optional visitor message
-//   - source: string (optional, 1..60 chars) - Acquisition source (e.g., "web-seo")
-//   - createdAt: timestamp (required, must equal request.time) - Server timestamp
+//   - launchName: string (required, 1..160 chars) - Target launch display name
+//   - source: string (required) - Acquisition source (e.g., "web-seo:launch-card")
+//   - createdAt: timestamp (required) - Server timestamp via Admin SDK
+//   - createdAtIso: string (required) - Exact ISO-8601 UTC timestamp
+//   - createdAtBrasilia: string (required) - Exact formatted America/Sao_Paulo timestamp
+//   - sheetsSynced: bool (optional) - Whether Google Sheets sync succeeded
 //
 // ===============================================================
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // ===============================================================
-    // Helper Functions
-    // ===============================================================
-
-    // Validate that the document contains only the allowed fields
-    function hasOnlyAllowedFields(data, fields) {
-      return data.keys().hasOnly(fields);
-    }
-
-    // Validate that all required fields exist on the document
-    function hasRequiredFields(data, fields) {
-      return data.keys().hasAll(fields);
-    }
-
-    // Validate required string field type and inclusive length bounds
-    function validStringLength(data, field, minLen, maxLen) {
-      return data[field] is string &&
-             data[field].size() >= minLen &&
-             data[field].size() <= maxLen;
-    }
-
-    // Validate optional string field (if present, must be string within bounds)
-    function isValidOptionalString(data, field, minLen, maxLen) {
-      return !(field in data) ||
-             (data[field] is string &&
-              data[field].size() >= minLen &&
-              data[field].size() <= maxLen);
-    }
-
-    // Validate email format and length bounds
-    function isValidEmail(email) {
-      return email is string &&
-             email.size() >= 5 &&
-             email.size() <= 160 &&
-             email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$');
-    }
-
-    // Validate that a field is a server-generated timestamp matching request.time
-    function isServerTimestamp(value) {
-      return value is timestamp && value == request.time;
-    }
-
-    // ===============================================================
-    // Domain Validators
-    // ===============================================================
-
-    // Validate incoming lead submission payload
-    function isValidLead(data) {
-      return hasOnlyAllowedFields(data, [
-               'name',
-               'email',
-               'phone',
-               'launchSlug',
-               'message',
-               'source',
-               'createdAt'
-             ]) &&
-             hasRequiredFields(data, [
-               'name',
-               'email',
-               'phone',
-               'launchSlug',
-               'createdAt'
-             ]) &&
-             validStringLength(data, 'name', 2, 120) &&
-             isValidEmail(data.email) &&
-             validStringLength(data, 'phone', 8, 25) &&
-             validStringLength(data, 'launchSlug', 1, 100) &&
-             isValidOptionalString(data, 'message', 0, 1000) &&
-             isValidOptionalString(data, 'source', 1, 60) &&
-             isServerTimestamp(data.createdAt);
-    }
 
     // ===============================================================
     // Collection Rules
@@ -148,12 +78,12 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Customer lead submissions (PII-sensitive):
-    // Public visitors may submit validated leads; all client reads,
-    // updates, and deletes are strictly denied.
+    // Customer lead submissions (PII-sensitive, strictly server-only):
+    // All reads and writes occur exclusively via the trusted SSR route
+    // `POST /api/leads` using Firebase Admin SDK. Direct client access
+    // is denied to prevent PII exposure, bypass spam, and Sheets drift.
     match /leads/{leadId} {
-      allow create: if isValidLead(request.resource.data);
-      allow read, update, delete: if false;
+      allow read, write: if false;
     }
 
     // Default deny all unmatched paths and subcollections

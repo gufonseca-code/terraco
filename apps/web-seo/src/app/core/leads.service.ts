@@ -1,100 +1,96 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { FirebaseService } from './firebase.service';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
 export interface LeadCreateInput {
   name: string;
-  email: string;
   phone: string;
   launchSlug: string;
-  message?: string;
-}
-
-export interface LeadCreatePayload {
-  name: string;
-  email: string;
-  phone: string;
-  launchSlug: string;
-  message?: string;
+  launchName: string;
   source?: string;
-  createdAt: ReturnType<typeof serverTimestamp>;
+  website?: string;
 }
 
 export interface LeadSubmissionResult {
   id: string;
-  persisted: boolean;
+  createdAtIso: string;
+  createdAtBrasilia: string;
+  sheetsSynced: boolean;
 }
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+interface LeadApiErrorBody {
+  error?: string;
+}
 
 /**
- * Write-only client service for the `leads` Firestore collection.
- * Never performs any read/query on `leads` (which is denied by firestore.rules).
+ * Extracts normalized Brazilian phone digits (10 or 11 local digits without country code 55).
+ */
+export function extractBrazilianPhoneDigits(raw: string): string {
+  const digits = raw.replace(/\D/g, '');
+  if (digits.length >= 12 && digits.startsWith('55')) {
+    return digits.slice(2, 13);
+  }
+  return digits.slice(0, 11);
+}
+
+/**
+ * Formats Brazilian phone digits as `(DD) 99999-9999` or `(DD) 9999-9999`.
+ */
+export function formatBrazilianPhone(raw: string): string {
+  const digits = extractBrazilianPhoneDigits(raw);
+  if (digits.length === 0) {
+    return '';
+  }
+  if (digits.length <= 2) {
+    return `(${digits}`;
+  }
+  if (digits.length <= 6) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  }
+  if (digits.length <= 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
+}
+
+/**
+ * Submits product lead captures to the Angular SSR server route (`POST /api/leads`),
+ * which persists the lead to Firestore with an exact server timestamp and forwards
+ * it automatically to Google Sheets.
  */
 @Injectable({ providedIn: 'root' })
 export class LeadsService {
-  private readonly firebase = inject(FirebaseService);
-
-  readonly submitting = signal<boolean>(false);
-  readonly lastError = signal<string | null>(null);
-  readonly lastSubmittedId = signal<string | null>(null);
+  private readonly http = inject(HttpClient);
 
   async createLead(input: LeadCreateInput): Promise<LeadSubmissionResult> {
-    const name = input.name.trim();
-    const email = input.email.trim().toLowerCase();
-    const phone = input.phone.trim();
-    const launchSlug = input.launchSlug.trim() || 'geral';
-    const message = input.message?.trim();
-
-    if (name.length < 2 || name.length > 120) {
-      throw new Error('Informe um nome válido (entre 2 e 120 caracteres).');
-    }
-    if (email.length < 5 || email.length > 160 || !EMAIL_PATTERN.test(email)) {
-      throw new Error('Informe um e-mail válido.');
-    }
-    if (phone.length < 8 || phone.length > 25) {
-      throw new Error('Informe um telefone válido com DDD.');
-    }
-    if (launchSlug.length < 1 || launchSlug.length > 100) {
-      throw new Error('Referência do lançamento inválida.');
-    }
-    if (message && message.length > 1000) {
-      throw new Error('A mensagem deve ter no máximo 1000 caracteres.');
-    }
-
-    this.submitting.set(true);
-    this.lastError.set(null);
+    const payload: LeadCreateInput = {
+      name: input.name.trim(),
+      phone: formatBrazilianPhone(input.phone) || input.phone.trim(),
+      launchSlug: input.launchSlug.trim(),
+      launchName: input.launchName.trim(),
+      source: input.source?.trim() || 'web-seo:launch-card',
+      ...(input.website ? { website: input.website } : {}),
+    };
 
     try {
-      const db = this.firebase.getFirestore();
-      if (!db) {
-        const localId = `local-${Date.now()}`;
-        this.lastSubmittedId.set(localId);
-        return { id: localId, persisted: false };
+      return await firstValueFrom(
+        this.http.post<LeadSubmissionResult>('/api/leads', payload),
+      );
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        const body = error.error as LeadApiErrorBody | null;
+        if (body?.error && typeof body.error === 'string') {
+          throw new Error(body.error);
+        }
+        if (error.status === 0) {
+          throw new Error(
+            'Sem conexão no momento. Verifique sua internet e tente novamente.',
+          );
+        }
       }
-
-      const payload: LeadCreatePayload = {
-        name,
-        email,
-        phone,
-        launchSlug,
-        source: 'web-seo',
-        createdAt: serverTimestamp(),
-        ...(message ? { message } : {}),
-      };
-
-      const docRef = await addDoc(collection(db, 'leads'), payload);
-      this.lastSubmittedId.set(docRef.id);
-      return { id: docRef.id, persisted: true };
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : 'Não foi possível enviar seu contato. Tente novamente.';
-      this.lastError.set(errorMessage);
-      throw err;
-    } finally {
-      this.submitting.set(false);
+      throw new Error(
+        'Não foi possível enviar seu contato agora. Tente novamente em instantes.',
+      );
     }
   }
 }

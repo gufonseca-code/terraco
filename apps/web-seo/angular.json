@@ -55,6 +55,12 @@
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
+            "externalDependencies": [
+              "firebase-admin",
+              "firebase-admin/app",
+              "firebase-admin/firestore",
+              "google-auth-library"
+            ],
             "security": {
               "allowedHosts": [
                 "localhost",

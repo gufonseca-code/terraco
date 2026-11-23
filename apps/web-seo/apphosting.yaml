@@ -14,3 +14,11 @@ env:
     availability:
       - BUILD
       - RUNTIME
+  - variable: GOOGLE_SHEETS_SPREADSHEET_ID
+    value: "1GXlTAZrO1pZNq2B8FUmie4x0IwJ-4xkH6RBom2gCIus"
+    availability:
+      - RUNTIME
+  - variable: GOOGLE_SHEETS_RANGE
+    value: "Leads!A:G"
+    availability:
+      - RUNTIME

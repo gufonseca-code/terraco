@@ -6,6 +6,7 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { handleCreateLead } from './server/leads.handler';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -49,6 +50,8 @@ app.get('/sitemap.xml', (_req, res) => {
       `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${SITE_URL}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>1</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/prime-view</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/upside-square</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/horizon</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n</urlset>\n`,
     );
 });
+
+app.post('/api/leads', express.json({ limit: '16kb' }), handleCreateLead);
 
 /**
  * Serve static files from /browser
