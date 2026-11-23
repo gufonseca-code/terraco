@@ -135,7 +135,23 @@ function buildLaunchDocument(raw, index, mediaEntry, useStorageUrls) {
           width: g.width,
           height: g.height,
         }))
-      : undefined;
+      : Array.isArray(raw.galeria)
+        ? raw.galeria.map((g) => ({
+            ...g,
+            url: ensureWebpUrl(g.url, slug),
+          }))
+        : [];
+
+  const plantas = Array.isArray(raw.plantas)
+    ? raw.plantas.map((p) => ({
+        ...p,
+        imagem: ensureWebpUrl(p.imagem, slug),
+      }))
+    : [];
+
+  const condicoesEspeciais = Array.isArray(raw.condicoesEspeciais)
+    ? raw.condicoesEspeciais
+    : [];
 
   const bookUrl = useStorageUrls && mediaEntry?.bookUrl ? mediaEntry.bookUrl : undefined;
   const plantasUrls =
@@ -146,7 +162,7 @@ function buildLaunchDocument(raw, index, mediaEntry, useStorageUrls) {
   const doc = stripUndefined({
     slug,
     nome: raw.nome,
-    construtora: raw.construtora,
+    construtora: raw.construtora ?? '',
     tagline: raw.tagline,
     bairro: raw.bairro,
     cidade: raw.cidade,
@@ -167,8 +183,10 @@ function buildLaunchDocument(raw, index, mediaEntry, useStorageUrls) {
     imagemHeight,
     imagemAlt: raw.imagemAlt,
     diferenciais: Array.isArray(raw.diferenciais) ? raw.diferenciais : [],
+    condicoesEspeciais,
     whatsappMensagem: raw.whatsappMensagem,
     galeria,
+    plantas,
     bookUrl,
     plantasUrls,
     published: true,
