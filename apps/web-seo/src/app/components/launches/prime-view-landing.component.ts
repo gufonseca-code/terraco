@@ -538,6 +538,6 @@ export class PrimeViewLandingComponent {
 
   closeLightbox(): void {
     this.isLightboxOpen.set(false);
-    this.heroTrigger()?.nativeElement.focus();
+    this.heroTrigger()?.nativeElement.focus({ preventScroll: true });
   }
 }

@@ -19,7 +19,8 @@ const DESKTOP_ZOOM_SCALE = 2.2;
 const MIN_ZOOM_SCALE = 1;
 const MAX_ZOOM_SCALE = 4;
 const EXPAND_DURATION_MS = 320;
-const COLLAPSE_DURATION_MS = 260;
+const COLLAPSE_DURATION_MS = 280;
+const CLOSE_BTN_LEAVE_DURATION_MS = 180;
 
 @Component({
   selector: 'app-image-lightbox',
@@ -31,7 +32,7 @@ const COLLAPSE_DURATION_MS = 260;
       [attr.aria-label]="'Visualização ampliada: ' + (title() || alt())"
       data-testid="image-lightbox"
       animate.enter="terraco-lightbox-backdrop-enter"
-      animate.leave="terraco-lightbox-backdrop-leave"
+      (animate.leave)="onLightboxLeave($event)"
       (click)="onBackdropClick($event)"
       class="fixed inset-0 z-50 flex items-center justify-center bg-ink/85 p-4 backdrop-blur-xs sm:p-8"
     >
@@ -63,7 +64,6 @@ const COLLAPSE_DURATION_MS = 260;
         #stageRef
         data-testid="image-lightbox-stage"
         (animate.enter)="onStageEnter($event)"
-        (animate.leave)="onStageLeave($event)"
         (touchstart)="onTouchStart($event)"
         (touchmove)="onTouchMove($event)"
         (touchend)="onTouchEnd($event)"
@@ -133,6 +133,7 @@ export class ImageLightboxComponent {
   private dragStartPanX = 0;
   private dragStartPanY = 0;
   private isDragging = false;
+  private isClosing = false;
   private suppressNextClick = false;
   private previousBodyOverflow = '';
 
@@ -163,7 +164,10 @@ export class ImageLightboxComponent {
   }
 
   requestClose(): void {
-    this.resetZoom();
+    if (this.isClosing) {
+      return;
+    }
+    this.isClosing = true;
     this.closed.emit();
   }
 
@@ -345,42 +349,92 @@ export class ImageLightboxComponent {
     animation.addEventListener('cancel', complete, { once: true });
   }
 
-  onStageLeave(event: AnimationCallbackEvent): void {
+  onLightboxLeave(event: AnimationCallbackEvent): void {
+    const backdropEl = event.target as HTMLElement;
+
     if (
       !isPlatformBrowser(this.platformId) ||
       this.prefersReducedMotion() ||
-      typeof event.target.animate !== 'function'
+      typeof backdropEl.animate !== 'function'
     ) {
       event.animationComplete();
       return;
     }
 
-    const el = event.target as HTMLElement;
-    const toTransform = this.computeOriginTransform(el);
+    backdropEl.style.pointerEvents = 'none';
 
-    const animation = el.animate(
-      [
+    const animations: Animation[] = [];
+
+    animations.push(
+      backdropEl.animate(
+        [
+          { opacity: 1 },
+          { opacity: 0 },
+        ],
         {
-          transform: 'translate3d(0, 0, 0) scale(1)',
-          opacity: 1,
-          borderRadius: '16px',
-        },
-        {
-          transform: toTransform,
-          opacity: 0.35,
-          borderRadius: '20px',
-        },
-      ],
-      {
-        duration: COLLAPSE_DURATION_MS,
-        easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
-        fill: 'forwards',
-      }
+          duration: COLLAPSE_DURATION_MS,
+          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          fill: 'forwards',
+        }
+      )
     );
 
-    const complete = () => event.animationComplete();
-    animation.addEventListener('finish', complete, { once: true });
-    animation.addEventListener('cancel', complete, { once: true });
+    const closeBtnEl = this.closeBtn()?.nativeElement;
+    if (closeBtnEl && typeof closeBtnEl.animate === 'function') {
+      animations.push(
+        closeBtnEl.animate(
+          [
+            {
+              opacity: 1,
+              transform: 'translate3d(0, 0, 0)',
+            },
+            {
+              opacity: 0,
+              transform: 'translate3d(0, -8px, 0)',
+            },
+          ],
+          {
+            duration: CLOSE_BTN_LEAVE_DURATION_MS,
+            easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+            fill: 'forwards',
+          }
+        )
+      );
+    }
+
+    const stageEl = this.stageRef()?.nativeElement;
+    if (stageEl && typeof stageEl.animate === 'function') {
+      const fromTransform = this.stageTransform();
+      const toTransform = this.computeOriginTransform(stageEl, backdropEl);
+
+      animations.push(
+        stageEl.animate(
+          [
+            {
+              transform: fromTransform,
+              opacity: 1,
+              borderRadius: '16px',
+            },
+            {
+              transform: toTransform,
+              opacity: 0,
+              borderRadius: '20px',
+            },
+          ],
+          {
+            duration: COLLAPSE_DURATION_MS,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'forwards',
+          }
+        )
+      );
+    }
+
+    void Promise.all(
+      animations.map((animation) => animation.finished.catch(() => undefined))
+    ).then(() => {
+      event.animationComplete();
+    });
   }
 
   private resetZoom(): void {
@@ -412,34 +466,45 @@ export class ImageLightboxComponent {
     };
   }
 
-  private computeOriginTransform(targetEl: HTMLElement): string {
+  private computeOriginTransform(
+    targetEl: HTMLElement,
+    backdropEl?: HTMLElement
+  ): string {
     const originEl = this.originElement();
     if (!originEl) {
       return 'translate3d(0, 12px, 0) scale(0.9)';
     }
 
     const originRect = originEl.getBoundingClientRect();
-    const targetRect = targetEl.getBoundingClientRect();
+    const targetWidth = targetEl.offsetWidth;
+    const targetHeight = targetEl.offsetHeight;
 
     if (
       originRect.width <= 0 ||
       originRect.height <= 0 ||
-      targetRect.width <= 0 ||
-      targetRect.height <= 0
+      targetWidth <= 0 ||
+      targetHeight <= 0
     ) {
       return 'translate3d(0, 12px, 0) scale(0.9)';
     }
 
+    const containerRect = backdropEl?.getBoundingClientRect();
+    const targetRect = containerRect ? null : targetEl.getBoundingClientRect();
+
     const originCenterX = originRect.left + originRect.width / 2;
     const originCenterY = originRect.top + originRect.height / 2;
-    const targetCenterX = targetRect.left + targetRect.width / 2;
-    const targetCenterY = targetRect.top + targetRect.height / 2;
+    const targetCenterX = containerRect
+      ? containerRect.left + containerRect.width / 2
+      : targetRect!.left + targetRect!.width / 2;
+    const targetCenterY = containerRect
+      ? containerRect.top + containerRect.height / 2
+      : targetRect!.top + targetRect!.height / 2;
 
     const dx = originCenterX - targetCenterX;
     const dy = originCenterY - targetCenterY;
     const scale = Math.min(
-      originRect.width / targetRect.width,
-      originRect.height / targetRect.height
+      originRect.width / targetWidth,
+      originRect.height / targetHeight
     );
     const clampedScale = Math.min(0.95, Math.max(0.2, scale));
 
