@@ -240,8 +240,8 @@ export class LancamentosService {
         for (const item of transferred) {
           this.detailCache.set(item.slug, item);
         }
+        this.listLoaded = true;
       }
-      this.listLoaded = true;
     }
   }
 
@@ -269,9 +269,9 @@ export class LancamentosService {
         for (const item of transferred) {
           this.detailCache.set(item.slug, item);
         }
+        this.listLoaded = true;
+        return this.lancamentos();
       }
-      this.listLoaded = true;
-      return this.lancamentos();
     }
 
     if (this.listInFlight) {
@@ -497,7 +497,9 @@ export class LancamentosService {
     } catch {
       const fallback =
         this.initialData.find((item) => item.slug === slug) ?? null;
-      return this.commitDetailResult(slug, fallback);
+      return fallback
+        ? this.commitDetailResult(slug, fallback)
+        : undefined;
     } finally {
       this.isLoadingDetail.set(false);
     }
@@ -508,10 +510,12 @@ export class LancamentosService {
     for (const item of items) {
       this.detailCache.set(item.slug, item);
     }
-    this.listLoaded = true;
 
-    if (isPlatformServer(this.platformId)) {
-      this.transferState.set(LAUNCHES_LIST_STATE_KEY, items);
+    if (items.length > 0) {
+      this.listLoaded = true;
+      if (isPlatformServer(this.platformId)) {
+        this.transferState.set(LAUNCHES_LIST_STATE_KEY, items);
+      }
     }
 
     return items;

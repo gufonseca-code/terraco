@@ -19,8 +19,10 @@ const angularApp = new AngularNodeAppEngine({
     '*.terraco.com.br',
     '*.web.app',
     '*.firebaseapp.com',
+    '*.hosted.app',
     '*.run.app',
   ],
+  trustProxyHeaders: true,
 });
 
 const SITE_URL = (
