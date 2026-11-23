@@ -74,7 +74,9 @@ export class LeadsService {
 
     try {
       return await firstValueFrom(
-        this.http.post<LeadSubmissionResult>('/api/leads', payload),
+        this.http.post<LeadSubmissionResult>('/api/leads', payload, {
+          keepalive: true,
+        }),
       );
     } catch (error) {
       if (error instanceof HttpErrorResponse) {

@@ -501,6 +501,12 @@ export class PrimeViewLandingComponent {
     event.preventDefault();
     this.submitError.set(null);
 
+    const isValid = this.leadForm().valid();
+    if (isValid && isPlatformBrowser(this.platformId)) {
+      // Open WhatsApp synchronously inside the user gesture so browsers never block the pop-up.
+      window.open(this.whatsappHref(), '_blank', 'noopener,noreferrer');
+    }
+
     void submit(this.leadForm, async () => {
       this.submitting.set(true);
       try {
@@ -514,9 +520,6 @@ export class PrimeViewLandingComponent {
           source: 'web-seo:launch-detail-whatsapp',
         });
         this.submitted.set(true);
-        if (isPlatformBrowser(this.platformId)) {
-          window.open(this.whatsappHref(), '_blank', 'noopener,noreferrer');
-        }
       } catch (error) {
         this.submitError.set(
           error instanceof Error
