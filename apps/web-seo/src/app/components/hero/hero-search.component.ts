@@ -2,13 +2,20 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   PLATFORM_ID,
+  afterNextRender,
   inject,
+  signal,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { QUICK_NEIGHBORHOODS, SEARCH_SUGGESTIONS } from '../../core';
 import { HeroIllustrationComponent } from './hero-illustration.component';
 import { HeroSearchFormComponent } from './hero-search-form.component';
+
+const HERO_HEADING_TEXT = 'Seu próximo canto, sem burocracia.';
+const TYPEWRITER_CHAR_MS = 38;
+const TYPEWRITER_END_HOLD_MS = 550;
 
 @Component({
   selector: 'app-hero-search',
@@ -31,15 +38,27 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
             aria-hidden="true"
             class="pointer-events-none absolute -inset-x-6 top-0 -bottom-20 -z-10 bg-gradient-to-b from-canvas/95 via-canvas/92 via-78% to-transparent md:hidden"
           ></div>
-          <div animate.enter="terraco-reveal" class="space-y-4">
+          <div class="space-y-4">
             <h1
               id="hero-heading"
               class="font-display text-[clamp(2.25rem,4.5vw,3.25rem)] font-medium leading-[1.06] tracking-[-0.03em] text-ink max-w-[14ch] text-balance"
             >
-              Seu próximo canto, sem burocracia.
+              <span class="sr-only">{{ fullHeading }}</span>
+              <span aria-hidden="true" class="relative block">
+                <span class="invisible block select-none">{{
+                  fullHeading
+                }}</span>
+                <span class="absolute inset-0">
+                  {{ typedHeading() }}@if (isTyping()) {<span
+                    class="terraco-typewriter-caret"
+                    aria-hidden="true"
+                  ></span>}
+                </span>
+              </span>
             </h1>
 
             <p
+              animate.enter="terraco-reveal"
               class="text-base font-normal leading-[1.55] text-ink-muted max-w-[42ch] md:max-w-[30ch] lg:max-w-[42ch]"
             >
               Lançamentos em Belo Horizonte, direto no WhatsApp.
@@ -84,9 +103,57 @@ export class HeroSearchComponent {
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+
+  readonly fullHeading = HERO_HEADING_TEXT;
+  readonly typedHeading = signal(HERO_HEADING_TEXT);
+  readonly isTyping = signal(false);
 
   readonly suggestions = SEARCH_SUGGESTIONS;
   readonly quickNeighborhoods = QUICK_NEIGHBORHOODS;
+
+  constructor() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    let stepTimer: number | null = null;
+    let holdTimer: number | null = null;
+
+    this.destroyRef.onDestroy(() => {
+      if (stepTimer !== null) {
+        window.clearInterval(stepTimer);
+      }
+      if (holdTimer !== null) {
+        window.clearTimeout(holdTimer);
+      }
+    });
+
+    afterNextRender(() => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+
+      let index = 0;
+      this.typedHeading.set('');
+      this.isTyping.set(true);
+
+      stepTimer = window.setInterval(() => {
+        index += 1;
+        this.typedHeading.set(HERO_HEADING_TEXT.slice(0, index));
+
+        if (index >= HERO_HEADING_TEXT.length) {
+          if (stepTimer !== null) {
+            window.clearInterval(stepTimer);
+            stepTimer = null;
+          }
+          holdTimer = window.setTimeout(() => {
+            this.isTyping.set(false);
+          }, TYPEWRITER_END_HOLD_MS);
+        }
+      }, TYPEWRITER_CHAR_MS);
+    });
+  }
 
   scrollToFeatured(event: MouseEvent): void {
     event.preventDefault();
