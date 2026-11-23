@@ -179,6 +179,16 @@ export class FirebaseService {
     if (this.config.appCheckDebugToken) {
       (globalThis as Record<string, unknown>)['FIREBASE_APPCHECK_DEBUG_TOKEN'] =
         this.config.appCheckDebugToken;
+    } else {
+      const hostname =
+        typeof window !== 'undefined' ? window.location.hostname : '';
+      const isLocalhost =
+        hostname === 'localhost' ||
+        hostname === '127.0.0.1' ||
+        hostname === '[::1]';
+      if (isLocalhost) {
+        return null;
+      }
     }
 
     this.appCheckInstance = initializeAppCheck(app, {
