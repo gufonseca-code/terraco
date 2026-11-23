@@ -7,6 +7,7 @@ import {
 import {
   GuidedDiscoveryComponent,
   HeroSearchComponent,
+  TrustConciergeComponent,
 } from '../components/hero';
 import { FeaturedLaunchesComponent } from '../components/launches';
 import { FooterComponent, NavbarComponent } from '../components/layout';
@@ -19,6 +20,7 @@ import { SeoService } from '../core';
     HeroSearchComponent,
     GuidedDiscoveryComponent,
     FeaturedLaunchesComponent,
+    TrustConciergeComponent,
     FooterComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +33,7 @@ import { SeoService } from '../core';
         </div>
         <app-featured-launches />
         <app-guided-discovery />
+        <app-trust-concierge />
       </main>
       <app-footer />
     </div>
