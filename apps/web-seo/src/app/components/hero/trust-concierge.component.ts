@@ -42,26 +42,22 @@ const WHATSAPP_INTENT_OPTIONS: readonly WhatsAppIntentOption[] = [
 ];
 
 interface TrustPillar {
-  readonly step: string;
   readonly title: string;
   readonly description: string;
 }
 
 const TRUST_PILLARS: readonly TrustPillar[] = [
   {
-    step: '01',
     title: 'Ficha completa antes do contato',
     description:
       'Metragem, faixa de preço e previsão de entrega ficam abertas na página para você avaliar sem cadastro.',
   },
   {
-    step: '02',
     title: 'Sem ligações nem spam',
     description:
       'A conversa começa no WhatsApp apenas com o assunto que você escolher, sem repassar seu número.',
   },
   {
-    step: '03',
     title: 'Online ou presencial em BH',
     description:
       'Compare plantas pelo celular ou agende visita direta ao decorado nos bairros de Belo Horizonte.',
@@ -78,30 +74,18 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
       class="border-t border-border-subtle bg-surface/45 py-16 sm:py-20 lg:py-24 scroll-mt-24"
     >
       <div class="mx-auto max-w-6xl px-6 lg:px-8">
-        <div class="max-w-2xl space-y-3">
-          <h2
-            id="trust-concierge-heading"
-            class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
-          >
-            Atendimento claro em BH, no seu ritmo
-          </h2>
-          <p class="text-base font-normal leading-[1.55] text-ink-muted">
-            Você pesquisa os números antes, compara sem formulário e só chama no
-            WhatsApp quando quiser tirar uma dúvida ou visitar.
-          </p>
-        </div>
+        <h2
+          id="trust-concierge-heading"
+          class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
+        >
+          Atendimento claro em BH, no seu ritmo
+        </h2>
 
-        <div class="mt-10 grid gap-6 md:grid-cols-3">
-          @for (pillar of pillars; track pillar.step) {
+        <div class="mt-8 grid gap-6 sm:mt-10 md:grid-cols-3">
+          @for (pillar of pillars; track pillar.title) {
             <div
-              class="flex flex-col gap-2.5 rounded-lg border border-border-subtle bg-elevated/80 p-6"
+              class="flex flex-col gap-2 rounded-lg border border-border-subtle bg-elevated/80 p-6"
             >
-              <span
-                aria-hidden="true"
-                class="text-[13px] font-medium tracking-[0.04em] text-ink-muted tabular-nums"
-              >
-                {{ pillar.step }}
-              </span>
               <h3
                 class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance"
               >
@@ -119,17 +103,11 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
             class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
           >
             <div class="space-y-4">
-              <div class="space-y-1.5">
-                <h3
-                  class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance"
-                >
-                  Quer falar direto sobre o seu plano?
-                </h3>
-                <p class="text-[15px] font-normal leading-[1.5] text-ink-muted">
-                  Escolha o assunto para abrir o WhatsApp já com contexto — sem
-                  precisar repetir tudo.
-                </p>
-              </div>
+              <h3
+                class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance"
+              >
+                Quer falar direto sobre o seu plano?
+              </h3>
 
               <div
                 role="group"

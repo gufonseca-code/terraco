@@ -115,8 +115,7 @@ function normalizeText(value: string): string {
             Qual momento combina com você?
           </h2>
           <p class="text-base font-normal leading-[1.55] text-ink-muted">
-            Escolha três preferências rápidas — sem cadastro — e veja os
-            lançamentos que fazem sentido para o seu plano.
+            Combine objetivo, tipologia e região sem cadastro.
           </p>
         </div>
 
@@ -190,15 +189,10 @@ function normalizeText(value: string): string {
                   </p>
                 } @else {
                   <p>
-                    Nenhum lançamento exato com essa combinação — explore o
+                    Nenhum lançamento exato com essa combinação. Explore o
                     catálogo completo em BH.
                   </p>
                 }
-              } @else {
-                <p>
-                  Toque nas opções acima para filtrar ou abra o catálogo
-                  completo.
-                </p>
               }
             </div>
 

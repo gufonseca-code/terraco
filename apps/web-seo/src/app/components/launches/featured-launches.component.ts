@@ -26,18 +26,12 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
         class="border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24"
       >
         <div class="mx-auto max-w-6xl px-6 lg:px-8">
-          <div class="max-w-2xl space-y-3">
-            <h2
-              id="featured-launches-heading"
-              class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
-            >
-              Lançamentos selecionados em BH
-            </h2>
-            <p class="text-base font-normal leading-[1.55] text-ink-muted">
-              Empreendimentos escolhidos pela localização, planta bem resolvida e
-              condições claras para comparar sem pressa.
-            </p>
-          </div>
+          <h2
+            id="featured-launches-heading"
+            class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
+          >
+            Lançamentos selecionados em BH
+          </h2>
           <div
             class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 sm:mt-10"
           >
@@ -56,18 +50,12 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
           <div
             class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
           >
-            <div class="max-w-2xl space-y-3">
-              <h2
-                id="featured-launches-heading"
-                class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
-              >
-                Lançamentos selecionados em BH
-              </h2>
-              <p class="text-base font-normal leading-[1.55] text-ink-muted">
-                Empreendimentos escolhidos pela localização, planta bem
-                resolvida e condições claras para comparar sem pressa.
-              </p>
-            </div>
+            <h2
+              id="featured-launches-heading"
+              class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
+            >
+              Lançamentos selecionados em BH
+            </h2>
 
             <a
               routerLink="/lancamentos"
