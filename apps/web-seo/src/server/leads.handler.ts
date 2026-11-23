@@ -7,6 +7,7 @@ import { resolveFirebaseEnvConfig } from '../app/core/site.config';
 const ADMIN_APP_NAME = 'terraco-ssr-admin';
 const LEADS_COLLECTION = 'leads';
 const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
+const DEFAULT_SPREADSHEET_ID = '1GXlTAZrO1pZNq2B8FUmie4x0IwJ-4xkH6RBom2gCIus';
 const DEFAULT_SHEET_RANGE = 'Leads!A:G';
 const BRASILIA_TIMEZONE = 'America/Sao_Paulo';
 
@@ -236,7 +237,9 @@ function getSheetsAuth(): GoogleAuth {
 }
 
 async function appendLeadToGoogleSheets(row: string[]): Promise<boolean> {
-  const spreadsheetId = process.env['GOOGLE_SHEETS_SPREADSHEET_ID']?.trim();
+  const spreadsheetId =
+    process.env['GOOGLE_SHEETS_SPREADSHEET_ID']?.trim() ||
+    DEFAULT_SPREADSHEET_ID;
   if (!spreadsheetId) {
     console.warn(
       '[leads] GOOGLE_SHEETS_SPREADSHEET_ID não configurado; lead salvo apenas no Firestore.',
