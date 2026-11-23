@@ -34,6 +34,7 @@ export class CardResizeDirective {
   private lastHeight = 0;
   private isAnimating = false;
   private activeAnimation: Animation | null = null;
+  private rafId: number | null = null;
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) {
@@ -83,42 +84,55 @@ export class CardResizeDirective {
           return;
         }
 
-        this.activeAnimation?.cancel();
-        this.isAnimating = true;
+        if (this.rafId !== null) {
+          cancelAnimationFrame(this.rafId);
+        }
 
-        const anim = el.animate(
-          [
+        // Defer el.animate() to the next animation frame so layout mutations
+        // never happen synchronously inside the ResizeObserver callback.
+        this.rafId = requestAnimationFrame(() => {
+          this.rafId = null;
+          this.activeAnimation?.cancel();
+          this.isAnimating = true;
+
+          const anim = el.animate(
+            [
+              {
+                width: `${fromWidth.toFixed(1)}px`,
+                height: `${fromHeight.toFixed(1)}px`,
+              },
+              {
+                width: `${nextWidth.toFixed(1)}px`,
+                height: `${nextHeight.toFixed(1)}px`,
+              },
+            ],
             {
-              width: `${fromWidth.toFixed(1)}px`,
-              height: `${fromHeight.toFixed(1)}px`,
-            },
-            {
-              width: `${nextWidth.toFixed(1)}px`,
-              height: `${nextHeight.toFixed(1)}px`,
-            },
-          ],
-          {
-            duration: this.resizeDuration(),
-            easing: this.resizeEasing(),
-          }
-        );
-        this.activeAnimation = anim;
+              duration: this.resizeDuration(),
+              easing: this.resizeEasing(),
+            }
+          );
+          this.activeAnimation = anim;
 
-        const finalize = () => {
-          this.isAnimating = false;
-          this.activeAnimation = null;
-          const settled = el.getBoundingClientRect();
-          this.lastWidth = settled.width;
-          this.lastHeight = settled.height;
-        };
+          const finalize = () => {
+            this.isAnimating = false;
+            this.activeAnimation = null;
+            const settled = el.getBoundingClientRect();
+            this.lastWidth = settled.width;
+            this.lastHeight = settled.height;
+          };
 
-        anim.addEventListener('finish', finalize, { once: true });
-        anim.addEventListener('cancel', finalize, { once: true });
+          anim.addEventListener('finish', finalize, { once: true });
+          anim.addEventListener('cancel', finalize, { once: true });
+        });
       });
 
       observer.observe(el);
 
       this.destroyRef.onDestroy(() => {
+        if (this.rafId !== null) {
+          cancelAnimationFrame(this.rafId);
+          this.rafId = null;
+        }
         this.activeAnimation?.cancel();
         observer.disconnect();
       });

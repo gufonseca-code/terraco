@@ -30,12 +30,19 @@ export const appConfig: ApplicationConfig = {
       routes,
       withViewTransitions({
         onViewTransitionCreated: ({ transition }) => {
+          if (typeof document !== 'undefined' && document.hidden) {
+            transition.skipTransition();
+            return;
+          }
           if (
             typeof window !== 'undefined' &&
             window.matchMedia('(prefers-reduced-motion: reduce)').matches
           ) {
             transition.skipTransition();
+            return;
           }
+          transition.ready.catch(() => {});
+          transition.finished.catch(() => {});
         },
       }),
       withComponentInputBinding(),
