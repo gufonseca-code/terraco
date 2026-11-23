@@ -23,7 +23,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
     @if (isLoading() && featuredLaunches().length === 0) {
       <section
         aria-labelledby="featured-launches-heading"
-        class="border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24"
+        class="bg-canvas py-16 sm:py-20 lg:py-24"
       >
         <div class="mx-auto max-w-6xl px-6 lg:px-8">
           <h2
@@ -44,7 +44,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
     } @else if (featuredLaunches().length > 0) {
       <section
         aria-labelledby="featured-launches-heading"
-        class="border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24"
+        class="bg-canvas py-16 sm:py-20 lg:py-24"
       >
         <div class="mx-auto max-w-6xl px-6 lg:px-8">
           <div
