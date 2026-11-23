@@ -23,7 +23,6 @@ import {
 } from '../../core';
 import { ImageLightboxComponent } from './image-lightbox.component';
 import { LaunchFloorPlansComponent } from './launch-floor-plans.component';
-import { LaunchSimulatorComponent } from './launch-simulator.component';
 
 export type LaunchIntentKey =
   | 'plantas_valores'
@@ -148,7 +147,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
     RouterLink,
     ImageLightboxComponent,
     LaunchFloorPlansComponent,
-    LaunchSimulatorComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -453,8 +451,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           }
 
           <app-launch-floor-plans [item]="item()" />
-
-          <app-launch-simulator id="simulador" [item]="item()" />
 
           @if (hasGallery()) {
             <section

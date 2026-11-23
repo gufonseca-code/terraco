@@ -1,10 +1,8 @@
-import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
-  inject,
   input,
   signal,
 } from '@angular/core';
@@ -332,14 +330,6 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     >
                       {{ activeIntentOption().ctaLabel }}
                     </a>
-
-                    <button
-                      type="button"
-                      (click)="scrollToSimulator()"
-                      class="terraco-btn inline-flex min-h-[44px] items-center justify-center rounded-md border border-border-subtle bg-elevated px-4 py-2.5 text-[13px] font-medium text-ink hover:border-ink/30"
-                    >
-                      Simular entrada abaixo
-                    </button>
                   </div>
                 </div>
               </div>
@@ -358,8 +348,6 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
   `,
 })
 export class LaunchFloorPlansComponent {
-  private readonly document = inject(DOCUMENT);
-
   readonly item = input.required<Lancamento>();
   readonly intentOptions = PLAN_INTENT_OPTIONS;
 
@@ -487,10 +475,5 @@ export class LaunchFloorPlansComponent {
 
   closeLightbox(): void {
     this.lightboxOpen.set(false);
-  }
-
-  scrollToSimulator(): void {
-    const el = this.document.getElementById('simulador');
-    el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
