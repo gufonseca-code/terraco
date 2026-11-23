@@ -464,44 +464,6 @@ h4 {
     transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes terraco-caret-blink {
-  0%,
-  100% {
-    opacity: 0.9;
-  }
-  50% {
-    opacity: 0.15;
-  }
-}
-
-.terraco-typewriter-char {
-  opacity: 0;
-  transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.terraco-typewriter-char.is-visible {
-  opacity: 1;
-}
-
-.terraco-typewriter-caret {
-  position: relative;
-  display: inline-block;
-  width: 0;
-  height: 0.85em;
-  vertical-align: -0.06em;
-}
-
-.terraco-typewriter-caret::after {
-  content: '';
-  position: absolute;
-  left: 2px;
-  top: 0;
-  width: 2px;
-  height: 100%;
-  background-color: var(--color-brand);
-  animation: terraco-caret-blink 950ms ease-in-out infinite;
-}
-
 @keyframes terraco-chip-in {
   from {
     opacity: 0;
@@ -739,9 +701,6 @@ h4 {
   .terraco-reveal-delay,
   .terraco-scroll-pending,
   .terraco-scroll-visible,
-  .terraco-typewriter-char,
-  .terraco-typewriter-caret,
-  .terraco-typewriter-caret::after,
   .terraco-chip-enter,
   .terraco-chip-leave,
   .terraco-skeleton::after,

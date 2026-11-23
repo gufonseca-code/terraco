@@ -2,21 +2,13 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   PLATFORM_ID,
-  afterNextRender,
   inject,
-  signal,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { QUICK_NEIGHBORHOODS, SEARCH_SUGGESTIONS } from '../../core';
 import { HeroIllustrationComponent } from './hero-illustration.component';
 import { HeroSearchFormComponent } from './hero-search-form.component';
-
-const HERO_HEADING_TEXT = 'Seu próximo canto, sem burocracia.';
-const HERO_HEADING_CHARS = Array.from(HERO_HEADING_TEXT);
-const TYPEWRITER_CHAR_MS = 58;
-const TYPEWRITER_END_HOLD_MS = 700;
 
 @Component({
   selector: 'app-hero-search',
@@ -39,26 +31,15 @@ const TYPEWRITER_END_HOLD_MS = 700;
             aria-hidden="true"
             class="pointer-events-none absolute -inset-x-6 top-0 -bottom-20 -z-10 bg-gradient-to-b from-canvas/95 via-canvas/92 via-78% to-transparent md:hidden"
           ></div>
-          <div class="space-y-4">
+          <div animate.enter="terraco-reveal" class="space-y-4">
             <h1
               id="hero-heading"
               class="font-display text-[clamp(2.25rem,4.5vw,3.25rem)] font-medium leading-[1.06] tracking-[-0.03em] text-ink max-w-[14ch] text-balance"
             >
-              <span class="sr-only">{{ fullHeading }}</span>
-              <span aria-hidden="true">
-                @if (isTyping() && visibleCount() === 0) {<span
-                  class="terraco-typewriter-caret"
-                ></span>}@for (char of headingChars; track $index) {<span
-                  class="terraco-typewriter-char"
-                  [class.is-visible]="$index < visibleCount()"
-                >{{ char }}</span>@if (isTyping() && $index === visibleCount() - 1) {<span
-                  class="terraco-typewriter-caret"
-                ></span>}}
-              </span>
+              Seu próximo canto, sem burocracia.
             </h1>
 
             <p
-              animate.enter="terraco-reveal"
               class="text-base font-normal leading-[1.55] text-ink-muted max-w-[42ch] md:max-w-[30ch] lg:max-w-[42ch]"
             >
               Lançamentos em Belo Horizonte, direto no WhatsApp.
@@ -103,58 +84,9 @@ export class HeroSearchComponent {
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
-
-  readonly fullHeading = HERO_HEADING_TEXT;
-  readonly headingChars = HERO_HEADING_CHARS;
-  readonly visibleCount = signal(HERO_HEADING_CHARS.length);
-  readonly isTyping = signal(false);
 
   readonly suggestions = SEARCH_SUGGESTIONS;
   readonly quickNeighborhoods = QUICK_NEIGHBORHOODS;
-
-  constructor() {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
-    let stepTimer: number | null = null;
-    let holdTimer: number | null = null;
-
-    this.destroyRef.onDestroy(() => {
-      if (stepTimer !== null) {
-        window.clearInterval(stepTimer);
-      }
-      if (holdTimer !== null) {
-        window.clearTimeout(holdTimer);
-      }
-    });
-
-    afterNextRender(() => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        return;
-      }
-
-      let index = 0;
-      this.visibleCount.set(0);
-      this.isTyping.set(true);
-
-      stepTimer = window.setInterval(() => {
-        index += 1;
-        this.visibleCount.set(index);
-
-        if (index >= HERO_HEADING_CHARS.length) {
-          if (stepTimer !== null) {
-            window.clearInterval(stepTimer);
-            stepTimer = null;
-          }
-          holdTimer = window.setTimeout(() => {
-            this.isTyping.set(false);
-          }, TYPEWRITER_END_HOLD_MS);
-        }
-      }, TYPEWRITER_CHAR_MS);
-    });
-  }
 
   scrollToFeatured(event: MouseEvent): void {
     event.preventDefault();
