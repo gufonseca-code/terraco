@@ -76,7 +76,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
             @for (launch of featuredLaunches(); track launch.slug) {
               <app-launch-card
                 appScrollReveal
-                [revealDelayMs]="($index % 3) * 60"
+                [revealDelayMs]="($index % 3) * 90"
                 [launch]="launch"
                 headingLevel="h3"
                 [priority]="$index < 3"

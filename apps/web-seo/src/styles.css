@@ -452,15 +452,16 @@ h4 {
 
 .terraco-scroll-pending {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(14px);
+  will-change: opacity, transform;
 }
 
 .terraco-scroll-visible {
   opacity: 1;
   transform: translateY(0);
   transition:
-    opacity 480ms var(--ease-enter),
-    transform 480ms var(--ease-enter);
+    opacity 680ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes terraco-chip-in {
