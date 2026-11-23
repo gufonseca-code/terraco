@@ -29,8 +29,8 @@ import { SeoService } from '../core';
         <div class="flex min-h-[calc(100dvh-4.5rem)] flex-col">
           <app-hero-search />
         </div>
-        <app-guided-discovery />
         <app-featured-launches />
+        <app-guided-discovery />
       </main>
       <app-footer />
     </div>
