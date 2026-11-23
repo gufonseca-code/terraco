@@ -103,8 +103,9 @@ function normalizeText(value: string): string {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
+      id="descoberta-guiada"
       aria-labelledby="guided-discovery-heading"
-      class="border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24"
+      class="border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
     >
       <div class="mx-auto max-w-6xl px-6 lg:px-8">
         <div class="max-w-2xl space-y-3">

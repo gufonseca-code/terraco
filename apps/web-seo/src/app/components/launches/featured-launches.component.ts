@@ -1,6 +1,8 @@
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  PLATFORM_ID,
   computed,
   inject,
 } from '@angular/core';
@@ -85,16 +87,51 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
               />
             }
           </div>
+
+          <div
+            class="mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-muted sm:mt-10"
+          >
+            <span>Em dúvida por onde começar?</span>
+            <a
+              href="#descoberta-guiada"
+              (click)="scrollToGuidedDiscovery($event)"
+              class="terraco-link-underline inline-flex min-h-[44px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
+            >
+              Descubra pelo seu momento
+            </a>
+          </div>
         </div>
       </section>
     }
   `,
 })
 export class FeaturedLaunchesComponent {
+  private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly lancamentosService = inject(LancamentosService);
 
   readonly isLoading = this.lancamentosService.isLoadingList;
   readonly featuredLaunches = computed(() =>
     this.lancamentosService.lancamentos().slice(0, MAX_HOME_FEATURED_LAUNCHES),
   );
+
+  scrollToGuidedDiscovery(event: MouseEvent): void {
+    event.preventDefault();
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const target = this.document.getElementById('descoberta-guiada');
+    if (!target) {
+      return;
+    }
+
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    target.scrollIntoView({
+      behavior: reducedMotion ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }
 }
