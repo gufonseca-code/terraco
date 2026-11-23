@@ -294,7 +294,7 @@ import {
                             <li class="flex items-start gap-2">
                               <span
                                 aria-hidden="true"
-                                class="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-pill bg-brand"
+                                class="mt-2 h-1.5 w-1.5 shrink-0 rounded-pill bg-brand"
                               ></span>
                               <span>{{ item }}</span>
                             </li>
@@ -314,7 +314,7 @@ import {
             class="flex flex-col items-stretch justify-between gap-3 border-t border-border-subtle bg-canvas px-5 py-4 sm:flex-row sm:items-center sm:px-6"
           >
             <p class="text-[13px] font-normal text-ink-muted">
-              Sem compromisso — enviamos plantas, tabela e condições direto no seu WhatsApp.
+              Sem compromisso. Enviamos plantas, tabela e condições direto no seu WhatsApp.
             </p>
 
             <a

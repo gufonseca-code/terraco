@@ -425,7 +425,7 @@ function buildBairroJsonLd(
                       class="mt-2 text-[14px] font-normal leading-[1.55] text-ink-muted"
                     >
                       Deixe seu WhatsApp que te chamamos assim que surgir uma
-                      boa oportunidade no bairro — sem spam.
+                      boa oportunidade no bairro, sem spam.
                     </p>
 
                     @if (alertSuccess()) {

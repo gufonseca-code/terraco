@@ -187,8 +187,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 (error)="markImageLoaded()"
                 fetchpriority="high"
                 decoding="async"
-                class="relative z-[1] h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center transition-transform duration-300 lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
-                [class.group-hover:scale-[1.02]]="hasGallery()"
+                class="relative z-[1] h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
               />
               @if (hasGallery()) {
                 <button
@@ -488,7 +487,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.height]="media.height ?? null"
                       loading="lazy"
                       decoding="async"
-                      class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.03]"
+                      class="h-full w-full object-cover object-center"
                     />
                   </button>
                 }

@@ -158,7 +158,7 @@ function formatBrazilianPhone(raw: string): string {
           </h2>
 
           <p class="mt-2.5 text-[15px] font-normal leading-[1.55] text-ink-muted">
-            Deixe seu WhatsApp que te avisamos assim que surgir uma boa oportunidade nessa região — sem spam.
+            Deixe seu WhatsApp que te avisamos assim que surgir uma boa oportunidade nessa região, sem spam.
           </p>
 
           @if (demandSuccessTerm()) {
