@@ -22,6 +22,7 @@ import {
   type LaunchMediaItem,
 } from '../../core';
 import { ImageLightboxComponent } from './image-lightbox.component';
+import { LaunchFloorPlansComponent } from './launch-floor-plans.component';
 import { LaunchSimulatorComponent } from './launch-simulator.component';
 
 export type LaunchIntentKey =
@@ -143,7 +144,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
 @Component({
   selector: 'app-prime-view-landing',
-  imports: [RouterLink, ImageLightboxComponent, LaunchSimulatorComponent],
+  imports: [
+    RouterLink,
+    ImageLightboxComponent,
+    LaunchFloorPlansComponent,
+    LaunchSimulatorComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
@@ -447,7 +453,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </section>
           }
 
-          <app-launch-simulator [item]="item()" />
+          <app-launch-floor-plans [item]="item()" />
+
+          <app-launch-simulator id="simulador" [item]="item()" />
 
           @if (hasGallery()) {
             <section
@@ -458,7 +466,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 id="gallery-heading"
                 class="font-display text-[clamp(1.25rem,2vw,1.5rem)] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
               >
-                Galeria e Plantas
+                Galeria do empreendimento
               </h2>
 
               <div

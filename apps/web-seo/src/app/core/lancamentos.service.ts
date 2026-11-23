@@ -23,6 +23,7 @@ import {
   LANCAMENTOS,
   type Lancamento,
   type LaunchDocItem,
+  type LaunchFloorPlan,
   type LaunchMediaItem,
   QUICK_NEIGHBORHOODS,
   SEARCH_SUGGESTIONS,
@@ -135,6 +136,9 @@ function normalizeLancamento(
     whatsappMensagem: String(raw['whatsappMensagem'] ?? ''),
     ...(Array.isArray(raw['galeria'])
       ? { galeria: raw['galeria'] as LaunchMediaItem[] }
+      : {}),
+    ...(Array.isArray(raw['plantas'])
+      ? { plantas: raw['plantas'] as LaunchFloorPlan[] }
       : {}),
     ...(typeof raw['bookUrl'] === 'string' ? { bookUrl: raw['bookUrl'] } : {}),
     ...(Array.isArray(raw['plantasUrls'])
