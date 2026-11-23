@@ -14,8 +14,9 @@ import { HeroIllustrationComponent } from './hero-illustration.component';
 import { HeroSearchFormComponent } from './hero-search-form.component';
 
 const HERO_HEADING_TEXT = 'Seu próximo canto, sem burocracia.';
-const TYPEWRITER_CHAR_MS = 38;
-const TYPEWRITER_END_HOLD_MS = 550;
+const HERO_HEADING_CHARS = Array.from(HERO_HEADING_TEXT);
+const TYPEWRITER_CHAR_MS = 58;
+const TYPEWRITER_END_HOLD_MS = 700;
 
 @Component({
   selector: 'app-hero-search',
@@ -44,16 +45,15 @@ const TYPEWRITER_END_HOLD_MS = 550;
               class="font-display text-[clamp(2.25rem,4.5vw,3.25rem)] font-medium leading-[1.06] tracking-[-0.03em] text-ink max-w-[14ch] text-balance"
             >
               <span class="sr-only">{{ fullHeading }}</span>
-              <span aria-hidden="true" class="relative block">
-                <span class="invisible block select-none">{{
-                  fullHeading
-                }}</span>
-                <span class="absolute inset-0">
-                  {{ typedHeading() }}@if (isTyping()) {<span
-                    class="terraco-typewriter-caret"
-                    aria-hidden="true"
-                  ></span>}
-                </span>
+              <span aria-hidden="true">
+                @if (isTyping() && visibleCount() === 0) {<span
+                  class="terraco-typewriter-caret"
+                ></span>}@for (char of headingChars; track $index) {<span
+                  class="terraco-typewriter-char"
+                  [class.is-visible]="$index < visibleCount()"
+                >{{ char }}</span>@if (isTyping() && $index === visibleCount() - 1) {<span
+                  class="terraco-typewriter-caret"
+                ></span>}}
               </span>
             </h1>
 
@@ -106,7 +106,8 @@ export class HeroSearchComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly fullHeading = HERO_HEADING_TEXT;
-  readonly typedHeading = signal(HERO_HEADING_TEXT);
+  readonly headingChars = HERO_HEADING_CHARS;
+  readonly visibleCount = signal(HERO_HEADING_CHARS.length);
   readonly isTyping = signal(false);
 
   readonly suggestions = SEARCH_SUGGESTIONS;
@@ -135,14 +136,14 @@ export class HeroSearchComponent {
       }
 
       let index = 0;
-      this.typedHeading.set('');
+      this.visibleCount.set(0);
       this.isTyping.set(true);
 
       stepTimer = window.setInterval(() => {
         index += 1;
-        this.typedHeading.set(HERO_HEADING_TEXT.slice(0, index));
+        this.visibleCount.set(index);
 
-        if (index >= HERO_HEADING_TEXT.length) {
+        if (index >= HERO_HEADING_CHARS.length) {
           if (stepTimer !== null) {
             window.clearInterval(stepTimer);
             stepTimer = null;
