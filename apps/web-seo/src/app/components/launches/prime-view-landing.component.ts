@@ -141,6 +141,19 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 class="terraco-card-media-trigger relative z-[1] block aspect-square w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] text-left lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] cursor-zoom-in"
               >
                 <img
+                  aria-hidden="true"
+                  [src]="item().imagem"
+                  alt=""
+                  decoding="async"
+                  class="pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover object-center blur-2xl opacity-50 saturate-110"
+                />
+
+                <span
+                  aria-hidden="true"
+                  class="pointer-events-none absolute inset-0 bg-surface/25"
+                ></span>
+
+                <img
                   #heroImg
                   data-testid="launch-hero-image"
                   [src]="item().imagem"
@@ -152,17 +165,17 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   (error)="markImageLoaded()"
                   fetchpriority="high"
                   decoding="async"
-                  class="terraco-card-media-img h-full w-full object-cover object-[center_25%]"
+                  class="terraco-card-media-img relative z-[1] h-full w-full object-contain object-center"
                 />
 
                 <span
                   aria-hidden="true"
-                  class="terraco-card-media-scrim pointer-events-none absolute inset-0 bg-ink/18 opacity-0"
+                  class="terraco-card-media-scrim pointer-events-none absolute inset-0 z-[2] bg-ink/18 opacity-0"
                 ></span>
 
                 <span
                   aria-hidden="true"
-                  class="terraco-card-media-hint pointer-events-none absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-pill border border-ink-inverse/20 bg-ink/75 px-3 py-1.5 text-[13px] font-medium leading-none text-ink-inverse opacity-0 backdrop-blur-xs"
+                  class="terraco-card-media-hint pointer-events-none absolute bottom-4 left-4 z-[3] inline-flex items-center gap-1.5 rounded-pill border border-ink-inverse/20 bg-ink/75 px-3 py-1.5 text-[13px] font-medium leading-none text-ink-inverse opacity-0 backdrop-blur-xs"
                 >
                   <svg
                     viewBox="0 0 24 24"
