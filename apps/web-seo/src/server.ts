@@ -30,7 +30,7 @@ const SITE_URL = (
 ).replace(/\/+$/, '');
 
 const SSR_HTML_CACHE_CONTROL =
-  'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400';
+  'public, max-age=0, s-maxage=300, stale-while-revalidate=60';
 const SSR_NOT_FOUND_CACHE_CONTROL = 'public, max-age=60, s-maxage=300';
 const SEO_STATIC_CACHE_CONTROL =
   'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400';
