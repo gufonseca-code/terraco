@@ -7,7 +7,10 @@ import {
   DEFAULT_LAUNCH_OG_IMAGE_URL,
   SITE_HERO_IMAGE_URL,
   SITE_NAME,
+  SITE_URL,
 } from './site.config';
+
+const HOME_JSONLD_ID = 'terraco-home-jsonld';
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
@@ -61,9 +64,11 @@ export class SeoService {
     });
 
     this.setCanonical('/');
+    this.setHomeJsonLd(description);
   }
 
   updateLancamentosMeta(): void {
+    this.removeHomeJsonLd();
     const pageTitle = `Lançamentos | ${SITE_NAME}`;
     const description =
       'Lançamentos imobiliários selecionados em Belo Horizonte nos bairros Estoril, Santa Efigênia e Serrano: studios, 1 e 2 quartos com suíte e lazer completo.';
@@ -105,6 +110,7 @@ export class SeoService {
   }
 
   updateBairroMeta(bairro: BairroGuide): void {
+    this.removeHomeJsonLd();
     const canonicalPath = `/bairros/${bairro.slug}`;
     const pageTitle = bairro.tituloSeo.includes(SITE_NAME)
       ? bairro.tituloSeo
@@ -147,6 +153,7 @@ export class SeoService {
   }
 
   updateLancamentoDetailMeta(item: Lancamento): void {
+    this.removeHomeJsonLd();
     const canonicalPath = `/lancamentos/${item.slug}`;
     const pageTitle = `${item.nome}, ${item.bairro}, ${item.cidade} | ${SITE_NAME}`;
     const socialTitle = `${item.nome}, ${item.bairro} | ${SITE_NAME}`;
@@ -185,8 +192,73 @@ export class SeoService {
   }
 
   updateNotFoundMeta(): void {
+    this.removeHomeJsonLd();
     this.title.setTitle(`Lançamento não encontrado | ${SITE_NAME}`);
     this.meta.updateTag({ name: 'robots', content: 'noindex, nofollow' });
+  }
+
+  private setHomeJsonLd(description: string): void {
+    const head = this.document?.head;
+    if (!head) {
+      return;
+    }
+
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'RealEstateAgent',
+          '@id': `${SITE_URL}/#organization`,
+          name: SITE_NAME,
+          url: SITE_URL,
+          image: SITE_HERO_IMAGE_URL,
+          description,
+          areaServed: {
+            '@type': 'City',
+            name: 'Belo Horizonte',
+            addressRegion: 'MG',
+            addressCountry: 'BR',
+          },
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Belo Horizonte',
+            addressRegion: 'MG',
+            addressCountry: 'BR',
+          },
+        },
+        {
+          '@type': 'WebSite',
+          '@id': `${SITE_URL}/#website`,
+          url: SITE_URL,
+          name: SITE_NAME,
+          inLanguage: 'pt-BR',
+          publisher: {
+            '@id': `${SITE_URL}/#organization`,
+          },
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: `${SITE_URL}/lancamentos?q={search_term_string}`,
+            'query-input': 'required name=search_term_string',
+          },
+        },
+      ],
+    };
+
+    const serialized = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
+    let scriptEl = this.document.getElementById(
+      HOME_JSONLD_ID
+    ) as HTMLScriptElement | null;
+    if (!scriptEl) {
+      scriptEl = this.document.createElement('script');
+      scriptEl.type = 'application/ld+json';
+      scriptEl.id = HOME_JSONLD_ID;
+      head.appendChild(scriptEl);
+    }
+    scriptEl.textContent = serialized;
+  }
+
+  private removeHomeJsonLd(): void {
+    this.document?.getElementById(HOME_JSONLD_ID)?.remove();
   }
 
   private setCanonical(path: string): void {
