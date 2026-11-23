@@ -130,7 +130,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           <div class="grid lg:grid-cols-12">
             <div
               [class.terraco-skeleton]="!imageLoaded()"
-              class="relative flex w-full items-center justify-center overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface lg:col-span-7 lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] lg:border-b-0 lg:border-r lg:border-border-subtle"
+              class="relative aspect-[2/1] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface sm:aspect-[5/3] lg:col-span-7 lg:aspect-auto lg:h-auto lg:min-h-[480px] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] lg:border-b-0 lg:border-r lg:border-border-subtle"
             >
               <button
                 #heroTrigger
@@ -138,7 +138,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 data-testid="launch-hero-trigger"
                 (click)="openLightbox()"
                 [attr.aria-label]="'Ampliar foto de ' + item().nome"
-                class="terraco-card-media-trigger relative z-[1] block aspect-square w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] text-left lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] cursor-zoom-in"
+                class="terraco-card-media-trigger relative z-[1] block h-full w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] text-left lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] cursor-zoom-in"
               >
                 <img
                   #heroImg
@@ -152,7 +152,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   (error)="markImageLoaded()"
                   fetchpriority="high"
                   decoding="async"
-                  class="terraco-card-media-img h-full w-full object-fill"
+                  class="terraco-card-media-img h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-fill lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
                 />
 
                 <span
