@@ -39,6 +39,9 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
   selector: 'app-launch-card',
   imports: [RouterLink, FavoriteButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'block h-full',
+  },
   template: `
     @let item = launch();
     @let spec = thirdSpec();

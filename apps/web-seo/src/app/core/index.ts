@@ -7,3 +7,4 @@ export * from './leads.service';
 export * from './utm.service';
 export * from './favorites.service';
 export * from './seo.service';
+export * from './scroll-reveal.directive';

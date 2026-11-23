@@ -450,6 +450,19 @@ h4 {
   animation: terraco-rise 420ms var(--ease-enter) 90ms both;
 }
 
+.terraco-scroll-pending {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.terraco-scroll-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 480ms var(--ease-enter),
+    transform 480ms var(--ease-enter);
+}
+
 @keyframes terraco-chip-in {
   from {
     opacity: 0;
@@ -685,6 +698,8 @@ h4 {
   .animate-letter-jump,
   .terraco-reveal,
   .terraco-reveal-delay,
+  .terraco-scroll-pending,
+  .terraco-scroll-visible,
   .terraco-chip-enter,
   .terraco-chip-leave,
   .terraco-skeleton::after,

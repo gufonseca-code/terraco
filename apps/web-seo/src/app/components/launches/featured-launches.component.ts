@@ -5,7 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LancamentosService } from '../../core';
+import { LancamentosService, ScrollRevealDirective } from '../../core';
 import { LaunchCardComponent } from './launch-card.component';
 import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
 
@@ -17,7 +17,12 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
  */
 @Component({
   selector: 'app-featured-launches',
-  imports: [RouterLink, LaunchCardComponent, LaunchCardSkeletonComponent],
+  imports: [
+    RouterLink,
+    LaunchCardComponent,
+    LaunchCardSkeletonComponent,
+    ScrollRevealDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (isLoading() && featuredLaunches().length === 0) {
@@ -70,6 +75,8 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
           >
             @for (launch of featuredLaunches(); track launch.slug) {
               <app-launch-card
+                appScrollReveal
+                [revealDelayMs]="($index % 3) * 60"
                 [launch]="launch"
                 headingLevel="h3"
                 [priority]="$index < 3"
