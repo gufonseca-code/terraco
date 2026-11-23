@@ -2,7 +2,7 @@
   {
     "slug": "prime-view",
     "nome": "Prime View",
-    "construtora": "Novolar (Grupo Patrimar)",
+    "construtora": "",
     "tagline": "Vista para sua nova vida.",
     "bairro": "Estoril",
     "cidade": "Belo Horizonte",
@@ -18,7 +18,7 @@
     "metragem": "49 a 103 m²",
     "tipologias": "Tipo, Garden, PCD e Coberturas Lineares",
     "vagas": "1 e 2 vagas",
-    "resumo": "Condomínio fechado da Novolar (Grupo Patrimar) no Estoril com ampla vista panorâmica para Belo Horizonte em terreno de 5.855,90 m² e 2 torres com 2 elevadores por torre. Apartamentos de 2 quartos com suíte, Garden (1 e 2 quartos), PCD e Coberturas Lineares de 49,38 a 103,54 m², com áreas comuns entregues mobiliadas e decoradas, a 2 minutos da Av. Barão Homem de Melo e próximo ao Buritis.",
+    "resumo": "Condomínio fechado no Estoril com ampla vista panorâmica para Belo Horizonte em terreno de 5.855,90 m² e 2 torres com 2 elevadores por torre. Apartamentos de 2 quartos com suíte, Garden (1 e 2 quartos), PCD e Coberturas Lineares de 49,38 a 103,54 m², com áreas comuns entregues mobiliadas e decoradas, a 2 minutos da Av. Barão Homem de Melo e próximo ao Buritis.",
     "corCapa": "moss",
     "imagem": "/images/lancamentos/prime-view/cover.webp",
     "imagemWidth": 1024,
@@ -28,7 +28,7 @@
       "Terreno amplo de 5.855,90 m² com 2 torres, 2 elevadores por torre e vista panorâmica privilegiada para Belo Horizonte (Registro R-4 matrícula nº 167.015 · Patrimônio de Afetação)",
       "Acabamento superior nos apartamentos: piso laminado nos quartos, porcelanato na sala, cozinha e banheiros, bancadas em granito, tomadas USB e previsão para ar-condicionado nos quartos",
       "Lazer completíssimo entregue mobiliado e decorado: piscinas adulto e infantil com prainha e solarium, espaço gourmet com vista, salão de festas, churrasqueira, academia, crossfit zone, praça de esportes, espaço fogo, mind space, pet place, playground e espaço kids",
-      "Conveniência inteligente: coworking, espaço influencer, espaço beauty, bicicletário com bike wash, ferramentas compartilhadas, minimercado Novomarket, guarda-entregas, horta, pomar e aplicativo exclusivo do condomínio",
+      "Conveniência inteligente: coworking, espaço influencer, espaço beauty, bicicletário com bike wash, ferramentas compartilhadas, minimercado autoatendimento, guarda-entregas, horta, pomar e aplicativo exclusivo do condomínio",
       "Segurança e sustentabilidade (Selo Sempre Verde): portaria 24h com eclusas de pedestres e veículos, ponto de recarga para carro elétrico, iluminação em LED, coleta seletiva e dispositivos economizadores de água",
       "Localização estratégica no Estoril: a 2 min a pé da Av. Barão Homem de Melo e Arena Foot Beer, 3 min da Newton Paiva e UPA Oeste, 4 min do Shopping Paragem, 5 min da Av. Raja Gabaglia e EPA, e 7 min do UniBH e Mercado da Boca"
     ],
@@ -180,8 +180,8 @@
         "height": 640
       },
       {
-        "url": "/images/lancamentos/prime-view/novomarket.webp",
-        "alt": "Minimercado Novomarket de autoatendimento dentro do condomínio Prime View",
+        "url": "/images/lancamentos/prime-view/minimercado.webp",
+        "alt": "Minimercado de autoatendimento dentro do condomínio Prime View",
         "width": 800,
         "height": 1280
       },
@@ -333,7 +333,7 @@
       "Certificado EDGE de sustentabilidade ainda na fase de projeto: 25% de economia de energia, 26% de economia de água e 33% de economia na energia incorporada aos materiais",
       "Eficiência e infraestrutura nos apartamentos: medição individualizada de água via rádio frequência, sistema dual flux e previsão para ar-condicionado nos studios, quartos e salas",
       "Lazer completo entregue montado e decorado: piscina climatizada, espaço grill, gourmet com terraço, fitness interno e externo, solarium, espaço fogo, playground e pet place",
-      "Comodidades incluídas e pay-per-use: coworking/espaço conteúdo, lavanderia, i-storage delivery, 2 e-bikes e 2 patinetes elétricos compartilhados, tool sharing, bicicletário, Grab & Go, Maid Service e aplicativo Meu Patrimar",
+      "Comodidades incluídas e pay-per-use: coworking/espaço conteúdo, lavanderia, i-storage delivery, 2 e-bikes e 2 patinetes elétricos compartilhados, tool sharing, bicicletário, Grab & Go, Maid Service e aplicativo exclusivo do condomínio",
       "Segurança completa: guarita 24h, antecâmara de segurança para pedestres, área de delivery independente, CFTV, controle de acesso biométrico/facial e previsão para sensor IVA nas divisas",
       "Sustentabilidade nas áreas comuns: placas fotovoltaicas para economia de energia do condomínio, iluminação LED com sensor de presença, torneiras com temporizador e previsão para carregador de carro elétrico",
       "Localização conectada no Santa Efigênia: a 3 min a pé da Praça Floriano Peixoto, 5 min do Hospital da Unimed e Tem Hortifruti, 6 min da Santa Casa e 7 min do Shopping Boulevard e Teatro Sesiminas"
@@ -701,7 +701,7 @@
   {
     "slug": "horizon",
     "nome": "Horizon",
-    "construtora": "Novolar (Grupo Patrimar)",
+    "construtora": "",
     "tagline": "Seu novo ponto alto.",
     "bairro": "Serrano",
     "cidade": "Belo Horizonte",
@@ -717,7 +717,7 @@
     "metragem": "52 a 83 m²",
     "tipologias": "Tipo com varanda e Garden",
     "vagas": "Vaga de garagem",
-    "resumo": "Torre única da Novolar (Grupo Patrimar) em terreno de 6.673 m² cercado por Área de Preservação Permanente (APP) no Serrano, na continuidade da Av. Abílio Machado ao lado do Castelo. Apartamentos de 52,36 m² a 83,34 m² com varanda em todas as unidades, opções Garden, Selo Sempre Verde, aplicativo Novolar Conecta e lazer completo entregue montado e mobiliado.",
+    "resumo": "Torre única em terreno de 6.673 m² cercado por Área de Preservação Permanente (APP) no Serrano, na continuidade da Av. Abílio Machado ao lado do Castelo. Apartamentos de 52,36 m² a 83,34 m² com varanda em todas as unidades, opções Garden, Selo Sempre Verde, aplicativo exclusivo do condomínio e lazer completo entregue montado e mobiliado.",
     "corCapa": "guava",
     "imagem": "/images/lancamentos/horizon/cover.webp",
     "imagemWidth": 641,
@@ -727,15 +727,15 @@
       "Torre única em terreno de 6.673 m² com 4 elevadores, cercada por Área de Preservação Permanente (APP) e vista privilegiada para a cidade",
       "Apartamentos de 52,36 m² a 83,34 m²: amplas salas de estar e jantar integradas, varanda em todas as unidades, opções Garden, piso em porcelanato na sala, varanda, cozinha e banheiros, bancadas em granito e previsão para ar-condicionado na sala e suíte",
       "Lazer completo entregue montado e mobiliado: piscinas adulto e infantil, prainha, solarium, espaço gourmet com varanda, salão de festas com terraço, churrasqueira, academia (fitness), sauna com descanso, espaço massagem, espaço kids e playground",
-      "Comodidades inclusas no condomínio: coworking, espaço beauty, bicicletário, bike wash, ferramentas compartilhadas, guarda-entregas na guarita e app Novolar Conecta; além de minimercado Novomarket e lavanderia sob demanda sem custo de manutenção",
+      "Comodidades inclusas no condomínio: coworking, espaço beauty, bicicletário, bike wash, ferramentas compartilhadas, guarda-entregas na guarita e aplicativo exclusivo do condomínio; além de minimercado e lavanderia sob demanda sem custo de manutenção",
       "Sustentabilidade (Selo Sempre Verde) e segurança: previsão para placas fotovoltaicas, LED com sensor de presença, dual flux, torneiras com economizador, medição individualizada de água e gás, portaria 24h com eclusas de veículos e pedestres, câmeras e fechadura eletromagnética",
       "Localização estratégica no Serrano, conectando BH e Contagem na continuidade da Av. Abílio Machado: 1 min a pé da Praça Sol Nascente e Academia em Forma, 2 min do comércio da Abílio Machado, 3 min a pé dos colégios CEM e Chromos e 4 min do Mart Minas, Drogaria Araújo, Smart Fit, EPA e Topázio Mall"
     ],
     "condicoesEspeciais": [
-      "Campanha Novolar: 6% de desconto já abatido no fluxo, com até 15% OFF no pagamento à vista ou 10% OFF quitando durante a obra (sinal mínimo de 12% + 24 parcelas iguais sem correção)",
-      "6% OFF no Desligamento Futuro (25% na obra + 5% nas chaves pelo INCC + 70% financiados após a entrega) ou no Direto com a Novolar (12% sinal + 23% obra + 5% chaves INCC + 60% em até 84x pós-obra com IPCA + 1% a.m.)",
+      "Campanha especial: 6% de desconto já abatido no fluxo, com até 15% OFF no pagamento à vista ou 10% OFF quitando durante a obra (sinal mínimo de 12% + 24 parcelas iguais sem correção)",
+      "6% OFF no Desligamento Futuro (25% na obra + 5% nas chaves pelo INCC + 70% financiados após a entrega) ou no Financiamento Direto (12% sinal + 23% obra + 5% chaves INCC + 60% em até 84x pós-obra com IPCA + 1% a.m.)",
       "6% OFF com Parcela Fixa (fluxo 25x75 ou 30x70 sem correção nas parcelas, com intermediárias somente até 12/2027 e saldo corrigido pelo INCC)",
-      "Modalidades padrão fora da campanha: Repasse futuro 25% x 75% (25% em até 24x na obra) ou Direto com a Novolar (40% na obra em 24x INCC + 60% após o habite-se em 60x IPCA + 1% a.m., sujeito à análise Patricred)"
+      "Modalidades padrão fora da campanha: Repasse futuro 25% x 75% (25% em até 24x na obra) ou Financiamento Direto (40% na obra em 24x INCC + 60% após o habite-se em 60x IPCA + 1% a.m., sujeito à análise de crédito)"
     ],
     "whatsappMensagem": "Oi! Gostaria de receber as plantas, valores e condições do Horizon (Serrano).",
     "galeria": [
