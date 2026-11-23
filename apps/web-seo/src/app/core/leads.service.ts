@@ -1,5 +1,7 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { FavoritesService } from './favorites.service';
 import { FirebaseService } from './firebase.service';
 import { UtmService } from './utm.service';
 
@@ -98,8 +100,10 @@ function normalizeBrazilianPhone(rawPhone: string): string {
  */
 @Injectable({ providedIn: 'root' })
 export class LeadsService {
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly firebase = inject(FirebaseService);
   private readonly utmService = inject(UtmService);
+  private readonly favoritesService = inject(FavoritesService);
 
   readonly submitting = signal<boolean>(false);
   readonly lastError = signal<string | null>(null);
@@ -182,6 +186,20 @@ export class LeadsService {
 
       const docRef = await addDoc(collection(db, 'leads'), payload);
       this.lastSubmittedId.set(docRef.id);
+      this.notifyLeadWebhook({
+        leadId: docRef.id,
+        phone,
+        launchSlug,
+        source,
+        favorites: this.favoritesService.favorites().slice(0, 10),
+        ...(name ? { name } : {}),
+        ...(email ? { email } : {}),
+        ...(intent ? { intent } : {}),
+        ...(searchedTerm ? { searchedTerm } : {}),
+        ...(utmSource ? { utmSource } : {}),
+        ...(utmMedium ? { utmMedium } : {}),
+        ...(utmCampaign ? { utmCampaign } : {}),
+      });
       return { id: docRef.id, persisted: true };
     } catch (err) {
       const errorMessage =
@@ -224,5 +242,37 @@ export class LeadsService {
       intent: 'busca_sem_resultado',
       ...(searchedTerm ? { searchedTerm } : {}),
     });
+  }
+
+  private notifyLeadWebhook(payload: {
+    leadId: string;
+    phone: string;
+    launchSlug: string;
+    source: string;
+    favorites: string[];
+    name?: string;
+    email?: string;
+    intent?: LeadIntent;
+    searchedTerm?: string;
+    utmSource?: string;
+    utmMedium?: string;
+    utmCampaign?: string;
+  }): void {
+    if (!isPlatformBrowser(this.platformId) || typeof fetch !== 'function') {
+      return;
+    }
+
+    try {
+      void fetch('/api/leads/notify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      }).catch(() => undefined);
+    } catch {
+      // Never block or degrade lead capture UX on webhook delivery failures.
+    }
   }
 }

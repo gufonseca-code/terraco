@@ -22,6 +22,7 @@ import {
   type LaunchMediaItem,
 } from '../../core';
 import { ImageLightboxComponent } from './image-lightbox.component';
+import { LaunchSimulatorComponent } from './launch-simulator.component';
 
 export type LaunchIntentKey =
   | 'plantas_valores'
@@ -142,7 +143,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
 @Component({
   selector: 'app-prime-view-landing',
-  imports: [RouterLink, ImageLightboxComponent],
+  imports: [RouterLink, ImageLightboxComponent, LaunchSimulatorComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
@@ -403,6 +404,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </ul>
             </section>
           }
+
+          <app-launch-simulator [item]="item()" />
 
           @if (hasGallery()) {
             <section
