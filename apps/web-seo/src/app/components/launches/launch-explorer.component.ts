@@ -2,23 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  afterNextRender,
   computed,
   effect,
   inject,
   signal,
   viewChild,
-  viewChildren,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
-  type Lancamento,
   LancamentosService,
   LeadsService,
-  formatCurrencyBRL,
 } from '../../core';
-import { FavoriteButtonComponent } from './favorite-button.component';
+import { LaunchCardComponent } from './launch-card.component';
 import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
 
 function formatBrazilianPhone(raw: string): string {
@@ -34,7 +30,7 @@ function formatBrazilianPhone(raw: string): string {
 
 @Component({
   selector: 'app-launch-explorer',
-  imports: [RouterLink, FavoriteButtonComponent, LaunchCardSkeletonComponent],
+  imports: [LaunchCardComponent, LaunchCardSkeletonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
@@ -137,105 +133,12 @@ function formatBrazilianPhone(raw: string): string {
       } @else if (filteredLancamentos().length > 0) {
         <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           @for (launch of filteredLancamentos(); track launch.slug) {
-            <article
-              [attr.id]="$first ? 'resultados-lancamentos' : null"
-              animate.enter="terraco-reveal-delay"
-              class="terraco-plate flex flex-col overflow-hidden rounded-lg bg-elevated scroll-mt-24"
-            >
-              <div
-                [class.terraco-skeleton]="!isImageLoaded(launch.slug)"
-                class="relative aspect-[16/10] overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface"
-              >
-                <a
-                  [routerLink]="['/lancamentos', launch.slug]"
-                  class="relative z-[1] block h-full w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)]"
-                  [attr.aria-label]="'Conhecer ' + launch.nome"
-                >
-                  <img
-                    #coverImg
-                    data-testid="lancamentos-cover-image"
-                    [attr.data-slug]="launch.slug"
-                    [src]="launch.imagem"
-                    [alt]="launch.imagemAlt"
-                    [width]="launch.imagemWidth"
-                    [height]="launch.imagemHeight"
-                    [style.view-transition-name]="'launch-image-' + launch.slug"
-                    (load)="markImageLoaded(launch.slug)"
-                    (error)="markImageLoaded(launch.slug)"
-                    [attr.fetchpriority]="$index < 3 ? 'high' : null"
-                    [attr.loading]="$index >= 3 ? 'lazy' : null"
-                    decoding="async"
-                    class="h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center"
-                  />
-                </a>
-
-                <div class="absolute top-3.5 right-3.5 z-10 sm:top-4 sm:right-4">
-                  <app-favorite-button [slug]="launch.slug" [nome]="launch.nome" />
-                </div>
-              </div>
-
-              <div class="flex flex-1 flex-col justify-between gap-4 px-5 py-4 sm:py-5">
-                <div class="space-y-1">
-                  <p class="text-[13px] font-normal text-ink-muted">
-                    {{ launch.bairro }}, {{ launch.cidade }}
-                  </p>
-                  <h2
-                    [style.view-transition-name]="'launch-title-' + launch.slug"
-                    class="font-display text-[1.25rem] font-medium leading-[1.2] tracking-[-0.015em] text-ink text-balance"
-                  >
-                    <a
-                      [routerLink]="['/lancamentos', launch.slug]"
-                      class="transition-colors duration-150 hover:text-brand"
-                    >
-                      {{ launch.nome }}
-                    </a>
-                  </h2>
-                </div>
-
-                <a
-                  [routerLink]="['/lancamentos', launch.slug]"
-                  class="terraco-btn terraco-btn-moss inline-flex min-h-[42px] w-full items-center justify-center rounded-pill bg-brand px-4 py-2 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
-                >
-                  Conhecer lançamento
-                </a>
-              </div>
-
-              @let thirdSpec = getThirdSpec(launch);
-              <dl
-                class="grid grid-cols-2 border-t border-border-subtle bg-surface/45"
-              >
-                <div class="space-y-0.5 border-r border-border-subtle px-5 py-3">
-                  <dt class="text-[12px] font-normal text-ink-muted">Dormitórios</dt>
-                  <dd
-                    class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums"
-                  >
-                    {{ launch.quartos }}
-                  </dd>
-                </div>
-                <div class="space-y-0.5 px-5 py-3">
-                  <dt class="text-[12px] font-normal text-ink-muted">Metragem</dt>
-                  <dd
-                    class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums"
-                  >
-                    {{ launch.metragem }}
-                  </dd>
-                </div>
-                <div class="col-span-2 space-y-0.5 border-t border-border-subtle px-5 py-3">
-                  <dt class="text-[12px] font-normal text-ink-muted">
-                    {{ thirdSpec.label }}
-                  </dt>
-                  <dd
-                    [class]="
-                      thirdSpec.tabular
-                        ? 'text-[14px] font-normal leading-[1.4] text-ink tabular-nums'
-                        : 'text-[14px] font-normal leading-[1.4] text-ink'
-                    "
-                  >
-                    {{ thirdSpec.value }}
-                  </dd>
-                </div>
-              </dl>
-            </article>
+            <app-launch-card
+              [launch]="launch"
+              headingLevel="h2"
+              [priority]="$index < 3"
+              [cardId]="$first ? 'resultados-lancamentos' : null"
+            />
           }
         </div>
       } @else if (!isLoading()) {
@@ -364,11 +267,8 @@ export class LaunchExplorerComponent {
       this.activeFilter() === 'Todos'
   );
 
-  private readonly loadedSlugs = signal<ReadonlySet<string>>(new Set());
   private readonly searchInputRef =
     viewChild<ElementRef<HTMLInputElement>>('searchInputRef');
-  private readonly coverImages =
-    viewChildren<ElementRef<HTMLImageElement>>('coverImg');
 
   constructor() {
     // Sync initial ?q= synchronously so SSR and prerendered HTML filter immediately.
@@ -382,16 +282,6 @@ export class LaunchExplorerComponent {
       this.searchInput.set(q);
       this.demandSuccessTerm.set(null);
       this.demandError.set(null);
-    });
-
-    afterNextRender(() => {
-      for (const ref of this.coverImages()) {
-        const el = ref.nativeElement;
-        const slug = el.dataset['slug'];
-        if (slug && el.complete && el.naturalWidth > 0) {
-          this.markImageLoaded(slug);
-        }
-      }
     });
   }
 
@@ -483,42 +373,6 @@ export class LaunchExplorerComponent {
     } finally {
       this.demandSubmitting.set(false);
     }
-  }
-
-  getThirdSpec(launch: Lancamento): {
-    label: string;
-    value: string;
-    tabular?: boolean;
-  } {
-    if (launch.vagas.trim().length > 0) {
-      return { label: 'Vagas', value: launch.vagas };
-    }
-    if (typeof launch.precoAPartirDe === 'number') {
-      return {
-        label: 'A partir de',
-        value: formatCurrencyBRL(launch.precoAPartirDe),
-        tabular: true,
-      };
-    }
-    return {
-      label: 'Tipologias',
-      value: launch.tipologias || 'Consulte opções',
-    };
-  }
-
-  isImageLoaded(slug: string): boolean {
-    return this.loadedSlugs().has(slug);
-  }
-
-  markImageLoaded(slug: string): void {
-    this.loadedSlugs.update((current) => {
-      if (current.has(slug)) {
-        return current;
-      }
-      const next = new Set(current);
-      next.add(slug);
-      return next;
-    });
   }
 
   private syncQueryParam(q: string): void {

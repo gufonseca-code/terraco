@@ -19,6 +19,9 @@ export const routes: Routes = [
   {
     path: '',
     component: HomePageComponent,
+    resolve: {
+      lancamentos: lancamentosListResolver,
+    },
   },
   {
     path: 'lancamentos',
