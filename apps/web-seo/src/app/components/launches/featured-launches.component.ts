@@ -27,8 +27,9 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
   template: `
     @if (isLoading() && featuredLaunches().length === 0) {
       <section
+        id="lancamentos-selecionados"
         aria-labelledby="featured-launches-heading"
-        class="bg-canvas py-16 sm:py-20 lg:py-24"
+        class="bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
       >
         <div class="mx-auto max-w-6xl px-6 lg:px-8">
           <h2
@@ -48,8 +49,9 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
       </section>
     } @else if (featuredLaunches().length > 0) {
       <section
+        id="lancamentos-selecionados"
         aria-labelledby="featured-launches-heading"
-        class="bg-canvas py-16 sm:py-20 lg:py-24"
+        class="bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
       >
         <div class="mx-auto max-w-6xl px-6 lg:px-8">
           <div

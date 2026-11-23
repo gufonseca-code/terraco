@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  PLATFORM_ID,
+  inject,
+} from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { QUICK_NEIGHBORHOODS, SEARCH_SUGGESTIONS } from '../../core';
 import { HeroIllustrationComponent } from './hero-illustration.component';
 import { HeroSearchFormComponent } from './hero-search-form.component';
@@ -57,7 +63,8 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
                 </a>
               }
               <a
-                routerLink="/lancamentos"
+                href="#lancamentos-selecionados"
+                (click)="scrollToFeatured($event)"
                 class="terraco-link-underline inline-flex min-h-[44px] items-center text-sm font-medium text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
               >
                 Ver lançamentos
@@ -74,6 +81,31 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroSearchComponent {
+  private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly router = inject(Router);
+
   readonly suggestions = SEARCH_SUGGESTIONS;
   readonly quickNeighborhoods = QUICK_NEIGHBORHOODS;
+
+  scrollToFeatured(event: MouseEvent): void {
+    event.preventDefault();
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const target = this.document.getElementById('lancamentos-selecionados');
+    if (!target) {
+      void this.router.navigate(['/lancamentos']);
+      return;
+    }
+
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    target.scrollIntoView({
+      behavior: reducedMotion ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }
 }
