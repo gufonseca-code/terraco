@@ -9,3 +9,4 @@ export { HeroIllustrationComponent } from './hero-illustration.component';
 export { HeroAnimatedBackdropComponent } from './hero-animated-backdrop.component';
 export { HeroSearchFormComponent } from './hero-search-form.component';
 export { HeroSearchComponent } from './hero-search.component';
+export { GuidedDiscoveryComponent } from './guided-discovery.component';

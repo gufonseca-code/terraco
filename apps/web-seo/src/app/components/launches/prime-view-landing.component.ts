@@ -100,6 +100,17 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         description: item.resumo,
         url: pageUrl,
         image: imageUrl,
+        ...(typeof item.precoAPartirDe === 'number'
+          ? {
+              offers: {
+                '@type': 'Offer',
+                priceCurrency: 'BRL',
+                price: item.precoAPartirDe,
+                availability: 'https://schema.org/InStock',
+                url: pageUrl,
+              },
+            }
+          : {}),
         mainEntity: {
           '@type': 'ApartmentComplex',
           name: item.nome,

@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { BairroGuide } from './bairros.data';
 import { Lancamento } from './lancamentos.data';
 import {
   DEFAULT_LAUNCH_OG_IMAGE_URL,
@@ -65,7 +66,7 @@ export class SeoService {
   updateLancamentosMeta(): void {
     const pageTitle = `Lançamentos | ${SITE_NAME}`;
     const description =
-      'Prime View no Estoril, Belo Horizonte: 2 quartos com suíte, 49 a 103 m² e lazer completo.';
+      'Lançamentos imobiliários selecionados em Belo Horizonte nos bairros Estoril, Santa Efigênia e Serrano: studios, 1 e 2 quartos com suíte e lazer completo.';
 
     this.title.setTitle(pageTitle);
     this.meta.updateTag({ name: 'description', content: description });
@@ -86,7 +87,7 @@ export class SeoService {
     this.meta.updateTag({
       property: 'og:image:alt',
       content:
-        'Fachada contemporânea do residencial Prime View no Estoril, Belo Horizonte',
+        'Lançamentos imobiliários em Belo Horizonte nos bairros Estoril, Santa Efigênia e Serrano',
     });
 
     this.meta.updateTag({
@@ -101,6 +102,48 @@ export class SeoService {
     });
 
     this.setCanonical('/lancamentos');
+  }
+
+  updateBairroMeta(bairro: BairroGuide): void {
+    const canonicalPath = `/bairros/${bairro.slug}`;
+    const pageTitle = bairro.tituloSeo.includes(SITE_NAME)
+      ? bairro.tituloSeo
+      : `${bairro.tituloSeo} | ${SITE_NAME}`;
+    const description = bairro.descricaoSeo;
+
+    this.title.setTitle(pageTitle);
+    this.meta.updateTag({ name: 'description', content: description });
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+
+    this.meta.updateTag({ property: 'og:type', content: 'website' });
+    this.meta.updateTag({ property: 'og:locale', content: 'pt_BR' });
+    this.meta.updateTag({ property: 'og:site_name', content: SITE_NAME });
+    this.meta.updateTag({ property: 'og:url', content: canonicalPath });
+    this.meta.updateTag({ property: 'og:title', content: pageTitle });
+    this.meta.updateTag({ property: 'og:description', content: description });
+    this.meta.updateTag({
+      property: 'og:image',
+      content: DEFAULT_LAUNCH_OG_IMAGE_URL,
+    });
+    this.meta.updateTag({ property: 'og:image:width', content: '1024' });
+    this.meta.updateTag({ property: 'og:image:height', content: '614' });
+    this.meta.updateTag({
+      property: 'og:image:alt',
+      content: `Guia do bairro ${bairro.nome}, ${bairro.cidade} — ${SITE_NAME}`,
+    });
+
+    this.meta.updateTag({
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    });
+    this.meta.updateTag({ name: 'twitter:title', content: pageTitle });
+    this.meta.updateTag({ name: 'twitter:description', content: description });
+    this.meta.updateTag({
+      name: 'twitter:image',
+      content: DEFAULT_LAUNCH_OG_IMAGE_URL,
+    });
+
+    this.setCanonical(canonicalPath);
   }
 
   updateLancamentoDetailMeta(item: Lancamento): void {
