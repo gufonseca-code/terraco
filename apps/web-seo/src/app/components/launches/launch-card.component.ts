@@ -19,15 +19,15 @@ export interface LaunchThirdSpec {
 }
 
 export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
-  if (launch.vagas.trim().length > 0) {
-    return { label: 'Vagas', value: launch.vagas };
-  }
-  if (typeof launch.precoAPartirDe === 'number') {
+  if (typeof launch.precoAPartirDe === 'number' && launch.precoAPartirDe > 0) {
     return {
       label: 'A partir de',
       value: formatCurrencyBRL(launch.precoAPartirDe),
       tabular: true,
     };
+  }
+  if (launch.vagas.trim().length > 0) {
+    return { label: 'Vagas', value: launch.vagas };
   }
   return {
     label: 'Tipologias',
@@ -133,7 +133,14 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
             {{ item.metragem }}
           </dd>
         </div>
-        <div class="col-span-2 space-y-0.5 border-t border-border-subtle px-5 py-3">
+        @let entrega = item.entrega?.trim();
+        <div
+          [class]="
+            entrega
+              ? 'space-y-0.5 border-t border-r border-border-subtle px-5 py-3'
+              : 'col-span-2 space-y-0.5 border-t border-border-subtle px-5 py-3'
+          "
+        >
           <dt class="text-[12px] font-normal text-ink-muted">
             {{ spec.label }}
           </dt>
@@ -147,6 +154,14 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
             {{ spec.value }}
           </dd>
         </div>
+        @if (entrega) {
+          <div class="space-y-0.5 border-t border-border-subtle px-5 py-3">
+            <dt class="text-[12px] font-normal text-ink-muted">Entrega</dt>
+            <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
+              {{ entrega }}
+            </dd>
+          </div>
+        }
       </dl>
     </article>
   `,
