@@ -19,7 +19,8 @@ const DESKTOP_ZOOM_SCALE = 2.2;
 const MIN_ZOOM_SCALE = 1;
 const MAX_ZOOM_SCALE = 4;
 const EXPAND_DURATION_MS = 320;
-const COLLAPSE_DURATION_MS = 280;
+const COLLAPSE_DURATION_MS = 300;
+const BACKDROP_LEAVE_DURATION_MS = 260;
 const CLOSE_BTN_LEAVE_DURATION_MS = 180;
 
 @Component({
@@ -27,15 +28,21 @@ const CLOSE_BTN_LEAVE_DURATION_MS = 180;
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
+      #dialogRef
       role="dialog"
       aria-modal="true"
       [attr.aria-label]="'Visualização ampliada: ' + (title() || alt())"
       data-testid="image-lightbox"
-      animate.enter="terraco-lightbox-backdrop-enter"
-      (animate.leave)="onLightboxLeave($event)"
       (click)="onBackdropClick($event)"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-ink/85 p-4 backdrop-blur-xs sm:p-8"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
     >
+      <div
+        #backdropRef
+        aria-hidden="true"
+        animate.enter="terraco-lightbox-backdrop-enter"
+        class="pointer-events-none fixed inset-0 bg-ink/85 backdrop-blur-xs"
+      ></div>
+
       <button
         #closeBtn
         type="button"
@@ -76,7 +83,7 @@ const CLOSE_BTN_LEAVE_DURATION_MS = 180;
         [class.duration-200]="!isGesturing()"
         [style.transform]="stageTransform()"
         [style.transform-origin]="transformOrigin()"
-        class="relative flex max-h-[88dvh] max-w-[92vw] touch-none select-none items-center justify-center overflow-hidden rounded-md shadow-floating will-change-transform"
+        class="relative z-10 flex max-h-[88dvh] max-w-[92vw] touch-none select-none items-center justify-center overflow-hidden rounded-md shadow-floating will-change-transform"
       >
         <img
           #fullImg
@@ -105,6 +112,10 @@ export class ImageLightboxComponent {
 
   readonly closed = output<void>();
 
+  private readonly dialogRef =
+    viewChild<ElementRef<HTMLDivElement>>('dialogRef');
+  private readonly backdropRef =
+    viewChild<ElementRef<HTMLDivElement>>('backdropRef');
   private readonly closeBtn =
     viewChild<ElementRef<HTMLButtonElement>>('closeBtn');
   private readonly stageRef = viewChild<ElementRef<HTMLDivElement>>('stageRef');
@@ -134,6 +145,7 @@ export class ImageLightboxComponent {
   private dragStartPanY = 0;
   private isDragging = false;
   private isClosing = false;
+  private isDestroyed = false;
   private suppressNextClick = false;
   private previousBodyOverflow = '';
 
@@ -153,6 +165,7 @@ export class ImageLightboxComponent {
       this.document.addEventListener('keydown', onKeyDown);
 
       this.destroyRef.onDestroy(() => {
+        this.isDestroyed = true;
         this.document.removeEventListener('keydown', onKeyDown);
         body.style.overflow = this.previousBodyOverflow;
       });
@@ -168,7 +181,105 @@ export class ImageLightboxComponent {
       return;
     }
     this.isClosing = true;
-    this.closed.emit();
+
+    const dialogEl = this.dialogRef()?.nativeElement;
+    if (
+      !isPlatformBrowser(this.platformId) ||
+      this.prefersReducedMotion() ||
+      !dialogEl
+    ) {
+      this.closed.emit();
+      return;
+    }
+
+    dialogEl.style.pointerEvents = 'none';
+    this.isGesturing.set(true);
+
+    const animations: Animation[] = [];
+
+    const backdropEl = this.backdropRef()?.nativeElement;
+    if (backdropEl && typeof backdropEl.animate === 'function') {
+      animations.push(
+        backdropEl.animate(
+          [{ opacity: 1 }, { opacity: 0 }],
+          {
+            duration: BACKDROP_LEAVE_DURATION_MS,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'forwards',
+          }
+        )
+      );
+    }
+
+    const closeBtnEl = this.closeBtn()?.nativeElement;
+    if (closeBtnEl && typeof closeBtnEl.animate === 'function') {
+      animations.push(
+        closeBtnEl.animate(
+          [
+            {
+              opacity: 1,
+              transform: 'translate3d(0, 0, 0)',
+            },
+            {
+              opacity: 0,
+              transform: 'translate3d(0, -8px, 0)',
+            },
+          ],
+          {
+            duration: CLOSE_BTN_LEAVE_DURATION_MS,
+            easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+            fill: 'forwards',
+          }
+        )
+      );
+    }
+
+    const stageEl = this.stageRef()?.nativeElement;
+    if (stageEl && typeof stageEl.animate === 'function') {
+      const fromTransform = this.stageTransform();
+      const toTransform = this.computeOriginTransform(stageEl, dialogEl);
+
+      animations.push(
+        stageEl.animate(
+          [
+            {
+              transform: fromTransform,
+              opacity: 1,
+              borderRadius: '16px',
+              offset: 0,
+            },
+            {
+              opacity: 0.95,
+              offset: 0.72,
+            },
+            {
+              transform: toTransform,
+              opacity: 0,
+              borderRadius: '20px',
+              offset: 1,
+            },
+          ],
+          {
+            duration: COLLAPSE_DURATION_MS,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'forwards',
+          }
+        )
+      );
+    }
+
+    if (animations.length === 0) {
+      this.closed.emit();
+      return;
+    }
+
+    void Promise.all(
+      animations.map((animation) => animation.finished.catch(() => undefined))
+    ).then(() => {
+      if (!this.isDestroyed) {
+        this.closed.emit();
+      }
+    });
   }
 
   onBackdropClick(event: MouseEvent): void {
@@ -323,7 +434,10 @@ export class ImageLightboxComponent {
     }
 
     const el = event.target as HTMLElement;
-    const fromTransform = this.computeOriginTransform(el);
+    const fromTransform = this.computeOriginTransform(
+      el,
+      this.dialogRef()?.nativeElement
+    );
 
     const animation = el.animate(
       [
@@ -347,94 +461,6 @@ export class ImageLightboxComponent {
     const complete = () => event.animationComplete();
     animation.addEventListener('finish', complete, { once: true });
     animation.addEventListener('cancel', complete, { once: true });
-  }
-
-  onLightboxLeave(event: AnimationCallbackEvent): void {
-    const backdropEl = event.target as HTMLElement;
-
-    if (
-      !isPlatformBrowser(this.platformId) ||
-      this.prefersReducedMotion() ||
-      typeof backdropEl.animate !== 'function'
-    ) {
-      event.animationComplete();
-      return;
-    }
-
-    backdropEl.style.pointerEvents = 'none';
-
-    const animations: Animation[] = [];
-
-    animations.push(
-      backdropEl.animate(
-        [
-          { opacity: 1 },
-          { opacity: 0 },
-        ],
-        {
-          duration: COLLAPSE_DURATION_MS,
-          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-          fill: 'forwards',
-        }
-      )
-    );
-
-    const closeBtnEl = this.closeBtn()?.nativeElement;
-    if (closeBtnEl && typeof closeBtnEl.animate === 'function') {
-      animations.push(
-        closeBtnEl.animate(
-          [
-            {
-              opacity: 1,
-              transform: 'translate3d(0, 0, 0)',
-            },
-            {
-              opacity: 0,
-              transform: 'translate3d(0, -8px, 0)',
-            },
-          ],
-          {
-            duration: CLOSE_BTN_LEAVE_DURATION_MS,
-            easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
-            fill: 'forwards',
-          }
-        )
-      );
-    }
-
-    const stageEl = this.stageRef()?.nativeElement;
-    if (stageEl && typeof stageEl.animate === 'function') {
-      const fromTransform = this.stageTransform();
-      const toTransform = this.computeOriginTransform(stageEl, backdropEl);
-
-      animations.push(
-        stageEl.animate(
-          [
-            {
-              transform: fromTransform,
-              opacity: 1,
-              borderRadius: '16px',
-            },
-            {
-              transform: toTransform,
-              opacity: 0,
-              borderRadius: '20px',
-            },
-          ],
-          {
-            duration: COLLAPSE_DURATION_MS,
-            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-            fill: 'forwards',
-          }
-        )
-      );
-    }
-
-    void Promise.all(
-      animations.map((animation) => animation.finished.catch(() => undefined))
-    ).then(() => {
-      event.animationComplete();
-    });
   }
 
   private resetZoom(): void {
