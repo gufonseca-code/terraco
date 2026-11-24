@@ -128,7 +128,7 @@ function normalizeText(value: string): string {
               <legend class="text-sm font-medium leading-[1.35] text-ink">
                 Seu objetivo
               </legend>
-              <div class="flex flex-wrap gap-2.5">
+              <div class="terraco-m3-group-grid grid-cols-1 sm:grid-cols-3">
                 @for (option of objetivoOptions; track option) {
                   <button
                     type="button"
@@ -146,7 +146,7 @@ function normalizeText(value: string): string {
               <legend class="text-sm font-medium leading-[1.35] text-ink">
                 Tipologia
               </legend>
-              <div class="flex flex-wrap gap-2.5">
+              <div class="terraco-m3-group-grid grid-cols-1 sm:grid-cols-3">
                 @for (option of tipologiaOptions; track option) {
                   <button
                     type="button"
@@ -164,7 +164,7 @@ function normalizeText(value: string): string {
               <legend class="text-sm font-medium leading-[1.35] text-ink">
                 Região de BH
               </legend>
-              <div class="flex flex-wrap gap-2.5">
+              <div class="terraco-m3-group-grid grid-cols-2 sm:grid-cols-4">
                 @for (option of regiaoOptions; track option) {
                   <button
                     type="button"
@@ -367,7 +367,7 @@ export class GuidedDiscoveryComponent {
 
   chipClass(selected: boolean): string {
     const base =
-      'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center justify-center border px-4 py-2 text-sm font-normal leading-[1.35]';
+      'terraco-m3-group-item inline-flex min-h-[44px] cursor-pointer items-center justify-center border px-4 py-2 text-center text-sm font-normal leading-[1.35]';
     if (selected) {
       return `${base} border-brand bg-brand font-medium text-ink-inverse shadow-chip hover:bg-brand-hover`;
     }

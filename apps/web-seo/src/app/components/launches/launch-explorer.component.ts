@@ -10,13 +10,11 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import {
-  LancamentosService,
-  LeadsService,
-} from '../../core';
+import { LancamentosService } from '../../core';
 import { BAIRROS_BH, type BairroGuide } from '../../core/bairros.data';
 import { LaunchCardComponent } from './launch-card.component';
 import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
+import { WhatsappAlertFormComponent } from './whatsapp-alert-form.component';
 
 const TIPOLOGIA_FILTERS = [
   'Todas',
@@ -26,20 +24,14 @@ const TIPOLOGIA_FILTERS = [
   'Cobertura',
 ] as const;
 
-function formatBrazilianPhone(raw: string): string {
-  const digits = raw.replace(/\D/g, '').slice(0, 11);
-  if (digits.length === 0) return '';
-  if (digits.length <= 2) return `(${digits}`;
-  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-  if (digits.length <= 10) {
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-  }
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-}
-
 @Component({
   selector: 'app-launch-explorer',
-  imports: [RouterLink, LaunchCardComponent, LaunchCardSkeletonComponent],
+  imports: [
+    RouterLink,
+    LaunchCardComponent,
+    LaunchCardSkeletonComponent,
+    WhatsappAlertFormComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:click)': 'onDocumentClick($event)',
@@ -291,56 +283,14 @@ function formatBrazilianPhone(raw: string): string {
               </p>
             </div>
 
-            @if (demandSuccessTerm()) {
-              <div
-                role="status"
-                class="rounded-md border border-success-fg/20 bg-success-bg px-4 py-3 text-[14px] font-normal leading-[1.5] text-success-fg"
-              >
-                Combinado! Assim que entrar um novo lançamento para {{ demandSuccessTerm() }}, te chamamos no WhatsApp.
-              </div>
-            } @else {
-              <form
-                (submit)="handleDemandSubmit($event)"
-                novalidate
-                class="flex w-full max-w-md flex-col gap-2.5 sm:flex-row sm:items-center"
-              >
-                <label for="catalog-alert-whatsapp" class="sr-only">
-                  Seu WhatsApp com DDD
-                </label>
-                <input
-                  id="catalog-alert-whatsapp"
-                  type="tel"
-                  autocomplete="tel"
-                  inputmode="tel"
-                  placeholder="(31) 99999-9999"
-                  [value]="demandPhone()"
-                  (input)="onDemandPhoneInput($event)"
-                  [disabled]="demandSubmitting()"
-                  class="min-h-[44px] w-full min-w-0 flex-1 rounded-pill border border-border-subtle bg-canvas px-4 py-2.5 text-[15px] font-normal text-ink placeholder:text-ink-muted transition-[border-color,box-shadow] duration-150 focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/20 disabled:opacity-60"
-                />
-                <button
-                  type="submit"
-                  [disabled]="demandSubmitting()"
-                  class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-                >
-                  @if (demandSubmitting()) {
-                    Enviando...
-                  } @else {
-                    Me avise no WhatsApp
-                  }
-                </button>
-              </form>
-            }
+            <app-whatsapp-alert-form
+              inputId="catalog-alert-whatsapp"
+              [searchedTerm]="searchedTerm() || 'Belo Horizonte'"
+              [resetKey]="searchedTerm()"
+              [compact]="true"
+              class="w-full max-w-md"
+            />
           </div>
-
-          @if (demandError() && !demandSuccessTerm()) {
-            <p
-              role="alert"
-              class="mt-3 rounded-sm bg-error-bg px-3.5 py-2 text-[13px] font-normal text-error-fg"
-            >
-              {{ demandError() }}
-            </p>
-          }
         </aside>
       } @else if (!isLoading()) {
         <div
@@ -362,59 +312,14 @@ function formatBrazilianPhone(raw: string): string {
             Deixe seu WhatsApp que te avisamos assim que surgir uma boa oportunidade nessa região, sem spam.
           </p>
 
-          @if (demandSuccessTerm()) {
-            <div
-              role="status"
-              class="mt-5 rounded-md border border-success-fg/20 bg-success-bg px-4 py-3.5 text-[14px] font-normal leading-[1.5] text-success-fg"
-            >
-              @if (demandSuccessTerm() === 'essa região') {
-                Combinado! Assim que entrar um novo lançamento por aqui, te chamamos no WhatsApp.
-              } @else {
-                Combinado! Assim que entrar um lançamento em {{ demandSuccessTerm() }}, te chamamos no WhatsApp.
-              }
-            </div>
-          } @else {
-            <form
-              (submit)="handleDemandSubmit($event)"
-              novalidate
-              class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center"
-            >
-              <label for="demand-whatsapp" class="sr-only">
-                Seu WhatsApp com DDD
-              </label>
-              <input
-                id="demand-whatsapp"
-                type="tel"
-                autocomplete="tel"
-                inputmode="tel"
-                placeholder="(31) 99999-9999"
-                [value]="demandPhone()"
-                (input)="onDemandPhoneInput($event)"
-                [disabled]="demandSubmitting()"
-                class="min-h-[44px] w-full min-w-0 flex-1 rounded-pill border border-border-subtle bg-canvas px-4 py-2.5 text-[15px] font-normal text-ink placeholder:text-ink-muted transition-[border-color,box-shadow] duration-150 focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/20 disabled:opacity-60"
-              />
-              <button
-                type="submit"
-                [disabled]="demandSubmitting()"
-                class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-              >
-                @if (demandSubmitting()) {
-                  Enviando...
-                } @else {
-                  Me avise no WhatsApp
-                }
-              </button>
-            </form>
-
-            @if (demandError()) {
-              <p
-                role="alert"
-                class="mt-3 rounded-sm bg-error-bg px-3.5 py-2 text-[13px] font-normal text-error-fg"
-              >
-                {{ demandError() }}
-              </p>
-            }
-          }
+          <div class="mt-5">
+            <app-whatsapp-alert-form
+              inputId="demand-whatsapp"
+              [searchedTerm]="searchedTerm()"
+              fallbackTerm="essa região"
+              [resetKey]="searchedTerm()"
+            />
+          </div>
 
           <div class="mt-6 border-t border-border-subtle pt-4">
             <button
@@ -449,7 +354,6 @@ export class LaunchExplorerComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly lancamentosService = inject(LancamentosService);
-  private readonly leadsService = inject(LeadsService);
 
   readonly lancamentos = this.lancamentosService.lancamentos;
   readonly filteredLancamentos = this.lancamentosService.filteredLancamentos;
@@ -469,10 +373,6 @@ export class LaunchExplorerComponent {
   readonly searchInput = signal<string>('');
   readonly neighborhoodMenuOpen = signal<boolean>(false);
   readonly tipologiaMenuOpen = signal<boolean>(false);
-  readonly demandPhone = signal<string>('');
-  readonly demandSubmitting = signal<boolean>(false);
-  readonly demandError = signal<string | null>(null);
-  readonly demandSuccessTerm = signal<string | null>(null);
 
   readonly hasActiveNeighborhood = computed(() =>
     this.quickNeighborhoods().some((bairro) => this.isNeighborhoodActive(bairro))
@@ -552,8 +452,6 @@ export class LaunchExplorerComponent {
       this.lancamentosService.setTipologiaFilter(tipologia);
       this.lancamentosService.setObjetivoFilter(objetivo);
       this.searchInput.set(q);
-      this.demandSuccessTerm.set(null);
-      this.demandError.set(null);
     });
   }
 
@@ -628,8 +526,6 @@ export class LaunchExplorerComponent {
     const value = target?.value ?? '';
     this.searchInput.set(value);
     this.lancamentosService.setSearchQuery(value);
-    this.demandSuccessTerm.set(null);
-    this.demandError.set(null);
   }
 
   handleSearchSubmit(event: Event): void {
@@ -682,59 +578,8 @@ export class LaunchExplorerComponent {
     this.lancamentosService.setActiveFilter('Todos');
     this.lancamentosService.setTipologiaFilter('Todas');
     this.lancamentosService.setObjetivoFilter(null);
-    this.demandSuccessTerm.set(null);
-    this.demandError.set(null);
     this.syncQueryParams({ q: '', tipologia: '', objetivo: '' });
     this.searchInputRef()?.nativeElement.focus();
-  }
-
-  onDemandPhoneInput(event: Event): void {
-    const target = event.target as HTMLInputElement | null;
-    const formatted = formatBrazilianPhone(target?.value ?? '');
-    this.demandPhone.set(formatted);
-    if (target && target.value !== formatted) {
-      target.value = formatted;
-    }
-    if (this.demandError()) {
-      this.demandError.set(null);
-    }
-  }
-
-  async handleDemandSubmit(event: Event): Promise<void> {
-    event.preventDefault();
-    if (this.demandSubmitting()) {
-      return;
-    }
-
-    const phone = this.demandPhone().trim();
-    const digits = phone.replace(/\D/g, '');
-    if (digits.length < 10) {
-      this.demandError.set(
-        'Informe um WhatsApp válido com DDD (ex: (31) 99999-9999).'
-      );
-      return;
-    }
-
-    const term = this.searchedTerm();
-    this.demandSubmitting.set(true);
-    this.demandError.set(null);
-
-    try {
-      await this.leadsService.captureDemandLead({
-        phone,
-        searchedTerm: term || 'Belo Horizonte',
-      });
-      this.demandSuccessTerm.set(term || 'essa região');
-      this.demandPhone.set('');
-    } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : 'Não foi possível salvar seu WhatsApp agora. Tente novamente.';
-      this.demandError.set(message);
-    } finally {
-      this.demandSubmitting.set(false);
-    }
   }
 
   private syncQueryParams(updates: {

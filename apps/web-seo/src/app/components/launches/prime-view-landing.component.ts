@@ -442,7 +442,43 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           </div>
         </article>
 
-        <div class="mt-8 space-y-8 sm:mt-10 sm:space-y-10">
+        <div class="mt-8 space-y-10 sm:mt-10 sm:space-y-12">
+          <nav
+            aria-label="Atalhos desta página"
+            class="flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-border-subtle pb-3 text-[14px]"
+          >
+            @if (hasFloorPlans()) {
+              <a
+                href="#plantas"
+                class="terraco-link-underline inline-flex min-h-[40px] items-center font-medium text-brand hover:text-brand-hover"
+              >
+                Plantas e tipologias
+              </a>
+            }
+            <a
+              href="#simulador"
+              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted hover:text-ink"
+            >
+              Simular entrada
+            </a>
+            @if (item().diferenciais.length > 0) {
+              <a
+                href="#diferenciais"
+                class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted hover:text-ink"
+              >
+                Diferenciais
+              </a>
+            }
+            @if (hasGallery()) {
+              <a
+                href="#galeria"
+                class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted hover:text-ink"
+              >
+                Galeria
+              </a>
+            }
+          </nav>
+
           @if (item().condicoesEspeciais?.length) {
             <section
               aria-labelledby="special-conditions-heading"
@@ -502,7 +538,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
           <section
             aria-labelledby="about-heading"
-            class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+            class="border-t border-border-subtle pt-8 sm:pt-10"
           >
             <h2
               id="about-heading"
@@ -512,7 +548,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </h2>
 
             <p
-              class="mt-3 max-w-3xl text-[15px] font-normal leading-[1.6] text-ink sm:text-base"
+              class="mt-3 max-w-3xl text-base font-normal leading-[1.6] text-ink"
             >
               {{ item().resumo }}
             </p>
@@ -533,8 +569,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
           @if (item().diferenciais.length > 0) {
             <section
+              id="diferenciais"
               aria-labelledby="features-heading"
-              class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+              class="border-t border-border-subtle pt-8 sm:pt-10 scroll-mt-24"
             >
               <h2
                 id="features-heading"
@@ -575,8 +612,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
           @if (hasGallery()) {
             <section
+              id="galeria"
               aria-labelledby="gallery-heading"
-              class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+              class="border-t border-border-subtle pt-8 sm:pt-10 scroll-mt-24"
             >
               <h2
                 id="gallery-heading"
@@ -670,6 +708,7 @@ export class PrimeViewLandingComponent {
   );
 
   readonly hasGallery = computed(() => this.galleryImages().length > 0);
+  readonly hasFloorPlans = computed(() => (this.item().plantas?.length ?? 0) > 0);
 
   readonly formattedPrice = computed<string | null>(() => {
     const price = this.item().precoAPartirDe;

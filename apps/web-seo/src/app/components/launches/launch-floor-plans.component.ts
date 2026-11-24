@@ -50,7 +50,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
       <section
         id="plantas"
         aria-labelledby="floor-plans-heading"
-        class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+        class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8 scroll-mt-24"
       >
         <div
           class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
@@ -169,10 +169,10 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
           <!-- Active floor plan stage -->
           @if (activePlan(); as plan) {
             <div
-              class="rounded-md border border-border-subtle bg-canvas p-4 sm:p-6 lg:col-span-7"
+              class="rounded-md bg-canvas p-4 sm:p-6 lg:col-span-7"
             >
               <div
-                class="relative flex items-center justify-center overflow-hidden rounded-md border border-border-subtle bg-elevated p-3 sm:p-5"
+                class="relative flex items-center justify-center overflow-hidden rounded-md bg-elevated p-3 sm:p-5"
               >
                 <img
                   [src]="plan.imagem"
@@ -248,7 +248,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 
                 <!-- Transparent specs row -->
                 <dl
-                  class="grid grid-cols-2 gap-3 rounded-md border border-border-subtle bg-elevated p-3.5 sm:grid-cols-3"
+                  class="grid grid-cols-2 gap-3 border-y border-border-subtle py-3.5 sm:grid-cols-3"
                 >
                   <div>
                     <dt class="text-[13px] font-normal text-ink-muted">
@@ -280,7 +280,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 
                 @if (plan.entradaExemplo || plan.parcelaExemplo) {
                   <div
-                    class="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border-subtle bg-surface/60 px-3.5 py-2.5 text-[13px]"
+                    class="flex flex-wrap items-center justify-between gap-2 rounded-sm bg-surface/75 px-3.5 py-2.5 text-[13px]"
                   >
                     <span class="font-normal text-ink-muted">
                       Referência de fluxo na obra:

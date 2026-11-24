@@ -11,3 +11,7 @@ export {
   LaunchDetailSkeletonComponent,
 } from './launch-skeleton.component';
 export { PrimeViewLandingComponent } from './prime-view-landing.component';
+export {
+  WhatsappAlertFormComponent,
+  formatBrazilianPhone,
+} from './whatsapp-alert-form.component';

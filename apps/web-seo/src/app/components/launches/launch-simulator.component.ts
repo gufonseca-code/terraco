@@ -99,9 +99,10 @@ function resolveInitialPropertyValue(item: Lancamento): number {
   `,
   template: `
     <section
+      id="simulador"
       aria-labelledby="simulator-heading"
       data-testid="launch-simulator"
-      class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+      class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8 scroll-mt-24"
     >
       <div class="space-y-1.5">
         <h2

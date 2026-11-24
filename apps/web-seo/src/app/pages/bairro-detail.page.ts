@@ -7,21 +7,22 @@ import {
   effect,
   inject,
   input,
-  signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import {
+  LaunchCardComponent,
+  WhatsappAlertFormComponent,
+} from '../components/launches';
 import { FooterComponent, NavbarComponent } from '../components/layout';
 import {
   BAIRROS_BH,
   type BairroGuide,
   type Lancamento,
   LancamentosService,
-  LeadsService,
   SITE_NAME,
   SITE_URL,
   SeoService,
-  formatCurrencyBRL,
   getBairroBySlug,
 } from '../core';
 import { NotFoundPageComponent } from './not-found.page';
@@ -34,17 +35,6 @@ function normalizeNeighborhood(value: string): string {
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
-}
-
-function formatBrazilianPhone(raw: string): string {
-  const digits = raw.replace(/\D/g, '').slice(0, 11);
-  if (digits.length === 0) return '';
-  if (digits.length <= 2) return `(${digits}`;
-  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-  if (digits.length <= 10) {
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-  }
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 }
 
 function buildBairroJsonLd(
@@ -138,7 +128,14 @@ function buildBairroJsonLd(
 
 @Component({
   selector: 'app-bairro-detail-page',
-  imports: [NavbarComponent, FooterComponent, NotFoundPageComponent, RouterLink],
+  imports: [
+    NavbarComponent,
+    FooterComponent,
+    NotFoundPageComponent,
+    LaunchCardComponent,
+    WhatsappAlertFormComponent,
+    RouterLink,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (bairro(); as current) {
@@ -275,65 +272,11 @@ function buildBairroJsonLd(
                   class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
                 >
                   @for (launch of matchingLaunches(); track launch.slug) {
-                    <article
-                      class="terraco-plate flex flex-col overflow-hidden rounded-xl bg-elevated"
-                    >
-                      <div class="p-2.5 pb-0">
-                        <a
-                          [routerLink]="['/lancamentos', launch.slug]"
-                          [attr.aria-label]="'Conhecer ' + launch.nome"
-                          class="block aspect-[16/10] overflow-hidden rounded-[20px] bg-surface"
-                        >
-                          <img
-                            [src]="launch.imagem"
-                            [alt]="launch.imagemAlt"
-                            [width]="launch.imagemWidth"
-                            [height]="launch.imagemHeight"
-                            decoding="async"
-                            class="h-full w-full rounded-[20px] object-cover object-center"
-                          />
-                        </a>
-                      </div>
-
-                      <div
-                        class="flex flex-1 flex-col justify-between gap-4 px-5 py-5"
-                      >
-                        <div class="space-y-1.5">
-                          <p class="text-[13px] font-normal text-ink-muted">
-                            {{ launch.bairro }}, {{ launch.cidade }}
-                          </p>
-                          <h3
-                            class="font-display text-[1.25rem] font-medium leading-[1.2] tracking-[-0.015em] text-ink text-balance"
-                          >
-                            <a
-                              [routerLink]="['/lancamentos', launch.slug]"
-                              class="transition-colors duration-150 hover:text-brand"
-                            >
-                              {{ launch.nome }}
-                            </a>
-                          </h3>
-                          <p
-                            class="text-[14px] font-normal leading-[1.5] text-ink-muted tabular-nums"
-                          >
-                            {{ launch.quartos }} · {{ launch.metragem }}
-                          </p>
-                          @if (formatPrice(launch.precoAPartirDe); as price) {
-                            <p
-                              class="pt-0.5 text-[14px] font-medium text-ink tabular-nums"
-                            >
-                              A partir de {{ price }}
-                            </p>
-                          }
-                        </div>
-
-                        <a
-                          [routerLink]="['/lancamentos', launch.slug]"
-                          class="terraco-btn terraco-btn-moss inline-flex min-h-[42px] w-full items-center justify-center rounded-pill bg-brand px-4 py-2 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
-                        >
-                          Conhecer lançamento
-                        </a>
-                      </div>
-                    </article>
+                    <app-launch-card
+                      [launch]="launch"
+                      headingLevel="h3"
+                      [priority]="$index < 3"
+                    />
                   }
                 </div>
               } @else {
@@ -350,68 +293,11 @@ function buildBairroJsonLd(
                         class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
                       >
                         @for (launch of nearbyLaunches(); track launch.slug) {
-                          <article
-                            class="terraco-plate flex flex-col overflow-hidden rounded-xl bg-elevated"
-                          >
-                            <div class="p-2.5 pb-0">
-                              <a
-                                [routerLink]="['/lancamentos', launch.slug]"
-                                [attr.aria-label]="'Conhecer ' + launch.nome"
-                                class="block aspect-[16/10] overflow-hidden rounded-[20px] bg-surface"
-                              >
-                                <img
-                                  [src]="launch.imagem"
-                                  [alt]="launch.imagemAlt"
-                                  [width]="launch.imagemWidth"
-                                  [height]="launch.imagemHeight"
-                                  decoding="async"
-                                  class="h-full w-full rounded-[20px] object-cover object-center"
-                                />
-                              </a>
-                            </div>
-
-                            <div
-                              class="flex flex-1 flex-col justify-between gap-4 px-5 py-5"
-                            >
-                              <div class="space-y-1.5">
-                                <p class="text-[13px] font-normal text-ink-muted">
-                                  {{ launch.bairro }}, {{ launch.cidade }}
-                                </p>
-                                <h4
-                                  class="font-display text-[1.25rem] font-medium leading-[1.2] tracking-[-0.015em] text-ink text-balance"
-                                >
-                                  <a
-                                    [routerLink]="['/lancamentos', launch.slug]"
-                                    class="transition-colors duration-150 hover:text-brand"
-                                  >
-                                    {{ launch.nome }}
-                                  </a>
-                                </h4>
-                                <p
-                                  class="text-[14px] font-normal leading-[1.5] text-ink-muted tabular-nums"
-                                >
-                                  {{ launch.quartos }} · {{ launch.metragem }}
-                                </p>
-                                @if (
-                                  formatPrice(launch.precoAPartirDe);
-                                  as price
-                                ) {
-                                  <p
-                                    class="pt-0.5 text-[14px] font-medium text-ink tabular-nums"
-                                  >
-                                    A partir de {{ price }}
-                                  </p>
-                                }
-                              </div>
-
-                              <a
-                                [routerLink]="['/lancamentos', launch.slug]"
-                                class="terraco-btn terraco-btn-moss inline-flex min-h-[42px] w-full items-center justify-center rounded-pill bg-brand px-4 py-2 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
-                              >
-                                Conhecer lançamento
-                              </a>
-                            </div>
-                          </article>
+                          <app-launch-card
+                            [launch]="launch"
+                            headingLevel="h4"
+                            [priority]="$index < 3"
+                          />
                         }
                       </div>
                     </div>
@@ -432,56 +318,13 @@ function buildBairroJsonLd(
                       boa oportunidade no bairro, sem spam.
                     </p>
 
-                    @if (alertSuccess()) {
-                      <div
-                        role="status"
-                        class="mt-5 rounded-md border border-success-fg/20 bg-success-bg px-4 py-3.5 text-[14px] font-normal leading-[1.5] text-success-fg"
-                      >
-                        Combinado! Assim que entrar um lançamento em
-                        {{ current.nome }}, te avisamos no WhatsApp.
-                      </div>
-                    } @else {
-                      <form
-                        (submit)="handleAlertSubmit($event, current.nome)"
-                        novalidate
-                        class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center"
-                      >
-                        <label for="bairro-alert-whatsapp" class="sr-only">
-                          Seu WhatsApp com DDD
-                        </label>
-                        <input
-                          id="bairro-alert-whatsapp"
-                          type="tel"
-                          autocomplete="tel"
-                          inputmode="tel"
-                          placeholder="(31) 99999-9999"
-                          [value]="alertPhone()"
-                          (input)="onAlertPhoneInput($event)"
-                          [disabled]="alertSubmitting()"
-                          class="min-h-[44px] w-full min-w-0 flex-1 rounded-pill border border-border-subtle bg-canvas px-4 py-2.5 text-[14px] font-normal text-ink placeholder:text-ink-muted transition-[border-color,box-shadow] duration-150 focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/20 disabled:opacity-60"
-                        />
-                        <button
-                          type="submit"
-                          [disabled]="alertSubmitting()"
-                          class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-                        >
-                          @if (alertSubmitting()) {
-                            Enviando...
-                          } @else {
-                            Me avise no WhatsApp
-                          }
-                        </button>
-                      </form>
-
-                      @if (alertError()) {
-                        <p
-                          role="alert"
-                          class="mt-3 rounded-sm bg-error-bg px-3.5 py-2 text-[13px] font-normal text-error-fg"
-                        >
-                          {{ alertError() }}
-                        </p>
-                      }
-                    }
+                    <div class="mt-5">
+                      <app-whatsapp-alert-form
+                        inputId="bairro-alert-whatsapp"
+                        [searchedTerm]="current.nome"
+                        [resetKey]="current.slug"
+                      />
+                    </div>
                   </div>
                 </div>
               }
@@ -569,7 +412,6 @@ function buildBairroJsonLd(
 export class BairroDetailPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly lancamentosService = inject(LancamentosService);
-  private readonly leadsService = inject(LeadsService);
   private readonly seoService = inject(SeoService);
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
@@ -618,21 +460,7 @@ export class BairroDetailPageComponent {
     return BAIRROS_BH.filter((item) => item.slug !== current?.slug);
   });
 
-  readonly alertPhone = signal<string>('');
-  readonly alertSubmitting = signal<boolean>(false);
-  readonly alertError = signal<string | null>(null);
-  readonly alertSuccess = signal<boolean>(false);
-
   constructor() {
-    effect(() => {
-      // Reset alert form state when navigating between neighborhood guides.
-      this.resolvedSlug();
-      this.alertPhone.set('');
-      this.alertSubmitting.set(false);
-      this.alertError.set(null);
-      this.alertSuccess.set(false);
-    });
-
     effect(() => {
       const current = this.bairro();
       if (current) {
@@ -647,50 +475,6 @@ export class BairroDetailPageComponent {
     this.destroyRef.onDestroy(() => {
       this.removeJsonLd();
     });
-  }
-
-  formatPrice(value: number | undefined): string | null {
-    return typeof value === 'number' && value > 0
-      ? formatCurrencyBRL(value)
-      : null;
-  }
-
-  onAlertPhoneInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const formatted = formatBrazilianPhone(input.value);
-    this.alertPhone.set(formatted);
-    if (input.value !== formatted) {
-      input.value = formatted;
-    }
-    if (this.alertError()) {
-      this.alertError.set(null);
-    }
-  }
-
-  async handleAlertSubmit(event: Event, bairroNome: string): Promise<void> {
-    event.preventDefault();
-    if (this.alertSubmitting()) {
-      return;
-    }
-
-    this.alertError.set(null);
-    this.alertSubmitting.set(true);
-    try {
-      await this.leadsService.captureDemandLead({
-        phone: this.alertPhone(),
-        searchedTerm: bairroNome,
-      });
-      this.alertSuccess.set(true);
-      this.alertPhone.set('');
-    } catch (err) {
-      this.alertError.set(
-        err instanceof Error
-          ? err.message
-          : 'Não foi possível enviar seu WhatsApp. Tente novamente.',
-      );
-    } finally {
-      this.alertSubmitting.set(false);
-    }
   }
 
   private upsertJsonLd(

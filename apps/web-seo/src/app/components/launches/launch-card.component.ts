@@ -102,6 +102,18 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
                 {{ item.nome }}
               </a>
             </h3>
+          } @else if (headingLevel() === 'h4') {
+            <h4
+              [style.view-transition-name]="'launch-title-' + item.slug"
+              class="font-display text-[1.25rem] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+            >
+              <a
+                [routerLink]="['/lancamentos', item.slug]"
+                class="transition-colors duration-150 hover:text-brand"
+              >
+                {{ item.nome }}
+              </a>
+            </h4>
           } @else {
             <h2
               [style.view-transition-name]="'launch-title-' + item.slug"
@@ -173,7 +185,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
 })
 export class LaunchCardComponent {
   readonly launch = input.required<Lancamento>();
-  readonly headingLevel = input<'h2' | 'h3'>('h2');
+  readonly headingLevel = input<'h2' | 'h3' | 'h4'>('h2');
   readonly priority = input<boolean>(false);
   readonly cardId = input<string | null>(null);
 
