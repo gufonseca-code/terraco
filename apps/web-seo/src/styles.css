@@ -4,9 +4,10 @@
   --font-fraunces: "Fraunces", Georgia, serif;
   --font-plus-jakarta: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
 
-  /* Terraço — Paleta Ipê & Grafite (Creme Papel #F8F5EA global) */
+  /* Terraço — Paleta Ipê & Grafite (Moodboard Warm Tech Brasileiro) */
   --color-bg-canvas: #F8F5EA;
   --color-bg-surface: #F1E9D8;
+  --color-bg-surface-deep: #E8DEC9;
   --color-bg-elevated: #FFFDF9;
 
   --color-text-primary: #1E1D1B;
@@ -15,17 +16,23 @@
 
   --color-brand-primary: #2E5B46;
   --color-brand-primary-hover: #234736;
+  --color-brand-container: #E3EFE8;
+
   --color-brand-accent: #EEB506;
+  --color-brand-accent-hover: #D9A304;
+  --color-brand-accent-soft: #FBF1CE;
+
   --color-brand-highlight: #ED7467;
+  --color-brand-highlight-soft: #FCE4E0;
 
   --color-border-subtle: #E4DCCB;
   --color-border-strong: #CFC5B2;
 
   /* Estados Semânticos */
   --color-success-fg: #2E5B46;
-  --color-success-bg: #E4F0EA;
+  --color-success-bg: #E3EFE8;
   --color-warning-fg: #8A6500;
-  --color-warning-bg: #FEF3C7;
+  --color-warning-bg: #FBF1CE;
   --color-error-fg: #B9382E;
   --color-error-bg: #FDE8E6;
 
@@ -37,13 +44,15 @@
   --radius-morph-pill: 22px;
   --radius-lg: 24px;
   --radius-xl: 28px;
+  --radius-2xl: 32px;
   --radius-pill: 9999px;
 
   /* Sombras Quentes (nunca cinza frio ou preto puro) */
   --shadow-chip: 0 2px 8px -2px rgba(30, 29, 27, 0.08);
   --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.07);
-  --shadow-card-hover: 0 14px 32px -10px rgba(30, 29, 27, 0.11);
-  --shadow-moss: 0 10px 24px -8px rgba(46, 91, 70, 0.30);
+  --shadow-card-hover: 0 16px 34px -10px rgba(30, 29, 27, 0.12);
+  --shadow-moss: 0 10px 24px -8px rgba(46, 91, 70, 0.32);
+  --shadow-ipe: 0 10px 24px -8px rgba(238, 181, 6, 0.34);
   --shadow-floating:
     0 24px 56px -14px rgba(30, 29, 27, 0.14),
     0 4px 12px -2px rgba(30, 29, 27, 0.05);
@@ -92,6 +101,7 @@
 @theme inline {
   --color-canvas: var(--color-bg-canvas);
   --color-surface: var(--color-bg-surface);
+  --color-surface-deep: var(--color-bg-surface-deep);
   --color-elevated: var(--color-bg-elevated);
 
   --color-ink: var(--color-text-primary);
@@ -100,8 +110,13 @@
 
   --color-brand: var(--color-brand-primary);
   --color-brand-hover: var(--color-brand-primary-hover);
+  --color-brand-container: var(--color-brand-container);
   --color-accent: var(--color-brand-accent);
+  --color-accent-hover: var(--color-brand-accent-hover);
+  --color-accent-soft: var(--color-brand-accent-soft);
   --color-highlight: var(--color-brand-highlight);
+  --color-highlight-soft: var(--color-brand-highlight-soft);
+
   --color-border: var(--color-border-subtle);
   --color-border-subtle: var(--color-border-subtle);
   --color-border-strong: var(--color-border-strong);
@@ -122,10 +137,12 @@
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
   --radius-pill: var(--radius-pill);
 
   --shadow-chip: var(--shadow-chip);
   --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
   --shadow-floating: var(--shadow-floating);
 }
 
@@ -154,13 +171,24 @@ h4 {
 }
 
 ::selection {
-  background-color: var(--color-warning-bg);
+  background-color: var(--color-brand-accent-soft);
   color: var(--color-text-primary);
 }
 
 .font-display {
   font-family: var(--font-display);
   font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+/* Textura arquitetônica sutil de cobogó brasileiro (geometria leve em superfícies) */
+.terraco-cobogo-light {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23CFC5B2' stroke-width='1' stroke-opacity='0.34'%3E%3Crect x='4' y='4' width='48' height='48' rx='10'/%3E%3Ccircle cx='28' cy='28' r='11'/%3E%3Cpath d='M28 4v13M28 39v13M4 28h13M39 28h13'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 56px 56px;
+}
+
+.terraco-cobogo-moss {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23F8F5EA' stroke-width='1' stroke-opacity='0.09'%3E%3Crect x='5' y='5' width='54' height='54' rx='12'/%3E%3Ccircle cx='32' cy='32' r='13'/%3E%3Cpath d='M32 5v14M32 45v14M5 32h14M45 32h14'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 64px 64px;
 }
 
 /* Anel de foco consistente e imediato */
@@ -201,21 +229,23 @@ h4 {
   box-shadow: var(--shadow-card);
 }
 
-/* Botões CTA com resposta tátil contida (sem hover float genérico) */
+/* Botões CTA M3 Expressive com shape morph sutil no toque */
 .terraco-btn {
   transition:
+    border-radius 260ms var(--ease-spring-fast),
     background-color 150ms var(--ease-ui),
     border-color 150ms var(--ease-ui),
     color 150ms var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
-    transform 90ms var(--ease-ui);
+    transform 120ms var(--ease-ui);
 }
 
 .terraco-btn:active {
+  border-radius: 14px;
   transform: scale(0.985);
 }
 
-/* Sombra Moss sutil para CTAs primários em Verde Musgo */
+/* Sombra Moss para CTAs primários em Verde Musgo */
 .terraco-btn-moss:focus-visible {
   box-shadow: var(--shadow-moss);
 }
@@ -230,21 +260,38 @@ h4 {
   box-shadow: none;
 }
 
-/* M3 Expressive: Adaptive Top Bar Shell (docked morph when mobile sheet opens) */
-.terraco-m3-topbar {
-  border-radius: 28px;
-  transition:
-    border-radius 280ms var(--ease-enter),
-    border-color 180ms var(--ease-ui),
-    box-shadow 220ms var(--ease-ui),
-    background-color 180ms var(--ease-ui);
+/* Sombra Ipê Solar para CTAs de contraste sobre Verde Musgo ou Grafite */
+.terraco-btn-ipe:focus-visible {
+  box-shadow: var(--shadow-ipe);
 }
 
-.terraco-m3-topbar--open {
-  border-top-left-radius: 28px;
-  border-top-right-radius: 28px;
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
+@media (hover: hover) and (pointer: fine) {
+  .terraco-btn-ipe:hover {
+    box-shadow: var(--shadow-ipe);
+  }
+}
+
+.terraco-btn-ipe:active {
+  box-shadow: none;
+}
+
+/* M3 Expressive: Borderless-to-Tonal Header (sangra no topo e ganha superfície ao rolar) */
+.terraco-header-shell {
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 220ms var(--ease-ui),
+    border-color 220ms var(--ease-ui),
+    box-shadow 220ms var(--ease-ui);
+}
+
+.terraco-header-shell--scrolled,
+.terraco-header-shell--open {
+  background-color: color-mix(in srgb, var(--color-bg-canvas) 92%, transparent);
+  border-bottom-color: var(--color-border-subtle);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 6px 20px -10px rgba(30, 29, 27, 0.08);
 }
 
 /* M3 Expressive: Desktop Tonal Navigation Rail */
@@ -253,8 +300,9 @@ h4 {
   gap: 2px;
   padding: 4px;
   border-radius: var(--radius-pill);
-  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 85%, transparent);
-  background-color: color-mix(in srgb, var(--color-bg-surface) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 90%, transparent);
+  background-color: color-mix(in srgb, var(--color-bg-elevated) 84%, transparent);
+  backdrop-filter: blur(10px);
 }
 
 .terraco-m3-rail-item {
@@ -283,7 +331,7 @@ h4 {
 
 @media (hover: hover) and (pointer: fine) {
   .terraco-m3-rail-item:hover {
-    background-color: color-mix(in srgb, var(--color-bg-elevated) 85%, transparent);
+    background-color: var(--color-bg-surface);
     color: var(--color-text-primary);
   }
 }
@@ -295,8 +343,8 @@ h4 {
 
 .terraco-m3-rail-item[aria-expanded="true"] {
   border-radius: var(--radius-m3-md);
-  border-color: color-mix(in srgb, var(--color-brand-primary) 30%, transparent);
-  background-color: color-mix(in srgb, var(--color-brand-primary) 10%, var(--color-bg-elevated));
+  border-color: color-mix(in srgb, var(--color-brand-primary) 28%, transparent);
+  background-color: var(--color-brand-container);
   color: var(--color-brand-primary);
   font-weight: 500;
 }
@@ -334,7 +382,7 @@ h4 {
   flex-shrink: 0;
   border-radius: 20px;
   border: 1px solid var(--color-border-subtle);
-  background-color: color-mix(in srgb, var(--color-bg-surface) 80%, transparent);
+  background-color: color-mix(in srgb, var(--color-bg-elevated) 90%, transparent);
   color: var(--color-text-primary);
   transition:
     border-radius 320ms var(--ease-spring-fast),
@@ -414,7 +462,7 @@ h4 {
   gap: 0.375rem;
   min-height: 40px;
   border: 1px solid var(--color-border-subtle);
-  background-color: color-mix(in srgb, var(--color-bg-surface) 75%, transparent);
+  background-color: color-mix(in srgb, var(--color-bg-elevated) 90%, transparent);
   color: var(--color-text-primary);
   border-radius: 20px;
   transition:
@@ -444,8 +492,8 @@ h4 {
   justify-content: center;
   gap: 0.375rem;
   min-height: 40px;
-  border: 1px solid color-mix(in srgb, var(--color-brand-primary) 22%, transparent);
-  background-color: var(--color-success-bg);
+  border: 1px solid color-mix(in srgb, var(--color-brand-primary) 24%, transparent);
+  background-color: var(--color-brand-container);
   color: var(--color-brand-primary);
   border-radius: 20px;
   transition:
@@ -489,51 +537,6 @@ h4 {
   transform: scale(0.94);
 }
 
-/* Botão pill de navegação na navbar (legado/compatibilidade) */
-.terraco-nav-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  border: 1px solid var(--color-border-subtle);
-  background-color: var(--color-bg-surface);
-  color: var(--color-text-primary);
-  box-shadow: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .terraco-nav-link:hover {
-    border-color: rgba(30, 29, 27, 0.22);
-    background-color: var(--color-bg-canvas);
-    color: var(--color-text-primary);
-    box-shadow: var(--shadow-chip);
-  }
-}
-
-.terraco-nav-link:active {
-  box-shadow: none;
-}
-
-.terraco-nav-link[aria-current="page"] {
-  border-color: var(--color-brand-primary);
-  background-color: var(--color-brand-primary);
-  color: var(--color-text-inverse);
-  box-shadow: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .terraco-nav-link[aria-current="page"]:hover {
-    border-color: var(--color-brand-primary-hover);
-    background-color: var(--color-brand-primary-hover);
-    color: var(--color-text-inverse);
-    box-shadow: var(--shadow-moss);
-  }
-}
-
-.terraco-nav-link[aria-current="page"]:active {
-  box-shadow: none;
-}
-
 /* Sublinhado animado contido para links de texto (min-h 44px) */
 .terraco-link-underline {
   position: relative;
@@ -563,9 +566,11 @@ h4 {
   }
 }
 
-/* Superfície de card quieta (mudança sutil de borda, sem salto ou zoom) */
+/* Superfície de card quieta */
 .terraco-card {
-  transition: border-color 180ms var(--ease-ui);
+  transition:
+    border-color 180ms var(--ease-ui),
+    box-shadow 220ms var(--ease-ui);
 }
 
 /* Placa de galeria (/lancamentos & Home) — M3 Expressive Tonal Card */
@@ -576,12 +581,34 @@ h4 {
   transition:
     border-color 180ms var(--ease-ui),
     box-shadow 220ms var(--ease-ui),
-    transform 220ms var(--ease-enter);
+    transform 240ms var(--ease-enter);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .terraco-plate:hover {
-    border-color: rgba(46, 91, 70, 0.32);
+    border-color: rgba(46, 91, 70, 0.34);
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-3px);
+  }
+}
+
+/* Fachada Viva — cartão arquitetônico com arco superior sutil para bairros */
+.terraco-arch-card {
+  border-top-left-radius: 36px;
+  border-top-right-radius: 36px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border: 1px solid var(--color-border-subtle);
+  transition:
+    border-color 180ms var(--ease-ui),
+    background-color 180ms var(--ease-ui),
+    box-shadow 220ms var(--ease-ui),
+    transform 240ms var(--ease-enter);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-arch-card:hover {
+    border-color: rgba(46, 91, 70, 0.38);
     box-shadow: var(--shadow-card-hover);
     transform: translateY(-2px);
   }
@@ -644,7 +671,7 @@ h4 {
   transform: scale(0.975);
 }
 
-/* Variante de Connected Group que faz wrap em grid 2x2 no mobile e vira linha única em sm+ */
+/* Variante de Connected Group que faz wrap em grid no mobile e vira linha única em sm+ */
 .terraco-m3-group-grid {
   display: grid;
   gap: 3px;
@@ -900,6 +927,16 @@ h4 {
   box-shadow:
     var(--shadow-floating),
     inset 0 1px 0 rgba(255, 253, 249, 0.85);
+}
+
+/* Ocultar scrollbar visual mantendo rolagem horizontal tátil no mobile */
+.terraco-no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.terraco-no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* Degraus ascendentes reutilizáveis (60fps, GPU-composited via transform + opacity) */
@@ -1339,14 +1376,16 @@ h4 {
 
   .terraco-btn,
   .terraco-btn-moss,
+  .terraco-btn-ipe,
+  .terraco-header-shell,
   .terraco-card,
   .terraco-plate,
+  .terraco-arch-card,
   .terraco-m3-chip,
   .terraco-m3-group-item,
   .terraco-m3-icon-toggle,
   .terraco-m3-select-card,
   .terraco-m3-search,
-  .terraco-m3-topbar,
   .terraco-m3-rail-item,
   .terraco-m3-menu-toggle,
   .terraco-m3-burger-line,
@@ -1357,7 +1396,6 @@ h4 {
   .terraco-m3-accordion-icon,
   .terraco-m3-accordion-chevron,
   .terraco-m3-accordion-panel,
-  .terraco-nav-link,
   .terraco-link-underline::after,
   .terraco-stairs-step,
   .terraco-logo-step {

@@ -50,7 +50,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
       [attr.id]="cardId()"
       class="terraco-reveal-delay terraco-plate flex h-full flex-col overflow-hidden rounded-xl bg-elevated scroll-mt-24"
     >
-      <div class="p-2.5 pb-0">
+      <div class="p-3 pb-0">
         <div
           [class.terraco-skeleton]="!imageLoaded()"
           class="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-surface"
@@ -82,8 +82,8 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
         </div>
       </div>
 
-      <div class="flex flex-1 flex-col justify-between gap-4 px-5 py-4 sm:py-5">
-        <div class="space-y-1">
+      <div class="flex flex-1 flex-col justify-between gap-4 px-5 pt-4 pb-3">
+        <div class="space-y-1.5">
           <p class="text-[13px] font-normal text-ink-muted">
             {{ item.bairro }}, {{ item.cidade }}
           </p>
@@ -91,7 +91,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
           @if (headingLevel() === 'h3') {
             <h3
               [style.view-transition-name]="'launch-title-' + item.slug"
-              class="font-display text-[1.25rem] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+              class="font-display text-[1.3125rem] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
             >
               <a
                 [routerLink]="['/lancamentos', item.slug]"
@@ -103,7 +103,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
           } @else if (headingLevel() === 'h4') {
             <h4
               [style.view-transition-name]="'launch-title-' + item.slug"
-              class="font-display text-[1.25rem] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+              class="font-display text-[1.3125rem] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
             >
               <a
                 [routerLink]="['/lancamentos', item.slug]"
@@ -115,7 +115,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
           } @else {
             <h2
               [style.view-transition-name]="'launch-title-' + item.slug"
-              class="font-display text-[1.25rem] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+              class="font-display text-[1.3125rem] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
             >
               <a
                 [routerLink]="['/lancamentos', item.slug]"
@@ -125,59 +125,67 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
               </a>
             </h2>
           }
+
+          @if (item.tagline) {
+            <p class="text-[14px] font-normal leading-[1.45] text-ink-muted">
+              {{ item.tagline }}
+            </p>
+          }
         </div>
 
+        <dl class="grid grid-cols-2 overflow-hidden rounded-[18px] bg-surface/80">
+          <div class="space-y-0.5 border-r border-border-subtle/75 px-3.5 py-2.5">
+            <dt class="text-[13px] font-normal text-ink-muted">Dormitórios</dt>
+            <dd class="text-[14px] font-normal leading-[1.35] text-ink tabular-nums">
+              {{ item.quartos }}
+            </dd>
+          </div>
+          <div class="space-y-0.5 px-3.5 py-2.5">
+            <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
+            <dd class="text-[14px] font-normal leading-[1.35] text-ink tabular-nums">
+              {{ item.metragem }}
+            </dd>
+          </div>
+          @let entrega = item.entrega?.trim();
+          <div
+            [class]="
+              entrega
+                ? 'space-y-0.5 border-t border-r border-border-subtle/75 px-3.5 py-2.5'
+                : 'col-span-2 space-y-0.5 border-t border-border-subtle/75 px-3.5 py-2.5'
+            "
+          >
+            <dt class="text-[13px] font-normal text-ink-muted">
+              {{ spec.label }}
+            </dt>
+            <dd
+              [class]="
+                spec.tabular
+                  ? 'text-[14px] font-medium leading-[1.35] text-ink tabular-nums'
+                  : 'text-[14px] font-normal leading-[1.35] text-ink'
+              "
+            >
+              {{ spec.value }}
+            </dd>
+          </div>
+          @if (entrega) {
+            <div class="space-y-0.5 border-t border-border-subtle/75 px-3.5 py-2.5">
+              <dt class="text-[13px] font-normal text-ink-muted">Entrega</dt>
+              <dd class="text-[14px] font-normal leading-[1.35] text-ink tabular-nums">
+                {{ entrega }}
+              </dd>
+            </div>
+          }
+        </dl>
+      </div>
+
+      <div class="px-3 pt-1 pb-3">
         <a
           [routerLink]="['/lancamentos', item.slug]"
-          class="terraco-btn terraco-btn-moss inline-flex min-h-[42px] w-full items-center justify-center rounded-pill bg-brand px-4 py-2 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+          class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
         >
           Conhecer lançamento
         </a>
       </div>
-
-      <dl class="mx-2.5 mb-2.5 grid grid-cols-2 overflow-hidden rounded-[18px] bg-surface/75">
-        <div class="space-y-0.5 border-r border-border-subtle/70 px-4 py-3">
-          <dt class="text-[13px] font-normal text-ink-muted">Dormitórios</dt>
-          <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
-            {{ item.quartos }}
-          </dd>
-        </div>
-        <div class="space-y-0.5 px-4 py-3">
-          <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
-          <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
-            {{ item.metragem }}
-          </dd>
-        </div>
-        @let entrega = item.entrega?.trim();
-        <div
-          [class]="
-            entrega
-              ? 'space-y-0.5 border-t border-r border-border-subtle/70 px-4 py-3'
-              : 'col-span-2 space-y-0.5 border-t border-border-subtle/70 px-4 py-3'
-          "
-        >
-          <dt class="text-[13px] font-normal text-ink-muted">
-            {{ spec.label }}
-          </dt>
-          <dd
-            [class]="
-              spec.tabular
-                ? 'text-[14px] font-normal leading-[1.4] text-ink tabular-nums'
-                : 'text-[14px] font-normal leading-[1.4] text-ink'
-            "
-          >
-            {{ spec.value }}
-          </dd>
-        </div>
-        @if (entrega) {
-          <div class="space-y-0.5 border-t border-border-subtle/70 px-4 py-3">
-            <dt class="text-[13px] font-normal text-ink-muted">Entrega</dt>
-            <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
-              {{ entrega }}
-            </dd>
-          </div>
-        }
-      </dl>
     </article>
   `,
 })
