@@ -1,7 +1,10 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
+  PLATFORM_ID,
   computed,
   inject,
   output,
@@ -209,9 +212,9 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
           @for (item of primaryItems; track item.route) {
             @let active = isRouteActive(item);
             <a
-              [routerLink]="item.route"
+              [href]="item.route"
               [attr.aria-current]="active ? 'page' : null"
-              (click)="closeAllMenus()"
+              (click)="navigateFromMobileSheet($event, [item.route])"
               [class]="
                 active
                   ? 'flex min-h-[48px] items-center justify-between gap-3 rounded-[16px] bg-brand/10 px-3 py-2.5 text-[15px] font-medium text-brand transition-colors duration-150'
@@ -282,9 +285,9 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             @for (bairro of bairros; track bairro.slug) {
               @let active = isBairroSlugCurrent(bairro.slug);
               <a
-                [routerLink]="['/bairros', bairro.slug]"
+                [href]="'/bairros/' + bairro.slug"
                 [attr.aria-current]="active ? 'page' : null"
-                (click)="closeAllMenus()"
+                (click)="navigateFromMobileSheet($event, ['/bairros', bairro.slug])"
                 [class]="
                   active
                     ? 'flex min-h-[52px] flex-col justify-center rounded-[16px] border border-brand/35 bg-brand/10 px-3.5 py-2 transition-colors duration-150'
@@ -339,12 +342,16 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
 })
 export class NavbarLinksComponent {
   private readonly router = inject(Router);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly currentUrl = signal<string>(this.router.url);
   private readonly navRef = viewChild<ElementRef<HTMLElement>>('navRef');
   private readonly mobileSheetRef =
     viewChild<ElementRef<HTMLElement>>('mobileSheetRef');
   private readonly menuToggleRef =
     viewChild<ElementRef<HTMLButtonElement>>('menuToggleRef');
+
+  private pendingNavTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly primaryItems = PRIMARY_NAV_ITEMS;
   readonly bairros = BAIRROS_BH;
@@ -365,6 +372,13 @@ export class NavbarLinksComponent {
   );
 
   constructor() {
+    this.destroyRef.onDestroy(() => {
+      if (this.pendingNavTimer !== null) {
+        clearTimeout(this.pendingNavTimer);
+        this.pendingNavTimer = null;
+      }
+    });
+
     this.currentUrl.set(this.router.url);
     this.router.events
       .pipe(
@@ -411,6 +425,41 @@ export class NavbarLinksComponent {
     if (restoreFocus) {
       this.menuToggleRef()?.nativeElement.focus();
     }
+  }
+
+  navigateFromMobileSheet(event: MouseEvent, commands: string[]): void {
+    // Allow modified clicks (new tab/window) to follow native link behavior.
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    this.closeMobileMenu(false);
+
+    if (this.pendingNavTimer !== null) {
+      clearTimeout(this.pendingNavTimer);
+      this.pendingNavTimer = null;
+    }
+
+    const reducedMotion =
+      isPlatformBrowser(this.platformId) &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reducedMotion || !isPlatformBrowser(this.platformId)) {
+      void this.router.navigate(commands);
+      return;
+    }
+
+    this.pendingNavTimer = setTimeout(() => {
+      this.pendingNavTimer = null;
+      void this.router.navigate(commands);
+    }, 180);
   }
 
   closeAllMenus(): void {
