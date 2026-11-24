@@ -355,6 +355,56 @@ h4 {
   transform: scale(0.94);
 }
 
+/* Barras do ícone hambúrguer -> X (60fps GPU-composited) */
+.terraco-m3-burger-line {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 240ms var(--ease-enter);
+}
+
+.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--top {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--bottom {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+/* Folha flutuante mobile da navbar (entrada/saída suave só com transform + opacity) */
+@keyframes terraco-m3-sheet-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes terraco-m3-sheet-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0) scale(0.985);
+  }
+}
+
+.terraco-m3-sheet-enter {
+  transform-origin: top center;
+  will-change: transform, opacity;
+  animation: terraco-m3-sheet-in 240ms var(--ease-enter) both;
+}
+
+.terraco-m3-sheet-leave {
+  transform-origin: top center;
+  will-change: transform, opacity;
+  animation: terraco-m3-sheet-out 160ms var(--ease-ui) both;
+}
+
 /* M3 Expressive: Mobile Quick Pill + Tonal Action Button */
 .terraco-m3-nav-item {
   display: inline-flex;
@@ -1244,6 +1294,8 @@ h4 {
   .terraco-toolbar-leave,
   .terraco-search-panel-enter,
   .terraco-search-panel-leave,
+  .terraco-m3-sheet-enter,
+  .terraco-m3-sheet-leave,
   .terraco-skeleton::after,
   .hero-enter-title,
   .hero-enter-form,
@@ -1275,6 +1327,7 @@ h4 {
   .terraco-m3-topbar,
   .terraco-m3-rail-item,
   .terraco-m3-menu-toggle,
+  .terraco-m3-burger-line,
   .terraco-m3-nav-item,
   .terraco-m3-nav-action,
   .terraco-m3-accordion-item,

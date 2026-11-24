@@ -166,35 +166,30 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
           "
           class="terraco-m3-menu-toggle cursor-pointer"
         >
-          @if (mobileMenuOpen()) {
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-5 w-5"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          } @else {
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-5 w-5"
-            >
-              <path d="M4 8h16" />
-              <path d="M4 16h16" />
-            </svg>
-          }
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            class="h-5 w-5"
+          >
+            <line
+              x1="4"
+              y1="8"
+              x2="20"
+              y2="8"
+              class="terraco-m3-burger-line terraco-m3-burger-line--top"
+            />
+            <line
+              x1="4"
+              y1="16"
+              x2="20"
+              y2="16"
+              class="terraco-m3-burger-line terraco-m3-burger-line--bottom"
+            />
+          </svg>
         </button>
       </div>
     </nav>
@@ -202,18 +197,13 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
     <!-- Mobile (< md): M3 Expressive Docked Floating Navigation Sheet -->
     @if (mobileMenuOpen()) {
       <div
-        aria-hidden="true"
-        (click)="closeMobileMenu()"
-        class="pointer-events-auto fixed inset-0 z-20 bg-ink/25 backdrop-blur-[2px] md:hidden"
-      ></div>
-
-      <div
+        #mobileSheetRef
         id="navbar-mobile-sheet"
         role="dialog"
         aria-label="Menu de navegação"
-        animate.enter="terraco-search-panel-enter"
-        animate.leave="terraco-search-panel-leave"
-        class="pointer-events-auto absolute inset-x-0 top-full z-30 mt-1.5 overflow-hidden rounded-t-[14px] rounded-b-[28px] border border-border-subtle bg-elevated p-3 shadow-floating md:hidden"
+        animate.enter="terraco-m3-sheet-enter"
+        animate.leave="terraco-m3-sheet-leave"
+        class="pointer-events-auto absolute inset-x-0 top-full z-40 mt-1.5 overflow-hidden rounded-t-[14px] rounded-b-[28px] border border-border-subtle bg-elevated p-3 shadow-floating md:hidden"
       >
         <div class="space-y-1">
           @for (item of primaryItems; track item.route) {
@@ -351,6 +341,8 @@ export class NavbarLinksComponent {
   private readonly router = inject(Router);
   private readonly currentUrl = signal<string>(this.router.url);
   private readonly navRef = viewChild<ElementRef<HTMLElement>>('navRef');
+  private readonly mobileSheetRef =
+    viewChild<ElementRef<HTMLElement>>('mobileSheetRef');
   private readonly menuToggleRef =
     viewChild<ElementRef<HTMLButtonElement>>('menuToggleRef');
 
@@ -427,10 +419,19 @@ export class NavbarLinksComponent {
   }
 
   onDocumentClick(event: Event): void {
-    const container = this.navRef()?.nativeElement;
     const target = event.target as Node | null;
-    if (container && target && !container.contains(target)) {
+    if (!target) return;
+
+    const navEl = this.navRef()?.nativeElement;
+    const sheetEl = this.mobileSheetRef()?.nativeElement;
+    const insideNav = Boolean(navEl?.contains(target));
+    const insideSheet = Boolean(sheetEl?.contains(target));
+
+    if (!insideNav) {
       this.bairrosMenuOpen.set(false);
+    }
+    if (!insideNav && !insideSheet) {
+      this.closeMobileMenu(false);
     }
   }
 }
