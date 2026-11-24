@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { LaunchExplorerComponent } from '../components/launches';
 import { FooterComponent, NavbarComponent } from '../components/layout';
-import { SeoService } from '../core';
+import { LancamentosService, SeoService } from '../core';
 
 @Component({
   selector: 'app-lancamentos-page',
@@ -24,8 +24,9 @@ import { SeoService } from '../core';
 })
 export class LancamentosPageComponent implements OnInit {
   private readonly seoService = inject(SeoService);
+  private readonly lancamentosService = inject(LancamentosService);
 
   ngOnInit(): void {
-    this.seoService.updateLancamentosMeta();
+    this.seoService.updateLancamentosMeta(this.lancamentosService.lancamentos());
   }
 }

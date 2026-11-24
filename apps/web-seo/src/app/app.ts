@@ -16,10 +16,11 @@ import {
   Router,
   RouterOutlet,
 } from '@angular/router';
+import { FavoritesTrayComponent } from './components/launches';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, FavoritesTrayComponent],
   template: `
     @if (isNavigating()) {
       <div
@@ -31,6 +32,7 @@ import {
       ></div>
     }
     <router-outlet />
+    <app-favorites-tray />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

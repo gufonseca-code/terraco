@@ -7,6 +7,7 @@ import {
 import express from 'express';
 import { join } from 'node:path';
 import { handleCreateLead } from './server/leads.handler';
+import { createLeadWebhookHandler } from './server/lead-webhook.handler';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -32,7 +33,7 @@ const SITE_URL = (
 ).replace(/\/+$/, '');
 
 const SSR_HTML_CACHE_CONTROL =
-  'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400';
+  'public, max-age=0, s-maxage=300, stale-while-revalidate=60';
 const SSR_NOT_FOUND_CACHE_CONTROL = 'public, max-age=60, s-maxage=300';
 const SEO_STATIC_CACHE_CONTROL =
   'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400';
@@ -49,11 +50,16 @@ app.get('/sitemap.xml', (_req, res) => {
     .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
     .type('application/xml')
     .send(
-      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${SITE_URL}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>1</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/prime-view</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/upside-square</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/horizon</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n</urlset>\n`,
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${SITE_URL}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>1</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/prime-view</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/upside-square</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/horizon</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/estoril</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/santa-efigenia</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/serrano</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/buritis</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n</urlset>\n`,
     );
 });
 
 app.post('/api/leads', express.json({ limit: '16kb' }), handleCreateLead);
+app.post(
+  '/api/leads/notify',
+  express.json({ limit: '16kb' }),
+  createLeadWebhookHandler(),
+);
 
 /**
  * Serve static files from /browser

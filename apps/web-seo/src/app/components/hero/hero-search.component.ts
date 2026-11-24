@@ -1,12 +1,12 @@
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
-  PendingTasks,
+  PLATFORM_ID,
   inject,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { LancamentosService } from '../../core';
+import { QUICK_NEIGHBORHOODS, SEARCH_SUGGESTIONS } from '../../core';
 import { HeroIllustrationComponent } from './hero-illustration.component';
 import { HeroSearchFormComponent } from './hero-search-form.component';
 
@@ -47,28 +47,24 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
           </div>
 
           <div animate.enter="terraco-reveal-delay" class="space-y-3">
-            <app-hero-search-form
-              [suggestions]="suggestions()"
-              (searchSubmit)="onSearchSubmit($event)"
-            />
+            <app-hero-search-form [suggestions]="suggestions" />
 
             <nav
               aria-label="Bairros em destaque"
               class="flex flex-wrap items-center gap-x-6 gap-y-1 pl-1"
             >
-              @for (bairro of quickNeighborhoods(); track bairro) {
+              @for (bairro of quickNeighborhoods; track bairro) {
                 <a
                   [routerLink]="['/lancamentos']"
-                  [queryParams]="{ filtro: bairro }"
-                  (click)="onSelectNeighborhood(bairro)"
+                  [queryParams]="{ q: bairro }"
                   class="terraco-link-underline inline-flex min-h-[44px] items-center text-sm font-normal text-ink-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink"
                 >
                   {{ bairro }}
                 </a>
               }
               <a
-                routerLink="/lancamentos"
-                (click)="onViewAll()"
+                href="#lancamentos-selecionados"
+                (click)="scrollToFeatured($event)"
                 class="terraco-link-underline inline-flex min-h-[44px] items-center text-sm font-medium text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
               >
                 Ver lançamentos
@@ -84,34 +80,32 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroSearchComponent implements OnInit {
-  private readonly lancamentosService = inject(LancamentosService);
+export class HeroSearchComponent {
+  private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
-  private readonly pendingTasks = inject(PendingTasks);
 
-  readonly suggestions = this.lancamentosService.suggestions;
-  readonly quickNeighborhoods = this.lancamentosService.quickNeighborhoods;
+  readonly suggestions = SEARCH_SUGGESTIONS;
+  readonly quickNeighborhoods = QUICK_NEIGHBORHOODS;
 
-  ngOnInit(): void {
-    void this.pendingTasks.run(() => this.lancamentosService.loadLancamentos());
-  }
+  scrollToFeatured(event: MouseEvent): void {
+    event.preventDefault();
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
 
-  onSearchSubmit(query: string): void {
-    const trimmed = query.trim();
-    this.lancamentosService.setSearchQuery(trimmed);
-    this.lancamentosService.setActiveFilter('Todos');
-    void this.router.navigate(
-      ['/lancamentos'],
-      trimmed ? { queryParams: { q: trimmed } } : undefined
-    );
-  }
+    const target = this.document.getElementById('lancamentos-selecionados');
+    if (!target) {
+      void this.router.navigate(['/lancamentos']);
+      return;
+    }
 
-  onSelectNeighborhood(bairro: string): void {
-    this.lancamentosService.setSearchQuery('');
-    this.lancamentosService.setActiveFilter(bairro);
-  }
-
-  onViewAll(): void {
-    this.lancamentosService.clearFilters();
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    target.scrollIntoView({
+      behavior: reducedMotion ? 'auto' : 'smooth',
+      block: 'start',
+    });
   }
 }

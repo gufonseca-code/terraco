@@ -43,16 +43,42 @@ import { TerracoLogoComponent } from './terraco-logo.component';
 
       <div class="border-t border-border-subtle/80">
         <div
-          class="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4 text-sm font-normal text-ink-muted sm:flex-row sm:items-center sm:justify-between lg:px-8 tabular-nums"
+          class="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-4 text-sm font-normal text-ink-muted sm:flex-row sm:items-center sm:justify-between lg:px-8"
         >
-          <span>© 2026 Terraço</span>
-          <span>Belo Horizonte, MG</span>
+          <nav
+            aria-label="Guias de bairros em BH"
+            class="flex flex-wrap items-center gap-x-5 gap-y-1"
+          >
+            <span class="text-ink-muted/80">Bairros em BH</span>
+            @for (guide of neighborhoodGuides; track guide.route) {
+              <a
+                [routerLink]="guide.route"
+                class="terraco-link-underline inline-flex min-h-[44px] items-center text-ink-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink"
+              >
+                {{ guide.label }}
+              </a>
+            }
+          </nav>
+
+          <div
+            class="flex flex-wrap items-center gap-x-4 gap-y-1 tabular-nums"
+          >
+            <span>© 2026 Terraço</span>
+            <span>Belo Horizonte, MG</span>
+          </div>
         </div>
       </div>
     </footer>
   `,
 })
 export class FooterComponent {
+  readonly neighborhoodGuides = [
+    { label: 'Estoril', route: '/bairros/estoril' },
+    { label: 'Santa Efigênia', route: '/bairros/santa-efigenia' },
+    { label: 'Serrano', route: '/bairros/serrano' },
+    { label: 'Buritis', route: '/bairros/buritis' },
+  ] as const;
+
   readonly whatsappHref = buildWhatsAppUrl(
     'Oi! Gostaria de conversar sobre um lançamento na Terraço.'
   );

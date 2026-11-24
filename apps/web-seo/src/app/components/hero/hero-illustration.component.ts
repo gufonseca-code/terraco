@@ -18,6 +18,11 @@ import { HeroSvgPrototypeComponent } from './hero-svg-prototype.component';
         aria-hidden="true"
         class="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-canvas via-canvas/45 to-transparent sm:w-20 md:w-44 md:via-canvas/90 lg:w-14 lg:via-canvas/30"
       ></div>
+      <!-- Fade vertical na base para dissolver a fachada no fundo Creme Papel antes da seção seguinte -->
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-canvas via-canvas/75 to-transparent sm:h-24 lg:h-28"
+      ></div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

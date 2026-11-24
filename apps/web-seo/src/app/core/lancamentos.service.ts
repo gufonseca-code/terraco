@@ -23,6 +23,7 @@ import {
   LANCAMENTOS,
   type Lancamento,
   type LaunchDocItem,
+  type LaunchFloorPlan,
   type LaunchMediaItem,
   QUICK_NEIGHBORHOODS,
   SEARCH_SUGGESTIONS,
@@ -139,9 +140,15 @@ export function normalizeLancamento(
     diferenciais: Array.isArray(raw['diferenciais'])
       ? raw['diferenciais'].map(String)
       : [],
+    ...(Array.isArray(raw['condicoesEspeciais'])
+      ? { condicoesEspeciais: raw['condicoesEspeciais'].map(String) }
+      : {}),
     whatsappMensagem: String(raw['whatsappMensagem'] ?? ''),
     ...(Array.isArray(raw['galeria'])
       ? { galeria: raw['galeria'] as LaunchMediaItem[] }
+      : {}),
+    ...(Array.isArray(raw['plantas'])
+      ? { plantas: raw['plantas'] as LaunchFloorPlan[] }
       : {}),
     ...(typeof raw['bookUrl'] === 'string' ? { bookUrl: raw['bookUrl'] } : {}),
     ...(Array.isArray(raw['plantasUrls'])
@@ -173,6 +180,7 @@ export class LancamentosService {
   readonly isLoadingDetail = signal<boolean>(false);
   readonly searchQuery = signal<string>('');
   readonly activeFilter = signal<string>('Todos');
+  readonly tipologiaFilter = signal<string>('Todas');
 
   readonly suggestions = computed<string[]>(() => {
     const items = this.lancamentos();
@@ -213,7 +221,12 @@ export class LancamentosService {
   );
 
   readonly filteredLancamentos = computed(() =>
-    filterLancamentos(this.searchQuery(), this.activeFilter(), this.lancamentos())
+    filterLancamentos(
+      this.searchQuery(),
+      this.activeFilter(),
+      this.lancamentos(),
+      this.tipologiaFilter()
+    )
   );
 
   private listLoaded = false;
@@ -343,6 +356,10 @@ export class LancamentosService {
   clearFilters(): void {
     this.searchQuery.set('');
     this.activeFilter.set('Todos');
+  }
+
+  setTipologiaFilter(tipologia: string): void {
+    this.tipologiaFilter.set(tipologia || 'Todas');
   }
 
   getBySlug(slug: string): Lancamento | undefined {

@@ -10,6 +10,24 @@ export interface LaunchDocItem {
   url: string;
 }
 
+export interface LaunchFloorPlan {
+  id: string;
+  titulo: string;
+  categoria: string;
+  metragem: string;
+  quartos: string;
+  banhos: string;
+  unidades?: string;
+  destaque?: string;
+  precoAPartirDe?: number;
+  entradaExemplo?: number;
+  parcelaExemplo?: string;
+  imagem: string;
+  width: number;
+  height: number;
+  alt: string;
+}
+
 export interface Lancamento {
   slug: string;
   nome: string;
@@ -34,8 +52,10 @@ export interface Lancamento {
   imagemHeight: number;
   imagemAlt: string;
   diferenciais: string[];
+  condicoesEspeciais?: string[];
   whatsappMensagem: string;
   galeria?: LaunchMediaItem[];
+  plantas?: LaunchFloorPlan[];
   bookUrl?: string;
   plantasUrls?: LaunchDocItem[];
   published?: boolean;
@@ -57,11 +77,988 @@ export function formatCurrencyBRL(value: number): string {
   }).format(value);
 }
 
-export const LANCAMENTOS: Lancamento[] = [];
+export const LANCAMENTOS: Lancamento[] = [
+  {
+    slug: 'prime-view',
+    nome: 'Prime View',
+    construtora: 'Novolar (Grupo Patrimar)',
+    tagline: 'Vista para sua nova vida.',
+    bairro: 'Estoril',
+    cidade: 'Belo Horizonte',
+    uf: 'MG',
+    endereco: 'Rua Paulo Piedade Campos, 2160 - Estoril, Belo Horizonte - MG',
+    badge: 'Lançamento',
+    tags: ['Vista panorâmica', 'Lazer completo', 'Portaria 24h'],
+    quartos: '1 e 2 quartos com suíte',
+    metragem: '49 a 103 m²',
+    tipologias: 'Tipo, Garden, PCD e Coberturas Lineares',
+    vagas: '1 e 2 vagas',
+    resumo:
+      'Condomínio fechado no Estoril com ampla vista panorâmica para Belo Horizonte em terreno de 5.855,90 m² e 2 torres com 2 elevadores por torre. Apartamentos de 2 quartos com suíte, Garden (1 e 2 quartos), PCD e Coberturas Lineares de 49,38 a 103,54 m², com áreas comuns entregues mobiliadas e decoradas, a 2 minutos da Av. Barão Homem de Melo e próximo ao Buritis.',
+    corCapa: 'moss',
+    imagem: '/images/lancamentos/prime-view/cover.webp',
+    imagemWidth: 1024,
+    imagemHeight: 614,
+    imagemAlt:
+      'Fachada contemporânea do residencial Prime View no Estoril, Belo Horizonte',
+    diferenciais: [
+      'Terreno amplo de 5.855,90 m² com 2 torres, 2 elevadores por torre e vista panorâmica privilegiada para Belo Horizonte (Registro R-4 matrícula nº 167.015 · Patrimônio de Afetação)',
+      'Acabamento superior nos apartamentos: piso laminado nos quartos, porcelanato na sala, cozinha e banheiros, bancadas em granito, tomadas USB e previsão para ar-condicionado nos quartos',
+      'Lazer completíssimo entregue mobiliado e decorado: piscinas adulto e infantil com prainha e solarium, espaço gourmet com vista, salão de festas, churrasqueira, academia, crossfit zone, praça de esportes, espaço fogo, mind space, pet place, playground e espaço kids',
+      'Conveniência inteligente: coworking, espaço influencer, espaço beauty, bicicletário com bike wash, ferramentas compartilhadas, minimercado autoatendimento, guarda-entregas, horta, pomar e aplicativo exclusivo do condomínio',
+      'Segurança e sustentabilidade (Selo Sempre Verde): portaria 24h com eclusas de pedestres e veículos, ponto de recarga para carro elétrico, iluminação em LED, coleta seletiva e dispositivos economizadores de água',
+      'Localização estratégica no Estoril: a 2 min a pé da Av. Barão Homem de Melo e Arena Foot Beer, 3 min da Newton Paiva e UPA Oeste, 4 min do Shopping Paragem, 5 min da Av. Raja Gabaglia e EPA, e 7 min do UniBH e Mercado da Boca',
+    ],
+    condicoesEspeciais: [
+      'Repasse Caixa (10% × 90%): entrada parcelada em até 36x, podendo dividir até 5% após a obra, com ITBI e registro grátis nessa modalidade (sujeito à aprovação CEF)',
+      'Opção de EMCASH em até 72x no Repasse Caixa, com até 2 intermediárias opcionais em dez/2027 e dez/2028',
+      'Repasse Futuro (30% × 70%): 30% pagos durante a obra em até 18x e 70% financiados na entrega',
+      'Opção de Parcela Fixa sem correção até dez/2027 na modalidade 30% × 70% (saldo corrigido pelo INCC)',
+      'Bônus negociável de até R$ 10 mil em desconto ou opção de cashback de 50% do valor economizado',
+    ],
+    whatsappMensagem:
+      'Oi! Gostaria de receber as plantas, valores e condições do Prime View (Estoril).',
+    galeria: [
+      {
+        url: '/images/lancamentos/prime-view/vista-aerea.webp',
+        alt: 'Vista aérea em perspectiva do Prime View no Estoril com vista panorâmica para Belo Horizonte',
+        width: 800,
+        height: 1280,
+      },
+      {
+        url: '/images/lancamentos/prime-view/piscina.webp',
+        alt: 'Piscina adulto com solarium e vista da torre do Prime View no Estoril',
+        width: 800,
+        height: 550,
+      },
+      {
+        url: '/images/lancamentos/prime-view/deck-piscina.webp',
+        alt: 'Deck da piscina com espreguiçadeiras e paisagismo no Prime View',
+        width: 800,
+        height: 1280,
+      },
+      {
+        url: '/images/lancamentos/prime-view/piscina-infantil.webp',
+        alt: 'Piscina infantil integrada ao deck molhado e área de descanso do Prime View',
+        width: 800,
+        height: 1280,
+      },
+      {
+        url: '/images/lancamentos/prime-view/espaco-gourmet.webp',
+        alt: 'Espaço gourmet panorâmico mobiliado e decorado com vista para Belo Horizonte',
+        width: 800,
+        height: 1050,
+      },
+      {
+        url: '/images/lancamentos/prime-view/salao-festas.webp',
+        alt: 'Salão de festas entregue mobiliado e decorado com vista para a área verde do Prime View',
+        width: 1400,
+        height: 2016,
+      },
+      {
+        url: '/images/lancamentos/prime-view/churrasqueira.webp',
+        alt: 'Espaço churrasqueira com bancada e banquetas altas no Prime View',
+        width: 800,
+        height: 1280,
+      },
+      {
+        url: '/images/lancamentos/prime-view/living-integrado.webp',
+        alt: 'Salas de estar e jantar integradas à cozinha do Prime View',
+        width: 802,
+        height: 1283,
+      },
+      {
+        url: '/images/lancamentos/prime-view/cozinha.webp',
+        alt: 'Cozinha e área de serviço integradas com bancada em granito no Prime View',
+        width: 1400,
+        height: 2038,
+      },
+      {
+        url: '/images/lancamentos/prime-view/suite.webp',
+        alt: 'Suíte decorada com iluminação aconchegante dos apartamentos do Prime View',
+        width: 1400,
+        height: 2038,
+      },
+      {
+        url: '/images/lancamentos/prime-view/quarto-decorado.webp',
+        alt: 'Segundo quarto decorado dos apartamentos de 2 quartos do Prime View',
+        width: 800,
+        height: 1280,
+      },
+      {
+        url: '/images/lancamentos/prime-view/garden.webp',
+        alt: 'Área externa privativa de unidade Garden do Prime View',
+        width: 800,
+        height: 1277,
+      },
+      {
+        url: '/images/lancamentos/prime-view/academia.webp',
+        alt: 'Academia equipada com esteiras, bicicletas e vista panorâmica no Prime View',
+        width: 1400,
+        height: 1030,
+      },
+      {
+        url: '/images/lancamentos/prime-view/crossfit-zone.webp',
+        alt: 'Crossfit Zone ao ar livre cercada por área verde no Prime View',
+        width: 800,
+        height: 1280,
+      },
+      {
+        url: '/images/lancamentos/prime-view/praca-esportes.webp',
+        alt: 'Praça de esportes com mesa de ping-pong e jogos ao ar livre no Prime View',
+        width: 800,
+        height: 652,
+      },
+      {
+        url: '/images/lancamentos/prime-view/espaco-fogo.webp',
+        alt: 'Espaço fogo ao ar livre para convivência ao entardecer no Prime View',
+        width: 800,
+        height: 1280,
+      },
+      {
+        url: '/images/lancamentos/prime-view/playground.webp',
+        alt: 'Playground colorido integrado à área de lazer térrea do Prime View',
+        width: 800,
+        height: 673,
+      },
+      {
+        url: '/images/lancamentos/prime-view/espaco-kids.webp',
+        alt: 'Espaço kids coberto, mobiliado e decorado para crianças no Prime View',
+        width: 800,
+        height: 607,
+      },
+      {
+        url: '/images/lancamentos/prime-view/pet-place.webp',
+        alt: 'Pet place gramado e cercado com equipamentos de agilidade no Prime View',
+        width: 1400,
+        height: 2038,
+      },
+      {
+        url: '/images/lancamentos/prime-view/coworking.webp',
+        alt: 'Coworking climatizado com estações de trabalho compartilhadas no Prime View',
+        width: 800,
+        height: 640,
+      },
+      {
+        url: '/images/lancamentos/prime-view/espaco-influencer.webp',
+        alt: 'Espaço Influencer equipado com iluminação e fundo chroma key no Prime View',
+        width: 800,
+        height: 1280,
+      },
+      {
+        url: '/images/lancamentos/prime-view/espaco-beauty.webp',
+        alt: 'Espaço Beauty privativo com lavatório e espelhos no Prime View',
+        width: 800,
+        height: 1278,
+      },
+      {
+        url: '/images/lancamentos/prime-view/ferramentas-compartilhadas.webp',
+        alt: 'Sala de ferramentas compartilhadas equipada para pequenos reparos no Prime View',
+        width: 800,
+        height: 640,
+      },
+      {
+        url: '/images/lancamentos/prime-view/minimercado.webp',
+        alt: 'Minimercado de autoatendimento dentro do condomínio Prime View',
+        width: 800,
+        height: 1280,
+      },
+      {
+        url: '/images/lancamentos/prime-view/portaria.webp',
+        alt: 'Portaria contemporânea com guarita, eclusa de pedestres e acesso de veículos no Prime View',
+        width: 800,
+        height: 539,
+      },
+      {
+        url: '/images/lancamentos/prime-view/implantacao.webp',
+        alt: 'Planta de implantação do Prime View mostrando as duas torres e os 35 itens de lazer e conveniência',
+        width: 801,
+        height: 565,
+      },
+    ],
+    plantas: [
+      {
+        id: 'prime-view-tipo-49',
+        titulo: 'Tipo 2 Quartos com Suíte',
+        categoria: '2 Quartos',
+        metragem: '49,38 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Finais 01, 02, 07 e 08 · Torres 1 e 2',
+        destaque: 'Salas integradas',
+        imagem: '/images/lancamentos/prime-view/planta-tipo-49m2.webp',
+        width: 491,
+        height: 489,
+        alt: 'Planta humanizada do apartamento tipo de 2 quartos com suíte (49,38 m²) do Prime View',
+      },
+      {
+        id: 'prime-view-tipo-51',
+        titulo: 'Tipo 2 Quartos Ampliado',
+        categoria: '2 Quartos',
+        metragem: '51,67 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Finais 03, 04, 05 e 06 · Torres 1 e 2',
+        destaque: 'Planta ampliada',
+        imagem: '/images/lancamentos/prime-view/planta-tipo-51m2.webp',
+        width: 1400,
+        height: 896,
+        alt: 'Planta humanizada do apartamento tipo de 2 quartos com suíte (51,67 m²) do Prime View',
+      },
+      {
+        id: 'prime-view-garden-56',
+        titulo: 'Garden 1 Quarto',
+        categoria: 'Garden',
+        metragem: '56,77 m²',
+        quartos: '1 quarto',
+        banhos: '1 banho',
+        unidades: 'Unidade 103 · Torres 1 e 2',
+        destaque: 'Terraço descoberto privativo',
+        imagem: '/images/lancamentos/prime-view/planta-garden-56m2.webp',
+        width: 491,
+        height: 465,
+        alt: 'Planta humanizada do apartamento Garden de 1 quarto com terraço privativo (56,77 m²) do Prime View',
+      },
+      {
+        id: 'prime-view-garden-57',
+        titulo: 'Garden 2 Quartos',
+        categoria: 'Garden',
+        metragem: '57,57 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Unidades 101, 102, 107 e 108 · Torres 1 e 2',
+        destaque: 'Terraço privativo descoberto',
+        imagem: '/images/lancamentos/prime-view/planta-garden-57m2.webp',
+        width: 1220,
+        height: 1200,
+        alt: 'Planta humanizada do apartamento Garden de 2 quartos com suíte e área privativa (57,57 m²) do Prime View',
+      },
+      {
+        id: 'prime-view-garden-72',
+        titulo: 'Garden 2 Quartos Amplo',
+        categoria: 'Garden',
+        metragem: '72,27 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Unidades 104, 105 e 106 · Torres 1 e 2',
+        destaque: 'Terraço descoberto amplo',
+        imagem: '/images/lancamentos/prime-view/planta-garden-72m2.webp',
+        width: 1400,
+        height: 992,
+        alt: 'Planta humanizada do apartamento Garden de 2 quartos com suíte e terraço amplo (72,27 m²) do Prime View',
+      },
+      {
+        id: 'prime-view-pcd-49',
+        titulo: 'Apartamento PCD Adaptado',
+        categoria: 'PCD',
+        metragem: '49,38 m²',
+        quartos: '1 quarto + escritório',
+        banhos: '1 banho adaptado',
+        unidades: 'Unidades 801, 901, 902, 907 e 908 · Torre 1',
+        destaque: 'Acessibilidade integral',
+        imagem: '/images/lancamentos/prime-view/planta-pcd-49m2.webp',
+        width: 1220,
+        height: 1158,
+        alt: 'Planta humanizada do apartamento PCD adaptado de 1 quarto e escritório (49,38 m²) do Prime View',
+      },
+      {
+        id: 'prime-view-cobertura-103',
+        titulo: 'Cobertura Linear',
+        categoria: 'Cobertura',
+        metragem: '103,54 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Unidade 1004 · Torre 2',
+        destaque: 'Terraço panorâmico',
+        imagem: '/images/lancamentos/prime-view/planta-cobertura-103m2.webp',
+        width: 1400,
+        height: 726,
+        alt: 'Planta humanizada da Cobertura Linear de 2 quartos com suíte e terraço panorâmico (103,54 m²) do Prime View',
+      },
+    ],
+    published: true,
+    order: 1,
+  },
+  {
+    slug: 'upside-square',
+    nome: 'Upside Square',
+    construtora: 'Grupo Patrimar',
+    tagline: 'Essencial é viver bem.',
+    bairro: 'Santa Efigênia',
+    cidade: 'Belo Horizonte',
+    uf: 'MG',
+    endereco: 'Rua Domingos Vieira, 176 - Santa Efigênia, Belo Horizonte - MG',
+    badge: 'Lançamento',
+    tags: ['Certificado EDGE', 'Torre única', 'Lazer completo'],
+    quartos: 'Studios, 1 quarto e 2 suítes',
+    metragem: '30 a 122 m²',
+    tipologias: 'Studio, 1 Quarto, 2 Suítes, Garden e High Garden',
+    vagas: 'Vagas conforme tipologia',
+    precoAPartirDe: 596403,
+    entrega: 'Março/2030',
+    resumo:
+      'Torre única com 21 pavimentos e 161 unidades em terreno de 1.453,35 m² no coração do Santa Efigênia, assinada por Torres Miranda (arquitetura), Piacesi (interiores) e Forma Garden (paisagismo). Com certificado internacional EDGE de sustentabilidade, plantas versáteis de 30 a 122 m², lojas no térreo e lazer completo a 3 minutos a pé da Praça Floriano Peixoto, Hospital da Unimed e Shopping Boulevard.',
+    corCapa: 'ipe',
+    imagem: '/images/lancamentos/upside-square/cover.webp',
+    imagemWidth: 641,
+    imagemHeight: 1024,
+    imagemAlt:
+      'Fachada contemporânea do residencial Upside Square no bairro Santa Efigênia, Belo Horizonte',
+    diferenciais: [
+      'Torre única com 21 pavimentos, 3 elevadores, lojas no térreo e projeto assinado por Torres Miranda (arquitetura), Piacesi (áreas comuns) e Forma Garden (paisagismo)',
+      'Certificado EDGE de sustentabilidade ainda na fase de projeto: 25% de economia de energia, 26% de economia de água e 33% de economia na energia incorporada aos materiais',
+      'Eficiência e infraestrutura nos apartamentos: medição individualizada de água via rádio frequência, sistema dual flux e previsão para ar-condicionado nos studios, quartos e salas',
+      'Lazer completo entregue montado e decorado: piscina climatizada, espaço grill, gourmet com terraço, fitness interno e externo, solarium, espaço fogo, playground e pet place',
+      'Comodidades incluídas e pay-per-use: coworking/espaço conteúdo, lavanderia, i-storage delivery, 2 e-bikes e 2 patinetes elétricos compartilhados, tool sharing, bicicletário, Grab & Go, Maid Service e aplicativo exclusivo do condomínio',
+      'Segurança completa: guarita 24h, antecâmara de segurança para pedestres, área de delivery independente, CFTV, controle de acesso biométrico/facial e previsão para sensor IVA nas divisas',
+      'Sustentabilidade nas áreas comuns: placas fotovoltaicas para economia de energia do condomínio, iluminação LED com sensor de presença, torneiras com temporizador e previsão para carregador de carro elétrico',
+      'Localização conectada no Santa Efigênia: a 3 min a pé da Praça Floriano Peixoto, 5 min do Hospital da Unimed e Tem Hortifruti, 6 min da Santa Casa e 7 min do Shopping Boulevard e Teatro Sesiminas',
+    ],
+    condicoesEspeciais: [
+      'Tabela 03/2026: entrada + 3 parcelas mensais iniciais + 34 mensais + 5 intermediárias semestrais durante a obra até março de 2030',
+      'Studios a partir de R$ 596.403 (unidade 502) e 2 suítes a partir de R$ 1.097.902 (unidade 612), com correção pelo INCC na fase de obra',
+      'Saldo restante (~68% do valor) financiado na entrega das chaves, com opção de fluxo personalizado de entrada',
+    ],
+    whatsappMensagem:
+      'Oi! Gostaria de receber as plantas, valores e condições do Upside Square (Santa Efigênia).',
+    galeria: [
+      {
+        url: '/images/lancamentos/upside-square/fachada-tarde.webp',
+        alt: 'Fachada contemporânea da torre única do Upside Square ao entardecer no Santa Efigênia',
+        width: 803,
+        height: 1282,
+      },
+      {
+        url: '/images/lancamentos/upside-square/piscina-climatizada.webp',
+        alt: 'Piscina climatizada com vista panorâmica para Belo Horizonte no Upside Square',
+        width: 800,
+        height: 467,
+      },
+      {
+        url: '/images/lancamentos/upside-square/piscina-vista-ampla.webp',
+        alt: 'Área da piscina climatizada integrada ao espaço grill e academia no Upside Square',
+        width: 803,
+        height: 584,
+      },
+      {
+        url: '/images/lancamentos/upside-square/espaco-grill.webp',
+        alt: 'Espaço grill contemporâneo entregue mobiliado e decorado no Upside Square',
+        width: 802,
+        height: 812,
+      },
+      {
+        url: '/images/lancamentos/upside-square/espaco-gourmet.webp',
+        alt: 'Salão gourmet amplo entregue mobiliado e decorado no Upside Square',
+        width: 803,
+        height: 331,
+      },
+      {
+        url: '/images/lancamentos/upside-square/terraco-gourmet.webp',
+        alt: 'Terraço do espaço gourmet ao entardecer no Upside Square em Santa Efigênia',
+        width: 800,
+        height: 426,
+      },
+      {
+        url: '/images/lancamentos/upside-square/fitness.webp',
+        alt: 'Espaço fitness interno equipado com vista para o Santa Efigênia no Upside Square',
+        width: 803,
+        height: 1281,
+      },
+      {
+        url: '/images/lancamentos/upside-square/fitness-externo.webp',
+        alt: 'Área de fitness externo para treinos funcionais ao ar livre no Upside Square',
+        width: 801,
+        height: 534,
+      },
+      {
+        url: '/images/lancamentos/upside-square/coworking.webp',
+        alt: 'Coworking e espaço conteúdo compartilhado no condomínio Upside Square',
+        width: 802,
+        height: 422,
+      },
+      {
+        url: '/images/lancamentos/upside-square/lavanderia.webp',
+        alt: 'Lavanderia compartilhada equipada no Upside Square',
+        width: 388,
+        height: 408,
+      },
+      {
+        url: '/images/lancamentos/upside-square/grab-and-go.webp',
+        alt: 'Mercadinho Grab & Go pay-per-use no condomínio Upside Square',
+        width: 387,
+        height: 410,
+      },
+      {
+        url: '/images/lancamentos/upside-square/bicicletario.webp',
+        alt: 'Bicicletário com bicicletas e patinetes elétricos compartilhados no Upside Square',
+        width: 752,
+        height: 512,
+      },
+      {
+        url: '/images/lancamentos/upside-square/playground.webp',
+        alt: 'Playground ao ar livre com área verde no Upside Square',
+        width: 505,
+        height: 501,
+      },
+      {
+        url: '/images/lancamentos/upside-square/pet-place.webp',
+        alt: 'Pet place gramado dedicado aos animais de estimação no Upside Square',
+        width: 427,
+        height: 285,
+      },
+      {
+        url: '/images/lancamentos/upside-square/hall-entrada.webp',
+        alt: 'Hall de entrada social com portaria e controle de acesso no Upside Square',
+        width: 801,
+        height: 528,
+      },
+      {
+        url: '/images/lancamentos/upside-square/apartamento-decorado.webp',
+        alt: 'Perspectiva ilustrada de unidade decorada com sala de jantar e dormitório no Upside Square',
+        width: 803,
+        height: 1282,
+      },
+      {
+        url: '/images/lancamentos/upside-square/studio-decorado.webp',
+        alt: 'Perspectiva ilustrada de unidade Studio integrada com vista urbana no Upside Square',
+        width: 800,
+        height: 452,
+      },
+      {
+        url: '/images/lancamentos/upside-square/living-studio.webp',
+        alt: 'Sala de estar e jantar integrada com marcenaria contemporânea no Upside Square',
+        width: 803,
+        height: 1065,
+      },
+      {
+        url: '/images/lancamentos/upside-square/living-2-suites.webp',
+        alt: 'Living integrado com cozinha e sala de jantar em apartamento de 2 suítes no Upside Square',
+        width: 671,
+        height: 452,
+      },
+      {
+        url: '/images/lancamentos/upside-square/suite-decorado.webp',
+        alt: 'Suíte máster decorada com closet envidraçado e iluminação embutida no Upside Square',
+        width: 673,
+        height: 450,
+      },
+      {
+        url: '/images/lancamentos/upside-square/home-office-decorado.webp',
+        alt: 'Ambiente de estar e home office com iluminação natural no Upside Square',
+        width: 671,
+        height: 313,
+      },
+      {
+        url: '/images/lancamentos/upside-square/terraco-high-garden.webp',
+        alt: 'Terraço descoberto privativo das unidades High Garden ao pôr do sol no Upside Square',
+        width: 803,
+        height: 1280,
+      },
+    ],
+    plantas: [
+      {
+        id: 'upside-studio-30',
+        titulo: 'Studio 30 m²',
+        categoria: 'Studio',
+        metragem: '30,10 m²',
+        quartos: 'Studio',
+        banhos: '1 banho',
+        unidades: 'Finais 01 a 04, 07 e 08',
+        destaque: 'Ambiente integrado com bancada gourmet',
+        precoAPartirDe: 596403,
+        entradaExemplo: 47712,
+        parcelaExemplo: '34x R$ 965 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-studio-30m2.webp',
+        width: 600,
+        height: 654,
+        alt: 'Planta humanizada do Studio de 30 m² (finais 01 a 04, 07 e 08) do Upside Square',
+      },
+      {
+        id: 'upside-studio-32',
+        titulo: 'Studio 32 m²',
+        categoria: 'Studio',
+        metragem: '32,07 m²',
+        quartos: 'Studio',
+        banhos: '1 banho',
+        unidades: 'Final 11 (apts 511 a 1411)',
+        destaque: 'Layout longitudinal funcional',
+        precoAPartirDe: 648270,
+        entradaExemplo: 51862,
+        parcelaExemplo: '34x R$ 1.049 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-studio-32m2.webp',
+        width: 640,
+        height: 438,
+        alt: 'Planta humanizada do Studio de 32 m² (final 11) do Upside Square',
+      },
+      {
+        id: 'upside-studio-33',
+        titulo: 'Studio 33 m²',
+        categoria: 'Studio',
+        metragem: '33,05 m²',
+        quartos: 'Studio',
+        banhos: '1 banho',
+        unidades: 'Final 10 (apts 510 a 1410)',
+        destaque: 'Área de estar ampliada',
+        precoAPartirDe: 674151,
+        entradaExemplo: 53932,
+        parcelaExemplo: '34x R$ 1.091 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-studio-33m2.webp',
+        width: 679,
+        height: 440,
+        alt: 'Planta humanizada do Studio de 33 m² (final 10) do Upside Square',
+      },
+      {
+        id: 'upside-studio-garden-39',
+        titulo: 'Studio Garden 39 m²',
+        categoria: 'Garden',
+        metragem: '38,89 m²',
+        quartos: 'Studio',
+        banhos: '1 banho',
+        unidades: 'Apts 401 a 404, 407 e 408',
+        destaque: 'Terraço descoberto privativo',
+        precoAPartirDe: 643021,
+        entradaExemplo: 51442,
+        parcelaExemplo: '34x R$ 1.040 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-studio-garden-39m2.webp',
+        width: 542,
+        height: 630,
+        alt: 'Planta humanizada do Studio Garden de 39 m² com terraço descoberto do Upside Square',
+      },
+      {
+        id: 'upside-studio-garden-40',
+        titulo: 'Studio Garden 40 m²',
+        categoria: 'Garden',
+        metragem: '40 m²',
+        quartos: 'Studio',
+        banhos: '1 banho',
+        unidades: 'Apt 410',
+        destaque: 'Terraço descoberto privativo',
+        imagem: '/images/lancamentos/upside-square/planta-studio-garden-40m2.webp',
+        width: 716,
+        height: 418,
+        alt: 'Planta humanizada do Studio Garden de 40 m² com terraço descoberto (apt 410) do Upside Square',
+      },
+      {
+        id: 'upside-1-quarto-40',
+        titulo: '1 Quarto 40 m²',
+        categoria: '1 Quarto',
+        metragem: '40,44 m²',
+        quartos: '1 quarto',
+        banhos: '1 banho',
+        unidades: 'Apts 1603 a 2103',
+        destaque: 'Andares altos com quarto separado',
+        precoAPartirDe: 927678,
+        entradaExemplo: 74214,
+        parcelaExemplo: '34x R$ 1.501 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-1-quarto-40m2.webp',
+        width: 328,
+        height: 834,
+        alt: 'Planta humanizada do apartamento de 1 quarto (40 m², apts 1603 a 2103) do Upside Square',
+      },
+      {
+        id: 'upside-garden-1-quarto-58',
+        titulo: 'Garden 1 Quarto 58 m²',
+        categoria: 'Garden',
+        metragem: '58,66 m²',
+        quartos: '1 quarto',
+        banhos: '1 banho',
+        unidades: 'Apt 409',
+        destaque: 'Terraço descoberto amplo',
+        precoAPartirDe: 895839,
+        entradaExemplo: 71667,
+        parcelaExemplo: '34x R$ 1.449 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-garden-1-quarto-58m2.webp',
+        width: 496,
+        height: 717,
+        alt: 'Planta humanizada do apartamento Garden de 1 quarto com terraço descoberto (58 m², apt 409) do Upside Square',
+      },
+      {
+        id: 'upside-2-suites-58',
+        titulo: 'Tipo 2 Suítes 58 m²',
+        categoria: '2 Suítes',
+        metragem: '58,06 m²',
+        quartos: '2 suítes',
+        banhos: '2 banhos + lavabo',
+        unidades: 'Apts 612 a 1412',
+        destaque: '2 suítes independentes + lavabo',
+        precoAPartirDe: 1097902,
+        entradaExemplo: 87832,
+        parcelaExemplo: '34x R$ 1.776 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-2-suites-58m2.webp',
+        width: 660,
+        height: 401,
+        alt: 'Planta humanizada do apartamento tipo de 2 suítes (58 m², apts 612 a 1412) do Upside Square',
+      },
+      {
+        id: 'upside-garden-2-suites-62',
+        titulo: 'Garden 2 Suítes 62 m²',
+        categoria: 'Garden',
+        metragem: '62 m²',
+        quartos: '2 suítes',
+        banhos: '2 banhos + lavabo',
+        unidades: 'Apt 512',
+        destaque: 'Terraço descoberto privativo',
+        imagem: '/images/lancamentos/upside-square/planta-garden-2-suites-62m2.webp',
+        width: 713,
+        height: 427,
+        alt: 'Planta humanizada do apartamento Garden de 2 suítes com terraço descoberto (62 m², apt 512) do Upside Square',
+      },
+      {
+        id: 'upside-garden-2-suites-66',
+        titulo: 'Garden 2 Suítes 66 m²',
+        categoria: 'Garden',
+        metragem: '66,18 m²',
+        quartos: '2 suítes',
+        banhos: '2 banhos + lavabo',
+        unidades: 'Apt 513',
+        destaque: 'Terraço descoberto + lavabo',
+        precoAPartirDe: 1186754,
+        entradaExemplo: 94940,
+        parcelaExemplo: '34x R$ 1.920 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-garden-2-suites-66m2.webp',
+        width: 340,
+        height: 625,
+        alt: 'Planta humanizada do apartamento Garden de 2 suítes com terraço descoberto (66 m², apt 513) do Upside Square',
+      },
+      {
+        id: 'upside-high-garden-1-quarto-62',
+        titulo: 'High Garden 1 Quarto 62 m²',
+        categoria: 'High Garden',
+        metragem: '62,30 m²',
+        quartos: '1 quarto',
+        banhos: '1 banho',
+        unidades: 'Apt 1503 (15º andar)',
+        destaque: 'Terraço panorâmico em andar alto',
+        precoAPartirDe: 1104158,
+        entradaExemplo: 88333,
+        parcelaExemplo: '34x R$ 1.786 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-high-garden-1-quarto-62m2.webp',
+        width: 355,
+        height: 629,
+        alt: 'Planta humanizada do apartamento High Garden de 1 quarto com terraço descoberto (62 m², apt 1503) do Upside Square',
+      },
+      {
+        id: 'upside-high-garden-1-suite-109',
+        titulo: 'High Garden 2 Quartos 109 m²',
+        categoria: 'High Garden',
+        metragem: '109,46 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Apt 1501 (15º andar)',
+        destaque: 'Amplo terraço descoberto em L',
+        precoAPartirDe: 1812864,
+        entradaExemplo: 145029,
+        parcelaExemplo: '34x R$ 2.933 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-high-garden-1-suite-109m2.webp',
+        width: 440,
+        height: 601,
+        alt: 'Planta humanizada do apartamento High Garden de 1 suíte e 1 quarto com terraço descoberto (109 m², apt 1501) do Upside Square',
+      },
+      {
+        id: 'upside-high-garden-2-suites-122',
+        titulo: 'High Garden 2 Suítes 122 m²',
+        categoria: 'High Garden',
+        metragem: '122,25 m²',
+        quartos: '2 suítes',
+        banhos: '2 banhos + lavabo',
+        unidades: 'Apt 1502 (15º andar)',
+        destaque: 'Maior terraço panorâmico da torre',
+        precoAPartirDe: 1979666,
+        entradaExemplo: 158373,
+        parcelaExemplo: '34x R$ 3.203 + 5 interm.',
+        imagem: '/images/lancamentos/upside-square/planta-high-garden-2-suites-122m2.webp',
+        width: 508,
+        height: 782,
+        alt: 'Planta humanizada do apartamento High Garden de 2 suítes com terraço descoberto (122 m², apt 1502) do Upside Square',
+      },
+    ],
+    published: true,
+    order: 2,
+  },
+  {
+    slug: 'horizon',
+    nome: 'Horizon',
+    construtora: 'Novolar (Grupo Patrimar)',
+    tagline: 'Seu novo ponto alto.',
+    bairro: 'Serrano',
+    cidade: 'Belo Horizonte',
+    uf: 'MG',
+    endereco: 'Rua Imperial, 250 - Serrano, Belo Horizonte - MG',
+    badge: 'Lançamento',
+    tags: ['Torre única', 'Vista livre', 'Lazer completo'],
+    quartos: '1 e 2 quartos com suíte',
+    metragem: '52 a 83 m²',
+    tipologias: 'Tipo com varanda e Garden',
+    vagas: 'Vaga de garagem',
+    resumo:
+      'Torre única em terreno de 6.673 m² cercado por Área de Preservação Permanente (APP) no Serrano, na continuidade da Av. Abílio Machado ao lado do Castelo. Apartamentos de 52,36 m² a 83,34 m² com varanda em todas as unidades, opções Garden, Selo Sempre Verde, aplicativo exclusivo do condomínio e lazer completo entregue montado e mobiliado.',
+    corCapa: 'guava',
+    imagem: '/images/lancamentos/horizon/cover.webp',
+    imagemWidth: 641,
+    imagemHeight: 576,
+    imagemAlt:
+      'Fachada da torre única do residencial Horizon cercado por área verde no bairro Serrano, Belo Horizonte',
+    diferenciais: [
+      'Torre única em terreno de 6.673 m² com 4 elevadores, cercada por Área de Preservação Permanente (APP) e vista privilegiada para a cidade',
+      'Apartamentos de 52,36 m² a 83,34 m²: amplas salas de estar e jantar integradas, varanda em todas as unidades, opções Garden, piso em porcelanato na sala, varanda, cozinha e banheiros, bancadas em granito e previsão para ar-condicionado na sala e suíte',
+      'Lazer completo entregue montado e mobiliado: piscinas adulto e infantil, prainha, solarium, espaço gourmet com varanda, salão de festas com terraço, churrasqueira, academia (fitness), sauna com descanso, espaço massagem, espaço kids e playground',
+      'Comodidades inclusas no condomínio: coworking, espaço beauty, bicicletário, bike wash, ferramentas compartilhadas, guarda-entregas na guarita e aplicativo exclusivo do condomínio; além de minimercado e lavanderia sob demanda sem custo de manutenção',
+      'Sustentabilidade (Selo Sempre Verde) e segurança: previsão para placas fotovoltaicas, LED com sensor de presença, dual flux, torneiras com economizador, medição individualizada de água e gás, portaria 24h com eclusas de veículos e pedestres, câmeras e fechadura eletromagnética',
+      'Localização estratégica no Serrano, conectando BH e Contagem na continuidade da Av. Abílio Machado: 1 min a pé da Praça Sol Nascente e Academia em Forma, 2 min do comércio da Abílio Machado, 3 min a pé dos colégios CEM e Chromos e 4 min do Mart Minas, Drogaria Araújo, Smart Fit, EPA e Topázio Mall',
+    ],
+    condicoesEspeciais: [
+      'Campanha especial: 6% de desconto já abatido no fluxo, com até 15% OFF no pagamento à vista ou 10% OFF quitando durante a obra (sinal mínimo de 12% + 24 parcelas iguais sem correção)',
+      '6% OFF no Desligamento Futuro (25% na obra + 5% nas chaves pelo INCC + 70% financiados após a entrega) ou no Financiamento Direto (12% sinal + 23% obra + 5% chaves INCC + 60% em até 84x pós-obra com IPCA + 1% a.m.)',
+      '6% OFF com Parcela Fixa (fluxo 25x75 ou 30x70 sem correção nas parcelas, com intermediárias somente até 12/2027 e saldo corrigido pelo INCC)',
+      'Modalidades padrão fora da campanha: Repasse futuro 25% x 75% (25% em até 24x na obra) ou Financiamento Direto (40% na obra em 24x INCC + 60% após o habite-se em 60x IPCA + 1% a.m., sujeito à análise de crédito)',
+    ],
+    whatsappMensagem:
+      'Oi! Gostaria de receber as plantas, valores e condições do Horizon (Serrano).',
+    galeria: [
+      {
+        url: '/images/lancamentos/horizon/piscina-vista.webp',
+        alt: 'Piscina adulto com prainha e vista para área verde preservada no Horizon',
+        width: 596,
+        height: 476,
+      },
+      {
+        url: '/images/lancamentos/horizon/piscina-solarium.webp',
+        alt: 'Piscina adulto e solarium com vista livre no residencial Horizon',
+        width: 596,
+        height: 476,
+      },
+      {
+        url: '/images/lancamentos/horizon/espaco-gourmet.webp',
+        alt: 'Espaço gourmet integrado à varanda e ao lazer do residencial Horizon no Serrano',
+        width: 467,
+        height: 242,
+      },
+      {
+        url: '/images/lancamentos/horizon/salao-festas.webp',
+        alt: 'Salão de festas integrado ao terraço no Horizon',
+        width: 467,
+        height: 242,
+      },
+      {
+        url: '/images/lancamentos/horizon/churrasqueira.webp',
+        alt: 'Churrasqueira com área de convivência no lazer do Horizon',
+        width: 466,
+        height: 242,
+      },
+      {
+        url: '/images/lancamentos/horizon/living-integrado.webp',
+        alt: 'Salas de estar e jantar integradas à varanda e cozinha no Horizon',
+        width: 596,
+        height: 440,
+      },
+      {
+        url: '/images/lancamentos/horizon/varanda.webp',
+        alt: 'Varanda integrada à sala de estar dos apartamentos do Horizon',
+        width: 595,
+        height: 490,
+      },
+      {
+        url: '/images/lancamentos/horizon/suite.webp',
+        alt: 'Suíte decorada do residencial Horizon no bairro Serrano',
+        width: 596,
+        height: 356,
+      },
+      {
+        url: '/images/lancamentos/horizon/quarto.webp',
+        alt: 'Segundo quarto com layout versátil no apartamento decorado do Horizon',
+        width: 592,
+        height: 594,
+      },
+      {
+        url: '/images/lancamentos/horizon/fitness.webp',
+        alt: 'Academia equipada e climatizada com vista livre no Horizon',
+        width: 596,
+        height: 238,
+      },
+      {
+        url: '/images/lancamentos/horizon/sauna-descanso.webp',
+        alt: 'Sauna com área de descanso no pavimento de lazer do Horizon',
+        width: 596,
+        height: 381,
+      },
+      {
+        url: '/images/lancamentos/horizon/espaco-massagem.webp',
+        alt: 'Espaço massagem entregue equipado no residencial Horizon',
+        width: 524,
+        height: 366,
+      },
+      {
+        url: '/images/lancamentos/horizon/playground.webp',
+        alt: 'Playground externo integrado ao lazer do Horizon',
+        width: 595,
+        height: 244,
+      },
+      {
+        url: '/images/lancamentos/horizon/espaco-kids.webp',
+        alt: 'Espaço kids montado e mobiliado no Horizon',
+        width: 524,
+        height: 286,
+      },
+      {
+        url: '/images/lancamentos/horizon/coworking.webp',
+        alt: 'Coworking compartilhado entregue mobiliado no Horizon',
+        width: 550,
+        height: 407,
+      },
+      {
+        url: '/images/lancamentos/horizon/espaco-beauty.webp',
+        alt: 'Espaço beauty exclusivo para os moradores do Horizon',
+        width: 596,
+        height: 382,
+      },
+      {
+        url: '/images/lancamentos/horizon/bicicletario.webp',
+        alt: 'Bicicletário organizado nas áreas comuns do Horizon',
+        width: 575,
+        height: 243,
+      },
+      {
+        url: '/images/lancamentos/horizon/bike-wash.webp',
+        alt: 'Espaço bike wash para manutenção e lavagem de bicicletas no Horizon',
+        width: 481,
+        height: 464,
+      },
+      {
+        url: '/images/lancamentos/horizon/ferramentas-compartilhadas.webp',
+        alt: 'Oficina de ferramentas compartilhadas do condomínio Horizon',
+        width: 596,
+        height: 422,
+      },
+      {
+        url: '/images/lancamentos/horizon/lavanderia.webp',
+        alt: 'Lavanderia compartilhada instalada no Horizon',
+        width: 450,
+        height: 397,
+      },
+      {
+        url: '/images/lancamentos/horizon/portaria-fachada.webp',
+        alt: 'Portaria 24 horas com acesso de pedestres e paisagismo no Horizon',
+        width: 596,
+        height: 436,
+      },
+      {
+        url: '/images/lancamentos/horizon/lazer-perspectiva.webp',
+        alt: 'Perspectiva aérea da área de lazer do Horizon junto à Área de Preservação Permanente',
+        width: 596,
+        height: 436,
+      },
+      {
+        url: '/images/lancamentos/horizon/implantacao.webp',
+        alt: 'Implantação do residencial Horizon na esquina da Rua Imperial com Rua Ocidental',
+        width: 584,
+        height: 737,
+      },
+    ],
+    plantas: [
+      {
+        id: 'horizon-tipo-56-05',
+        titulo: 'Tipo 2 Quartos com Suíte',
+        categoria: '2 Quartos',
+        metragem: '56,89 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Final 05',
+        destaque: 'Salas amplas integradas à varanda',
+        imagem: '/images/lancamentos/horizon/planta-tipo-56m2.webp',
+        width: 540,
+        height: 381,
+        alt: 'Planta humanizada do apartamento tipo de 2 quartos com suíte e varanda (56,89 m², final 05) do Horizon',
+      },
+      {
+        id: 'horizon-tipo-54-08',
+        titulo: 'Tipo 2 Quartos com Suíte',
+        categoria: '2 Quartos',
+        metragem: '54,11 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Final 08',
+        destaque: 'Varanda e área técnica dedicada',
+        imagem: '/images/lancamentos/horizon/planta-tipo-54m2-08.webp',
+        width: 409,
+        height: 324,
+        alt: 'Planta humanizada do apartamento tipo de 2 quartos com suíte (54,11 m², final 08) do Horizon',
+      },
+      {
+        id: 'horizon-tipo-54-03',
+        titulo: 'Tipo 2 Quartos com Suíte',
+        categoria: '2 Quartos',
+        metragem: '54,29 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Final 03',
+        destaque: 'Planta alongada com suíte reservada',
+        imagem: '/images/lancamentos/horizon/planta-tipo-54m2-03.webp',
+        width: 409,
+        height: 456,
+        alt: 'Planta humanizada do apartamento tipo de 2 quartos com suíte (54,29 m², final 03) do Horizon',
+      },
+      {
+        id: 'horizon-garden-52-106',
+        titulo: 'Garden 1 Quarto',
+        categoria: '1 Quarto Garden',
+        metragem: '52,36 m²',
+        quartos: '1 quarto',
+        banhos: '1 banho',
+        unidades: 'Unidade 106',
+        destaque: 'Área privativa descoberta integrada',
+        imagem: '/images/lancamentos/horizon/planta-garden-52m2.webp',
+        width: 409,
+        height: 324,
+        alt: 'Planta humanizada do apartamento garden de 1 quarto (52,36 m², unidade 106) do Horizon',
+      },
+      {
+        id: 'horizon-garden-76-103',
+        titulo: 'Garden 2 Quartos com Suíte',
+        categoria: '2 Quartos Garden',
+        metragem: '76,10 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Unidade 103',
+        destaque: 'Duas áreas privativas descobertas',
+        imagem: '/images/lancamentos/horizon/planta-garden-76m2.webp',
+        width: 409,
+        height: 559,
+        alt: 'Planta humanizada do apartamento garden de 2 quartos com suíte (76,10 m², unidade 103) do Horizon',
+      },
+      {
+        id: 'horizon-garden-83-108',
+        titulo: 'Garden 2 Quartos Ampliado',
+        categoria: '2 Quartos Garden',
+        metragem: '83,34 m²',
+        quartos: '2 quartos (1 suíte)',
+        banhos: '2 banhos',
+        unidades: 'Unidade 108',
+        destaque: 'Ampla área privativa em L',
+        imagem: '/images/lancamentos/horizon/planta-garden-83m2.webp',
+        width: 476,
+        height: 458,
+        alt: 'Planta humanizada do apartamento garden ampliado de 2 quartos com suíte (83,34 m², unidade 108) do Horizon',
+      },
+    ],
+    published: true,
+    order: 3,
+  },
+];
 
-export const SEARCH_SUGGESTIONS: string[] = [];
+export const SEARCH_SUGGESTIONS: string[] = [
+  'Estoril',
+  'Santa Efigênia',
+  'Serrano',
+  'Prime View',
+  'Upside Square',
+  'Horizon',
+];
 
-export const QUICK_NEIGHBORHOODS: string[] = [];
+export const QUICK_NEIGHBORHOODS: string[] = [
+  'Estoril',
+  'Santa Efigênia',
+  'Serrano',
+];
 
 export function normalizeSearchText(value: string): string {
   return value
@@ -74,33 +1071,32 @@ export function normalizeSearchText(value: string): string {
 export function filterLancamentos(
   query: string,
   activeFilter: string,
-  items: readonly Lancamento[] = LANCAMENTOS
+  items: readonly Lancamento[] = LANCAMENTOS,
+  tipologiaFilter = 'Todas'
 ): Lancamento[] {
-  const normalizedQuery = normalizeSearchText(query);
-  const normalizedFilter = normalizeSearchText(activeFilter);
-  const queryTokens = normalizedQuery
-    ? normalizedQuery.split(/\s+/).filter(Boolean)
-    : [];
+  const normalized = normalizeSearchText(query);
+  const normalizedTipologia = normalizeSearchText(tipologiaFilter);
 
   return items.filter((item) => {
     const matchesFilter =
-      !normalizedFilter ||
-      normalizedFilter === 'todos' ||
-      normalizeSearchText(item.bairro) === normalizedFilter ||
-      normalizeSearchText(item.cidade) === normalizedFilter ||
-      normalizeSearchText(item.construtora) === normalizedFilter ||
-      normalizeSearchText(item.quartos).includes(normalizedFilter) ||
-      normalizeSearchText(item.tipologias).includes(normalizedFilter) ||
-      item.tags.some((tag) => {
-        const normalizedTag = normalizeSearchText(tag);
-        return (
-          normalizedTag === normalizedFilter ||
-          normalizedTag.includes(normalizedFilter)
-        );
-      });
+      activeFilter === 'Todos' ||
+      normalizeSearchText(item.quartos).includes(normalizeSearchText(activeFilter)) ||
+      item.tags.some(
+        (tag) => normalizeSearchText(tag) === normalizeSearchText(activeFilter)
+      );
 
     if (!matchesFilter) return false;
-    if (queryTokens.length === 0) return true;
+
+    if (normalizedTipologia && normalizedTipologia !== 'todas') {
+      const tipologiaHaystack = normalizeSearchText(
+        `${item.quartos} ${item.tipologias} ${item.resumo} ${item.tags.join(' ')}`
+      );
+      if (!tipologiaHaystack.includes(normalizedTipologia)) {
+        return false;
+      }
+    }
+
+    if (!normalized) return true;
 
     const searchable = normalizeSearchText(
       [
@@ -110,14 +1106,12 @@ export function filterLancamentos(
         item.cidade,
         item.quartos,
         item.tipologias,
-        item.metragem,
         item.resumo,
         ...item.tags,
-        ...item.diferenciais,
       ].join(' ')
     );
 
-    return queryTokens.every((token) => searchable.includes(token));
+    return searchable.includes(normalized);
   });
 }
 

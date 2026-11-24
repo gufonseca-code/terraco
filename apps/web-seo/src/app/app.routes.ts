@@ -4,6 +4,7 @@ import { type Lancamento, LancamentosService } from './core';
 import { HomePageComponent } from './pages/home.page';
 import { LancamentosPageComponent } from './pages/lancamentos.page';
 import { LancamentoDetailPageComponent } from './pages/lancamento-detail.page';
+import { BairroDetailPageComponent } from './pages/bairro-detail.page';
 import { NotFoundPageComponent } from './pages/not-found.page';
 
 const lancamentosListResolver: ResolveFn<Lancamento[]> = () =>
@@ -18,6 +19,9 @@ export const routes: Routes = [
   {
     path: '',
     component: HomePageComponent,
+    resolve: {
+      lancamentos: lancamentosListResolver,
+    },
   },
   {
     path: 'lancamentos',
@@ -31,6 +35,13 @@ export const routes: Routes = [
     component: LancamentoDetailPageComponent,
     resolve: {
       lancamento: lancamentoDetailResolver,
+    },
+  },
+  {
+    path: 'bairros/:slug',
+    component: BairroDetailPageComponent,
+    resolve: {
+      lancamentos: lancamentosListResolver,
     },
   },
   {

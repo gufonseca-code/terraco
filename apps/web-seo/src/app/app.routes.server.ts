@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { PrerenderFallback, RenderMode, ServerRoute } from '@angular/ssr';
-import { LancamentosService } from './core';
+import { BAIRROS_BH, LancamentosService } from './core';
 
 export const serverRoutes: ServerRoute[] = [
   {
@@ -19,6 +19,14 @@ export const serverRoutes: ServerRoute[] = [
       const lancamentosService = inject(LancamentosService);
       const items = await lancamentosService.loadLancamentos();
       return items.map((item) => ({ slug: item.slug }));
+    },
+  },
+  {
+    path: 'bairros/:slug',
+    renderMode: RenderMode.Prerender,
+    fallback: PrerenderFallback.Server,
+    async getPrerenderParams() {
+      return BAIRROS_BH.map((bairro) => ({ slug: bairro.slug }));
     },
   },
   {
