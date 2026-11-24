@@ -10,7 +10,7 @@ import { HeroSvgPrototypeComponent } from './hero-svg-prototype.component';
   template: `
     <div
       data-testid="hero-backdrop"
-      class="terraco-reveal-delay pointer-events-none absolute inset-y-0 right-0 w-[96%] overflow-hidden select-none sm:w-[82%] md:w-[54%] lg:w-[44vw] lg:max-w-[720px] xl:w-[45vw]"
+      class="terraco-reveal pointer-events-none absolute inset-y-0 right-0 w-[96%] overflow-hidden select-none sm:w-[82%] md:w-[54%] lg:w-[44vw] lg:max-w-[720px] xl:w-[45vw]"
     >
       <app-hero-svg-prototype className="h-full w-full" />
       <!-- Transição sutil na borda esquerda para fusão limpa com o fundo Creme Papel -->
