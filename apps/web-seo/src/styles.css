@@ -574,18 +574,18 @@ h4 {
 .terraco-m3-accordion-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .terraco-m3-accordion-item {
   border: 1px solid var(--color-border-subtle);
   background-color: var(--color-bg-elevated);
   border-radius: var(--radius-sm);
+  overflow: hidden;
   transition:
-    border-radius 320ms var(--ease-spring-fast),
-    margin-block 320ms var(--ease-spring-fast),
-    border-color 160ms var(--ease-ui),
-    background-color 160ms var(--ease-ui),
+    border-radius 280ms var(--ease-enter),
+    border-color 180ms var(--ease-ui),
+    background-color 180ms var(--ease-ui),
     box-shadow 220ms var(--ease-ui);
 }
 
@@ -609,15 +609,6 @@ h4 {
   border-radius: var(--radius-lg);
   border-color: color-mix(in srgb, var(--color-brand-primary) 35%, transparent);
   box-shadow: var(--shadow-card);
-  margin-block: 6px;
-}
-
-.terraco-m3-accordion-group > .terraco-m3-accordion-item:first-child[data-expanded="true"] {
-  margin-top: 0;
-}
-
-.terraco-m3-accordion-group > .terraco-m3-accordion-item:last-child[data-expanded="true"] {
-  margin-bottom: 0;
 }
 
 .terraco-m3-accordion-icon {
@@ -631,10 +622,9 @@ h4 {
   background-color: var(--color-bg-surface);
   color: var(--color-text-secondary);
   transition:
-    border-radius 320ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
-    transform 320ms var(--ease-spring-fast);
+    border-radius 260ms var(--ease-enter),
+    background-color 180ms var(--ease-ui),
+    color 180ms var(--ease-ui);
 }
 
 [aria-expanded="true"] .terraco-m3-accordion-icon {
@@ -644,26 +634,30 @@ h4 {
 }
 
 .terraco-m3-accordion-chevron {
-  transition: transform 320ms var(--ease-spring-fast);
+  transition: transform 260ms var(--ease-enter);
 }
 
 [aria-expanded="true"] .terraco-m3-accordion-chevron {
   transform: rotate(180deg);
 }
 
-@keyframes terraco-accordion-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.terraco-m3-accordion-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 280ms var(--ease-enter),
+    opacity 180ms var(--ease-ui);
 }
 
-.terraco-accordion-enter {
-  animation: terraco-accordion-fade-in 220ms var(--ease-enter) both;
+.terraco-m3-accordion-item[data-expanded="true"] .terraco-m3-accordion-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.terraco-m3-accordion-body {
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* M3 Expressive: Search Bar com Shape Morphing (28px pill -> 28px/14px docked) */
@@ -1183,7 +1177,6 @@ h4 {
   .terraco-toolbar-leave,
   .terraco-search-panel-enter,
   .terraco-search-panel-leave,
-  .terraco-accordion-enter,
   .terraco-skeleton::after,
   .hero-enter-title,
   .hero-enter-form,
@@ -1217,6 +1210,7 @@ h4 {
   .terraco-m3-accordion-item,
   .terraco-m3-accordion-icon,
   .terraco-m3-accordion-chevron,
+  .terraco-m3-accordion-panel,
   .terraco-nav-link,
   .terraco-link-underline::after,
   .terraco-stairs-step,

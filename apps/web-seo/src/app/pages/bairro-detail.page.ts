@@ -1,18 +1,15 @@
-import {
-  AccordionContent,
-  AccordionGroup,
-  AccordionPanel,
-  AccordionTrigger,
-} from '@angular/aria/accordion';
 import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
   computed,
   effect,
   inject,
   input,
+  linkedSignal,
+  viewChildren,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -135,10 +132,6 @@ function buildBairroJsonLd(
 @Component({
   selector: 'app-bairro-detail-page',
   imports: [
-    AccordionGroup,
-    AccordionTrigger,
-    AccordionPanel,
-    AccordionContent,
     NavbarComponent,
     FooterComponent,
     NotFoundPageComponent,
@@ -356,23 +349,23 @@ function buildBairroJsonLd(
                 Perguntas frequentes sobre {{ current.nome }}
               </h2>
 
-              <div
-                ngAccordionGroup
-                [multiExpandable]="false"
-                class="terraco-m3-accordion-group mt-6"
-              >
+              <div class="terraco-m3-accordion-group mt-6">
                 @for (faq of current.faqs; track faq.pergunta; let i = $index) {
+                  @let isOpen = expandedFaqIndex() === i;
                   <div
                     class="terraco-m3-accordion-item"
-                    [attr.data-expanded]="panel.visible()"
+                    [attr.data-expanded]="isOpen"
                   >
                     <h3 class="font-sans">
                       <button
+                        #faqTrigger
                         type="button"
-                        ngAccordionTrigger
-                        [panel]="panel"
                         [id]="'faq-trigger-' + current.slug + '-' + i"
-                        class="flex min-h-[56px] w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left text-[15px] font-medium leading-[1.45] text-ink transition-colors duration-150 focus-visible:rounded-[inherit]"
+                        [attr.aria-expanded]="isOpen"
+                        [attr.aria-controls]="'faq-panel-' + current.slug + '-' + i"
+                        (click)="toggleFaq(i)"
+                        (keydown)="onFaqKeydown($event, i, current.faqs.length)"
+                        class="flex min-h-[56px] w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left text-[15px] font-medium leading-[1.45] text-ink transition-colors duration-150 focus-visible:outline-offset-[-2px]"
                       >
                         <span>{{ faq.pergunta }}</span>
                         <span
@@ -395,22 +388,21 @@ function buildBairroJsonLd(
                     </h3>
 
                     <div
-                      ngAccordionPanel
-                      #panel="ngAccordionPanel"
+                      role="region"
                       [id]="'faq-panel-' + current.slug + '-' + i"
+                      [attr.aria-labelledby]="'faq-trigger-' + current.slug + '-' + i"
+                      [attr.inert]="isOpen ? null : true"
+                      class="terraco-m3-accordion-panel"
                     >
-                      <ng-template ngAccordionContent>
-                        <div
-                          animate.enter="terraco-accordion-enter"
-                          class="px-5 pb-5"
-                        >
+                      <div class="terraco-m3-accordion-body">
+                        <div class="px-5 pb-5">
                           <p
                             class="border-t border-border-subtle/70 pt-3.5 text-[14px] font-normal leading-[1.65] text-ink-muted"
                           >
                             {{ faq.resposta }}
                           </p>
                         </div>
-                      </ng-template>
+                      </div>
                     </div>
                   </div>
                 }
@@ -510,6 +502,14 @@ export class BairroDetailPageComponent {
     return BAIRROS_BH.filter((item) => item.slug !== current?.slug);
   });
 
+  readonly expandedFaqIndex = linkedSignal<string, number | null>({
+    source: this.resolvedSlug,
+    computation: () => null,
+  });
+
+  private readonly faqTriggers =
+    viewChildren<ElementRef<HTMLButtonElement>>('faqTrigger');
+
   constructor() {
     effect(() => {
       const current = this.bairro();
@@ -525,6 +525,30 @@ export class BairroDetailPageComponent {
     this.destroyRef.onDestroy(() => {
       this.removeJsonLd();
     });
+  }
+
+  toggleFaq(index: number): void {
+    this.expandedFaqIndex.update((current) =>
+      current === index ? null : index
+    );
+  }
+
+  onFaqKeydown(event: KeyboardEvent, index: number, total: number): void {
+    if (total <= 1) return;
+    let nextIndex: number | null = null;
+    if (event.key === 'ArrowDown') {
+      nextIndex = (index + 1) % total;
+    } else if (event.key === 'ArrowUp') {
+      nextIndex = (index - 1 + total) % total;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = total - 1;
+    }
+    if (nextIndex !== null) {
+      event.preventDefault();
+      this.faqTriggers()[nextIndex]?.nativeElement.focus();
+    }
   }
 
   private upsertJsonLd(
