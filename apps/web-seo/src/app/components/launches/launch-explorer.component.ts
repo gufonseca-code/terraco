@@ -9,13 +9,22 @@ import {
   viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   LancamentosService,
   LeadsService,
 } from '../../core';
+import { BAIRROS_BH, type BairroGuide } from '../../core/bairros.data';
 import { LaunchCardComponent } from './launch-card.component';
 import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
+
+const TIPOLOGIA_FILTERS = [
+  'Todas',
+  '1 quarto',
+  '2 quartos',
+  'Garden',
+  'Cobertura',
+] as const;
 
 function formatBrazilianPhone(raw: string): string {
   const digits = raw.replace(/\D/g, '').slice(0, 11);
@@ -30,7 +39,7 @@ function formatBrazilianPhone(raw: string): string {
 
 @Component({
   selector: 'app-launch-explorer',
-  imports: [LaunchCardComponent, LaunchCardSkeletonComponent],
+  imports: [RouterLink, LaunchCardComponent, LaunchCardSkeletonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
@@ -38,13 +47,18 @@ function formatBrazilianPhone(raw: string): string {
       class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
     >
       <div class="space-y-6">
-        <h1
-          id="lancamentos-heading"
-          animate.enter="terraco-reveal"
-          class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink text-balance"
-        >
-          Lançamentos
-        </h1>
+        <div class="space-y-2.5">
+          <h1
+            id="lancamentos-heading"
+            animate.enter="terraco-reveal"
+            class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink text-balance"
+          >
+            Lançamentos
+          </h1>
+          <p class="max-w-2xl text-[15px] font-normal leading-[1.6] text-ink-muted">
+            Compare tipologias, metragens e condições em Belo Horizonte antes de falar com alguém. Salve seus favoritos ou tire dúvidas direto no WhatsApp.
+          </p>
+        </div>
 
         @if (!isLoading() || lancamentos().length > 0) {
           <div class="flex flex-col gap-4">
@@ -88,39 +102,74 @@ function formatBrazilianPhone(raw: string): string {
             </form>
 
             @if (quickNeighborhoods().length > 0) {
-              <div
-                role="group"
-                aria-label="Filtrar por bairro"
-                class="flex flex-wrap items-center gap-2"
-              >
-                <button
-                  type="button"
-                  (click)="clearFilters()"
-                  [attr.aria-pressed]="isAllActive()"
-                  [class]="
-                    isAllActive()
-                      ? 'inline-flex min-h-[38px] items-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse transition-colors duration-150 cursor-pointer'
-                      : 'inline-flex min-h-[38px] items-center rounded-pill border border-border-subtle bg-elevated px-4 py-1.5 text-[13px] font-medium text-ink transition-colors duration-150 hover:border-ink/25 hover:bg-surface/60 cursor-pointer'
-                  "
+              <div class="flex flex-col gap-2.5">
+                <div
+                  role="group"
+                  aria-label="Filtrar por bairro"
+                  class="flex flex-wrap items-center gap-2"
                 >
-                  Todos
-                </button>
-
-                @for (bairro of quickNeighborhoods(); track bairro) {
                   <button
                     type="button"
-                    (click)="selectNeighborhood(bairro)"
-                    [attr.aria-pressed]="isNeighborhoodActive(bairro)"
-                    [class]="
-                      isNeighborhoodActive(bairro)
-                        ? 'inline-flex min-h-[38px] items-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse transition-colors duration-150 cursor-pointer'
-                        : 'inline-flex min-h-[38px] items-center rounded-pill border border-border-subtle bg-elevated px-4 py-1.5 text-[13px] font-medium text-ink transition-colors duration-150 hover:border-ink/25 hover:bg-surface/60 cursor-pointer'
-                    "
+                    (click)="clearFilters()"
+                    [attr.aria-pressed]="isAllActive()"
+                    [class]="chipClass(isAllActive())"
                   >
-                    {{ bairro }}
+                    Todos
                   </button>
-                }
+
+                  @for (bairro of quickNeighborhoods(); track bairro) {
+                    <button
+                      type="button"
+                      (click)="selectNeighborhood(bairro)"
+                      [attr.aria-pressed]="isNeighborhoodActive(bairro)"
+                      [class]="chipClass(isNeighborhoodActive(bairro))"
+                    >
+                      {{ bairro }}
+                    </button>
+                  }
+                </div>
+
+                <div
+                  role="group"
+                  aria-label="Filtrar por tipologia"
+                  class="flex flex-wrap items-center gap-2"
+                >
+                  @for (tipologia of tipologiaFilters; track tipologia) {
+                    <button
+                      type="button"
+                      (click)="selectTipologia(tipologia)"
+                      [attr.aria-pressed]="isTipologiaActive(tipologia)"
+                      [class]="chipClass(isTipologiaActive(tipologia))"
+                    >
+                      {{ tipologia === 'Todas' ? 'Todas as tipologias' : tipologia }}
+                    </button>
+                  }
+
+                  @if (objetivoFilter(); as objetivo) {
+                    <button
+                      type="button"
+                      (click)="clearObjetivo()"
+                      [attr.aria-label]="'Remover filtro de objetivo ' + objetivo"
+                      class="inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-border-subtle bg-surface px-4 py-1.5 text-[13px] font-normal text-ink transition-colors duration-150 hover:border-ink/25 cursor-pointer"
+                    >
+                      <span>Objetivo: {{ objetivo }}</span>
+                      <span aria-hidden="true" class="text-ink-muted">×</span>
+                    </button>
+                  }
+                </div>
               </div>
+            }
+
+            @if (matchedBairroGuide(); as bairroGuide) {
+              <p class="text-[14px] font-normal leading-[1.5] text-ink-muted">
+                Quer entender mobilidade, serviços e perfil do bairro?
+                <a
+                  [routerLink]="['/bairros', bairroGuide.slug]"
+                  class="terraco-link-underline ml-1 font-medium text-brand hover:text-brand-hover"
+                >
+                  Ver guia completo do {{ bairroGuide.nome }}
+                </a>
+              </p>
             }
           </div>
         }
@@ -141,6 +190,74 @@ function formatBrazilianPhone(raw: string): string {
             />
           }
         </div>
+
+        <aside
+          aria-label="Alerta de novos lançamentos"
+          class="mt-12 rounded-lg border border-border-subtle bg-elevated p-6 shadow-card sm:p-8"
+        >
+          <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div class="max-w-xl space-y-1.5">
+              <h2
+                class="font-display text-[1.25rem] font-medium leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+              >
+                Procurando outro bairro ou perfil em BH?
+              </h2>
+              <p class="text-[14px] font-normal leading-[1.55] text-ink-muted">
+                Deixe seu WhatsApp para receber novos lançamentos compatíveis com o que você busca, sem pressão comercial.
+              </p>
+            </div>
+
+            @if (demandSuccessTerm()) {
+              <div
+                role="status"
+                class="rounded-md border border-success-fg/20 bg-success-bg px-4 py-3 text-[14px] font-normal leading-[1.5] text-success-fg"
+              >
+                Combinado! Assim que entrar um novo lançamento para {{ demandSuccessTerm() }}, te chamamos no WhatsApp.
+              </div>
+            } @else {
+              <form
+                (submit)="handleDemandSubmit($event)"
+                novalidate
+                class="flex w-full max-w-md flex-col gap-2.5 sm:flex-row sm:items-center"
+              >
+                <label for="catalog-alert-whatsapp" class="sr-only">
+                  Seu WhatsApp com DDD
+                </label>
+                <input
+                  id="catalog-alert-whatsapp"
+                  type="tel"
+                  autocomplete="tel"
+                  inputmode="tel"
+                  placeholder="(31) 99999-9999"
+                  [value]="demandPhone()"
+                  (input)="onDemandPhoneInput($event)"
+                  [disabled]="demandSubmitting()"
+                  class="min-h-[44px] w-full min-w-0 flex-1 rounded-pill border border-border-subtle bg-canvas px-4 py-2.5 text-[15px] font-normal text-ink placeholder:text-ink-muted transition-[border-color,box-shadow] duration-150 focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/20 disabled:opacity-60"
+                />
+                <button
+                  type="submit"
+                  [disabled]="demandSubmitting()"
+                  class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                >
+                  @if (demandSubmitting()) {
+                    Enviando...
+                  } @else {
+                    Me avise no WhatsApp
+                  }
+                </button>
+              </form>
+            }
+          </div>
+
+          @if (demandError() && !demandSuccessTerm()) {
+            <p
+              role="alert"
+              class="mt-3 rounded-sm bg-error-bg px-3.5 py-2 text-[13px] font-normal text-error-fg"
+            >
+              {{ demandError() }}
+            </p>
+          }
+        </aside>
       } @else if (!isLoading()) {
         <div
           id="resultados-lancamentos"
@@ -226,6 +343,21 @@ function formatBrazilianPhone(raw: string): string {
           </div>
         </div>
       }
+
+      <nav
+        aria-label="Guias de bairros em BH"
+        class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-1 border-t border-border-subtle pt-6 text-sm"
+      >
+        <span class="font-medium text-ink">Guias de bairros em BH</span>
+        @for (guide of bairrosGuides; track guide.slug) {
+          <a
+            [routerLink]="['/bairros', guide.slug]"
+            class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink"
+          >
+            {{ guide.nome }}
+          </a>
+        }
+      </nav>
     </section>
   `,
 })
@@ -240,22 +372,30 @@ export class LaunchExplorerComponent {
   readonly quickNeighborhoods = this.lancamentosService.quickNeighborhoods;
   readonly searchQuery = this.lancamentosService.searchQuery;
   readonly activeFilter = this.lancamentosService.activeFilter;
+  readonly tipologiaFilter = this.lancamentosService.tipologiaFilter;
   readonly isLoading = this.lancamentosService.isLoadingList;
+  readonly tipologiaFilters = TIPOLOGIA_FILTERS;
+  readonly bairrosGuides = BAIRROS_BH;
 
   private readonly queryParamMap = toSignal(this.route.queryParamMap, {
     initialValue: this.route.snapshot.queryParamMap,
   });
 
   readonly searchInput = signal<string>('');
+  readonly objetivoFilter = signal<string | null>(null);
   readonly demandPhone = signal<string>('');
   readonly demandSubmitting = signal<boolean>(false);
   readonly demandError = signal<string | null>(null);
   readonly demandSuccessTerm = signal<string | null>(null);
 
   readonly searchedTerm = computed(() => {
-    const q = this.searchQuery().trim();
-    if (q) {
-      return q;
+    const parts = [
+      this.searchQuery().trim(),
+      this.tipologiaFilter() !== 'Todas' ? this.tipologiaFilter() : '',
+      this.objetivoFilter() ?? '',
+    ].filter((part) => part.length > 0);
+    if (parts.length > 0) {
+      return parts.join(' · ');
     }
     const filter = this.activeFilter().trim();
     return filter && filter !== 'Todos' ? filter : '';
@@ -264,25 +404,57 @@ export class LaunchExplorerComponent {
   readonly isAllActive = computed(
     () =>
       this.searchQuery().trim().length === 0 &&
-      this.activeFilter() === 'Todos'
+      this.activeFilter() === 'Todos' &&
+      this.tipologiaFilter() === 'Todas'
   );
+
+  readonly matchedBairroGuide = computed<BairroGuide | null>(() => {
+    const q = this.searchQuery().trim().toLowerCase();
+    if (!q) {
+      return null;
+    }
+    return (
+      BAIRROS_BH.find(
+        (bairro) =>
+          bairro.nome.toLowerCase() === q ||
+          bairro.slug === q ||
+          bairro.matchBairros.some((match) => match.toLowerCase() === q)
+      ) ?? null
+    );
+  });
 
   private readonly searchInputRef =
     viewChild<ElementRef<HTMLInputElement>>('searchInputRef');
 
   constructor() {
-    // Sync initial ?q= synchronously so SSR and prerendered HTML filter immediately.
-    const initialQ = (this.route.snapshot.queryParamMap.get('q') ?? '').trim();
+    // Sync initial query params synchronously so SSR and prerendered HTML filter immediately.
+    const initialMap = this.route.snapshot.queryParamMap;
+    const initialQ = (initialMap.get('q') ?? '').trim();
+    const initialTipologia = (initialMap.get('tipologia') ?? '').trim() || 'Todas';
+    const initialObjetivo = (initialMap.get('objetivo') ?? '').trim() || null;
     this.lancamentosService.setSearchQuery(initialQ);
+    this.lancamentosService.setTipologiaFilter(initialTipologia);
+    this.objetivoFilter.set(initialObjetivo);
     this.searchInput.set(initialQ);
 
     effect(() => {
-      const q = (this.queryParamMap().get('q') ?? '').trim();
+      const map = this.queryParamMap();
+      const q = (map.get('q') ?? '').trim();
+      const tipologia = (map.get('tipologia') ?? '').trim() || 'Todas';
+      const objetivo = (map.get('objetivo') ?? '').trim() || null;
       this.lancamentosService.setSearchQuery(q);
+      this.lancamentosService.setTipologiaFilter(tipologia);
+      this.objetivoFilter.set(objetivo);
       this.searchInput.set(q);
       this.demandSuccessTerm.set(null);
       this.demandError.set(null);
     });
+  }
+
+  chipClass(active: boolean): string {
+    return active
+      ? 'inline-flex min-h-[38px] items-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse transition-colors duration-150 cursor-pointer'
+      : 'inline-flex min-h-[38px] items-center rounded-pill border border-border-subtle bg-elevated px-4 py-1.5 text-[13px] font-medium text-ink transition-colors duration-150 hover:border-ink/25 hover:bg-surface/60 cursor-pointer';
   }
 
   onSearchInput(event: Event): void {
@@ -300,14 +472,29 @@ export class LaunchExplorerComponent {
     this.searchInput.set(trimmed);
     this.lancamentosService.setActiveFilter('Todos');
     this.lancamentosService.setSearchQuery(trimmed);
-    this.syncQueryParam(trimmed);
+    this.syncQueryParams({ q: trimmed });
   }
 
   selectNeighborhood(bairro: string): void {
     this.lancamentosService.setActiveFilter('Todos');
     this.lancamentosService.setSearchQuery(bairro);
     this.searchInput.set(bairro);
-    this.syncQueryParam(bairro);
+    this.syncQueryParams({ q: bairro });
+  }
+
+  selectTipologia(tipologia: string): void {
+    const next =
+      this.tipologiaFilter().toLowerCase() === tipologia.toLowerCase() &&
+      tipologia !== 'Todas'
+        ? 'Todas'
+        : tipologia;
+    this.lancamentosService.setTipologiaFilter(next);
+    this.syncQueryParams({ tipologia: next === 'Todas' ? '' : next });
+  }
+
+  clearObjetivo(): void {
+    this.objetivoFilter.set(null);
+    this.syncQueryParams({ objetivo: '' });
   }
 
   isNeighborhoodActive(bairro: string): boolean {
@@ -316,13 +503,22 @@ export class LaunchExplorerComponent {
     );
   }
 
+  isTipologiaActive(tipologia: string): boolean {
+    return (
+      this.tipologiaFilter().trim().toLowerCase() ===
+      tipologia.trim().toLowerCase()
+    );
+  }
+
   clearFilters(): void {
     this.searchInput.set('');
     this.lancamentosService.setSearchQuery('');
     this.lancamentosService.setActiveFilter('Todos');
+    this.lancamentosService.setTipologiaFilter('Todas');
+    this.objetivoFilter.set(null);
     this.demandSuccessTerm.set(null);
     this.demandError.set(null);
-    this.syncQueryParam('');
+    this.syncQueryParams({ q: '', tipologia: '', objetivo: '' });
     this.searchInputRef()?.nativeElement.focus();
   }
 
@@ -375,10 +571,25 @@ export class LaunchExplorerComponent {
     }
   }
 
-  private syncQueryParam(q: string): void {
+  private syncQueryParams(updates: {
+    q?: string;
+    tipologia?: string;
+    objetivo?: string;
+  }): void {
+    const queryParams: Record<string, string | null> = {};
+    if ('q' in updates) {
+      queryParams['q'] = updates.q || null;
+    }
+    if ('tipologia' in updates) {
+      queryParams['tipologia'] = updates.tipologia || null;
+    }
+    if ('objetivo' in updates) {
+      queryParams['objetivo'] = updates.objetivo || null;
+    }
+
     void this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { q: q || null },
+      queryParams,
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });

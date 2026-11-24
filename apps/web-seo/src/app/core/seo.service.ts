@@ -11,6 +11,7 @@ import {
 } from './site.config';
 
 const HOME_JSONLD_ID = 'terraco-home-jsonld';
+const LANCAMENTOS_JSONLD_ID = 'terraco-lancamentos-jsonld';
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
@@ -64,10 +65,11 @@ export class SeoService {
     });
 
     this.setCanonical('/');
+    this.removeLancamentosJsonLd();
     this.setHomeJsonLd(description);
   }
 
-  updateLancamentosMeta(): void {
+  updateLancamentosMeta(lancamentos: readonly Lancamento[] = []): void {
     this.removeHomeJsonLd();
     const pageTitle = `Lançamentos | ${SITE_NAME}`;
     const description =
@@ -107,10 +109,12 @@ export class SeoService {
     });
 
     this.setCanonical('/lancamentos');
+    this.setLancamentosJsonLd(description, lancamentos);
   }
 
   updateBairroMeta(bairro: BairroGuide): void {
     this.removeHomeJsonLd();
+    this.removeLancamentosJsonLd();
     const canonicalPath = `/bairros/${bairro.slug}`;
     const pageTitle = bairro.tituloSeo.includes(SITE_NAME)
       ? bairro.tituloSeo
@@ -154,6 +158,7 @@ export class SeoService {
 
   updateLancamentoDetailMeta(item: Lancamento): void {
     this.removeHomeJsonLd();
+    this.removeLancamentosJsonLd();
     const canonicalPath = `/lancamentos/${item.slug}`;
     const pageTitle = `${item.nome}, ${item.bairro}, ${item.cidade} | ${SITE_NAME}`;
     const socialTitle = `${item.nome}, ${item.bairro} | ${SITE_NAME}`;
@@ -193,16 +198,12 @@ export class SeoService {
 
   updateNotFoundMeta(): void {
     this.removeHomeJsonLd();
+    this.removeLancamentosJsonLd();
     this.title.setTitle(`Lançamento não encontrado | ${SITE_NAME}`);
     this.meta.updateTag({ name: 'robots', content: 'noindex, nofollow' });
   }
 
   private setHomeJsonLd(description: string): void {
-    const head = this.document?.head;
-    if (!head) {
-      return;
-    }
-
     const jsonLd = {
       '@context': 'https://schema.org',
       '@graph': [
@@ -244,14 +245,72 @@ export class SeoService {
       ],
     };
 
-    const serialized = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
-    let scriptEl = this.document.getElementById(
-      HOME_JSONLD_ID
-    ) as HTMLScriptElement | null;
+    this.upsertJsonLd(HOME_JSONLD_ID, jsonLd);
+  }
+
+  private setLancamentosJsonLd(
+    description: string,
+    lancamentos: readonly Lancamento[]
+  ): void {
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'CollectionPage',
+          '@id': `${SITE_URL}/lancamentos#collection`,
+          url: `${SITE_URL}/lancamentos`,
+          name: `Lançamentos em Belo Horizonte | ${SITE_NAME}`,
+          description,
+          inLanguage: 'pt-BR',
+          isPartOf: {
+            '@id': `${SITE_URL}/#website`,
+          },
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: lancamentos.length,
+            itemListElement: lancamentos.map((item, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              url: `${SITE_URL}/lancamentos/${item.slug}`,
+              name: `${item.nome} — ${item.bairro}, ${item.cidade}`,
+            })),
+          },
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Início',
+              item: SITE_URL,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Lançamentos',
+              item: `${SITE_URL}/lancamentos`,
+            },
+          ],
+        },
+      ],
+    };
+
+    this.upsertJsonLd(LANCAMENTOS_JSONLD_ID, jsonLd);
+  }
+
+  private upsertJsonLd(id: string, payload: unknown): void {
+    const head = this.document?.head;
+    if (!head) {
+      return;
+    }
+
+    const serialized = JSON.stringify(payload).replace(/</g, '\\u003c');
+    let scriptEl = this.document.getElementById(id) as HTMLScriptElement | null;
     if (!scriptEl) {
       scriptEl = this.document.createElement('script');
       scriptEl.type = 'application/ld+json';
-      scriptEl.id = HOME_JSONLD_ID;
+      scriptEl.id = id;
       head.appendChild(scriptEl);
     }
     scriptEl.textContent = serialized;
@@ -259,6 +318,10 @@ export class SeoService {
 
   private removeHomeJsonLd(): void {
     this.document?.getElementById(HOME_JSONLD_ID)?.remove();
+  }
+
+  private removeLancamentosJsonLd(): void {
+    this.document?.getElementById(LANCAMENTOS_JSONLD_ID)?.remove();
   }
 
   private setCanonical(path: string): void {

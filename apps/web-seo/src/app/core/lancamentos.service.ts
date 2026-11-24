@@ -167,6 +167,7 @@ export class LancamentosService {
   readonly isLoadingDetail = signal<boolean>(false);
   readonly searchQuery = signal<string>('');
   readonly activeFilter = signal<string>('Todos');
+  readonly tipologiaFilter = signal<string>('Todas');
 
   readonly suggestions = computed<string[]>(() => {
     const items = this.lancamentos();
@@ -191,7 +192,12 @@ export class LancamentosService {
   });
 
   readonly filteredLancamentos = computed(() =>
-    filterLancamentos(this.searchQuery(), this.activeFilter(), this.lancamentos())
+    filterLancamentos(
+      this.searchQuery(),
+      this.activeFilter(),
+      this.lancamentos(),
+      this.tipologiaFilter()
+    )
   );
 
   private listLoaded = false;
@@ -315,6 +321,10 @@ export class LancamentosService {
 
   setActiveFilter(filter: string): void {
     this.activeFilter.set(filter);
+  }
+
+  setTipologiaFilter(tipologia: string): void {
+    this.tipologiaFilter.set(tipologia || 'Todas');
   }
 
   getBySlug(slug: string): Lancamento | undefined {

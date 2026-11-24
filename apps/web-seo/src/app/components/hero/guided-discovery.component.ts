@@ -321,20 +321,26 @@ export class GuidedDiscoveryComponent {
         return {};
       }
 
+      const params: Record<string, string> = {};
       const selectedRegiao = this.regiao();
       if (selectedRegiao) {
         const regiaoQuery = REGIAO_MATCHERS[selectedRegiao].query;
         if (regiaoQuery) {
-          return { q: regiaoQuery };
+          params['q'] = regiaoQuery;
         }
       }
 
       const selectedTipologia = this.tipologia();
       if (selectedTipologia) {
-        return { q: TIPOLOGIA_MATCHERS[selectedTipologia].query };
+        params['tipologia'] = TIPOLOGIA_MATCHERS[selectedTipologia].query;
       }
 
-      return {};
+      const selectedObjetivo = this.objetivo();
+      if (selectedObjetivo) {
+        params['objetivo'] = selectedObjetivo;
+      }
+
+      return params;
     }
   );
 

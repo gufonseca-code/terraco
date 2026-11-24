@@ -1060,34 +1060,56 @@ export const QUICK_NEIGHBORHOODS: string[] = [
   'Serrano',
 ];
 
+function normalizeSearchText(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 export function filterLancamentos(
   query: string,
   activeFilter: string,
-  items: readonly Lancamento[] = LANCAMENTOS
+  items: readonly Lancamento[] = LANCAMENTOS,
+  tipologiaFilter = 'Todas'
 ): Lancamento[] {
-  const normalized = query.trim().toLowerCase();
+  const normalized = normalizeSearchText(query);
+  const normalizedTipologia = normalizeSearchText(tipologiaFilter);
 
   return items.filter((item) => {
     const matchesFilter =
       activeFilter === 'Todos' ||
-      item.quartos.toLowerCase().includes(activeFilter.toLowerCase()) ||
-      item.tags.some((tag) => tag.toLowerCase() === activeFilter.toLowerCase());
+      normalizeSearchText(item.quartos).includes(normalizeSearchText(activeFilter)) ||
+      item.tags.some(
+        (tag) => normalizeSearchText(tag) === normalizeSearchText(activeFilter)
+      );
 
     if (!matchesFilter) return false;
+
+    if (normalizedTipologia && normalizedTipologia !== 'todas') {
+      const tipologiaHaystack = normalizeSearchText(
+        `${item.quartos} ${item.tipologias} ${item.resumo} ${item.tags.join(' ')}`
+      );
+      if (!tipologiaHaystack.includes(normalizedTipologia)) {
+        return false;
+      }
+    }
+
     if (!normalized) return true;
 
-    const searchable = [
-      item.nome,
-      item.construtora,
-      item.bairro,
-      item.cidade,
-      item.quartos,
-      item.tipologias,
-      item.resumo,
-      ...item.tags,
-    ]
-      .join(' ')
-      .toLowerCase();
+    const searchable = normalizeSearchText(
+      [
+        item.nome,
+        item.construtora,
+        item.bairro,
+        item.cidade,
+        item.quartos,
+        item.tipologias,
+        item.resumo,
+        ...item.tags,
+      ].join(' ')
+    );
 
     return searchable.includes(normalized);
   });
