@@ -323,6 +323,11 @@ function buildBairroJsonLd(
                         inputId="bairro-alert-whatsapp"
                         [searchedTerm]="current.nome"
                         [resetKey]="current.slug"
+                        [successMessage]="
+                          'Combinado! Assim que entrar um lançamento em ' +
+                          current.nome +
+                          ', te avisamos no WhatsApp.'
+                        "
                       />
                     </div>
                   </div>

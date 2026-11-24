@@ -1,9 +1,10 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
+  PLATFORM_ID,
   afterNextRender,
   computed,
   effect,
@@ -27,6 +28,7 @@ import { FavoriteButtonComponent } from './favorite-button.component';
 import { ImageLightboxComponent } from './image-lightbox.component';
 import { LaunchFloorPlansComponent } from './launch-floor-plans.component';
 import { LaunchSimulatorComponent } from './launch-simulator.component';
+import { formatBrazilianPhone } from './whatsapp-alert-form.component';
 
 export type LaunchIntentKey =
   | 'plantas_valores'
@@ -442,43 +444,54 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           </div>
         </article>
 
-        <div class="mt-8 space-y-10 sm:mt-10 sm:space-y-12">
-          <nav
-            aria-label="Atalhos desta página"
-            class="flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-border-subtle pb-3 text-[14px]"
+        <nav
+          aria-label="Seções do empreendimento"
+          class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-border-subtle pb-3 text-[14px]"
+        >
+          <a
+            href="#sobre"
+            (click)="scrollToSection($event, 'sobre')"
+            class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
           >
-            @if (hasFloorPlans()) {
-              <a
-                href="#plantas"
-                class="terraco-link-underline inline-flex min-h-[40px] items-center font-medium text-brand hover:text-brand-hover"
-              >
-                Plantas e tipologias
-              </a>
-            }
+            Sobre
+          </a>
+          @if (item().diferenciais.length > 0) {
             <a
-              href="#simulador"
-              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted hover:text-ink"
+              href="#diferenciais"
+              (click)="scrollToSection($event, 'diferenciais')"
+              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
             >
-              Simular entrada
+              Diferenciais
             </a>
-            @if (item().diferenciais.length > 0) {
-              <a
-                href="#diferenciais"
-                class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted hover:text-ink"
-              >
-                Diferenciais
-              </a>
-            }
-            @if (hasGallery()) {
-              <a
-                href="#galeria"
-                class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted hover:text-ink"
-              >
-                Galeria
-              </a>
-            }
-          </nav>
+          }
+          @if (item().plantas?.length) {
+            <a
+              href="#plantas"
+              (click)="scrollToSection($event, 'plantas')"
+              class="terraco-link-underline inline-flex min-h-[40px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+            >
+              Plantas
+            </a>
+          }
+          <a
+            href="#simulador"
+            (click)="scrollToSection($event, 'simulador')"
+            class="terraco-link-underline inline-flex min-h-[40px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+          >
+            Simular entrada
+          </a>
+          @if (hasGallery()) {
+            <a
+              href="#galeria"
+              (click)="scrollToSection($event, 'galeria')"
+              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+            >
+              Galeria
+            </a>
+          }
+        </nav>
 
+        <div class="mt-8 space-y-12 sm:mt-10 sm:space-y-14">
           @if (item().condicoesEspeciais?.length) {
             <section
               aria-labelledby="special-conditions-heading"
@@ -537,18 +550,19 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           }
 
           <section
+            id="sobre"
             aria-labelledby="about-heading"
-            class="border-t border-border-subtle pt-8 sm:pt-10"
+            class="scroll-mt-24"
           >
             <h2
               id="about-heading"
-              class="font-display text-[clamp(1.25rem,2vw,1.5rem)] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+              class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
             >
               Sobre o empreendimento
             </h2>
 
             <p
-              class="mt-3 max-w-3xl text-base font-normal leading-[1.6] text-ink"
+              class="mt-3 max-w-3xl text-base font-normal leading-[1.65] text-ink"
             >
               {{ item().resumo }}
             </p>
@@ -571,21 +585,21 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <section
               id="diferenciais"
               aria-labelledby="features-heading"
-              class="border-t border-border-subtle pt-8 sm:pt-10 scroll-mt-24"
+              class="border-t border-border-subtle pt-10 scroll-mt-24"
             >
               <h2
                 id="features-heading"
-                class="font-display text-[clamp(1.25rem,2vw,1.5rem)] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+                class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
               >
                 Diferenciais &amp; Lazer
               </h2>
 
               <ul
-                class="mt-5 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2"
+                class="mt-6 grid grid-cols-1 gap-x-10 gap-y-3.5 sm:grid-cols-2"
               >
                 @for (diferencial of item().diferenciais; track diferencial) {
                   <li
-                    class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.5] text-ink"
+                    class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.55] text-ink"
                   >
                     <svg
                       aria-hidden="true"
@@ -595,7 +609,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       stroke-width="2"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      class="mt-0.5 h-4 w-4 shrink-0 text-brand"
+                      class="mt-1 h-4 w-4 shrink-0 text-brand"
                     >
                       <path d="M4.5 10.5 8 14l7.5-8" />
                     </svg>
@@ -614,17 +628,17 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <section
               id="galeria"
               aria-labelledby="gallery-heading"
-              class="border-t border-border-subtle pt-8 sm:pt-10 scroll-mt-24"
+              class="border-t border-border-subtle pt-10 scroll-mt-24"
             >
               <h2
                 id="gallery-heading"
-                class="font-display text-[clamp(1.25rem,2vw,1.5rem)] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+                class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
               >
                 Galeria do empreendimento
               </h2>
 
               <div
-                class="mt-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3"
+                class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3"
               >
                 @for (media of galleryImages(); track media.url; let i = $index) {
                   <button
@@ -633,7 +647,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [attr.aria-label]="
                       'Ampliar imagem ' + (i + 1) + ': ' + media.alt
                     "
-                    class="group relative aspect-[4/3] overflow-hidden rounded-md border border-border-subtle bg-surface text-left transition-colors duration-150 hover:border-brand/40"
+                    class="group relative aspect-[4/3] overflow-hidden rounded-md border border-border-subtle bg-surface text-left transition-colors duration-150 hover:border-brand/40 cursor-pointer"
                   >
                     <img
                       [src]="media.url"
@@ -663,6 +677,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 })
 export class PrimeViewLandingComponent {
   private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
   private readonly leadsService = inject(LeadsService);
 
@@ -708,7 +723,6 @@ export class PrimeViewLandingComponent {
   );
 
   readonly hasGallery = computed(() => this.galleryImages().length > 0);
-  readonly hasFloorPlans = computed(() => (this.item().plantas?.length ?? 0) > 0);
 
   readonly formattedPrice = computed<string | null>(() => {
     const price = this.item().precoAPartirDe;
@@ -805,9 +819,31 @@ export class PrimeViewLandingComponent {
     this.callbackName.set(inputEl?.value ?? '');
   }
 
+  scrollToSection(event: MouseEvent, sectionId: string): void {
+    event.preventDefault();
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    const target = this.document.getElementById(sectionId);
+    if (!target) {
+      return;
+    }
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    target.scrollIntoView({
+      behavior: reducedMotion ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }
+
   onCallbackPhoneInput(event: Event): void {
     const inputEl = event.target as HTMLInputElement | null;
-    this.callbackPhone.set(inputEl?.value ?? '');
+    const formatted = formatBrazilianPhone(inputEl?.value ?? '');
+    this.callbackPhone.set(formatted);
+    if (inputEl && inputEl.value !== formatted) {
+      inputEl.value = formatted;
+    }
     if (this.callbackError()) {
       this.callbackError.set(null);
     }

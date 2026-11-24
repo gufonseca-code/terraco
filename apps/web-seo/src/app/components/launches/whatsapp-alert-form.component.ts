@@ -11,7 +11,6 @@ import {
   FormField,
   disabled,
   form,
-  required,
   submit,
   validate,
 } from '@angular/forms/signals';
@@ -36,18 +35,12 @@ export function formatBrazilianPhone(raw: string): string {
     class: 'block',
   },
   template: `
-    @if (successTerm(); as term) {
+    @if (submitted()) {
       <div
         role="status"
-        class="rounded-md border border-success-fg/20 bg-success-bg px-4 py-3.5 text-[14px] font-normal leading-[1.5] text-success-fg"
+        class="rounded-md border border-success-fg/20 bg-success-bg px-4 py-3 text-[14px] font-normal leading-[1.5] text-success-fg"
       >
-        @if (customSuccessMessage()) {
-          {{ customSuccessMessage() }}
-        } @else if (term === 'essa região') {
-          Combinado! Assim que entrar um novo lançamento por aqui, te chamamos no WhatsApp.
-        } @else {
-          Combinado! Assim que entrar um lançamento em {{ term }}, te chamamos no WhatsApp.
-        }
+        {{ successMessage() }}
       </div>
     } @else {
       <form
@@ -56,10 +49,10 @@ export function formatBrazilianPhone(raw: string): string {
         [class]="
           compact()
             ? 'flex w-full max-w-md flex-col gap-2.5 sm:flex-row sm:items-center'
-            : 'flex flex-col gap-3 sm:flex-row sm:items-center'
+            : 'flex w-full flex-col gap-3 sm:flex-row sm:items-center'
         "
       >
-        <label [for]="inputId()" class="sr-only">
+        <label [attr.for]="inputId()" class="sr-only">
           Seu WhatsApp com DDD
         </label>
         <input
@@ -80,7 +73,7 @@ export function formatBrazilianPhone(raw: string): string {
           @if (submitting()) {
             Enviando...
           } @else {
-            Me avise no WhatsApp
+            {{ submitLabel() }}
           }
         </button>
       </form>
@@ -101,42 +94,42 @@ export class WhatsappAlertFormComponent {
 
   readonly inputId = input<string>('whatsapp-alert-input');
   readonly searchedTerm = input<string>('Belo Horizonte');
-  readonly fallbackTerm = input<string>('essa região');
-  readonly customSuccessMessage = input<string>('');
-  readonly resetKey = input<string>('');
+  readonly successMessage = input<string>(
+    'Combinado! Assim que entrar um novo lançamento compatível, te chamamos no WhatsApp.'
+  );
+  readonly submitLabel = input<string>('Me avise no WhatsApp');
   readonly compact = input<boolean>(false);
+  readonly resetKey = input<string>('');
 
   private readonly model = signal({ phone: '' });
   readonly submitting = signal<boolean>(false);
-  readonly submitError = signal<string>('');
-  readonly successTerm = signal<string>('');
+  readonly submitted = signal<boolean>(false);
+  readonly serverError = signal<string | null>(null);
 
   readonly alertForm = form(this.model, (schemaPath) => {
-    required(schemaPath.phone, {
-      message: 'Informe um WhatsApp válido com DDD (ex: (31) 99999-9999).',
-    });
     validate(schemaPath.phone, ({ value }) => {
       const digits = value().replace(/\D/g, '');
-      if (digits.length > 0 && digits.length < 10) {
+      if (digits.length < 10) {
         return {
-          kind: 'phoneLength',
+          kind: 'brazilianPhone',
           message: 'Informe um WhatsApp válido com DDD (ex: (31) 99999-9999).',
         };
       }
       return undefined;
     });
+
     disabled(schemaPath.phone, () => this.submitting());
   });
 
-  readonly displayError = computed<string>(() => {
-    if (this.submitError()) {
-      return this.submitError();
+  readonly displayError = computed<string | null>(() => {
+    if (this.serverError()) {
+      return this.serverError();
     }
     const phoneState = this.alertForm.phone();
     if (phoneState.touched() && phoneState.invalid()) {
-      return phoneState.errors()[0]?.message ?? '';
+      return phoneState.errors()[0]?.message ?? null;
     }
-    return '';
+    return null;
   });
 
   constructor() {
@@ -145,18 +138,19 @@ export class WhatsappAlertFormComponent {
       this.model.set({ phone: '' });
       this.alertForm().reset();
       this.submitting.set(false);
-      this.submitError.set('');
-      this.successTerm.set('');
+      this.submitted.set(false);
+      this.serverError.set(null);
     });
   }
 
   onPhoneInput(): void {
-    const formatted = formatBrazilianPhone(this.model().phone);
-    if (formatted !== this.model().phone) {
+    const current = this.model().phone;
+    const formatted = formatBrazilianPhone(current);
+    if (formatted !== current) {
       this.model.set({ phone: formatted });
     }
-    if (this.submitError()) {
-      this.submitError.set('');
+    if (this.serverError()) {
+      this.serverError.set(null);
     }
   }
 
@@ -166,23 +160,22 @@ export class WhatsappAlertFormComponent {
       return;
     }
 
-    this.submitError.set('');
+    this.serverError.set(null);
     void submit(this.alertForm, async () => {
-      const term = this.searchedTerm().trim();
       this.submitting.set(true);
       try {
         await this.leadsService.captureDemandLead({
           phone: this.model().phone.trim(),
-          searchedTerm: term || 'Belo Horizonte',
+          searchedTerm: this.searchedTerm() || 'Belo Horizonte',
         });
-        this.successTerm.set(term || this.fallbackTerm());
+        this.submitted.set(true);
         this.model.set({ phone: '' });
         this.alertForm().reset();
       } catch (err) {
-        this.submitError.set(
+        this.serverError.set(
           err instanceof Error
             ? err.message
-            : 'Não foi possível salvar seu WhatsApp agora. Tente novamente.'
+            : 'Não foi possível enviar seu WhatsApp. Tente novamente.'
         );
       } finally {
         this.submitting.set(false);

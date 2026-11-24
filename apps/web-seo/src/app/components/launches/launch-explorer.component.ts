@@ -288,7 +288,7 @@ const TIPOLOGIA_FILTERS = [
               [searchedTerm]="searchedTerm() || 'Belo Horizonte'"
               [resetKey]="searchedTerm()"
               [compact]="true"
-              class="w-full max-w-md"
+              [successMessage]="catalogSuccessMessage()"
             />
           </div>
         </aside>
@@ -315,9 +315,9 @@ const TIPOLOGIA_FILTERS = [
           <div class="mt-5">
             <app-whatsapp-alert-form
               inputId="demand-whatsapp"
-              [searchedTerm]="searchedTerm()"
-              fallbackTerm="essa região"
+              [searchedTerm]="searchedTerm() || 'Belo Horizonte'"
               [resetKey]="searchedTerm()"
+              [successMessage]="emptyStateSuccessMessage()"
             />
           </div>
 
@@ -373,6 +373,20 @@ export class LaunchExplorerComponent {
   readonly searchInput = signal<string>('');
   readonly neighborhoodMenuOpen = signal<boolean>(false);
   readonly tipologiaMenuOpen = signal<boolean>(false);
+
+  readonly catalogSuccessMessage = computed(() => {
+    const term = this.searchedTerm();
+    return term
+      ? `Combinado! Assim que entrar um novo lançamento para ${term}, te chamamos no WhatsApp.`
+      : 'Combinado! Assim que entrar um novo lançamento em Belo Horizonte, te chamamos no WhatsApp.';
+  });
+
+  readonly emptyStateSuccessMessage = computed(() => {
+    const term = this.searchedTerm();
+    return term
+      ? `Combinado! Assim que entrar um lançamento em ${term}, te chamamos no WhatsApp.`
+      : 'Combinado! Assim que entrar um novo lançamento por aqui, te chamamos no WhatsApp.';
+  });
 
   readonly hasActiveNeighborhood = computed(() =>
     this.quickNeighborhoods().some((bairro) => this.isNeighborhoodActive(bairro))
