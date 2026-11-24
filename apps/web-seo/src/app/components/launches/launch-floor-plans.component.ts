@@ -68,7 +68,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
             </p>
           </div>
 
-          <p class="text-xs font-normal text-ink-muted tabular-nums">
+          <p class="text-[13px] font-normal text-ink-muted tabular-nums">
             {{ plans().length }}
             {{ plans().length === 1 ? 'planta disponível' : 'plantas disponíveis' }}
           </p>
@@ -133,7 +133,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     >
                       {{ plan.titulo }}
                     </p>
-                    <p class="mt-0.5 text-[12px] font-normal text-ink-muted">
+                    <p class="mt-0.5 text-[13px] font-normal text-ink-muted">
                       {{ plan.quartos }} · {{ plan.banhos }}
                     </p>
                   </div>
@@ -145,7 +145,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 </div>
 
                 <div
-                  class="flex items-center justify-between gap-2 border-t border-border-subtle/70 pt-2 text-[12px]"
+                  class="flex items-center justify-between gap-2 border-t border-border-subtle/70 pt-2 text-[13px]"
                 >
                   @if (plan.precoAPartirDe) {
                     <span class="font-medium text-brand tabular-nums">
@@ -234,7 +234,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 
                   @if (plan.precoAPartirDe) {
                     <div class="sm:text-right">
-                      <p class="text-[12px] font-normal text-ink-muted">
+                      <p class="text-[13px] font-normal text-ink-muted">
                         A partir de
                       </p>
                       <p
@@ -251,7 +251,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                   class="grid grid-cols-2 gap-3 rounded-md border border-border-subtle bg-elevated p-3.5 sm:grid-cols-3"
                 >
                   <div>
-                    <dt class="text-[12px] font-normal text-ink-muted">
+                    <dt class="text-[13px] font-normal text-ink-muted">
                       Área privativa
                     </dt>
                     <dd
@@ -261,7 +261,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-[12px] font-normal text-ink-muted">
+                    <dt class="text-[13px] font-normal text-ink-muted">
                       Configuração
                     </dt>
                     <dd class="mt-0.5 text-[14px] font-medium text-ink">
@@ -269,7 +269,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-[12px] font-normal text-ink-muted">
+                    <dt class="text-[13px] font-normal text-ink-muted">
                       Banhos
                     </dt>
                     <dd class="mt-0.5 text-[14px] font-medium text-ink">
@@ -302,7 +302,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 <!-- Progressive intent + contextual WhatsApp CTA -->
                 <div class="space-y-3 border-t border-border-subtle pt-4">
                   <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-[12px] font-normal text-ink-muted">
+                    <span class="text-[13px] font-normal text-ink-muted">
                       O que você precisa agora:
                     </span>
                     @for (intent of intentOptions; track intent.key) {
@@ -312,8 +312,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                         [attr.aria-pressed]="selectedIntent() === intent.key"
                         [class]="
                           selectedIntent() === intent.key
-                            ? 'terraco-btn rounded-pill border border-brand bg-brand/10 px-3 py-1 text-[12px] font-medium text-brand'
-                            : 'terraco-btn rounded-pill border border-border-subtle bg-elevated px-3 py-1 text-[12px] font-normal text-ink-muted hover:border-ink/30 hover:text-ink'
+                            ? 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-brand bg-brand/10 px-3.5 py-1.5 text-[13px] font-medium text-brand'
+                            : 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-border-subtle bg-elevated px-3.5 py-1.5 text-[13px] font-normal text-ink-muted hover:border-ink/30 hover:text-ink'
                         "
                       >
                         {{ intent.label }}
@@ -326,7 +326,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                       [href]="activePlanWhatsappHref()"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="terraco-btn inline-flex min-h-[44px] flex-1 items-center justify-center rounded-md bg-brand px-4 py-2.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover"
+                      class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] flex-1 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover"
                     >
                       {{ activeIntentOption().ctaLabel }}
                     </a>

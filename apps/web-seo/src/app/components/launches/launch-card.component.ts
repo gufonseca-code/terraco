@@ -127,13 +127,13 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
 
       <dl class="mx-2.5 mb-2.5 grid grid-cols-2 overflow-hidden rounded-[18px] bg-surface/75">
         <div class="space-y-0.5 border-r border-border-subtle/70 px-4 py-3">
-          <dt class="text-[12px] font-normal text-ink-muted">Dormitórios</dt>
+          <dt class="text-[13px] font-normal text-ink-muted">Dormitórios</dt>
           <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
             {{ item.quartos }}
           </dd>
         </div>
         <div class="space-y-0.5 px-4 py-3">
-          <dt class="text-[12px] font-normal text-ink-muted">Metragem</dt>
+          <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
           <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
             {{ item.metragem }}
           </dd>
@@ -146,7 +146,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
               : 'col-span-2 space-y-0.5 border-t border-border-subtle/70 px-4 py-3'
           "
         >
-          <dt class="text-[12px] font-normal text-ink-muted">
+          <dt class="text-[13px] font-normal text-ink-muted">
             {{ spec.label }}
           </dt>
           <dd
@@ -161,7 +161,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
         </div>
         @if (entrega) {
           <div class="space-y-0.5 border-t border-border-subtle/70 px-4 py-3">
-            <dt class="text-[12px] font-normal text-ink-muted">Entrega</dt>
+            <dt class="text-[13px] font-normal text-ink-muted">Entrega</dt>
             <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
               {{ entrega }}
             </dd>

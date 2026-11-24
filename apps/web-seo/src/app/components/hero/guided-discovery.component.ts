@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LancamentosService } from '../../core';
+import { LancamentosService, rankLancamentosByObjetivo } from '../../core';
 
 type ObjetivoOption = 'Sair do aluguel' | 'Dar um upgrade' | 'Investir';
 type TipologiaOption =
@@ -260,8 +260,9 @@ export class GuidedDiscoveryComponent {
     const items = this.lancamentosService.lancamentos();
     const selectedTipologia = this.tipologia();
     const selectedRegiao = this.regiao();
+    const selectedObjetivo = this.objetivo();
 
-    return items.filter((item) => {
+    const filtered = items.filter((item) => {
       if (selectedRegiao && selectedRegiao !== 'Qualquer região') {
         const regiaoText = normalizeText(
           `${item.bairro} ${item.endereco} ${item.resumo}`
@@ -290,6 +291,8 @@ export class GuidedDiscoveryComponent {
 
       return true;
     });
+
+    return rankLancamentosByObjetivo(filtered, selectedObjetivo);
   });
 
   readonly matchedSummary = computed(() => {

@@ -180,7 +180,7 @@ import {
                             type="button"
                             (click)="removeLaunch(launch.slug)"
                             [attr.aria-label]="'Remover ' + launch.nome + ' dos salvos'"
-                            class="terraco-btn inline-flex min-h-[32px] shrink-0 cursor-pointer items-center rounded-pill px-2.5 text-[12px] font-medium text-ink-muted hover:bg-surface hover:text-ink"
+                            class="terraco-btn inline-flex min-h-[36px] shrink-0 cursor-pointer items-center rounded-pill px-2.5 text-[13px] font-medium text-ink-muted hover:bg-surface hover:text-ink"
                           >
                             Remover
                           </button>

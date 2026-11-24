@@ -457,6 +457,7 @@ export class LaunchExplorerComponent {
   readonly searchQuery = this.lancamentosService.searchQuery;
   readonly activeFilter = this.lancamentosService.activeFilter;
   readonly tipologiaFilter = this.lancamentosService.tipologiaFilter;
+  readonly objetivoFilter = this.lancamentosService.objetivoFilter;
   readonly isLoading = this.lancamentosService.isLoadingList;
   readonly tipologiaFilters = TIPOLOGIA_FILTERS;
   readonly bairrosGuides = BAIRROS_BH;
@@ -466,7 +467,6 @@ export class LaunchExplorerComponent {
   });
 
   readonly searchInput = signal<string>('');
-  readonly objetivoFilter = signal<string | null>(null);
   readonly neighborhoodMenuOpen = signal<boolean>(false);
   readonly tipologiaMenuOpen = signal<boolean>(false);
   readonly demandPhone = signal<string>('');
@@ -540,7 +540,7 @@ export class LaunchExplorerComponent {
     const initialObjetivo = (initialMap.get('objetivo') ?? '').trim() || null;
     this.lancamentosService.setSearchQuery(initialQ);
     this.lancamentosService.setTipologiaFilter(initialTipologia);
-    this.objetivoFilter.set(initialObjetivo);
+    this.lancamentosService.setObjetivoFilter(initialObjetivo);
     this.searchInput.set(initialQ);
 
     effect(() => {
@@ -550,7 +550,7 @@ export class LaunchExplorerComponent {
       const objetivo = (map.get('objetivo') ?? '').trim() || null;
       this.lancamentosService.setSearchQuery(q);
       this.lancamentosService.setTipologiaFilter(tipologia);
-      this.objetivoFilter.set(objetivo);
+      this.lancamentosService.setObjetivoFilter(objetivo);
       this.searchInput.set(q);
       this.demandSuccessTerm.set(null);
       this.demandError.set(null);
@@ -659,7 +659,7 @@ export class LaunchExplorerComponent {
   }
 
   clearObjetivo(): void {
-    this.objetivoFilter.set(null);
+    this.lancamentosService.setObjetivoFilter(null);
     this.syncQueryParams({ objetivo: '' });
   }
 
@@ -681,7 +681,7 @@ export class LaunchExplorerComponent {
     this.lancamentosService.setSearchQuery('');
     this.lancamentosService.setActiveFilter('Todos');
     this.lancamentosService.setTipologiaFilter('Todas');
-    this.objetivoFilter.set(null);
+    this.lancamentosService.setObjetivoFilter(null);
     this.demandSuccessTerm.set(null);
     this.demandError.set(null);
     this.syncQueryParams({ q: '', tipologia: '', objetivo: '' });

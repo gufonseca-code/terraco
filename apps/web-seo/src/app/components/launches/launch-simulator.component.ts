@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import {
+  ENABLE_FLUTTER_APP_LINKS,
   FavoritesService,
   LancamentosService,
   buildWhatsAppUrl,
@@ -145,7 +146,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               class="simulator-range"
             />
 
-            <div class="flex items-center justify-between gap-2 text-[12px] font-normal text-ink-muted">
+            <div class="flex items-center justify-between gap-2 text-[13px] font-normal text-ink-muted">
               <span class="tabular-nums">{{ formattedMinValue }}</span>
               <span>{{ propertyValueHint() }}</span>
               <span class="tabular-nums">{{ formattedMaxValue }}</span>
@@ -285,29 +286,31 @@ function resolveInitialPropertyValue(item: Lancamento): number {
 
           <div class="space-y-2.5">
             <a
-              [href]="flutterDeepLink()"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="simulator-flutter-cta"
-              class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
-            >
-              Salvar simulação e ver plantas interativas
-            </a>
-
-            <a
               [href]="whatsappSimulationHref()"
               target="_blank"
               rel="noopener noreferrer"
               data-testid="simulator-whatsapp-cta"
-              class="terraco-btn flex min-h-[42px] w-full items-center justify-center rounded-pill border border-border-subtle bg-elevated px-5 py-2 text-center text-[13px] font-normal leading-[1.35] text-ink hover:border-ink/30 hover:bg-surface/60"
+              class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
             >
               Enviar simulação no WhatsApp
             </a>
+
+            @if (showFlutterAppCta) {
+              <a
+                [href]="flutterDeepLink()"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="simulator-flutter-cta"
+                class="terraco-btn flex min-h-[42px] w-full items-center justify-center rounded-pill border border-border-subtle bg-elevated px-5 py-2 text-center text-[13px] font-normal leading-[1.35] text-ink hover:border-ink/30 hover:bg-surface/60"
+              >
+                Salvar simulação e ver plantas interativas
+              </a>
+            }
           </div>
         </div>
       </div>
 
-      <p class="mt-5 border-t border-border-subtle pt-4 text-[12px] font-normal leading-[1.5] text-ink-muted">
+      <p class="mt-5 border-t border-border-subtle pt-4 text-[13px] font-normal leading-[1.5] text-ink-muted">
         Simulação estimativa para planejamento inicial. Taxas, correção (INCC/IPCA) e aprovação de crédito variam conforme o banco e a tabela vigente.
       </p>
     </section>
@@ -319,6 +322,7 @@ export class LaunchSimulatorComponent {
 
   readonly item = input.required<Lancamento>();
 
+  readonly showFlutterAppCta = ENABLE_FLUTTER_APP_LINKS;
   readonly minPropertyValue = MIN_PROPERTY_VALUE;
   readonly maxPropertyValue = MAX_PROPERTY_VALUE;
   readonly propertyValueStep = PROPERTY_VALUE_STEP;

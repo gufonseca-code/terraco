@@ -6,6 +6,8 @@ export const SITE_URL = 'https://terraco-a5ff7.web.app';
 
 export const FLUTTER_APP_URL = 'https://app.terraco.com.br';
 
+export const ENABLE_FLUTTER_APP_LINKS = false;
+
 export const SITE_HERO_IMAGE_URL =
   'https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/site%2Fimages%2Fhero-terraco.webp?alt=media';
 

@@ -59,8 +59,8 @@ export class FavoriteButtonComponent {
     () =>
       `terraco-m3-icon-toggle group inline-flex h-11 w-11 shrink-0 items-center justify-center border cursor-pointer backdrop-blur-sm ${
         this.isFavorited()
-          ? 'border-highlight bg-highlight text-ink-inverse shadow-chip hover:shadow-card'
-          : 'border-border-subtle bg-elevated/92 text-ink hover:border-ink/25 hover:bg-elevated hover:text-highlight hover:shadow-card'
+          ? 'border-highlight bg-highlight text-ink shadow-chip hover:shadow-card'
+          : 'border-border-subtle bg-elevated/92 text-ink hover:border-ink/25 hover:bg-elevated hover:text-error-fg hover:shadow-card'
       }`
   );
 

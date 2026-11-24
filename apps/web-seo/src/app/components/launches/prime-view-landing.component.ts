@@ -381,7 +381,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         <button
                           type="button"
                           (click)="toggleCallbackForm()"
-                          class="text-[12px] font-normal text-ink-muted hover:text-ink"
+                          class="text-[13px] font-normal text-ink-muted hover:text-ink"
                         >
                           Fechar
                         </button>
@@ -411,7 +411,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         <button
                           type="submit"
                           [disabled]="callbackSubmitting()"
-                          class="terraco-btn inline-flex min-h-[40px] shrink-0 items-center justify-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[12px] font-medium text-ink-inverse hover:bg-brand-hover disabled:opacity-60"
+                          class="terraco-btn inline-flex min-h-[40px] shrink-0 items-center justify-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover disabled:opacity-60"
                         >
                           {{ callbackSubmitting() ? 'Enviando...' : 'Solicitar' }}
                         </button>
@@ -420,7 +420,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       @if (callbackError(); as errorMsg) {
                         <p
                           role="alert"
-                          class="text-[12px] font-normal text-highlight"
+                          class="rounded-sm bg-error-bg px-3 py-2 text-[13px] font-normal text-error-fg"
                         >
                           {{ errorMsg }}
                         </p>
@@ -458,7 +458,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               <p
                 class="mt-2 max-w-3xl text-[15px] font-normal leading-[1.5] text-ink-muted"
               >
-                Facilidades vigentes para entrada e financiamento — consulte a
+                Facilidades vigentes para entrada e financiamento. Consulte a
                 disponibilidade da unidade.
               </p>
 
