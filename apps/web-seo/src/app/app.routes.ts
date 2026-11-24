@@ -2,10 +2,6 @@ import { inject } from '@angular/core';
 import { type ResolveFn, type Routes } from '@angular/router';
 import { type Lancamento, LancamentosService } from './core';
 import { HomePageComponent } from './pages/home.page';
-import { LancamentosPageComponent } from './pages/lancamentos.page';
-import { LancamentoDetailPageComponent } from './pages/lancamento-detail.page';
-import { BairroDetailPageComponent } from './pages/bairro-detail.page';
-import { NotFoundPageComponent } from './pages/not-found.page';
 
 const lancamentosListResolver: ResolveFn<Lancamento[]> = () =>
   inject(LancamentosService).loadLancamentos();
@@ -25,27 +21,35 @@ export const routes: Routes = [
   },
   {
     path: 'lancamentos',
-    component: LancamentosPageComponent,
+    loadComponent: () =>
+      import('./pages/lancamentos.page').then((m) => m.LancamentosPageComponent),
     resolve: {
       lancamentos: lancamentosListResolver,
     },
   },
   {
     path: 'lancamentos/:slug',
-    component: LancamentoDetailPageComponent,
+    loadComponent: () =>
+      import('./pages/lancamento-detail.page').then(
+        (m) => m.LancamentoDetailPageComponent
+      ),
     resolve: {
       lancamento: lancamentoDetailResolver,
     },
   },
   {
     path: 'bairros/:slug',
-    component: BairroDetailPageComponent,
+    loadComponent: () =>
+      import('./pages/bairro-detail.page').then(
+        (m) => m.BairroDetailPageComponent
+      ),
     resolve: {
       lancamentos: lancamentosListResolver,
     },
   },
   {
     path: '**',
-    component: NotFoundPageComponent,
+    loadComponent: () =>
+      import('./pages/not-found.page').then((m) => m.NotFoundPageComponent),
   },
 ];

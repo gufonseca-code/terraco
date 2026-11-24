@@ -2,10 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   input,
-  signal,
+  linkedSignal,
 } from '@angular/core';
 import {
   ENABLE_FLUTTER_APP_LINKS,
@@ -334,10 +333,24 @@ export class LaunchSimulatorComponent {
   readonly fgtsPresets = FGTS_PRESETS;
   readonly termYearPresets = TERM_YEAR_PRESETS;
 
-  readonly propertyValue = signal<number>(DEFAULT_PROPERTY_VALUE);
-  readonly downPaymentPercent = signal<number>(20);
-  readonly fgtsAmount = signal<number>(0);
-  readonly termYears = signal<number>(30);
+  private readonly itemSlug = computed(() => this.item().slug);
+
+  readonly propertyValue = linkedSignal({
+    source: this.item,
+    computation: (currentItem) => resolveInitialPropertyValue(currentItem),
+  });
+  readonly downPaymentPercent = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 20,
+  });
+  readonly fgtsAmount = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 0,
+  });
+  readonly termYears = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 30,
+  });
 
   readonly propertyValueHint = computed(() => {
     const price = this.item().precoAPartirDe;
@@ -432,18 +445,6 @@ export class LaunchSimulatorComponent {
       `Gostaria de conferir a tabela atualizada e as condições de financiamento.`;
     return buildWhatsAppUrl(message);
   });
-
-  constructor() {
-    effect(() => {
-      const currentItem = this.item();
-      // Reset simulator state cleanly when navigating between launch slugs.
-      currentItem.slug;
-      this.propertyValue.set(resolveInitialPropertyValue(currentItem));
-      this.downPaymentPercent.set(20);
-      this.fgtsAmount.set(0);
-      this.termYears.set(30);
-    });
-  }
 
   onPropertyValueInput(event: Event): void {
     const inputEl = event.target as HTMLInputElement | null;

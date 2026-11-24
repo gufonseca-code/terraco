@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -37,7 +38,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
 
 @Component({
   selector: 'app-launch-card',
-  imports: [RouterLink, FavoriteButtonComponent],
+  imports: [NgOptimizedImage, RouterLink, FavoriteButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block h-full',
@@ -64,16 +65,14 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
               #coverImg
               data-testid="lancamentos-cover-image"
               [attr.data-slug]="item.slug"
-              [src]="item.imagem"
+              [ngSrc]="item.imagem"
               [alt]="item.imagemAlt"
               [width]="item.imagemWidth"
               [height]="item.imagemHeight"
+              [priority]="priority()"
               [style.view-transition-name]="'launch-image-' + item.slug"
               (load)="markImageLoaded()"
               (error)="markImageLoaded()"
-              [attr.fetchpriority]="priority() ? 'high' : null"
-              [attr.loading]="priority() ? null : 'lazy'"
-              decoding="async"
               class="h-full w-full rounded-[20px] object-cover object-center"
             />
           </a>

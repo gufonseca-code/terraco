@@ -1,4 +1,4 @@
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, NgOptimizedImage, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,7 +10,7 @@ import {
   effect,
   inject,
   input,
-  signal,
+  linkedSignal,
   viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -158,6 +158,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 @Component({
   selector: 'app-prime-view-landing',
   imports: [
+    NgOptimizedImage,
     RouterLink,
     FavoriteButtonComponent,
     ImageLightboxComponent,
@@ -192,15 +193,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               <img
                 #heroImg
                 data-testid="launch-hero-image"
-                [src]="item().imagem"
+                [ngSrc]="item().imagem"
                 [alt]="item().imagemAlt"
                 [width]="item().imagemWidth"
                 [height]="item().imagemHeight"
+                priority
                 [style.view-transition-name]="'launch-image-' + item().slug"
                 (load)="markImageLoaded()"
                 (error)="markImageLoaded()"
-                fetchpriority="high"
-                decoding="async"
                 class="relative z-[1] h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
               />
               @if (hasGallery()) {
@@ -620,9 +620,25 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </section>
           }
 
-          <app-launch-floor-plans [item]="item()" />
+          @defer (on viewport; hydrate on interaction) {
+            <app-launch-floor-plans [item]="item()" />
+          } @placeholder {
+            <div
+              id="plantas"
+              aria-hidden="true"
+              class="min-h-[480px] rounded-lg border border-border-subtle bg-elevated scroll-mt-24"
+            ></div>
+          }
 
-          <app-launch-simulator [item]="item()" />
+          @defer (on viewport; hydrate on interaction) {
+            <app-launch-simulator [item]="item()" />
+          } @placeholder {
+            <div
+              id="simulador"
+              aria-hidden="true"
+              class="min-h-[440px] rounded-lg border border-border-subtle bg-elevated scroll-mt-24"
+            ></div>
+          }
 
           @if (hasGallery()) {
             <section
@@ -666,12 +682,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         </div>
       </div>
 
-      <app-image-lightbox
-        [images]="galleryImages()"
-        [initialIndex]="lightboxIndex()"
-        [isOpen]="lightboxOpen()"
-        (closed)="closeLightbox()"
-      />
+      @defer (when lightboxOpen()) {
+        <app-image-lightbox
+          [images]="galleryImages()"
+          [initialIndex]="lightboxIndex()"
+          [isOpen]="lightboxOpen()"
+          (closed)="closeLightbox()"
+        />
+      }
     </section>
   `,
 })
@@ -682,16 +700,48 @@ export class PrimeViewLandingComponent {
   private readonly leadsService = inject(LeadsService);
 
   readonly item = input.required<Lancamento>();
-  readonly imageLoaded = signal<boolean>(false);
-  readonly selectedIntent = signal<LaunchIntentKey>('plantas_valores');
-  readonly lightboxOpen = signal<boolean>(false);
-  readonly lightboxIndex = signal<number>(0);
+  private readonly itemSlug = computed(() => this.item().slug);
 
-  readonly callbackOpen = signal<boolean>(false);
-  readonly callbackName = signal<string>('');
-  readonly callbackPhone = signal<string>('');
-  readonly callbackError = signal<string | null>(null);
-  readonly callbackSubmitted = signal<boolean>(false);
+  readonly imageLoaded = linkedSignal({
+    source: this.itemSlug,
+    computation: () => {
+      const el = this.heroImg()?.nativeElement;
+      return Boolean(el?.complete && el.naturalWidth > 0);
+    },
+  });
+  readonly selectedIntent = linkedSignal<string, LaunchIntentKey>({
+    source: this.itemSlug,
+    computation: () => 'plantas_valores',
+  });
+  readonly lightboxOpen = linkedSignal({
+    source: this.itemSlug,
+    computation: () => false,
+  });
+  readonly lightboxIndex = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 0,
+  });
+
+  readonly callbackOpen = linkedSignal({
+    source: this.itemSlug,
+    computation: () => false,
+  });
+  readonly callbackName = linkedSignal({
+    source: this.itemSlug,
+    computation: () => '',
+  });
+  readonly callbackPhone = linkedSignal({
+    source: this.itemSlug,
+    computation: () => '',
+  });
+  readonly callbackError = linkedSignal<string, string | null>({
+    source: this.itemSlug,
+    computation: () => null,
+  });
+  readonly callbackSubmitted = linkedSignal({
+    source: this.itemSlug,
+    computation: () => false,
+  });
   readonly callbackSubmitting = this.leadsService.submitting;
 
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
@@ -751,21 +801,6 @@ export class PrimeViewLandingComponent {
       if (el?.complete && el.naturalWidth > 0) {
         this.imageLoaded.set(true);
       }
-    });
-
-    effect(() => {
-      // Reset per-launch interactive state when navigating between slugs.
-      this.item().slug;
-      this.selectedIntent.set('plantas_valores');
-      this.lightboxOpen.set(false);
-      this.lightboxIndex.set(0);
-      this.callbackOpen.set(false);
-      this.callbackName.set('');
-      this.callbackPhone.set('');
-      this.callbackError.set(null);
-      this.callbackSubmitted.set(false);
-      const el = this.heroImg()?.nativeElement;
-      this.imageLoaded.set(Boolean(el?.complete && el.naturalWidth > 0));
     });
 
     effect(() => {

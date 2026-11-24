@@ -1,10 +1,11 @@
+import { Listbox, Option } from '@angular/aria/listbox';
+import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   input,
-  signal,
+  linkedSignal,
 } from '@angular/core';
 import {
   buildWhatsAppUrl,
@@ -44,7 +45,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 @Component({
   selector: 'app-launch-floor-plans',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ImageLightboxComponent],
+  imports: [NgOptimizedImage, Listbox, Option, ImageLightboxComponent],
   template: `
     @if (hasPlans()) {
       <section
@@ -109,16 +110,21 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
         <div class="mt-6 grid gap-6 lg:grid-cols-12 lg:items-start">
           <!-- Selector list: horizontal scroll on mobile, vertical list on desktop -->
           <div
+            ngListbox
+            [value]="activePlanSelection()"
+            (valueChange)="onPlanSelectionChange($event)"
+            orientation="vertical"
+            [multi]="false"
+            selectionMode="follow"
             class="flex gap-2.5 overflow-x-auto pb-2 lg:col-span-5 lg:block lg:max-h-[560px] lg:space-y-2.5 lg:overflow-y-auto lg:pb-0 lg:pr-1"
-            role="listbox"
             aria-label="Lista de plantas"
           >
             @for (plan of filteredPlans(); track plan.id) {
               @let isSelected = activePlan()?.id === plan.id;
-              <button
-                type="button"
-                role="option"
-                [attr.aria-selected]="isSelected"
+              <div
+                ngOption
+                [value]="plan.id"
+                [label]="plan.titulo"
                 (click)="selectPlan(plan.id)"
                 [class]="
                   isSelected
@@ -162,7 +168,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     </span>
                   }
                 </div>
-              </button>
+              </div>
             }
           </div>
 
@@ -173,12 +179,10 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 class="relative flex items-center justify-center overflow-hidden rounded-md bg-elevated p-3 sm:p-5"
               >
                 <img
-                  [src]="plan.imagem"
+                  [ngSrc]="plan.imagem"
                   [alt]="plan.alt"
                   [width]="plan.width"
                   [height]="plan.height"
-                  loading="lazy"
-                  decoding="async"
                   class="max-h-[340px] w-auto object-contain sm:max-h-[400px]"
                 />
 
@@ -336,24 +340,42 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
         </div>
       </section>
 
-      <app-image-lightbox
-        [images]="filteredPlanMedia()"
-        [initialIndex]="lightboxIndex()"
-        [isOpen]="lightboxOpen()"
-        (closed)="closeLightbox()"
-      />
+      @defer (when lightboxOpen()) {
+        <app-image-lightbox
+          [images]="filteredPlanMedia()"
+          [initialIndex]="lightboxIndex()"
+          [isOpen]="lightboxOpen()"
+          (closed)="closeLightbox()"
+        />
+      }
     }
   `,
 })
 export class LaunchFloorPlansComponent {
   readonly item = input.required<Lancamento>();
+  private readonly itemSlug = computed(() => this.item().slug);
   readonly intentOptions = PLAN_INTENT_OPTIONS;
 
-  readonly selectedCategory = signal<string>('Todas');
-  readonly selectedPlanId = signal<string | null>(null);
-  readonly selectedIntent = signal<PlanIntentKey>('tabela_planta');
-  readonly lightboxOpen = signal<boolean>(false);
-  readonly lightboxIndex = signal<number>(0);
+  readonly selectedCategory = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 'Todas',
+  });
+  readonly selectedPlanId = linkedSignal<string, string | null>({
+    source: this.itemSlug,
+    computation: () => null,
+  });
+  readonly selectedIntent = linkedSignal<string, PlanIntentKey>({
+    source: this.itemSlug,
+    computation: () => 'tabela_planta',
+  });
+  readonly lightboxOpen = linkedSignal({
+    source: this.itemSlug,
+    computation: () => false,
+  });
+  readonly lightboxIndex = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 0,
+  });
 
   readonly plans = computed<readonly LaunchFloorPlan[]>(
     () => this.item().plantas ?? []
@@ -387,6 +409,11 @@ export class LaunchFloorPlansComponent {
     if (list.length === 0) return null;
     const currentId = this.selectedPlanId();
     return list.find((plan) => plan.id === currentId) ?? list[0];
+  });
+
+  readonly activePlanSelection = computed<string[]>(() => {
+    const current = this.activePlan();
+    return current ? [current.id] : [];
   });
 
   readonly filteredPlanMedia = computed<readonly LaunchMediaItem[]>(() =>
@@ -434,19 +461,15 @@ export class LaunchFloorPlansComponent {
     );
   });
 
-  constructor() {
-    effect(() => {
-      this.item().slug;
-      this.selectedCategory.set('Todas');
-      this.selectedPlanId.set(null);
-      this.selectedIntent.set('tabela_planta');
-      this.lightboxOpen.set(false);
-      this.lightboxIndex.set(0);
-    });
-  }
-
   formatPrice(value: number): string {
     return formatCurrencyBRL(value);
+  }
+
+  onPlanSelectionChange(values: readonly string[]): void {
+    const nextId = values[0];
+    if (nextId) {
+      this.selectedPlanId.set(nextId);
+    }
   }
 
   selectCategory(category: string): void {

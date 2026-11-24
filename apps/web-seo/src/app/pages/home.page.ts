@@ -4,12 +4,10 @@ import {
   OnInit,
   inject,
 } from '@angular/core';
-import {
-  GuidedDiscoveryComponent,
-  HeroSearchComponent,
-  TrustConciergeComponent,
-} from '../components/hero';
-import { FeaturedLaunchesComponent } from '../components/launches';
+import { GuidedDiscoveryComponent } from '../components/hero/guided-discovery.component';
+import { HeroSearchComponent } from '../components/hero/hero-search.component';
+import { TrustConciergeComponent } from '../components/hero/trust-concierge.component';
+import { FeaturedLaunchesComponent } from '../components/launches/featured-launches.component';
 import { FooterComponent, NavbarComponent } from '../components/layout';
 import { SeoService } from '../core';
 
@@ -32,8 +30,22 @@ import { SeoService } from '../core';
           <app-hero-search />
         </div>
         <app-featured-launches />
-        <app-guided-discovery />
-        <app-trust-concierge />
+        @defer (on viewport; hydrate on viewport) {
+          <app-guided-discovery />
+        } @placeholder {
+          <section
+            aria-hidden="true"
+            class="min-h-[420px] border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24"
+          ></section>
+        }
+        @defer (on viewport; hydrate on viewport) {
+          <app-trust-concierge />
+        } @placeholder {
+          <section
+            aria-hidden="true"
+            class="min-h-[440px] border-t border-border-subtle bg-surface/45 py-16 sm:py-20 lg:py-24"
+          ></section>
+        }
       </main>
       <app-footer />
     </div>

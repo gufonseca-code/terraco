@@ -1,3 +1,4 @@
+import { Listbox, Option } from '@angular/aria/listbox';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,6 +29,8 @@ const TIPOLOGIA_FILTERS = [
   selector: 'app-launch-explorer',
   imports: [
     RouterLink,
+    Listbox,
+    Option,
     LaunchCardComponent,
     LaunchCardSkeletonComponent,
     WhatsappAlertFormComponent,
@@ -130,39 +133,39 @@ const TIPOLOGIA_FILTERS = [
                     @if (neighborhoodMenuOpen()) {
                       <ul
                         id="bairro-filter-listbox"
-                        role="listbox"
+                        ngListbox
+                        [value]="selectedNeighborhoodValue()"
+                        (valueChange)="onNeighborhoodListboxChange($event)"
+                        [multi]="false"
+                        orientation="vertical"
                         aria-label="Filtrar por bairro"
                         animate.enter="terraco-chip-enter"
                         class="absolute left-0 top-full z-30 mt-2 min-w-[210px] rounded-[20px] border border-border-subtle bg-elevated p-1.5 shadow-card"
                       >
-                        <li>
-                          <button
-                            type="button"
-                            role="option"
-                            [attr.aria-selected]="!hasActiveNeighborhood()"
-                            (click)="selectNeighborhoodOption('Todos')"
-                            [class]="dropdownOptionClass(!hasActiveNeighborhood())"
-                          >
-                            <span>Todos os bairros</span>
-                            @if (!hasActiveNeighborhood()) {
-                              <span aria-hidden="true" class="text-brand">✓</span>
-                            }
-                          </button>
+                        <li
+                          ngOption
+                          value="Todos"
+                          label="Todos os bairros"
+                          (click)="selectNeighborhoodOption('Todos')"
+                          [class]="dropdownOptionClass(!hasActiveNeighborhood())"
+                        >
+                          <span>Todos os bairros</span>
+                          @if (!hasActiveNeighborhood()) {
+                            <span aria-hidden="true" class="text-brand">✓</span>
+                          }
                         </li>
                         @for (bairro of quickNeighborhoods(); track bairro) {
-                          <li>
-                            <button
-                              type="button"
-                              role="option"
-                              [attr.aria-selected]="isNeighborhoodActive(bairro)"
-                              (click)="selectNeighborhoodOption(bairro)"
-                              [class]="dropdownOptionClass(isNeighborhoodActive(bairro))"
-                            >
-                              <span>{{ bairro }}</span>
-                              @if (isNeighborhoodActive(bairro)) {
-                                <span aria-hidden="true" class="text-brand">✓</span>
-                              }
-                            </button>
+                          <li
+                            ngOption
+                            [value]="bairro"
+                            [label]="bairro"
+                            (click)="selectNeighborhoodOption(bairro)"
+                            [class]="dropdownOptionClass(isNeighborhoodActive(bairro))"
+                          >
+                            <span>{{ bairro }}</span>
+                            @if (isNeighborhoodActive(bairro)) {
+                              <span aria-hidden="true" class="text-brand">✓</span>
+                            }
                           </li>
                         }
                       </ul>
@@ -197,25 +200,27 @@ const TIPOLOGIA_FILTERS = [
                   @if (tipologiaMenuOpen()) {
                     <ul
                       id="tipologia-filter-listbox"
-                      role="listbox"
+                      ngListbox
+                      [value]="selectedTipologiaValue()"
+                      (valueChange)="onTipologiaListboxChange($event)"
+                      [multi]="false"
+                      orientation="vertical"
                       aria-label="Filtrar por tipologia"
                       animate.enter="terraco-chip-enter"
                       class="absolute left-0 top-full z-30 mt-2 min-w-[220px] rounded-[20px] border border-border-subtle bg-elevated p-1.5 shadow-card"
                     >
                       @for (tipologia of tipologiaFilters; track tipologia) {
-                        <li>
-                          <button
-                            type="button"
-                            role="option"
-                            [attr.aria-selected]="isTipologiaActive(tipologia)"
-                            (click)="selectTipologiaOption(tipologia)"
-                            [class]="dropdownOptionClass(isTipologiaActive(tipologia))"
-                          >
-                            <span>{{ tipologia === 'Todas' ? 'Todas as tipologias' : tipologia }}</span>
-                            @if (isTipologiaActive(tipologia)) {
-                              <span aria-hidden="true" class="text-brand">✓</span>
-                            }
-                          </button>
+                        <li
+                          ngOption
+                          [value]="tipologia"
+                          [label]="tipologia === 'Todas' ? 'Todas as tipologias' : tipologia"
+                          (click)="selectTipologiaOption(tipologia)"
+                          [class]="dropdownOptionClass(isTipologiaActive(tipologia))"
+                        >
+                          <span>{{ tipologia === 'Todas' ? 'Todas as tipologias' : tipologia }}</span>
+                          @if (isTipologiaActive(tipologia)) {
+                            <span aria-hidden="true" class="text-brand">✓</span>
+                          }
                         </li>
                       }
                     </ul>
@@ -515,6 +520,31 @@ export class LaunchExplorerComponent {
     const target = event.target as Node | null;
     if (container && target && !container.contains(target)) {
       this.closeMenus();
+    }
+  }
+
+  readonly selectedNeighborhoodValue = computed<string[]>(() => {
+    const active = this.quickNeighborhoods().find((bairro) =>
+      this.isNeighborhoodActive(bairro)
+    );
+    return [active ?? 'Todos'];
+  });
+
+  readonly selectedTipologiaValue = computed<string[]>(() => [
+    this.tipologiaFilter().trim() || 'Todas',
+  ]);
+
+  onNeighborhoodListboxChange(values: readonly string[]): void {
+    const next = values[0];
+    if (next) {
+      this.selectNeighborhoodOption(next);
+    }
+  }
+
+  onTipologiaListboxChange(values: readonly string[]): void {
+    const next = values[0];
+    if (next) {
+      this.selectTipologiaOption(next);
     }
   }
 
