@@ -564,7 +564,7 @@ export class LaunchExplorerComponent {
       return `${base} border-brand bg-elevated font-medium text-brand shadow-card`;
     }
     if (active) {
-      return `${base} !rounded-[12px] border-brand bg-brand/10 font-medium text-brand`;
+      return `${base} terraco-m3-chip--active border-brand bg-brand/10 font-medium text-brand`;
     }
     return `${base} border-border-subtle bg-elevated font-medium text-ink hover:border-border-strong hover:bg-surface/60`;
   }

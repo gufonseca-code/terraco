@@ -122,8 +122,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 (click)="selectPlan(plan.id)"
                 [class]="
                   isSelected
-                    ? 'terraco-btn group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 rounded-[20px] border border-brand bg-brand/[0.08] p-3.5 text-left shadow-chip lg:w-full'
-                    : 'terraco-btn group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 rounded-md border border-border-subtle bg-surface/65 p-3.5 text-left hover:border-border-strong hover:bg-surface lg:w-full'
+                    ? 'terraco-m3-select-card group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 border border-brand bg-brand/[0.08] p-3.5 text-left shadow-chip lg:w-full'
+                    : 'terraco-m3-select-card group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 border border-border-subtle bg-surface/65 p-3.5 text-left hover:border-border-strong hover:bg-surface lg:w-full'
                 "
               >
                 <div class="flex items-start justify-between gap-3">

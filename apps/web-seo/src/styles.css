@@ -34,6 +34,7 @@
   --radius-sm: 8px;
   --radius-m3-md: 12px;
   --radius-md: 16px;
+  --radius-morph-pill: 22px;
   --radius-lg: 24px;
   --radius-xl: 28px;
   --radius-pill: 9999px;
@@ -322,8 +323,8 @@ h4 {
   box-shadow: var(--shadow-card);
   transition:
     border-color 180ms var(--ease-ui),
-    box-shadow 260ms var(--ease-ui),
-    transform 340ms var(--ease-spring-fast);
+    box-shadow 220ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -334,29 +335,29 @@ h4 {
   }
 }
 
-/* M3 Expressive: Filter / Intent Chip com Shape Morphing (pill -> 12px) */
+/* M3 Expressive: Filter / Intent Chip com Shape Morphing (22px -> 12px) */
 .terraco-m3-chip {
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-morph-pill);
   transition:
     border-radius 320ms var(--ease-spring-fast),
     background-color 160ms var(--ease-ui),
     border-color 160ms var(--ease-ui),
     color 160ms var(--ease-ui),
-    box-shadow 200ms var(--ease-ui),
-    transform 260ms var(--ease-spring-fast);
+    box-shadow 180ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
 }
 
 .terraco-m3-chip[aria-pressed="true"],
-.terraco-m3-chip[aria-expanded="true"] {
+.terraco-m3-chip[aria-expanded="true"],
+.terraco-m3-chip--active {
   border-radius: var(--radius-m3-md);
 }
 
 .terraco-m3-chip:active {
-  border-radius: 10px;
   transform: scale(0.97);
 }
 
-/* M3 Expressive: Connected Button Group (gap 3px, pontas pill, internas 8px) */
+/* M3 Expressive: Connected Button Group (gap 3px, pontas 22px, internas 8px) */
 .terraco-m3-group {
   display: flex;
   gap: 3px;
@@ -369,26 +370,25 @@ h4 {
     background-color 160ms var(--ease-ui),
     border-color 160ms var(--ease-ui),
     color 160ms var(--ease-ui),
-    box-shadow 200ms var(--ease-ui),
-    transform 260ms var(--ease-spring-fast);
+    box-shadow 180ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
 }
 
 .terraco-m3-group > .terraco-m3-group-item:first-child {
-  border-top-left-radius: var(--radius-pill);
-  border-bottom-left-radius: var(--radius-pill);
+  border-top-left-radius: var(--radius-morph-pill);
+  border-bottom-left-radius: var(--radius-morph-pill);
 }
 
 .terraco-m3-group > .terraco-m3-group-item:last-child {
-  border-top-right-radius: var(--radius-pill);
-  border-bottom-right-radius: var(--radius-pill);
+  border-top-right-radius: var(--radius-morph-pill);
+  border-bottom-right-radius: var(--radius-morph-pill);
 }
 
 .terraco-m3-group > .terraco-m3-group-item[aria-pressed="true"] {
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-morph-pill);
 }
 
 .terraco-m3-group-item:active {
-  border-radius: 10px;
   transform: scale(0.975);
 }
 
@@ -399,31 +399,31 @@ h4 {
 }
 
 .terraco-m3-group-grid > .terraco-m3-group-item[aria-pressed="true"] {
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-morph-pill);
 }
 
 @media (min-width: 640px) {
   .terraco-m3-group-grid > .terraco-m3-group-item:first-child {
-    border-top-left-radius: var(--radius-pill);
-    border-bottom-left-radius: var(--radius-pill);
+    border-top-left-radius: var(--radius-morph-pill);
+    border-bottom-left-radius: var(--radius-morph-pill);
   }
 
   .terraco-m3-group-grid > .terraco-m3-group-item:last-child {
-    border-top-right-radius: var(--radius-pill);
-    border-bottom-right-radius: var(--radius-pill);
+    border-top-right-radius: var(--radius-morph-pill);
+    border-bottom-right-radius: var(--radius-morph-pill);
   }
 }
 
-/* M3 Expressive: Toggle Icon Button (circle -> squircle 14px) */
+/* M3 Expressive: Toggle Icon Button (22px circle -> 14px squircle) */
 .terraco-m3-icon-toggle {
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-morph-pill);
   transition:
     border-radius 340ms var(--ease-spring-fast),
     background-color 160ms var(--ease-ui),
     border-color 160ms var(--ease-ui),
     color 160ms var(--ease-ui),
-    box-shadow 200ms var(--ease-ui),
-    transform 280ms var(--ease-spring-fast);
+    box-shadow 180ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
 }
 
 .terraco-m3-icon-toggle[aria-pressed="true"] {
@@ -431,18 +431,43 @@ h4 {
 }
 
 .terraco-m3-icon-toggle:active {
-  border-radius: 11px;
   transform: scale(0.93);
 }
 
-/* M3 Expressive: Floating Toolbar entrada/saída com spatial spring */
-@keyframes terraco-toolbar-in {
+/* M3 Expressive: Card de seleção de planta com shape morphing suave (16px -> 22px) */
+.terraco-m3-select-card {
+  border-radius: var(--radius-md);
+  transition:
+    border-radius 320ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
+}
+
+.terraco-m3-select-card[aria-selected="true"] {
+  border-radius: var(--radius-morph-pill);
+}
+
+.terraco-m3-select-card:active {
+  transform: scale(0.985);
+}
+
+/* M3 Expressive: Floating Toolbar (Effects no opacity + Spatial spring no transform) */
+@keyframes terraco-toolbar-fade-in {
   from {
     opacity: 0;
-    transform: translateY(18px) scale(0.94);
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes terraco-toolbar-slide-in {
+  from {
+    transform: translateY(16px) scale(0.95);
+  }
+  to {
     transform: translateY(0) scale(1);
   }
 }
@@ -454,16 +479,18 @@ h4 {
   }
   to {
     opacity: 0;
-    transform: translateY(12px) scale(0.95);
+    transform: translateY(10px) scale(0.96);
   }
 }
 
 .terraco-toolbar-enter {
-  animation: terraco-toolbar-in 420ms var(--ease-spring-default) both;
+  animation:
+    terraco-toolbar-fade-in 160ms var(--ease-ui) both,
+    terraco-toolbar-slide-in 380ms var(--ease-spring-default) both;
 }
 
 .terraco-toolbar-leave {
-  animation: terraco-toolbar-out 180ms var(--ease-ui) both;
+  animation: terraco-toolbar-out 160ms var(--ease-ui) both;
 }
 
 /* Card flutuante (/lancamentos/[slug]) com destaque interno e profundidade quente */
@@ -909,6 +936,7 @@ h4 {
   .terraco-m3-chip,
   .terraco-m3-group-item,
   .terraco-m3-icon-toggle,
+  .terraco-m3-select-card,
   .terraco-nav-link,
   .terraco-link-underline::after,
   .terraco-stairs-step,
