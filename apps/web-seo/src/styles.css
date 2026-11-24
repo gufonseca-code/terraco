@@ -446,6 +446,64 @@ h4 {
   transform: scale(0.985);
 }
 
+/* M3 Expressive: Search Bar com Shape Morphing (28px pill -> 28px/14px docked) */
+.terraco-m3-search {
+  border-radius: 28px;
+  transition:
+    border-radius 320ms var(--ease-spring-fast),
+    border-color 160ms var(--ease-ui),
+    box-shadow 220ms var(--ease-ui),
+    background-color 160ms var(--ease-ui);
+}
+
+.terraco-m3-search--open {
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+@keyframes terraco-search-panel-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes terraco-search-panel-slide-in {
+  from {
+    transform: translateY(-6px) scale(0.985);
+  }
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes terraco-search-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.985);
+  }
+}
+
+.terraco-search-panel-enter {
+  transform-origin: top center;
+  animation:
+    terraco-search-panel-fade-in 140ms var(--ease-ui) both,
+    terraco-search-panel-slide-in 320ms var(--ease-spring-fast) both;
+}
+
+.terraco-search-panel-leave {
+  transform-origin: top center;
+  animation: terraco-search-panel-out 130ms var(--ease-ui) both;
+}
+
 /* M3 Expressive: Floating Toolbar (Effects no opacity + Spatial spring no transform) */
 @keyframes terraco-toolbar-fade-in {
   from {
@@ -903,6 +961,8 @@ h4 {
   .terraco-chip-leave,
   .terraco-toolbar-enter,
   .terraco-toolbar-leave,
+  .terraco-search-panel-enter,
+  .terraco-search-panel-leave,
   .terraco-skeleton::after,
   .hero-enter-title,
   .hero-enter-form,
@@ -930,6 +990,7 @@ h4 {
   .terraco-m3-group-item,
   .terraco-m3-icon-toggle,
   .terraco-m3-select-card,
+  .terraco-m3-search,
   .terraco-nav-link,
   .terraco-link-underline::after,
   .terraco-stairs-step,
