@@ -10,12 +10,12 @@ This repository implements the **Terraço Google-First Split Architecture** mono
   - Built with **Angular (latest stable)** using 100% Standalone Components, **Zoneless change detection** (`provideZonelessChangeDetection()`), and a **Signals-first** reactive architecture (`signal`, `computed`, `effect`, `input`, `viewChild`).
   - Configured with **Angular SSR & Hybrid Rendering** (`@angular/ssr`, `RenderMode.Prerender` for `/`, `/lancamentos`, and `/lancamentos/:slug` via `getPrerenderParams()`, plus `RenderMode.Server` fallback for `**`).
   - Uses **Incremental Hydration & Event Replay** (`provideClientHydration(withEventReplay(), withIncrementalHydration())`) and **Angular Router View Transitions** (`withViewTransitions()`, `withComponentInputBinding()`, `withPreloading(PreloadAllModules)`).
-  - Styled with **Tailwind CSS v4** (`@tailwindcss/postcss`) and the Terraço "Warm Brutalism / Sunlit Terracotta" design system (`apps/web-seo/src/styles.css`).
+  - Styled with **Tailwind CSS v4** (`@tailwindcss/postcss`) and the Terraço "Ipê & Grafite" design system (`apps/web-seo/src/styles.css`).
 - **`apps/mobile-app/`** *(Planned)* — **Flutter Interactive App (`app.terraco.com.br` + Android/iOS)**
   - Dedicated Flutter web and native mobile application for authenticated buyer workflows, interactive 3D/floorplan tours, real-time financing simulations, visit scheduling, and cloud-synced favorites.
   - Deep-linked from `apps/web-seo` via `FLUTTER_APP_URL` (`https://app.terraco.com.br`) and `LancamentosService.buildFlutterAppDeepLink()`.
 - **`branding/`** — **Single Source of Truth for Design Tokens & Brand Assets**
-  - `branding/tokens.json` & `branding/tokens.css`: Canonical color palette (`#FAF7F0` Warm Alabaster Canvas, `#161514` Deep Basalt Ink, `#C85A32` Sunlit Terracotta, `#2D4A3E` Deep Moss Leaf), typography (`Fraunces` display serif + `Plus Jakarta Sans` UI sans), elevation shadows, and motion curves shared across Angular (`apps/web-seo`) and Flutter (`apps/mobile-app`).
+  - `branding/tokens.json` & `branding/tokens.css`: Canonical **Ipê & Grafite** color palette (`#F8F5EA` Creme Papel, `#F1E9D8` Areia Suave, `#1E1D1B` Grafite Quente, `#2E5B46` Verde Musgo Urbano, `#EEB506` Amarelo Ipê Solar, `#ED7467` Rosa Goiaba), typography (`Fraunces` display serif + `Plus Jakarta Sans` UI sans), elevation shadows, and motion curves shared across Angular (`apps/web-seo`) and Flutter (`apps/mobile-app`).
   - `branding/DESIGN.md`: Complete visual direction, typography scale, layout discipline, and anti-slop guardrails.
 - **`firebase.json` & `.firebaserc`** — **Firebase Multi-Site Hosting, App Hosting SSR & Emulator Suite**
   - Default Firebase project alias: `terraco-platform`.

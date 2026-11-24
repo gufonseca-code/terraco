@@ -28,7 +28,7 @@ import { FavoritesTrayComponent } from './components/launches';
         aria-label="Carregando página"
         animate.enter="terraco-chip-enter"
         animate.leave="terraco-chip-leave"
-        class="terraco-skeleton pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 bg-brand/25"
+        class="terraco-skeleton pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 bg-accent"
       ></div>
     }
     <router-outlet />

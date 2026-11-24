@@ -1,23 +1,24 @@
 :root {
   /* Terraço — Paleta Ipê & Grafite */
-  --color-bg-canvas: #FAF7F0;
-  --color-bg-surface: #EFEAE0;
+  --color-bg-canvas: #F8F5EA;
+  --color-bg-surface: #F1E9D8;
   --color-bg-elevated: #FFFDF9;
 
   --color-text-primary: #1E1D1B;
   --color-text-secondary: #57534E;
-  --color-text-inverse: #FAF7F0;
+  --color-text-inverse: #F8F5EA;
 
-  --color-brand-primary: #265C4B;
-  --color-brand-primary-hover: #1D473A;
-  --color-brand-accent: #F2B705;
-  --color-brand-highlight: #F07167;
+  --color-brand-primary: #2E5B46;
+  --color-brand-primary-hover: #234736;
+  --color-brand-accent: #EEB506;
+  --color-brand-highlight: #ED7467;
 
-  --color-border-subtle: #E2DCD0;
+  --color-border-subtle: #E4DCCB;
+  --color-border-strong: #CFC5B2;
 
   /* Estados Semânticos */
-  --color-success-fg: #265C4B;
-  --color-success-bg: #E3F1EB;
+  --color-success-fg: #2E5B46;
+  --color-success-bg: #E4F0EA;
   --color-warning-fg: #8A6500;
   --color-warning-bg: #FEF3C7;
   --color-error-fg: #B9382E;

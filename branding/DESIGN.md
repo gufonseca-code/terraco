@@ -10,8 +10,8 @@
 O logotipo da **Terraço** combina o símbolo geométrico **Degraus** (três patamares horizontais escalonados que remetem a terraços em níveis e à evolução de fase) com o wordmark em **serifa arredondada** (*Recoleta* ou *Fraunces*).
 
 ### Versões Oficiais
-* **Web Lockup (Horizontal / Empilhado):** Símbolo **Degraus** + wordmark `Terraço` em Grafite Quente (`#1E1D1B`) sobre fundo Creme Papel (`#FAF7F0`), ou invertido em Creme Papel + Amarelo Ipê (`#F2B705`) sobre Verde Musgo (`#265C4B`) / Grafite Quente (`#1E1D1B`).
-* **App Icon / Favicon:** Apenas o símbolo **Degraus** (3 barras arredondadas em proporção ascendente) centralizado no *squircle* em Amarelo Ipê (`#F2B705`) com barras em Grafite Quente (`#1E1D1B`).
+* **Web Lockup (Horizontal / Empilhado):** Símbolo **Degraus** + wordmark `Terraço` em Grafite Quente (`#1E1D1B`) sobre fundo Creme Papel (`#F8F5EA`), ou invertido em Creme Papel + Amarelo Ipê (`#EEB506`) sobre Verde Musgo (`#2E5B46`) / Grafite Quente (`#1E1D1B`).
+* **App Icon / Favicon:** Apenas o símbolo **Degraus** (3 barras arredondadas em proporção ascendente) centralizado no *squircle* em Amarelo Ipê (`#EEB506`) com barras em Grafite Quente (`#1E1D1B`).
 * **Supergraphic:** As 3 barras do símbolo podem ser ampliadas como grafismo de fundo, divisória de seção ou moldura em pôsteres, kits de boas-vindas e redes sociais.
 
 ### Regras de Uso
@@ -27,19 +27,20 @@ Seguimos a regra **60-30-10** para manter leveza visual e evitar a frieza do bra
 
 | Token | Hex | Papel na Interface | Proporção |
 | :--- | :--- | :--- | :--- |
-| `color.bg.canvas` | `#FAF7F0` | **Creme Papel** — Fundo principal de páginas e app | 60% |
-| `color.bg.surface` | `#EFEAE0` | **Areia Suave** — Cards secundários, inputs e barras | 60% |
+| `color.bg.canvas` | `#F8F5EA` | **Creme Papel** — Fundo principal de páginas e app | 60% |
+| `color.bg.surface` | `#F1E9D8` | **Areia Suave** — Cards secundários, inputs e barras | 60% |
 | `color.bg.elevated` | `#FFFDF9` | **Branco Quente** — Cards elevados e modais | 60% |
 | `color.text.primary` | `#1E1D1B` | **Grafite Quente** — Textos principais e wordmark | 30% |
 | `color.text.secondary` | `#57534E` | **Grafite Médio** — Subtítulos, metadados e legendas | 30% |
-| `color.brand.primary` | `#265C4B` | **Verde Musgo Urbano** — CTAs principais, headers escuros e links ativos | 30% |
-| `color.brand.primaryHover` | `#1D473A` | Estado hover/pressed de botões principais | — |
-| `color.brand.accent` | `#F2B705` | **Amarelo Ipê Solar** — Ícone do app, destaques de marca e grafismos | 10% |
-| `color.brand.highlight` | `#F07167` | **Rosa Goiaba** — Badges (*"Novo"*, *"Sem fiador"*), favoritos e alertas gentis | 10% |
-| `color.border.subtle` | `#E2DCD0` | **Borda Areia** — Divisórias e contornos de cards (`1px`) | — |
+| `color.brand.primary` | `#2E5B46` | **Verde Musgo Urbano** — CTAs principais, headers escuros e links ativos | 30% |
+| `color.brand.primaryHover` | `#234736` | Estado hover/pressed de botões principais | — |
+| `color.brand.accent` | `#EEB506` | **Amarelo Ipê Solar** — Ícone do app, destaques de marca e grafismos | 10% |
+| `color.brand.highlight` | `#ED7467` | **Rosa Goiaba** — Badges (*"Novo"*, *"Sem fiador"*), favoritos e alertas gentis | 10% |
+| `color.border.subtle` | `#E4DCCB` | **Borda Areia** — Divisórias e contornos de cards (`1px`) | — |
+| `color.border.strong` | `#CFC5B2` | **Borda Areia Forte** — Contornos destacados e estados hover | — |
 
 ### Estados Semânticos
-* **Sucesso / Disponível:** `#265C4B` (texto/borda) sobre `#E3F1EB` (fundo suave)
+* **Sucesso / Disponível:** `#2E5B46` (texto/borda) sobre `#E4F0EA` (fundo suave)
 * **Atenção / Destaque:** `#8A6500` (texto) sobre `#FEF3C7` (fundo suave)
 * **Erro / Indisponível:** `#B9382E` (texto) sobre `#FDE8E6` (fundo suave)
 
@@ -86,7 +87,7 @@ O contraste entre uma **serifa orgânica** nos títulos e uma **sans-serif geom�
 ## 5. Direção de Arte & Ilustração
 
 * **Estilo:** Ilustrações editoriais com traço limpo e textura leve (*risograph*), retratando a vida urbana brasileira na escala humana — prédios residenciais com **cobogós**, varandas com samambaias, ruas arborizadas com ipês, ciclistas e cafés de esquina.
-* **Regra de Cor nas Ilustrações:** Usar exclusivamente a paleta **Ipê & Grafite** (`#F2B705`, `#265C4B`, `#F07167`, `#FAF7F0`, `#1E1D1B`).
+* **Regra de Cor nas Ilustrações:** Usar exclusivamente a paleta **Ipê & Grafite** (`#EEB506`, `#2E5B46`, `#ED7467`, `#F8F5EA`, `#1E1D1B`).
 * **O que evitar:** Fotos frias de banco de imagem com corretores de terno, prédios espelhados corporativos ou ícones clichês de telhado/chave.
 
 ---
@@ -106,5 +107,5 @@ A **Terraço** fala como um amigo organizado que conhece bem a cidade: direto, t
 ---
 
 ## 7. Arquivos de Tokens
-* [tokens.json](file:///C:/Users/gufon/.gemini/antigravity/brain/92699552-f27e-4e6b-9888-a3ce695cb858/tokens.json) — Formato W3C Design Tokens (Figma / Style Dictionary).
-* [tokens.css](file:///C:/Users/gufon/.gemini/antigravity/brain/92699552-f27e-4e6b-9888-a3ce695cb858/tokens.css) — Variáveis CSS prontas para uso em web apps.
+* [tokens.json](./tokens.json) — Formato W3C Design Tokens (Figma / Style Dictionary).
+* [tokens.css](./tokens.css) — Variáveis CSS prontas para uso em web apps.

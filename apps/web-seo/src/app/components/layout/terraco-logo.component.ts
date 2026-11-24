@@ -123,7 +123,7 @@ export class TerracoLogoComponent {
       `h-7 w-7 transition-colors duration-200 ${
         this.inverted()
           ? 'text-accent'
-          : 'text-ink group-hover:text-brand group-focus-visible:text-brand'
+          : 'text-ink group-hover:text-accent group-focus-visible:text-accent'
       }`
   );
 
