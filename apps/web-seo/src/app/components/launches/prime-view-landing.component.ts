@@ -488,6 +488,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
         <!-- Trilha fixa M3 Expressive com scroll-spy (visível já na dobra mobile) -->
         <nav
+          #sectionNav
           aria-label="Seções do empreendimento"
           class="terraco-no-scrollbar sticky top-3 z-20 mt-3.5 flex items-center gap-1.5 overflow-x-auto rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-card backdrop-blur-md sm:mt-5"
         >
@@ -578,7 +579,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <section
               id="condicoes"
               aria-labelledby="special-conditions-heading"
-              class="terraco-cobogo-band rounded-lg border border-brand/25 bg-surface/55 p-5 sm:p-8 scroll-mt-32"
+              class="terraco-cobogo-band rounded-lg border border-brand/25 bg-surface/55 p-5 sm:p-8 scroll-mt-24"
             >
               <h2
                 id="special-conditions-heading"
@@ -678,7 +679,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <section
               id="diferenciais"
               aria-labelledby="features-heading"
-              class="border-t border-border-subtle pt-10 scroll-mt-32"
+              class="border-t border-border-subtle pt-10 scroll-mt-24"
             >
               <h2
                 id="features-heading"
@@ -787,7 +788,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <section
               id="outros-lancamentos"
               aria-labelledby="other-launches-heading"
-              class="border-t border-border-subtle pt-10 scroll-mt-32"
+              class="border-t border-border-subtle pt-10 scroll-mt-24"
             >
               <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div class="space-y-1">
@@ -943,8 +944,13 @@ export class PrimeViewLandingComponent {
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
 
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
+  private readonly sectionNav =
+    viewChild<ElementRef<HTMLElement>>('sectionNav');
   private readonly sectionNavLinks =
     viewChildren<ElementRef<HTMLAnchorElement>>('sectionNavLink');
+
+  private ignoreScrollSpyUntil = 0;
+  private pendingScrollSettleTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly bairroGuideSlug = computed<string | null>(() => {
     const currentBairro = this.item().bairro;
@@ -1026,6 +1032,12 @@ export class PrimeViewLandingComponent {
 
       const observer = new IntersectionObserver(
         (entries) => {
+          if (
+            typeof performance !== 'undefined' &&
+            performance.now() < this.ignoreScrollSpyUntil
+          ) {
+            return;
+          }
           const visible = entries
             .filter((entry) => entry.isIntersecting)
             .sort(
@@ -1045,6 +1057,10 @@ export class PrimeViewLandingComponent {
 
       this.destroyRef.onDestroy(() => {
         observer.disconnect();
+        if (this.pendingScrollSettleTimer !== null) {
+          clearTimeout(this.pendingScrollSettleTimer);
+          this.pendingScrollSettleTimer = null;
+        }
       });
     });
 
@@ -1053,17 +1069,21 @@ export class PrimeViewLandingComponent {
       if (!isPlatformBrowser(this.platformId)) {
         return;
       }
+      const navEl = this.sectionNav()?.nativeElement;
       const activeEl = this.sectionNavLinks().find(
         (ref) => ref.nativeElement.dataset['sectionId'] === currentSection
       )?.nativeElement;
-      if (activeEl) {
+      if (navEl && activeEl) {
         const reducedMotion = window.matchMedia(
           '(prefers-reduced-motion: reduce)'
         ).matches;
-        activeEl.scrollIntoView({
+        const targetLeft =
+          activeEl.offsetLeft -
+          navEl.clientWidth / 2 +
+          activeEl.offsetWidth / 2;
+        navEl.scrollTo({
+          left: Math.max(0, targetLeft),
           behavior: reducedMotion ? 'auto' : 'smooth',
-          inline: 'center',
-          block: 'nearest',
         });
       }
     });
@@ -1125,7 +1145,7 @@ export class PrimeViewLandingComponent {
     if (this.activeSection() === sectionId) {
       return `${base} terraco-m3-chip--active bg-brand font-medium text-ink-inverse shadow-chip`;
     }
-    return `${base} bg-transparent font-normal text-ink-muted hover:bg-surface hover:text-ink`;
+    return `${base} bg-elevated font-normal text-ink-muted hover:bg-surface hover:text-ink`;
   }
 
   scrollToSection(event: MouseEvent, sectionId: string): void {
@@ -1134,17 +1154,50 @@ export class PrimeViewLandingComponent {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
+
     const target = this.document.getElementById(sectionId);
     if (!target) {
       return;
     }
-    const reducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-    target.scrollIntoView({
-      behavior: reducedMotion ? 'auto' : 'smooth',
-      block: 'start',
-    });
+
+    if (typeof performance !== 'undefined') {
+      this.ignoreScrollSpyUntil = performance.now() + 900;
+    }
+
+    const win = this.document.defaultView;
+    const reducedMotion = Boolean(
+      win?.matchMedia('(prefers-reduced-motion: reduce)').matches
+    );
+    const navHeight =
+      this.sectionNav()?.nativeElement.getBoundingClientRect().height ?? 50;
+    const stickyOffset = navHeight + 24;
+
+    const scrollToTarget = (smooth: boolean) => {
+      const freshTarget = this.document.getElementById(sectionId);
+      if (!freshTarget || !win) return;
+      const top =
+        freshTarget.getBoundingClientRect().top + win.scrollY - stickyOffset;
+      win.scrollTo({
+        top: Math.max(0, top),
+        behavior: smooth && !reducedMotion ? 'smooth' : 'auto',
+      });
+    };
+
+    scrollToTarget(true);
+
+    if (this.pendingScrollSettleTimer !== null) {
+      clearTimeout(this.pendingScrollSettleTimer);
+    }
+    // Re-align once after @defer hydration or smooth scroll if layout shifted.
+    this.pendingScrollSettleTimer = setTimeout(() => {
+      this.pendingScrollSettleTimer = null;
+      const freshTarget = this.document.getElementById(sectionId);
+      if (!freshTarget) return;
+      const currentTop = freshTarget.getBoundingClientRect().top;
+      if (Math.abs(currentTop - stickyOffset) > 28) {
+        scrollToTarget(false);
+      }
+    }, 520);
   }
 
   onCallbackPhoneInput(event: Event): void {
