@@ -342,8 +342,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.aria-pressed]="selectedIntent() === option.key"
                       [class]="
                         selectedIntent() === option.key
-                          ? 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-brand bg-brand/10 px-3 py-1.5 text-center text-[13px] font-medium leading-[1.3] text-brand'
-                          : 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-border-subtle bg-surface/60 px-3 py-1.5 text-center text-[13px] font-normal leading-[1.3] text-ink-muted hover:border-ink/25 hover:text-ink'
+                          ? 'terraco-m3-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-center text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip'
+                          : 'terraco-m3-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-center text-[13px] font-normal leading-[1.3] text-ink hover:border-border-strong hover:bg-surface'
                       "
                     >
                       {{ option.label }}

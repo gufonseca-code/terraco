@@ -559,14 +559,14 @@ export class LaunchExplorerComponent {
 
   dropdownTriggerClass(active: boolean, open: boolean): string {
     const base =
-      'inline-flex min-h-[42px] items-center gap-2 rounded-pill border px-4 py-1.5 text-[13px] transition-[border-color,background-color,box-shadow] duration-150 cursor-pointer';
+      'terraco-m3-chip inline-flex min-h-[42px] items-center gap-2 border px-4 py-1.5 text-[13px] cursor-pointer';
     if (open) {
       return `${base} border-brand bg-elevated font-medium text-brand shadow-card`;
     }
     if (active) {
-      return `${base} border-brand bg-brand/10 font-medium text-brand`;
+      return `${base} !rounded-[12px] border-brand bg-brand/10 font-medium text-brand`;
     }
-    return `${base} border-border-subtle bg-elevated font-medium text-ink hover:border-ink/25 hover:bg-surface/60`;
+    return `${base} border-border-subtle bg-elevated font-medium text-ink hover:border-border-strong hover:bg-surface/60`;
   }
 
   dropdownOptionClass(selected: boolean): string {

@@ -31,9 +31,9 @@ import {
     @if (savedLaunches().length > 0 && !isOpen()) {
       <aside
         aria-label="Lançamentos salvos"
-        animate.enter="terraco-chip-enter"
-        animate.leave="terraco-chip-leave"
-        class="fixed bottom-4 left-1/2 z-40 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-2.5 rounded-pill border border-border-subtle bg-elevated/95 px-4 py-2.5 shadow-floating backdrop-blur-md sm:gap-3"
+        animate.enter="terraco-toolbar-enter"
+        animate.leave="terraco-toolbar-leave"
+        class="fixed bottom-4 left-1/2 z-40 flex min-h-[56px] max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-2.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-2 shadow-floating backdrop-blur-md sm:gap-3 sm:px-4"
       >
         <div class="flex items-center gap-2 pl-0.5 text-sm font-normal text-ink">
           <svg

@@ -78,7 +78,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
           <div
             role="group"
             aria-label="Filtrar plantas por tipologia"
-            class="mt-5 flex flex-wrap gap-2"
+            class="terraco-m3-group mt-5 w-fit max-w-full overflow-x-auto pb-1"
           >
             @for (category of categories(); track category.name) {
               <button
@@ -87,8 +87,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 [attr.aria-pressed]="selectedCategory() === category.name"
                 [class]="
                   selectedCategory() === category.name
-                    ? 'terraco-btn inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-brand bg-brand px-3.5 py-1.5 text-[13px] font-medium text-ink-inverse'
-                    : 'terraco-btn inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-border-subtle bg-surface px-3.5 py-1.5 text-[13px] font-medium text-ink hover:border-ink/30'
+                    ? 'terraco-m3-group-item inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-1.5 border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse shadow-chip'
+                    : 'terraco-m3-group-item inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-1.5 border border-border-subtle bg-surface px-4 py-1.5 text-[13px] font-medium text-ink hover:border-border-strong'
                 "
               >
                 <span>{{ category.name }}</span>
@@ -122,8 +122,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 (click)="selectPlan(plan.id)"
                 [class]="
                   isSelected
-                    ? 'terraco-btn group flex w-[230px] shrink-0 flex-col justify-between gap-2 rounded-md border border-brand bg-brand/[0.06] p-3.5 text-left lg:w-full'
-                    : 'terraco-btn group flex w-[230px] shrink-0 flex-col justify-between gap-2 rounded-md border border-border-subtle bg-surface/65 p-3.5 text-left hover:border-ink/30 hover:bg-surface lg:w-full'
+                    ? 'terraco-btn group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 rounded-[20px] border border-brand bg-brand/[0.08] p-3.5 text-left shadow-chip lg:w-full'
+                    : 'terraco-btn group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 rounded-md border border-border-subtle bg-surface/65 p-3.5 text-left hover:border-border-strong hover:bg-surface lg:w-full'
                 "
               >
                 <div class="flex items-start justify-between gap-3">

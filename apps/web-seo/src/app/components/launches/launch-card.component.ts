@@ -48,37 +48,39 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
     <article
       [attr.id]="cardId()"
       animate.enter="terraco-reveal-delay"
-      class="terraco-plate flex h-full flex-col overflow-hidden rounded-lg bg-elevated scroll-mt-24"
+      class="terraco-plate flex h-full flex-col overflow-hidden rounded-xl bg-elevated scroll-mt-24"
     >
-      <div
-        [class.terraco-skeleton]="!imageLoaded()"
-        class="relative aspect-[16/10] overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface"
-      >
-        <a
-          [routerLink]="['/lancamentos', item.slug]"
-          class="relative z-[1] block h-full w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)]"
-          [attr.aria-label]="'Conhecer ' + item.nome"
+      <div class="p-2.5 pb-0">
+        <div
+          [class.terraco-skeleton]="!imageLoaded()"
+          class="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-surface"
         >
-          <img
-            #coverImg
-            data-testid="lancamentos-cover-image"
-            [attr.data-slug]="item.slug"
-            [src]="item.imagem"
-            [alt]="item.imagemAlt"
-            [width]="item.imagemWidth"
-            [height]="item.imagemHeight"
-            [style.view-transition-name]="'launch-image-' + item.slug"
-            (load)="markImageLoaded()"
-            (error)="markImageLoaded()"
-            [attr.fetchpriority]="priority() ? 'high' : null"
-            [attr.loading]="priority() ? null : 'lazy'"
-            decoding="async"
-            class="h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center"
-          />
-        </a>
+          <a
+            [routerLink]="['/lancamentos', item.slug]"
+            class="relative z-[1] block h-full w-full overflow-hidden rounded-[20px]"
+            [attr.aria-label]="'Conhecer ' + item.nome"
+          >
+            <img
+              #coverImg
+              data-testid="lancamentos-cover-image"
+              [attr.data-slug]="item.slug"
+              [src]="item.imagem"
+              [alt]="item.imagemAlt"
+              [width]="item.imagemWidth"
+              [height]="item.imagemHeight"
+              [style.view-transition-name]="'launch-image-' + item.slug"
+              (load)="markImageLoaded()"
+              (error)="markImageLoaded()"
+              [attr.fetchpriority]="priority() ? 'high' : null"
+              [attr.loading]="priority() ? null : 'lazy'"
+              decoding="async"
+              class="h-full w-full rounded-[20px] object-cover object-center"
+            />
+          </a>
 
-        <div class="absolute top-3.5 right-3.5 z-10 sm:top-4 sm:right-4">
-          <app-favorite-button [slug]="item.slug" [nome]="item.nome" />
+          <div class="absolute top-3 right-3 z-10">
+            <app-favorite-button [slug]="item.slug" [nome]="item.nome" />
+          </div>
         </div>
       </div>
 
@@ -123,14 +125,14 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
         </a>
       </div>
 
-      <dl class="grid grid-cols-2 border-t border-border-subtle bg-surface/45">
-        <div class="space-y-0.5 border-r border-border-subtle px-5 py-3">
+      <dl class="mx-2.5 mb-2.5 grid grid-cols-2 overflow-hidden rounded-[18px] bg-surface/75">
+        <div class="space-y-0.5 border-r border-border-subtle/70 px-4 py-3">
           <dt class="text-[12px] font-normal text-ink-muted">Dormitórios</dt>
           <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
             {{ item.quartos }}
           </dd>
         </div>
-        <div class="space-y-0.5 px-5 py-3">
+        <div class="space-y-0.5 px-4 py-3">
           <dt class="text-[12px] font-normal text-ink-muted">Metragem</dt>
           <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
             {{ item.metragem }}
@@ -140,8 +142,8 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
         <div
           [class]="
             entrega
-              ? 'space-y-0.5 border-t border-r border-border-subtle px-5 py-3'
-              : 'col-span-2 space-y-0.5 border-t border-border-subtle px-5 py-3'
+              ? 'space-y-0.5 border-t border-r border-border-subtle/70 px-4 py-3'
+              : 'col-span-2 space-y-0.5 border-t border-border-subtle/70 px-4 py-3'
           "
         >
           <dt class="text-[12px] font-normal text-ink-muted">
@@ -158,7 +160,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
           </dd>
         </div>
         @if (entrega) {
-          <div class="space-y-0.5 border-t border-border-subtle px-5 py-3">
+          <div class="space-y-0.5 border-t border-border-subtle/70 px-4 py-3">
             <dt class="text-[12px] font-normal text-ink-muted">Entrega</dt>
             <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
               {{ entrega }}

@@ -276,22 +276,24 @@ function buildBairroJsonLd(
                 >
                   @for (launch of matchingLaunches(); track launch.slug) {
                     <article
-                      class="terraco-plate flex flex-col overflow-hidden rounded-lg bg-elevated"
+                      class="terraco-plate flex flex-col overflow-hidden rounded-xl bg-elevated"
                     >
-                      <a
-                        [routerLink]="['/lancamentos', launch.slug]"
-                        [attr.aria-label]="'Conhecer ' + launch.nome"
-                        class="block aspect-[16/10] overflow-hidden border-b border-border-subtle bg-surface"
-                      >
-                        <img
-                          [src]="launch.imagem"
-                          [alt]="launch.imagemAlt"
-                          [width]="launch.imagemWidth"
-                          [height]="launch.imagemHeight"
-                          decoding="async"
-                          class="h-full w-full object-cover object-center"
-                        />
-                      </a>
+                      <div class="p-2.5 pb-0">
+                        <a
+                          [routerLink]="['/lancamentos', launch.slug]"
+                          [attr.aria-label]="'Conhecer ' + launch.nome"
+                          class="block aspect-[16/10] overflow-hidden rounded-[20px] bg-surface"
+                        >
+                          <img
+                            [src]="launch.imagem"
+                            [alt]="launch.imagemAlt"
+                            [width]="launch.imagemWidth"
+                            [height]="launch.imagemHeight"
+                            decoding="async"
+                            class="h-full w-full rounded-[20px] object-cover object-center"
+                          />
+                        </a>
+                      </div>
 
                       <div
                         class="flex flex-1 flex-col justify-between gap-4 px-5 py-5"
@@ -349,22 +351,24 @@ function buildBairroJsonLd(
                       >
                         @for (launch of nearbyLaunches(); track launch.slug) {
                           <article
-                            class="terraco-plate flex flex-col overflow-hidden rounded-lg bg-elevated"
+                            class="terraco-plate flex flex-col overflow-hidden rounded-xl bg-elevated"
                           >
-                            <a
-                              [routerLink]="['/lancamentos', launch.slug]"
-                              [attr.aria-label]="'Conhecer ' + launch.nome"
-                              class="block aspect-[16/10] overflow-hidden border-b border-border-subtle bg-surface"
-                            >
-                              <img
-                                [src]="launch.imagem"
-                                [alt]="launch.imagemAlt"
-                                [width]="launch.imagemWidth"
-                                [height]="launch.imagemHeight"
-                                decoding="async"
-                                class="h-full w-full object-cover object-center"
-                              />
-                            </a>
+                            <div class="p-2.5 pb-0">
+                              <a
+                                [routerLink]="['/lancamentos', launch.slug]"
+                                [attr.aria-label]="'Conhecer ' + launch.nome"
+                                class="block aspect-[16/10] overflow-hidden rounded-[20px] bg-surface"
+                              >
+                                <img
+                                  [src]="launch.imagem"
+                                  [alt]="launch.imagemAlt"
+                                  [width]="launch.imagemWidth"
+                                  [height]="launch.imagemHeight"
+                                  decoding="async"
+                                  class="h-full w-full rounded-[20px] object-cover object-center"
+                                />
+                              </a>
+                            </div>
 
                             <div
                               class="flex flex-1 flex-col justify-between gap-4 px-5 py-5"

@@ -162,7 +162,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
             <div
               role="group"
               aria-label="Percentual de entrada"
-              class="grid grid-cols-3 gap-2"
+              class="terraco-m3-group"
             >
               @for (percent of downPaymentPresets; track percent) {
                 <button
@@ -171,8 +171,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="downPaymentPercent() === percent"
                   [class]="
                     downPaymentPercent() === percent
-                      ? 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-brand bg-brand/10 px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-brand tabular-nums'
-                      : 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-border-subtle bg-surface/60 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink-muted tabular-nums hover:border-ink/25 hover:text-ink'
+                      ? 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
                   "
                 >
                   {{ percent }}%
@@ -191,7 +191,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
             <div
               role="group"
               aria-label="Valor estimado de FGTS"
-              class="grid grid-cols-2 gap-2 sm:grid-cols-4"
+              class="terraco-m3-group-grid grid-cols-2 sm:grid-cols-4"
             >
               @for (preset of fgtsPresets; track preset.value) {
                 <button
@@ -200,8 +200,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="clampedFgts() === preset.value"
                   [class]="
                     clampedFgts() === preset.value
-                      ? 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-brand bg-brand/10 px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-brand tabular-nums'
-                      : 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-border-subtle bg-surface/60 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink-muted tabular-nums hover:border-ink/25 hover:text-ink'
+                      ? 'terraco-m3-group-item flex min-h-[42px] cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'terraco-m3-group-item flex min-h-[42px] cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
                   "
                 >
                   {{ preset.label }}
@@ -215,7 +215,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
             <div
               role="group"
               aria-label="Prazo de financiamento em anos"
-              class="grid grid-cols-3 gap-2"
+              class="terraco-m3-group"
             >
               @for (years of termYearPresets; track years) {
                 <button
@@ -224,8 +224,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="termYears() === years"
                   [class]="
                     termYears() === years
-                      ? 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-brand bg-brand/10 px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-brand tabular-nums'
-                      : 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-border-subtle bg-surface/60 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink-muted tabular-nums hover:border-ink/25 hover:text-ink'
+                      ? 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
                   "
                 >
                   {{ years }} anos

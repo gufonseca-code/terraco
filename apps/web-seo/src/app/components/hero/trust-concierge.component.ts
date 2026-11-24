@@ -122,8 +122,8 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
                     [attr.aria-pressed]="active"
                     [class]="
                       active
-                        ? 'inline-flex min-h-[40px] items-center rounded-pill border border-ink bg-ink px-4 py-2 text-[14px] font-medium leading-[1.3] text-ink-inverse transition-colors duration-150'
-                        : 'inline-flex min-h-[40px] items-center rounded-pill border border-border-subtle bg-canvas px-4 py-2 text-[14px] font-normal leading-[1.3] text-ink transition-colors duration-150 hover:border-border-strong hover:bg-surface'
+                        ? 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-ink bg-ink px-4 py-2 text-[14px] font-medium leading-[1.3] text-ink-inverse shadow-chip'
+                        : 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-border-subtle bg-canvas px-4 py-2 text-[14px] font-normal leading-[1.3] text-ink hover:border-border-strong hover:bg-surface'
                     "
                   >
                     {{ option.label }}

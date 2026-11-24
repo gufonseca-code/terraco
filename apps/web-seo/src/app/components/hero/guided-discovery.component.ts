@@ -364,10 +364,10 @@ export class GuidedDiscoveryComponent {
 
   chipClass(selected: boolean): string {
     const base =
-      'terraco-btn inline-flex min-h-[44px] cursor-pointer items-center justify-center rounded-pill border px-4 py-2 text-sm font-normal leading-[1.35]';
+      'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center justify-center border px-4 py-2 text-sm font-normal leading-[1.35]';
     if (selected) {
-      return `${base} border-brand bg-brand font-medium text-ink-inverse hover:bg-brand-hover`;
+      return `${base} border-brand bg-brand font-medium text-ink-inverse shadow-chip hover:bg-brand-hover`;
     }
-    return `${base} border-border-subtle bg-canvas text-ink hover:border-ink/25 hover:bg-surface`;
+    return `${base} border-border-subtle bg-canvas text-ink hover:border-border-strong hover:bg-surface`;
   }
 }

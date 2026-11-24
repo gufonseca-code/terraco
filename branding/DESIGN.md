@@ -70,14 +70,28 @@ O contraste entre uma **serifa orgânica** nos títulos e uma **sans-serif geom�
 
 ---
 
-## 4. Espaçamento, Bordas & Sombras
+## 4. Espaçamento, Bordas, Sombras & Material 3 Expressive
 
 * **Grid Base:** Múltiplos de `4px` (`4, 8, 12, 16, 24, 32, 48, 64`).
-* **Cantos Arredondados (`radius`):**
-  * `radius.sm`: `8px` (inputs, tags pequenas)
-  * `radius.md`: `16px` (botões secundários, miniaturas)
-  * `radius.lg`: `24px` (cards de imóveis, modais)
-  * `radius.pill`: `9999px` (botões CTA principais, badges, barras de busca)
+* **Escala de Formas (`radius` — alinhada ao M3 Expressive):**
+  * `radius.xs`: `4px` (microelementos)
+  * `radius.sm`: `8px` (inputs, divisões internas de *connected button groups*)
+  * `radius.m3md`: `12px` (alvo de *shape morphing* em chips e toggles selecionados)
+  * `radius.md`: `16px` (botões secundários, cards de seleção de plantas, miniaturas)
+  * `radius.lg`: `24px` (containers de seção, modais)
+  * `radius.xl`: `28px` (cards de lançamentos e cards flutuantes expressivos)
+  * `radius.pill`: `9999px` (CTAs principais, chips em repouso, *floating toolbars*, barras de busca)
+* **Física de Movimento (*M3 Expressive Springs*):**
+  * **Spatial Spring Fast (`--ease-spring-fast`, `320ms`):** *shape morphing* em chips, botões conectados e toggle de favorito (leve *overshoot* tátil).
+  * **Spatial Spring Default (`--ease-spring-default`, `420ms`):** entrada de *floating toolbars*, popovers e cards.
+  * **Effects (`--ease-ui`, `160ms`):** mudanças de cor, borda e opacidade (sem *overshoot*, `damping: 1.0`).
+  * Sempre respeitar `@media (prefers-reduced-motion: reduce)` desligando molas e reduzindo transições a cor/opacidade.
+* **Padrões M3 Expressive adotados na Web (`apps/web-seo`):**
+  * **Expressive Filter Chips:** `rounded-pill` em repouso → *morph* para `12px` quando `[aria-pressed="true"]`.
+  * **Connected Button Groups:** `gap: 3px`, pontas externas `pill`, divisões internas `8px` → item ativo *morph* para `pill` com preenchimento tonal **Verde Musgo**.
+  * **Expressive Toggle Icon Button (Favorito):** círculo (`pill`) → *squircle* (`14px`) em **Rosa Goiaba** quando salvo.
+  * **Expressive Tonal Cards:** contêiner `28px` em **Branco Quente** (`#FFFDF9`), fotografia enquadrada internamente (`20px`) e rodapé de especificações em **Areia Suave** (`#F1E9D8`), sem bordas pesadas.
+  * **Floating Toolbar:** barra flutuante `pill` no rodapé mobile com entrada vertical em mola.
 * **Sombras Quentes (nunca cinza frio ou preto puro):**
   * `shadow.card`: `0 8px 24px -6px rgba(30, 29, 27, 0.08)`
   * `shadow.floating`: `0 16px 40px -8px rgba(30, 29, 27, 0.12)`
