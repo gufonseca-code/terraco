@@ -51,8 +51,7 @@ const TIPOLOGIA_FILTERS = [
         <div class="space-y-2.5">
           <h1
             id="lancamentos-heading"
-            animate.enter="terraco-reveal"
-            class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink text-balance"
+            class="terraco-reveal font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink text-balance"
           >
             Lançamentos
           </h1>

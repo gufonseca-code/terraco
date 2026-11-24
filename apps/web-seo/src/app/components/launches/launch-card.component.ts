@@ -48,8 +48,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
     @let spec = thirdSpec();
     <article
       [attr.id]="cardId()"
-      animate.enter="terraco-reveal-delay"
-      class="terraco-plate flex h-full flex-col overflow-hidden rounded-xl bg-elevated scroll-mt-24"
+      class="terraco-reveal-delay terraco-plate flex h-full flex-col overflow-hidden rounded-xl bg-elevated scroll-mt-24"
     >
       <div class="p-2.5 pb-0">
         <div

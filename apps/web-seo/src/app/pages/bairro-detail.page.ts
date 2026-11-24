@@ -153,7 +153,7 @@ function buildBairroJsonLd(
           <article
             class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
           >
-            <header animate.enter="terraco-reveal" class="max-w-3xl space-y-4">
+            <header class="terraco-reveal max-w-3xl space-y-4">
               <nav aria-label="Navegação estrutural">
                 <ol
                   class="flex flex-wrap items-center gap-2 text-[14px] font-normal text-ink-muted"
@@ -201,8 +201,7 @@ function buildBairroJsonLd(
 
             <section
               aria-label="Guia editorial do bairro"
-              animate.enter="terraco-reveal-delay"
-              class="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3 sm:mt-14"
+              class="terraco-reveal-delay mt-12 grid grid-cols-1 gap-5 md:grid-cols-3 sm:mt-14"
             >
               <div
                 class="terraco-card rounded-lg border border-border-subtle bg-elevated p-6 shadow-card"
