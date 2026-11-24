@@ -41,6 +41,10 @@ function formatBrazilianPhone(raw: string): string {
   selector: 'app-launch-explorer',
   imports: [RouterLink, LaunchCardComponent, LaunchCardSkeletonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:click)': 'onDocumentClick($event)',
+    '(document:keydown.escape)': 'closeMenus()',
+  },
   template: `
     <section
       aria-labelledby="lancamentos-heading"
@@ -61,104 +65,184 @@ function formatBrazilianPhone(raw: string): string {
         </div>
 
         @if (!isLoading() || lancamentos().length > 0) {
-          <div class="flex flex-col gap-4">
-            <form
-              (submit)="handleSearchSubmit($event)"
-              role="search"
-              aria-label="Filtrar lançamentos"
-              class="flex items-center gap-2 rounded-pill border border-border-subtle bg-elevated p-1.5 pl-5 max-w-lg shadow-chip transition-[border-color,box-shadow] duration-150 hover:border-ink/25 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 focus-within:shadow-card"
-            >
-              <label for="explorer-search" class="sr-only">
-                Filtrar por bairro ou lançamento
-              </label>
-              <input
-                #searchInputRef
-                id="explorer-search"
-                type="search"
-                enterkeyhint="search"
-                [value]="searchInput()"
-                (input)="onSearchInput($event)"
-                placeholder="Bairro ou lançamento"
-                class="w-full min-w-0 bg-transparent py-2 pr-2 text-[15px] font-normal text-ink placeholder:text-ink-muted focus-visible:outline-none [&::-webkit-search-cancel-button]:hidden"
-              />
-              @if (searchInput().length > 0) {
-                <button
-                  type="button"
-                  (click)="clearFilters()"
-                  aria-label="Limpar busca"
-                  animate.enter="terraco-chip-enter"
-                  animate.leave="terraco-chip-leave"
-                  class="inline-flex min-h-[40px] shrink-0 items-center rounded-pill px-3 text-sm font-normal text-ink-muted transition-colors duration-150 hover:bg-surface/70 hover:text-ink cursor-pointer"
-                >
-                  Limpar
-                </button>
-              }
-              <button
-                type="submit"
-                class="terraco-btn terraco-btn-moss inline-flex min-h-[40px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2 text-sm font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover cursor-pointer"
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
+              <form
+                (submit)="handleSearchSubmit($event)"
+                role="search"
+                aria-label="Filtrar lançamentos"
+                class="flex w-full items-center gap-2 rounded-pill border border-border-subtle bg-elevated p-1.5 pl-5 shadow-chip transition-[border-color,box-shadow] duration-150 hover:border-ink/25 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 focus-within:shadow-card lg:max-w-md"
               >
-                Buscar
-              </button>
-            </form>
-
-            @if (quickNeighborhoods().length > 0) {
-              <div class="flex flex-col gap-2.5">
-                <div
-                  role="group"
-                  aria-label="Filtrar por bairro"
-                  class="flex flex-wrap items-center gap-2"
-                >
+                <label for="explorer-search" class="sr-only">
+                  Filtrar por bairro ou lançamento
+                </label>
+                <input
+                  #searchInputRef
+                  id="explorer-search"
+                  type="search"
+                  enterkeyhint="search"
+                  [value]="searchInput()"
+                  (input)="onSearchInput($event)"
+                  placeholder="Bairro ou lançamento"
+                  class="w-full min-w-0 bg-transparent py-2 pr-2 text-[15px] font-normal text-ink placeholder:text-ink-muted focus-visible:outline-none [&::-webkit-search-cancel-button]:hidden"
+                />
+                @if (searchInput().length > 0) {
                   <button
                     type="button"
                     (click)="clearFilters()"
-                    [attr.aria-pressed]="isAllActive()"
-                    [class]="chipClass(isAllActive())"
+                    aria-label="Limpar busca"
+                    animate.enter="terraco-chip-enter"
+                    animate.leave="terraco-chip-leave"
+                    class="inline-flex min-h-[40px] shrink-0 items-center rounded-pill px-3 text-sm font-normal text-ink-muted transition-colors duration-150 hover:bg-surface/70 hover:text-ink cursor-pointer"
                   >
-                    Todos
+                    Limpar
+                  </button>
+                }
+                <button
+                  type="submit"
+                  class="terraco-btn terraco-btn-moss inline-flex min-h-[40px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2 text-sm font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover cursor-pointer"
+                >
+                  Buscar
+                </button>
+              </form>
+
+              <div
+                #filtersContainerRef
+                class="flex flex-wrap items-center gap-2.5"
+              >
+                @if (quickNeighborhoods().length > 0) {
+                  <div class="relative">
+                    <button
+                      type="button"
+                      (click)="toggleNeighborhoodMenu($event)"
+                      [attr.aria-expanded]="neighborhoodMenuOpen()"
+                      aria-haspopup="listbox"
+                      aria-controls="bairro-filter-listbox"
+                      [class]="dropdownTriggerClass(hasActiveNeighborhood(), neighborhoodMenuOpen())"
+                    >
+                      <span>{{ selectedNeighborhoodLabel() }}</span>
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        [class]="chevronClass(neighborhoodMenuOpen())"
+                      >
+                        <path d="m5.5 7.5 4.5 4.5 4.5-4.5" />
+                      </svg>
+                    </button>
+
+                    @if (neighborhoodMenuOpen()) {
+                      <ul
+                        id="bairro-filter-listbox"
+                        role="listbox"
+                        aria-label="Filtrar por bairro"
+                        animate.enter="terraco-chip-enter"
+                        class="absolute left-0 top-full z-30 mt-2 min-w-[210px] rounded-[20px] border border-border-subtle bg-elevated p-1.5 shadow-card"
+                      >
+                        <li>
+                          <button
+                            type="button"
+                            role="option"
+                            [attr.aria-selected]="!hasActiveNeighborhood()"
+                            (click)="selectNeighborhoodOption('Todos')"
+                            [class]="dropdownOptionClass(!hasActiveNeighborhood())"
+                          >
+                            <span>Todos os bairros</span>
+                            @if (!hasActiveNeighborhood()) {
+                              <span aria-hidden="true" class="text-brand">✓</span>
+                            }
+                          </button>
+                        </li>
+                        @for (bairro of quickNeighborhoods(); track bairro) {
+                          <li>
+                            <button
+                              type="button"
+                              role="option"
+                              [attr.aria-selected]="isNeighborhoodActive(bairro)"
+                              (click)="selectNeighborhoodOption(bairro)"
+                              [class]="dropdownOptionClass(isNeighborhoodActive(bairro))"
+                            >
+                              <span>{{ bairro }}</span>
+                              @if (isNeighborhoodActive(bairro)) {
+                                <span aria-hidden="true" class="text-brand">✓</span>
+                              }
+                            </button>
+                          </li>
+                        }
+                      </ul>
+                    }
+                  </div>
+                }
+
+                <div class="relative">
+                  <button
+                    type="button"
+                    (click)="toggleTipologiaMenu($event)"
+                    [attr.aria-expanded]="tipologiaMenuOpen()"
+                    aria-haspopup="listbox"
+                    aria-controls="tipologia-filter-listbox"
+                    [class]="dropdownTriggerClass(tipologiaFilter() !== 'Todas', tipologiaMenuOpen())"
+                  >
+                    <span>{{ selectedTipologiaLabel() }}</span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      [class]="chevronClass(tipologiaMenuOpen())"
+                    >
+                      <path d="m5.5 7.5 4.5 4.5 4.5-4.5" />
+                    </svg>
                   </button>
 
-                  @for (bairro of quickNeighborhoods(); track bairro) {
-                    <button
-                      type="button"
-                      (click)="selectNeighborhood(bairro)"
-                      [attr.aria-pressed]="isNeighborhoodActive(bairro)"
-                      [class]="chipClass(isNeighborhoodActive(bairro))"
+                  @if (tipologiaMenuOpen()) {
+                    <ul
+                      id="tipologia-filter-listbox"
+                      role="listbox"
+                      aria-label="Filtrar por tipologia"
+                      animate.enter="terraco-chip-enter"
+                      class="absolute left-0 top-full z-30 mt-2 min-w-[220px] rounded-[20px] border border-border-subtle bg-elevated p-1.5 shadow-card"
                     >
-                      {{ bairro }}
-                    </button>
+                      @for (tipologia of tipologiaFilters; track tipologia) {
+                        <li>
+                          <button
+                            type="button"
+                            role="option"
+                            [attr.aria-selected]="isTipologiaActive(tipologia)"
+                            (click)="selectTipologiaOption(tipologia)"
+                            [class]="dropdownOptionClass(isTipologiaActive(tipologia))"
+                          >
+                            <span>{{ tipologia === 'Todas' ? 'Todas as tipologias' : tipologia }}</span>
+                            @if (isTipologiaActive(tipologia)) {
+                              <span aria-hidden="true" class="text-brand">✓</span>
+                            }
+                          </button>
+                        </li>
+                      }
+                    </ul>
                   }
                 </div>
 
-                <div
-                  role="group"
-                  aria-label="Filtrar por tipologia"
-                  class="flex flex-wrap items-center gap-2"
-                >
-                  @for (tipologia of tipologiaFilters; track tipologia) {
-                    <button
-                      type="button"
-                      (click)="selectTipologia(tipologia)"
-                      [attr.aria-pressed]="isTipologiaActive(tipologia)"
-                      [class]="chipClass(isTipologiaActive(tipologia))"
-                    >
-                      {{ tipologia === 'Todas' ? 'Todas as tipologias' : tipologia }}
-                    </button>
-                  }
-
-                  @if (objetivoFilter(); as objetivo) {
-                    <button
-                      type="button"
-                      (click)="clearObjetivo()"
-                      [attr.aria-label]="'Remover filtro de objetivo ' + objetivo"
-                      class="inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-border-subtle bg-surface px-4 py-1.5 text-[13px] font-normal text-ink transition-colors duration-150 hover:border-ink/25 cursor-pointer"
-                    >
-                      <span>Objetivo: {{ objetivo }}</span>
-                      <span aria-hidden="true" class="text-ink-muted">×</span>
-                    </button>
-                  }
-                </div>
+                @if (objetivoFilter(); as objetivo) {
+                  <button
+                    type="button"
+                    (click)="clearObjetivo()"
+                    [attr.aria-label]="'Remover filtro de objetivo ' + objetivo"
+                    class="inline-flex min-h-[40px] items-center gap-1.5 rounded-pill border border-border-subtle bg-surface px-4 py-1.5 text-[13px] font-normal text-ink transition-colors duration-150 hover:border-ink/25 cursor-pointer"
+                  >
+                    <span>Objetivo: {{ objetivo }}</span>
+                    <span aria-hidden="true" class="text-ink-muted">×</span>
+                  </button>
+                }
               </div>
-            }
+            </div>
 
             @if (matchedBairroGuide(); as bairroGuide) {
               <p class="text-[14px] font-normal leading-[1.5] text-ink-muted">
@@ -383,10 +467,30 @@ export class LaunchExplorerComponent {
 
   readonly searchInput = signal<string>('');
   readonly objetivoFilter = signal<string | null>(null);
+  readonly neighborhoodMenuOpen = signal<boolean>(false);
+  readonly tipologiaMenuOpen = signal<boolean>(false);
   readonly demandPhone = signal<string>('');
   readonly demandSubmitting = signal<boolean>(false);
   readonly demandError = signal<string | null>(null);
   readonly demandSuccessTerm = signal<string | null>(null);
+
+  readonly hasActiveNeighborhood = computed(() =>
+    this.quickNeighborhoods().some((bairro) => this.isNeighborhoodActive(bairro))
+  );
+
+  readonly selectedNeighborhoodLabel = computed(() => {
+    const active = this.quickNeighborhoods().find((bairro) =>
+      this.isNeighborhoodActive(bairro)
+    );
+    return active ? `Bairro: ${active}` : 'Bairro: Todos';
+  });
+
+  readonly selectedTipologiaLabel = computed(() => {
+    const current = this.tipologiaFilter().trim();
+    return current && current !== 'Todas'
+      ? `Tipologia: ${current}`
+      : 'Tipologia: Todas';
+  });
 
   readonly searchedTerm = computed(() => {
     const parts = [
@@ -425,6 +529,8 @@ export class LaunchExplorerComponent {
 
   private readonly searchInputRef =
     viewChild<ElementRef<HTMLInputElement>>('searchInputRef');
+  private readonly filtersContainerRef =
+    viewChild<ElementRef<HTMLElement>>('filtersContainerRef');
 
   constructor() {
     // Sync initial query params synchronously so SSR and prerendered HTML filter immediately.
@@ -451,10 +557,70 @@ export class LaunchExplorerComponent {
     });
   }
 
-  chipClass(active: boolean): string {
-    return active
-      ? 'inline-flex min-h-[38px] items-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse transition-colors duration-150 cursor-pointer'
-      : 'inline-flex min-h-[38px] items-center rounded-pill border border-border-subtle bg-elevated px-4 py-1.5 text-[13px] font-medium text-ink transition-colors duration-150 hover:border-ink/25 hover:bg-surface/60 cursor-pointer';
+  dropdownTriggerClass(active: boolean, open: boolean): string {
+    const base =
+      'inline-flex min-h-[42px] items-center gap-2 rounded-pill border px-4 py-1.5 text-[13px] transition-[border-color,background-color,box-shadow] duration-150 cursor-pointer';
+    if (open) {
+      return `${base} border-brand bg-elevated font-medium text-brand shadow-card`;
+    }
+    if (active) {
+      return `${base} border-brand bg-brand/10 font-medium text-brand`;
+    }
+    return `${base} border-border-subtle bg-elevated font-medium text-ink hover:border-ink/25 hover:bg-surface/60`;
+  }
+
+  dropdownOptionClass(selected: boolean): string {
+    return selected
+      ? 'flex w-full items-center justify-between gap-3 rounded-[14px] bg-brand/10 px-3 py-2 text-left text-[13px] font-medium text-brand transition-colors duration-150 cursor-pointer'
+      : 'flex w-full items-center justify-between gap-3 rounded-[14px] px-3 py-2 text-left text-[13px] font-normal text-ink transition-colors duration-150 hover:bg-surface/70 cursor-pointer';
+  }
+
+  chevronClass(open: boolean): string {
+    return `h-4 w-4 shrink-0 transition-transform duration-150 ${
+      open ? 'rotate-180' : ''
+    }`;
+  }
+
+  toggleNeighborhoodMenu(event: Event): void {
+    event.stopPropagation();
+    this.tipologiaMenuOpen.set(false);
+    this.neighborhoodMenuOpen.update((open) => !open);
+  }
+
+  toggleTipologiaMenu(event: Event): void {
+    event.stopPropagation();
+    this.neighborhoodMenuOpen.set(false);
+    this.tipologiaMenuOpen.update((open) => !open);
+  }
+
+  closeMenus(): void {
+    this.neighborhoodMenuOpen.set(false);
+    this.tipologiaMenuOpen.set(false);
+  }
+
+  onDocumentClick(event: Event): void {
+    const container = this.filtersContainerRef()?.nativeElement;
+    const target = event.target as Node | null;
+    if (container && target && !container.contains(target)) {
+      this.closeMenus();
+    }
+  }
+
+  selectNeighborhoodOption(bairro: string): void {
+    this.closeMenus();
+    if (bairro === 'Todos') {
+      this.searchInput.set('');
+      this.lancamentosService.setActiveFilter('Todos');
+      this.lancamentosService.setSearchQuery('');
+      this.syncQueryParams({ q: '' });
+      return;
+    }
+    this.selectNeighborhood(bairro);
+  }
+
+  selectTipologiaOption(tipologia: string): void {
+    this.closeMenus();
+    this.selectTipologia(tipologia);
   }
 
   onSearchInput(event: Event): void {
