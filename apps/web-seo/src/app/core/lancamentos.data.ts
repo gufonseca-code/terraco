@@ -81,7 +81,7 @@ export const LANCAMENTOS: Lancamento[] = [
   {
     slug: 'prime-view',
     nome: 'Prime View',
-    construtora: '',
+    construtora: 'Novolar (Grupo Patrimar)',
     tagline: 'Vista para sua nova vida.',
     bairro: 'Estoril',
     cidade: 'Belo Horizonte',
@@ -382,7 +382,7 @@ export const LANCAMENTOS: Lancamento[] = [
   {
     slug: 'upside-square',
     nome: 'Upside Square',
-    construtora: '',
+    construtora: 'Grupo Patrimar',
     tagline: 'Essencial é viver bem.',
     bairro: 'Santa Efigênia',
     cidade: 'Belo Horizonte',
@@ -778,7 +778,7 @@ export const LANCAMENTOS: Lancamento[] = [
   {
     slug: 'horizon',
     nome: 'Horizon',
-    construtora: '',
+    construtora: 'Novolar (Grupo Patrimar)',
     tagline: 'Seu novo ponto alto.',
     bairro: 'Serrano',
     cidade: 'Belo Horizonte',

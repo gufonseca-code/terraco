@@ -14,6 +14,8 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
+  BAIRROS_BH,
+  LeadsService,
   SITE_NAME,
   SITE_URL,
   buildWhatsAppUrl,
@@ -21,8 +23,10 @@ import {
   type Lancamento,
   type LaunchMediaItem,
 } from '../../core';
+import { FavoriteButtonComponent } from './favorite-button.component';
 import { ImageLightboxComponent } from './image-lightbox.component';
 import { LaunchFloorPlansComponent } from './launch-floor-plans.component';
+import { LaunchSimulatorComponent } from './launch-simulator.component';
 
 export type LaunchIntentKey =
   | 'plantas_valores'
@@ -118,6 +122,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           description: `${[item.quartos, `${item.metragem} (${item.tipologias})`, item.vagas].filter(Boolean).join(', ')}. ${item.resumo}`,
           url: pageUrl,
           image: imageUrl,
+          ...(item.construtora
+            ? {
+                brand: {
+                  '@type': 'Organization',
+                  name: item.construtora,
+                },
+              }
+            : {}),
           address: {
             '@type': 'PostalAddress',
             streetAddress: item.endereco,
@@ -145,8 +157,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
   selector: 'app-prime-view-landing',
   imports: [
     RouterLink,
+    FavoriteButtonComponent,
     ImageLightboxComponent,
     LaunchFloorPlansComponent,
+    LaunchSimulatorComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -200,18 +214,34 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <div
               class="flex flex-col justify-between gap-4 p-4 sm:gap-5 sm:p-6 lg:col-span-5 lg:gap-6 lg:p-6"
             >
-              <div class="space-y-1.5 sm:space-y-2">
-                <p class="text-[13px] font-normal leading-[1.4] text-ink-muted">
-                  {{ item().bairro }}, {{ item().cidade }}, {{ item().uf }}
-                </p>
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0 space-y-1.5 sm:space-y-2">
+                  <p class="text-[13px] font-normal leading-[1.4] text-ink-muted">
+                    @if (bairroGuideSlug(); as guideSlug) {
+                      <a
+                        [routerLink]="['/bairros', guideSlug]"
+                        class="terraco-link-underline text-ink transition-colors duration-150 hover:text-brand"
+                      >
+                        {{ item().bairro }}
+                      </a>
+                    } @else {
+                      <span>{{ item().bairro }}</span>
+                    }<span>, {{ item().cidade }}, {{ item().uf }}</span>
+                  </p>
 
-                <h1
-                  id="launch-heading"
-                  [style.view-transition-name]="'launch-title-' + item().slug"
-                  class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.02em] text-ink text-balance"
-                >
-                  {{ item().nome }}
-                </h1>
+                  <h1
+                    id="launch-heading"
+                    [style.view-transition-name]="'launch-title-' + item().slug"
+                    class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.02em] text-ink text-balance"
+                  >
+                    {{ item().nome }}
+                  </h1>
+                </div>
+
+                <app-favorite-button
+                  [slug]="item().slug"
+                  [nome]="item().nome"
+                />
               </div>
 
               <dl
@@ -282,6 +312,17 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     </dd>
                   </div>
                 }
+
+                @if (item().construtora) {
+                  <div class="space-y-1">
+                    <dt class="text-[13px] font-normal text-ink-muted">
+                      Construtora
+                    </dt>
+                    <dd class="text-[15px] font-normal leading-[1.4] text-ink">
+                      {{ item().construtora }}
+                    </dd>
+                  </div>
+                }
               </dl>
 
               <div class="space-y-3">
@@ -318,6 +359,84 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 >
                   Falar no WhatsApp
                 </a>
+
+                <div class="pt-1">
+                  @if (callbackSubmitted()) {
+                    <p
+                      role="status"
+                      data-testid="launch-callback-success"
+                      class="rounded-md border border-brand/25 bg-surface/60 px-3.5 py-2.5 text-[13px] font-normal leading-[1.45] text-ink"
+                    >
+                      Recebemos seu contato. Um especialista retorna em instantes sobre {{ selectedIntentLabel() }}.
+                    </p>
+                  } @else if (callbackOpen()) {
+                    <form
+                      (submit)="submitCallbackLead($event)"
+                      class="space-y-2.5 rounded-md border border-border-subtle bg-surface/55 p-3.5"
+                    >
+                      <div class="flex items-center justify-between gap-2">
+                        <span class="text-[13px] font-medium text-ink">
+                          Receber retorno no WhatsApp
+                        </span>
+                        <button
+                          type="button"
+                          (click)="toggleCallbackForm()"
+                          class="text-[12px] font-normal text-ink-muted hover:text-ink"
+                        >
+                          Fechar
+                        </button>
+                      </div>
+
+                      <input
+                        type="text"
+                        [value]="callbackName()"
+                        (input)="onCallbackNameInput($event)"
+                        placeholder="Seu nome (opcional)"
+                        aria-label="Seu nome"
+                        autocomplete="name"
+                        class="min-h-[40px] w-full rounded-md border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
+                      />
+
+                      <div class="flex flex-col gap-2 sm:flex-row">
+                        <input
+                          type="tel"
+                          [value]="callbackPhone()"
+                          (input)="onCallbackPhoneInput($event)"
+                          placeholder="(31) 99999-9999"
+                          aria-label="Seu WhatsApp com DDD"
+                          autocomplete="tel"
+                          required
+                          class="min-h-[40px] flex-1 rounded-md border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
+                        />
+                        <button
+                          type="submit"
+                          [disabled]="callbackSubmitting()"
+                          class="terraco-btn inline-flex min-h-[40px] shrink-0 items-center justify-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[12px] font-medium text-ink-inverse hover:bg-brand-hover disabled:opacity-60"
+                        >
+                          {{ callbackSubmitting() ? 'Enviando...' : 'Solicitar' }}
+                        </button>
+                      </div>
+
+                      @if (callbackError(); as errorMsg) {
+                        <p
+                          role="alert"
+                          class="text-[12px] font-normal text-highlight"
+                        >
+                          {{ errorMsg }}
+                        </p>
+                      }
+                    </form>
+                  } @else {
+                    <button
+                      type="button"
+                      (click)="toggleCallbackForm()"
+                      data-testid="launch-callback-toggle"
+                      class="terraco-link-underline w-full text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+                    >
+                      Prefere que um especialista te chame?
+                    </button>
+                  }
+                </div>
               </div>
             </div>
           </div>
@@ -452,6 +571,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
           <app-launch-floor-plans [item]="item()" />
 
+          <app-launch-simulator [item]="item()" />
+
           @if (hasGallery()) {
             <section
               aria-labelledby="gallery-heading"
@@ -505,6 +626,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 export class PrimeViewLandingComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly leadsService = inject(LeadsService);
 
   readonly item = input.required<Lancamento>();
   readonly imageLoaded = signal<boolean>(false);
@@ -512,9 +634,36 @@ export class PrimeViewLandingComponent {
   readonly lightboxOpen = signal<boolean>(false);
   readonly lightboxIndex = signal<number>(0);
 
+  readonly callbackOpen = signal<boolean>(false);
+  readonly callbackName = signal<string>('');
+  readonly callbackPhone = signal<string>('');
+  readonly callbackError = signal<string | null>(null);
+  readonly callbackSubmitted = signal<boolean>(false);
+  readonly callbackSubmitting = this.leadsService.submitting;
+
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
 
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
+
+  readonly bairroGuideSlug = computed<string | null>(() => {
+    const currentBairro = this.item().bairro;
+    const match = BAIRROS_BH.find((guide) =>
+      guide.matchBairros.includes(currentBairro)
+    );
+    return match?.slug ?? null;
+  });
+
+  readonly selectedIntentOption = computed<LaunchIntentOption>(() => {
+    const currentKey = this.selectedIntent();
+    return (
+      LAUNCH_INTENT_OPTIONS.find((item) => item.key === currentKey) ??
+      LAUNCH_INTENT_OPTIONS[0]
+    );
+  });
+
+  readonly selectedIntentLabel = computed(() =>
+    this.selectedIntentOption().label.toLowerCase()
+  );
 
   readonly galleryImages = computed<readonly LaunchMediaItem[]>(
     () => this.item().galeria ?? []
@@ -531,11 +680,9 @@ export class PrimeViewLandingComponent {
 
   readonly whatsappHref = computed(() => {
     const currentItem = this.item();
-    const currentKey = this.selectedIntent();
-    const option =
-      LAUNCH_INTENT_OPTIONS.find((item) => item.key === currentKey) ??
-      LAUNCH_INTENT_OPTIONS[0];
-    return buildWhatsAppUrl(option.buildMessage(currentItem));
+    return buildWhatsAppUrl(
+      this.selectedIntentOption().buildMessage(currentItem)
+    );
   });
 
   readonly specialConditionsWhatsappHref = computed(() => {
@@ -559,6 +706,11 @@ export class PrimeViewLandingComponent {
       this.selectedIntent.set('plantas_valores');
       this.lightboxOpen.set(false);
       this.lightboxIndex.set(0);
+      this.callbackOpen.set(false);
+      this.callbackName.set('');
+      this.callbackPhone.set('');
+      this.callbackError.set(null);
+      this.callbackSubmitted.set(false);
       const el = this.heroImg()?.nativeElement;
       this.imageLoaded.set(Boolean(el?.complete && el.naturalWidth > 0));
     });
@@ -602,5 +754,61 @@ export class PrimeViewLandingComponent {
 
   closeLightbox(): void {
     this.lightboxOpen.set(false);
+  }
+
+  toggleCallbackForm(): void {
+    this.callbackOpen.update((open) => !open);
+    this.callbackError.set(null);
+  }
+
+  onCallbackNameInput(event: Event): void {
+    const inputEl = event.target as HTMLInputElement | null;
+    this.callbackName.set(inputEl?.value ?? '');
+  }
+
+  onCallbackPhoneInput(event: Event): void {
+    const inputEl = event.target as HTMLInputElement | null;
+    this.callbackPhone.set(inputEl?.value ?? '');
+    if (this.callbackError()) {
+      this.callbackError.set(null);
+    }
+  }
+
+  async submitCallbackLead(event: Event): Promise<void> {
+    event.preventDefault();
+    if (this.callbackSubmitting()) return;
+
+    const rawPhone = this.callbackPhone().trim();
+    const digits = rawPhone.replace(/\D/g, '');
+    if (digits.length < 10) {
+      this.callbackError.set(
+        'Informe um WhatsApp válido com DDD (ex.: (31) 99999-9999).'
+      );
+      return;
+    }
+
+    this.callbackError.set(null);
+    const currentItem = this.item();
+    const option = this.selectedIntentOption();
+    const trimmedName = this.callbackName().trim();
+
+    try {
+      await this.leadsService.createLead({
+        ...(trimmedName ? { name: trimmedName } : {}),
+        phone: rawPhone,
+        launchSlug: currentItem.slug,
+        source: 'launch-detail',
+        intent: option.key,
+        message: option.buildMessage(currentItem),
+      });
+      this.callbackSubmitted.set(true);
+      this.callbackOpen.set(false);
+    } catch (err) {
+      this.callbackError.set(
+        err instanceof Error
+          ? err.message
+          : 'Não foi possível enviar seu contato. Tente novamente.'
+      );
+    }
   }
 }
