@@ -71,7 +71,7 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
     <section
       id="como-funciona"
       aria-labelledby="trust-concierge-heading"
-      class="terraco-cobogo-surface border-t border-border-subtle bg-surface/55 py-16 sm:py-20 lg:py-24 scroll-mt-24"
+      class="border-t border-border-subtle bg-surface/45 py-16 sm:py-20 lg:py-24 scroll-mt-24"
     >
       <div class="mx-auto max-w-6xl px-6 lg:px-8">
         <h2
