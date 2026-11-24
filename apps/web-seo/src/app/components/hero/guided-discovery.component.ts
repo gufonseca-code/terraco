@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LancamentosService, rankLancamentosByObjetivo } from '../../core';
+import { SectionHandoffComponent } from '../shared/section-handoff.component';
 
 type ObjetivoOption = 'Sair do aluguel' | 'Dar um upgrade' | 'Investir';
 type TipologiaOption =
@@ -99,7 +100,7 @@ function normalizeText(value: string): string {
 
 @Component({
   selector: 'app-guided-discovery',
-  imports: [RouterLink],
+  imports: [RouterLink, SectionHandoffComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
@@ -219,20 +220,27 @@ function normalizeText(value: string): string {
           </div>
         </div>
 
-        <nav
-          aria-label="Guias de bairros em BH"
-          class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-1 text-sm"
-        >
-          <span class="font-medium text-ink">Guias de bairros em BH</span>
-          @for (guide of neighborhoodGuides; track guide.route) {
-            <a
-              [routerLink]="guide.route"
-              class="terraco-link-underline inline-flex min-h-[44px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink"
-            >
-              {{ guide.label }}
-            </a>
-          }
-        </nav>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <nav
+            aria-label="Guias de bairros em BH"
+            class="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm"
+          >
+            <span class="font-medium text-ink">Guias de bairros em BH</span>
+            @for (guide of neighborhoodGuides; track guide.route) {
+              <a
+                [routerLink]="guide.route"
+                class="terraco-link-underline inline-flex min-h-[44px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink"
+              >
+                {{ guide.label }}
+              </a>
+            }
+          </nav>
+
+          <app-section-handoff
+            label="Como funciona o atendimento"
+            targetId="como-funciona"
+          />
+        </div>
       </div>
     </section>
   `,

@@ -16,6 +16,7 @@ import {
 import { RouterLink } from '@angular/router';
 import {
   BAIRROS_BH,
+  LancamentosService,
   LeadsService,
   SITE_NAME,
   SITE_URL,
@@ -24,8 +25,14 @@ import {
   type Lancamento,
   type LaunchMediaItem,
 } from '../../core';
+import {
+  type JourneyDestination,
+  NextJourneyComponent,
+} from '../shared/next-journey.component';
+import { SectionHandoffComponent } from '../shared/section-handoff.component';
 import { FavoriteButtonComponent } from './favorite-button.component';
 import { ImageLightboxComponent } from './image-lightbox.component';
+import { LaunchCardComponent } from './launch-card.component';
 import { LaunchFloorPlansComponent } from './launch-floor-plans.component';
 import { LaunchSimulatorComponent } from './launch-simulator.component';
 import { formatBrazilianPhone } from './whatsapp-alert-form.component';
@@ -162,8 +169,11 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
     RouterLink,
     FavoriteButtonComponent,
     ImageLightboxComponent,
+    LaunchCardComponent,
     LaunchFloorPlansComponent,
     LaunchSimulatorComponent,
+    NextJourneyComponent,
+    SectionHandoffComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -222,9 +232,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       <a
                         [routerLink]="['/bairros', guideSlug]"
                         class="terraco-link-underline text-ink transition-colors duration-150 hover:text-brand"
-                      >
-                        {{ item().bairro }}
-                      </a>
+                      >{{ item().bairro }}</a>
                     } @else {
                       <span>{{ item().bairro }}</span>
                     }<span>, {{ item().cidade }}, {{ item().uf }}</span>
@@ -445,12 +453,23 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
         <nav
           aria-label="Seções do empreendimento"
-          class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-border-subtle pb-3 text-[14px]"
+          class="terraco-no-scrollbar sticky top-3 z-20 mt-6 flex items-center gap-1.5 overflow-x-auto rounded-[22px] border border-border-subtle bg-elevated/92 p-1.5 shadow-card backdrop-blur-md"
         >
+          @if (item().condicoesEspeciais?.length) {
+            <a
+              href="#condicoes"
+              (click)="scrollToSection($event, 'condicoes')"
+              [attr.aria-current]="activeSection() === 'condicoes' ? 'true' : null"
+              [class]="sectionNavPillClass('condicoes')"
+            >
+              Condições
+            </a>
+          }
           <a
             href="#sobre"
             (click)="scrollToSection($event, 'sobre')"
-            class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+            [attr.aria-current]="activeSection() === 'sobre' ? 'true' : null"
+            [class]="sectionNavPillClass('sobre')"
           >
             Sobre
           </a>
@@ -458,7 +477,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <a
               href="#diferenciais"
               (click)="scrollToSection($event, 'diferenciais')"
-              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+              [attr.aria-current]="activeSection() === 'diferenciais' ? 'true' : null"
+              [class]="sectionNavPillClass('diferenciais')"
             >
               Diferenciais
             </a>
@@ -467,7 +487,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <a
               href="#plantas"
               (click)="scrollToSection($event, 'plantas')"
-              class="terraco-link-underline inline-flex min-h-[40px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+              [attr.aria-current]="activeSection() === 'plantas' ? 'true' : null"
+              [class]="sectionNavPillClass('plantas')"
             >
               Plantas
             </a>
@@ -475,7 +496,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           <a
             href="#simulador"
             (click)="scrollToSection($event, 'simulador')"
-            class="terraco-link-underline inline-flex min-h-[40px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+            [attr.aria-current]="activeSection() === 'simulador' ? 'true' : null"
+            [class]="sectionNavPillClass('simulador')"
           >
             Simular entrada
           </a>
@@ -483,9 +505,20 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <a
               href="#galeria"
               (click)="scrollToSection($event, 'galeria')"
-              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+              [attr.aria-current]="activeSection() === 'galeria' ? 'true' : null"
+              [class]="sectionNavPillClass('galeria')"
             >
               Galeria
+            </a>
+          }
+          @if (otherLaunches().length > 0) {
+            <a
+              href="#outros-lancamentos"
+              (click)="scrollToSection($event, 'outros-lancamentos')"
+              [attr.aria-current]="activeSection() === 'outros-lancamentos' ? 'true' : null"
+              [class]="sectionNavPillClass('outros-lancamentos')"
+            >
+              Outros em BH
             </a>
           }
         </nav>
@@ -493,8 +526,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         <div class="mt-8 space-y-12 sm:mt-10 sm:space-y-14">
           @if (item().condicoesEspeciais?.length) {
             <section
+              id="condicoes"
               aria-labelledby="special-conditions-heading"
-              class="terraco-cobogo-band rounded-lg border border-brand/25 bg-surface/55 p-5 sm:p-8"
+              class="terraco-cobogo-band rounded-lg border border-brand/25 bg-surface/55 p-5 sm:p-8 scroll-mt-32"
             >
               <h2
                 id="special-conditions-heading"
@@ -578,13 +612,23 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 </div>
               </dl>
             }
+
+            @if (item().diferenciais.length > 0) {
+              <div class="mt-5">
+                <app-section-handoff
+                  prompt="Quer ver o que o condomínio oferece?"
+                  label="Explorar diferenciais e lazer"
+                  targetId="diferenciais"
+                />
+              </div>
+            }
           </section>
 
           @if (item().diferenciais.length > 0) {
             <section
               id="diferenciais"
               aria-labelledby="features-heading"
-              class="border-t border-border-subtle pt-10 scroll-mt-24"
+              class="border-t border-border-subtle pt-10 scroll-mt-32"
             >
               <h2
                 id="features-heading"
@@ -616,6 +660,16 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   </li>
                 }
               </ul>
+
+              @if (item().plantas?.length) {
+                <div class="mt-6">
+                  <app-section-handoff
+                    prompt="Próximo passo:"
+                    label="Ver plantas e metragens"
+                    targetId="plantas"
+                  />
+                </div>
+              }
             </section>
           }
 
@@ -678,7 +732,52 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </div>
             </section>
           }
+
+          @if (otherLaunches().length > 0) {
+            <section
+              id="outros-lancamentos"
+              aria-labelledby="other-launches-heading"
+              class="border-t border-border-subtle pt-10 scroll-mt-32"
+            >
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div class="space-y-1">
+                  <h2
+                    id="other-launches-heading"
+                    class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
+                  >
+                    Outros lançamentos em BH para comparar
+                  </h2>
+                  <p class="text-[14px] font-normal text-ink-muted">
+                    Compare plantas, bairros e condições antes de decidir.
+                  </p>
+                </div>
+
+                <a
+                  routerLink="/lancamentos"
+                  class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+                >
+                  Ver catálogo completo
+                </a>
+              </div>
+
+              <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+                @for (other of otherLaunches(); track other.slug) {
+                  <app-launch-card
+                    [launch]="other"
+                    headingLevel="h3"
+                  />
+                }
+              </div>
+            </section>
+          }
         </div>
+      </div>
+
+      <div class="mt-12 sm:mt-14">
+        <app-next-journey
+          heading="Continue sua pesquisa"
+          [destinations]="nextDestinations()"
+        />
       </div>
 
       @defer (when lightboxOpen()) {
@@ -697,9 +796,57 @@ export class PrimeViewLandingComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
   private readonly leadsService = inject(LeadsService);
+  private readonly lancamentosService = inject(LancamentosService);
 
   readonly item = input.required<Lancamento>();
   private readonly itemSlug = computed(() => this.item().slug);
+
+  readonly activeSection = linkedSignal<string, string>({
+    source: this.itemSlug,
+    computation: () =>
+      this.item().condicoesEspeciais?.length ? 'condicoes' : 'sobre',
+  });
+
+  readonly otherLaunches = computed<readonly Lancamento[]>(() =>
+    this.lancamentosService
+      .lancamentos()
+      .filter((launch) => launch.slug !== this.item().slug)
+  );
+
+  readonly nextDestinations = computed<readonly JourneyDestination[]>(() => {
+    const current = this.item();
+    const guideSlug = this.bairroGuideSlug();
+    const list: JourneyDestination[] = [];
+
+    if (guideSlug) {
+      list.push({
+        title: `Guia do bairro ${current.bairro}`,
+        description: `Mobilidade, serviços e perguntas frequentes sobre morar no ${current.bairro}.`,
+        actionLabel: `Conhecer ${current.bairro}`,
+        route: ['/bairros', guideSlug],
+      });
+    }
+
+    list.push(
+      {
+        title: 'Todos os lançamentos em BH',
+        description:
+          'Filtre por bairro, tipologia e salve seus preferidos para comparar lado a lado.',
+        actionLabel: 'Abrir catálogo',
+        route: '/lancamentos',
+      },
+      {
+        title: 'Descobrir pelo seu momento',
+        description:
+          'Combine objetivo, tamanho e região sem cadastro para encontrar o imóvel ideal.',
+        actionLabel: 'Usar descoberta guiada',
+        route: '/',
+        fragment: 'descoberta-guiada',
+      }
+    );
+
+    return list;
+  });
 
   readonly imageLoaded = linkedSignal({
     source: this.itemSlug,
@@ -800,6 +947,53 @@ export class PrimeViewLandingComponent {
       if (el?.complete && el.naturalWidth > 0) {
         this.imageLoaded.set(true);
       }
+
+      if (
+        !isPlatformBrowser(this.platformId) ||
+        typeof IntersectionObserver === 'undefined'
+      ) {
+        return;
+      }
+
+      const sectionIds = [
+        'condicoes',
+        'sobre',
+        'diferenciais',
+        'plantas',
+        'simulador',
+        'galeria',
+        'outros-lancamentos',
+      ];
+      const targets = sectionIds
+        .map((id) => this.document.getElementById(id))
+        .filter((node): node is HTMLElement => Boolean(node));
+
+      if (targets.length === 0) {
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort(
+              (a, b) =>
+                a.boundingClientRect.top - b.boundingClientRect.top
+            );
+          if (visible[0]?.target.id) {
+            this.activeSection.set(visible[0].target.id);
+          }
+        },
+        { rootMargin: '-18% 0px -62% 0px', threshold: 0 }
+      );
+
+      for (const target of targets) {
+        observer.observe(target);
+      }
+
+      this.destroyRef.onDestroy(() => {
+        observer.disconnect();
+      });
     });
 
     effect(() => {
@@ -853,8 +1047,18 @@ export class PrimeViewLandingComponent {
     this.callbackName.set(inputEl?.value ?? '');
   }
 
+  sectionNavPillClass(sectionId: string): string {
+    const base =
+      'terraco-m3-chip inline-flex min-h-[38px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap';
+    if (this.activeSection() === sectionId) {
+      return `${base} terraco-m3-chip--active bg-brand font-medium text-ink-inverse shadow-chip`;
+    }
+    return `${base} bg-transparent font-normal text-ink-muted hover:bg-surface hover:text-ink`;
+  }
+
   scrollToSection(event: MouseEvent, sectionId: string): void {
     event.preventDefault();
+    this.activeSection.set(sectionId);
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }

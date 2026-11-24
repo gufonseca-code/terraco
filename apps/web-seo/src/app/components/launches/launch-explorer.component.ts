@@ -17,6 +17,10 @@ import { LaunchCardComponent } from './launch-card.component';
 import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
 import { WhatsappAlertFormComponent } from './whatsapp-alert-form.component';
 import { M3SearchBarComponent } from '../shared/m3-search-bar.component';
+import {
+  type JourneyDestination,
+  NextJourneyComponent,
+} from '../shared/next-journey.component';
 
 const TIPOLOGIA_FILTERS = [
   'Todas',
@@ -36,6 +40,7 @@ const TIPOLOGIA_FILTERS = [
     LaunchCardSkeletonComponent,
     WhatsappAlertFormComponent,
     M3SearchBarComponent,
+    NextJourneyComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -331,6 +336,12 @@ const TIPOLOGIA_FILTERS = [
         }
       </nav>
     </section>
+
+    <app-next-journey
+      heading="Continue sua busca em BH"
+      subtitle="Se ainda está decidindo a região ou o perfil do imóvel, estes caminhos ajudam a afunilar."
+      [destinations]="catalogNextDestinations"
+    />
   `,
 })
 export class LaunchExplorerComponent {
@@ -348,6 +359,30 @@ export class LaunchExplorerComponent {
   readonly isLoading = this.lancamentosService.isLoadingList;
   readonly tipologiaFilters = TIPOLOGIA_FILTERS;
   readonly bairrosGuides = BAIRROS_BH;
+  readonly catalogNextDestinations: readonly JourneyDestination[] = [
+    {
+      title: 'Descobrir pelo seu momento',
+      description:
+        'Combine objetivo, tipologia e região de BH em 3 toques para ver o que mais encaixa.',
+      actionLabel: 'Usar descoberta guiada',
+      route: '/',
+      fragment: 'descoberta-guiada',
+    },
+    {
+      title: 'Guia do bairro Estoril',
+      description:
+        'Mobilidade pela Av. Barão Homem de Melo, proximidade ao Buritis e lançamentos na região.',
+      actionLabel: 'Explorar Estoril',
+      route: ['/bairros', 'estoril'],
+    },
+    {
+      title: 'Guia do Santa Efigênia',
+      description:
+        'Rotina a pé perto do metrô, Praça Floriano Peixoto, polo hospitalar e Shopping Boulevard.',
+      actionLabel: 'Explorar Santa Efigênia',
+      route: ['/bairros', 'santa-efigenia'],
+    },
+  ];
 
   private readonly queryParamMap = toSignal(this.route.queryParamMap, {
     initialValue: this.route.snapshot.queryParamMap,
