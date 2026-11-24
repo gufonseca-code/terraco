@@ -10,22 +10,23 @@ import { TerracoLogoComponent } from './terraco-logo.component';
   template: `
     <footer
       id="contato"
-      class="terraco-cobogo-moss mt-auto bg-brand text-ink-inverse scroll-mt-24"
+      class="terraco-cobogo-surface mt-auto border-t border-border-subtle bg-surface scroll-mt-24"
     >
       <div
-        class="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-14 sm:py-16 lg:px-8 md:flex-row md:items-end md:justify-between"
+        class="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-12 sm:py-14 lg:px-8 md:flex-row md:items-end md:justify-between"
       >
-        <div class="max-w-md space-y-3.5">
-          <app-terraco-logo [inverted]="true" [animate]="false" />
-          <p class="text-[15px] font-normal leading-[1.6] text-ink-inverse/82">
-            Imobiliária digital de lançamentos em Belo Horizonte. Plantas abertas, condições claras e conversa humana direto no WhatsApp.
+        <div class="max-w-md space-y-3">
+          <app-terraco-logo [animate]="false" />
+          <p class="text-base font-normal leading-[1.55] text-ink-muted">
+            Curadoria de lançamentos residenciais em Belo Horizonte, com
+            atendimento direto no WhatsApp.
           </p>
         </div>
 
-        <div class="flex flex-wrap items-center gap-4 sm:gap-5">
+        <div class="flex flex-wrap items-center gap-6">
           <a
             routerLink="/lancamentos"
-            class="terraco-link-underline inline-flex min-h-[44px] items-center px-1 text-[14px] font-normal leading-[1.35] text-ink-inverse/85 transition-colors duration-150 hover:text-ink-inverse"
+            class="terraco-link-underline inline-flex min-h-[44px] items-center px-1 text-[15px] font-normal leading-[1.35] text-ink-muted transition-colors duration-150 hover:text-ink"
           >
             Lançamentos
           </a>
@@ -33,26 +34,26 @@ import { TerracoLogoComponent } from './terraco-logo.component';
             [href]="whatsappHref"
             target="_blank"
             rel="noopener noreferrer"
-            class="terraco-btn terraco-btn-ipe inline-flex min-h-[46px] items-center justify-center rounded-pill bg-accent px-6 py-3 text-[14px] font-medium leading-[1.35] text-ink hover:bg-accent-hover"
+            class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-6 py-3 text-[15px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
           >
             Falar no WhatsApp
           </a>
         </div>
       </div>
 
-      <div class="border-t border-ink-inverse/15">
+      <div class="border-t border-border-subtle/80">
         <div
-          class="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-5 text-[14px] font-normal text-ink-inverse/75 sm:flex-row sm:items-center sm:justify-between lg:px-8"
+          class="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-4 text-sm font-normal text-ink-muted sm:flex-row sm:items-center sm:justify-between lg:px-8"
         >
           <nav
             aria-label="Guias de bairros em BH"
             class="flex flex-wrap items-center gap-x-5 gap-y-1"
           >
-            <span class="text-ink-inverse/60">Bairros em BH</span>
+            <span class="text-ink-muted/80">Bairros em BH</span>
             @for (guide of neighborhoodGuides; track guide.route) {
               <a
                 [routerLink]="guide.route"
-                class="terraco-link-underline inline-flex min-h-[44px] items-center text-ink-inverse/82 transition-colors duration-150 hover:text-ink-inverse focus-visible:text-ink-inverse"
+                class="terraco-link-underline inline-flex min-h-[44px] items-center text-ink-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink"
               >
                 {{ guide.label }}
               </a>
@@ -60,7 +61,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
           </nav>
 
           <div
-            class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] tabular-nums text-ink-inverse/70"
+            class="flex flex-wrap items-center gap-x-4 gap-y-1 tabular-nums"
           >
             <span>© 2026 Terraço</span>
             <span>Belo Horizonte, MG</span>

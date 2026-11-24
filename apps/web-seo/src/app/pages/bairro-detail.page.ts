@@ -101,7 +101,7 @@ function buildBairroJsonLd(
             url: launchUrl,
             item: {
               '@type': 'RealEstateListing',
-              name: `${launch.nome}, ${launch.bairro}, ${launch.cidade}`,
+              name: `${launch.nome} — ${launch.bairro}, ${launch.cidade}`,
               description: launch.resumo,
               url: launchUrl,
               image: imageUrl,
@@ -150,10 +150,10 @@ function buildBairroJsonLd(
           tabindex="-1"
           class="flex min-h-dvh flex-1 flex-col bg-canvas"
         >
-          <div class="border-b border-border-subtle bg-surface/65">
-            <header
-              class="terraco-reveal mx-auto w-full max-w-6xl space-y-4 px-4 py-10 sm:px-6 sm:py-12 lg:px-8"
-            >
+          <article
+            class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
+          >
+            <header class="terraco-reveal max-w-3xl space-y-4">
               <nav aria-label="Navegação estrutural">
                 <ol
                   class="flex flex-wrap items-center gap-2 text-[14px] font-normal text-ink-muted"
@@ -182,67 +182,67 @@ function buildBairroJsonLd(
                 </ol>
               </nav>
 
-              <div class="max-w-3xl space-y-3">
-                <h1
-                  class="font-display text-[clamp(2rem,4vw,2.75rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
-                >
-                  Morar em {{ current.nome }}, {{ current.cidade }}
-                </h1>
+              <p class="text-[14px] font-normal text-ink-muted">
+                {{ current.regiao }} · {{ current.cidade }}, {{ current.uf }}
+              </p>
 
-                <p class="text-[14px] font-normal text-ink-muted">
-                  {{ current.regiao }} · {{ current.cidade }}, {{ current.uf }}
-                </p>
+              <h1
+                class="font-display text-[clamp(2rem,4vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.025em] text-ink text-balance"
+              >
+                Morar em {{ current.nome }}, {{ current.cidade }}
+              </h1>
 
-                <p
-                  class="text-[16px] font-normal leading-[1.6] text-ink-muted"
-                >
-                  {{ current.resumo }}
-                </p>
-              </div>
+              <p
+                class="text-[16px] font-normal leading-[1.6] text-ink-muted sm:text-[17px]"
+              >
+                {{ current.resumo }}
+              </p>
             </header>
-          </div>
 
-          <article
-            class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8"
-          >
             <section
               aria-label="Guia editorial do bairro"
-              class="terraco-reveal-delay grid grid-cols-1 gap-8 md:grid-cols-3"
+              class="terraco-reveal-delay mt-12 grid grid-cols-1 gap-5 md:grid-cols-3 sm:mt-14"
             >
-              <div class="space-y-2 border-t border-border-strong pt-5">
+              <div
+                class="terraco-card rounded-lg border border-border-subtle bg-elevated p-6 shadow-card"
+              >
                 <h2
-                  class="font-display text-[1.25rem] font-medium not-italic leading-[1.22] tracking-[-0.015em] text-ink text-balance"
+                  class="font-display text-[1.125rem] font-medium leading-[1.25] tracking-[-0.01em] text-ink text-balance"
                 >
                   Mobilidade e acesso
                 </h2>
                 <p
-                  class="text-[15px] font-normal leading-[1.6] text-ink-muted"
+                  class="mt-2.5 text-[14px] font-normal leading-[1.6] text-ink-muted"
                 >
                   {{ current.mobilidade }}
                 </p>
               </div>
 
-              <div class="space-y-2 border-t border-border-strong pt-5">
+              <div
+                class="terraco-card rounded-lg border border-border-subtle bg-elevated p-6 shadow-card"
+              >
                 <h2
-                  class="font-display text-[1.25rem] font-medium not-italic leading-[1.22] tracking-[-0.015em] text-ink text-balance"
+                  class="font-display text-[1.125rem] font-medium leading-[1.25] tracking-[-0.01em] text-ink text-balance"
                 >
                   Serviços e arredores
                 </h2>
                 <p
-                  class="text-[15px] font-normal leading-[1.6] text-ink-muted"
+                  class="mt-2.5 text-[14px] font-normal leading-[1.6] text-ink-muted"
                 >
                   {{ current.servicos }}
                 </p>
               </div>
 
-              <div class="space-y-2 border-t border-border-strong pt-5">
+              <div
+                class="terraco-card rounded-lg border border-border-subtle bg-elevated p-6 shadow-card"
+              >
                 <h2
-                  class="font-display text-[1.25rem] font-medium not-italic leading-[1.22] tracking-[-0.015em] text-ink text-balance"
+                  class="font-display text-[1.125rem] font-medium leading-[1.25] tracking-[-0.01em] text-ink text-balance"
                 >
                   Perfil dos lançamentos
                 </h2>
                 <p
-                  class="text-[15px] font-normal leading-[1.6] text-ink-muted"
+                  class="mt-2.5 text-[14px] font-normal leading-[1.6] text-ink-muted"
                 >
                   {{ current.perfilImoveis }}
                 </p>
@@ -256,7 +256,7 @@ function buildBairroJsonLd(
               <div class="max-w-2xl space-y-2">
                 <h2
                   id="bairro-lancamentos-heading"
-                  class="font-display text-[clamp(1.5rem,2.6vw,1.875rem)] font-medium not-italic leading-[1.16] tracking-[-0.02em] text-ink text-balance"
+                  class="font-display text-[clamp(1.5rem,2.6vw,1.875rem)] font-medium leading-[1.18] tracking-[-0.02em] text-ink text-balance"
                 >
                   Lançamentos em {{ current.nome }}
                 </h2>
@@ -286,7 +286,7 @@ function buildBairroJsonLd(
                   @if (nearbyLaunches().length > 0) {
                     <div class="space-y-4">
                       <h3
-                        class="font-display text-[1.25rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance"
+                        class="font-display text-[1.25rem] font-medium leading-[1.25] tracking-[-0.015em] text-ink text-balance"
                       >
                         A poucos minutos do {{ current.nome }}
                       </h3>
@@ -306,10 +306,10 @@ function buildBairroJsonLd(
                   }
 
                   <div
-                    class="max-w-xl rounded-xl border border-border-subtle bg-elevated p-6 shadow-card sm:p-8"
+                    class="max-w-xl rounded-lg border border-border-subtle bg-elevated p-6 shadow-card sm:p-8"
                   >
                     <h3
-                      class="font-display text-[1.25rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance"
+                      class="font-display text-[1.25rem] font-medium leading-[1.25] tracking-[-0.015em] text-ink text-balance"
                     >
                       Quer ser avisado de novos lançamentos no {{ current.nome }}?
                     </h3>
@@ -343,7 +343,7 @@ function buildBairroJsonLd(
             >
               <h2
                 id="bairro-faq-heading"
-                class="font-display text-[clamp(1.5rem,2.6vw,1.875rem)] font-medium not-italic leading-[1.16] tracking-[-0.02em] text-ink text-balance"
+                class="font-display text-[clamp(1.5rem,2.6vw,1.875rem)] font-medium leading-[1.18] tracking-[-0.02em] text-ink text-balance"
               >
                 Perguntas frequentes sobre {{ current.nome }}
               </h2>
@@ -417,7 +417,7 @@ function buildBairroJsonLd(
               >
                 <h2
                   id="outros-bairros-heading"
-                  class="font-display text-[1.25rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance"
+                  class="font-display text-[1.25rem] font-medium leading-[1.25] tracking-[-0.015em] text-ink text-balance"
                 >
                   Explorar outros bairros em Belo Horizonte
                 </h2>

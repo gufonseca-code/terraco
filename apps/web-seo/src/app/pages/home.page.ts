@@ -24,9 +24,9 @@ import { SeoService } from '../core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="flex min-h-dvh flex-col bg-canvas">
-      <app-navbar [animateLogo]="true" [overlayHero]="true" />
+      <app-navbar [animateLogo]="true" />
       <main id="homepage" tabindex="-1" class="flex flex-1 flex-col">
-        <div class="flex min-h-[calc(100dvh-4.25rem)] flex-col">
+        <div class="flex min-h-[calc(100dvh-4.5rem)] flex-col">
           <app-hero-search />
         </div>
         <app-featured-launches />
@@ -35,7 +35,7 @@ import { SeoService } from '../core';
         } @placeholder {
           <section
             aria-hidden="true"
-            class="min-h-[460px] border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24"
+            class="min-h-[420px] border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24"
           ></section>
         }
         @defer (on viewport; hydrate on viewport) {
@@ -43,7 +43,7 @@ import { SeoService } from '../core';
         } @placeholder {
           <section
             aria-hidden="true"
-            class="min-h-[440px] border-t border-border-subtle bg-surface/60 py-16 sm:py-20 lg:py-24"
+            class="min-h-[440px] border-t border-border-subtle bg-surface/45 py-16 sm:py-20 lg:py-24"
           ></section>
         }
       </main>

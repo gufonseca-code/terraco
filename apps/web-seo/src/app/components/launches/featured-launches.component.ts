@@ -13,6 +13,10 @@ import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
 
 const MAX_HOME_FEATURED_LAUNCHES = 6;
 
+/**
+ * Curated launches section on the Home page that provides direct internal links
+ * to `/lancamentos/:slug` and `/lancamentos` without duplicating the full catalog explorer.
+ */
 @Component({
   selector: 'app-featured-launches',
   imports: [
@@ -27,12 +31,12 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
       <section
         id="lancamentos-selecionados"
         aria-labelledby="featured-launches-heading"
-        class="border-t border-border-subtle bg-surface/70 py-16 sm:py-20 lg:py-24 scroll-mt-20"
+        class="bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
       >
-        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-6xl px-6 lg:px-8">
           <h2
             id="featured-launches-heading"
-            class="max-w-2xl font-display text-[clamp(1.75rem,3.2vw,2.375rem)] font-medium not-italic leading-[1.1] tracking-[-0.025em] text-ink text-balance"
+            class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
           >
             Lançamentos selecionados em BH
           </h2>
@@ -49,23 +53,18 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
       <section
         id="lancamentos-selecionados"
         aria-labelledby="featured-launches-heading"
-        class="border-t border-border-subtle bg-surface/70 py-16 sm:py-20 lg:py-24 scroll-mt-20"
+        class="bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
       >
-        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-6xl px-6 lg:px-8">
           <div
             class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
           >
-            <div class="max-w-2xl space-y-2">
-              <h2
-                id="featured-launches-heading"
-                class="font-display text-[clamp(1.75rem,3.2vw,2.375rem)] font-medium not-italic leading-[1.1] tracking-[-0.025em] text-ink text-balance"
-              >
-                Lançamentos selecionados em BH
-              </h2>
-              <p class="text-[15px] font-normal leading-[1.55] text-ink-muted">
-                Plantas, metragens e condições abertas para você comparar sem cadastro.
-              </p>
-            </div>
+            <h2
+              id="featured-launches-heading"
+              class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
+            >
+              Lançamentos selecionados em BH
+            </h2>
 
             <a
               routerLink="/lancamentos"
@@ -81,7 +80,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
             @for (launch of featuredLaunches(); track launch.slug) {
               <app-launch-card
                 appScrollReveal
-                [revealDelayMs]="($index % 3) * 80"
+                [revealDelayMs]="($index % 3) * 90"
                 [launch]="launch"
                 headingLevel="h3"
                 [priority]="$index < 3"
@@ -90,7 +89,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
           </div>
 
           <div
-            class="mt-10 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-muted"
+            class="mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-muted sm:mt-10"
           >
             <span>Em dúvida por onde começar?</span>
             <a

@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BAIRROS_BH, LancamentosService, rankLancamentosByObjetivo } from '../../core';
+import { LancamentosService, rankLancamentosByObjetivo } from '../../core';
 
 type ObjetivoOption = 'Sair do aluguel' | 'Dar um upgrade' | 'Investir';
 type TipologiaOption =
@@ -18,6 +18,11 @@ type RegiaoOption =
   | 'Santa Efigênia'
   | 'Serrano / Castelo'
   | 'Qualquer região';
+
+interface NeighborhoodGuideLink {
+  readonly label: string;
+  readonly route: string;
+}
 
 const OBJETIVO_OPTIONS: readonly ObjetivoOption[] = [
   'Sair do aluguel',
@@ -78,12 +83,12 @@ const REGIAO_MATCHERS: Record<
   },
 };
 
-const ARCH_TINT_CLASSES = [
-  'bg-brand-container/65',
-  'bg-accent-soft/75',
-  'bg-highlight-soft/75',
-  'bg-surface/90',
-] as const;
+const NEIGHBORHOOD_GUIDES: readonly NeighborhoodGuideLink[] = [
+  { label: 'Estoril', route: '/bairros/estoril' },
+  { label: 'Santa Efigênia', route: '/bairros/santa-efigenia' },
+  { label: 'Serrano', route: '/bairros/serrano' },
+  { label: 'Buritis', route: '/bairros/buritis' },
+];
 
 function normalizeText(value: string): string {
   return value
@@ -102,230 +107,132 @@ function normalizeText(value: string): string {
       aria-labelledby="guided-discovery-heading"
       class="border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
     >
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="max-w-2xl space-y-2.5">
+      <div class="mx-auto max-w-6xl px-6 lg:px-8">
+        <div class="max-w-2xl space-y-3">
           <h2
             id="guided-discovery-heading"
-            class="font-display text-[clamp(1.75rem,3.2vw,2.375rem)] font-medium not-italic leading-[1.1] tracking-[-0.025em] text-ink text-balance"
+            class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
           >
             Qual momento combina com você?
           </h2>
-          <p class="text-[15px] font-normal leading-[1.58] text-ink-muted">
-            Toque nas opções para filtrar em tempo real, sem cadastro e sem compromisso.
+          <p class="text-base font-normal leading-[1.55] text-ink-muted">
+            Combine objetivo, tipologia e região sem cadastro.
           </p>
         </div>
 
-        <div class="mt-8 grid gap-5 lg:grid-cols-12 sm:mt-10">
-          <!-- Controles táteis M3 Expressive -->
-          <div
-            class="terraco-card rounded-xl border border-border-subtle bg-elevated p-5 shadow-card sm:p-7 lg:col-span-7"
-          >
-            <div class="space-y-6">
-              <fieldset class="space-y-2.5">
-                <legend class="text-[14px] font-medium leading-[1.35] text-ink">
-                  Seu objetivo
-                </legend>
-                <div class="terraco-m3-group-grid grid-cols-1 sm:grid-cols-3">
-                  @for (option of objetivoOptions; track option) {
-                    <button
-                      type="button"
-                      [attr.aria-pressed]="objetivo() === option"
-                      (click)="toggleObjetivo(option)"
-                      [class]="segmentClass(objetivo() === option)"
-                    >
-                      {{ option }}
-                    </button>
-                  }
-                </div>
-              </fieldset>
-
-              <fieldset class="space-y-2.5">
-                <legend class="text-[14px] font-medium leading-[1.35] text-ink">
-                  Tipologia
-                </legend>
-                <div class="terraco-m3-group-grid grid-cols-1 sm:grid-cols-3">
-                  @for (option of tipologiaOptions; track option) {
-                    <button
-                      type="button"
-                      [attr.aria-pressed]="tipologia() === option"
-                      (click)="toggleTipologia(option)"
-                      [class]="segmentClass(tipologia() === option)"
-                    >
-                      {{ option }}
-                    </button>
-                  }
-                </div>
-              </fieldset>
-
-              <fieldset class="space-y-2.5">
-                <legend class="text-[14px] font-medium leading-[1.35] text-ink">
-                  Região de BH
-                </legend>
-                <div class="terraco-m3-group-grid grid-cols-2 sm:grid-cols-4">
-                  @for (option of regiaoOptions; track option) {
-                    <button
-                      type="button"
-                      [attr.aria-pressed]="regiao() === option"
-                      (click)="toggleRegiao(option)"
-                      [class]="segmentClass(regiao() === option)"
-                    >
-                      {{ option }}
-                    </button>
-                  }
-                </div>
-              </fieldset>
-            </div>
-
-            @if (hasSelection()) {
-              <div class="mt-6 border-t border-border-subtle pt-4">
-                <button
-                  type="button"
-                  (click)="clearSelections()"
-                  class="terraco-link-underline inline-flex min-h-[40px] cursor-pointer items-center px-1 text-[13px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
-                >
-                  Limpar seleção
-                </button>
+        <div
+          class="terraco-card mt-8 rounded-lg border border-border-subtle bg-elevated p-6 shadow-card sm:mt-10 sm:p-8"
+        >
+          <div class="space-y-6">
+            <fieldset class="space-y-2.5">
+              <legend class="text-sm font-medium leading-[1.35] text-ink">
+                Seu objetivo
+              </legend>
+              <div class="terraco-m3-group-grid grid-cols-1 sm:w-fit sm:grid-cols-3">
+                @for (option of objetivoOptions; track option) {
+                  <button
+                    type="button"
+                    [attr.aria-pressed]="objetivo() === option"
+                    (click)="toggleObjetivo(option)"
+                    [class]="segmentClass(objetivo() === option)"
+                  >
+                    {{ option }}
+                  </button>
+                }
               </div>
-            }
+            </fieldset>
+
+            <fieldset class="space-y-2.5">
+              <legend class="text-sm font-medium leading-[1.35] text-ink">
+                Tipologia
+              </legend>
+              <div class="terraco-m3-group-grid grid-cols-1 sm:w-fit sm:grid-cols-3">
+                @for (option of tipologiaOptions; track option) {
+                  <button
+                    type="button"
+                    [attr.aria-pressed]="tipologia() === option"
+                    (click)="toggleTipologia(option)"
+                    [class]="segmentClass(tipologia() === option)"
+                  >
+                    {{ option }}
+                  </button>
+                }
+              </div>
+            </fieldset>
+
+            <fieldset class="space-y-2.5">
+              <legend class="text-sm font-medium leading-[1.35] text-ink">
+                Região de BH
+              </legend>
+              <div class="terraco-m3-group-grid grid-cols-2 sm:w-fit sm:grid-cols-4">
+                @for (option of regiaoOptions; track option) {
+                  <button
+                    type="button"
+                    [attr.aria-pressed]="regiao() === option"
+                    (click)="toggleRegiao(option)"
+                    [class]="segmentClass(regiao() === option)"
+                  >
+                    {{ option }}
+                  </button>
+                }
+              </div>
+            </fieldset>
           </div>
 
-          <!-- Painel vivo em Verde Musgo Urbano + destaque Ipê Solar -->
           <div
-            class="terraco-cobogo-moss flex flex-col justify-between gap-6 rounded-xl bg-brand p-6 text-ink-inverse shadow-floating sm:p-7 lg:col-span-5"
+            class="mt-8 flex flex-col gap-4 border-t border-border-subtle pt-6 sm:flex-row sm:items-center sm:justify-between"
           >
-            <div class="space-y-4">
-              <div class="space-y-1.5">
-                <h3
-                  class="font-display text-[1.3125rem] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink-inverse text-balance"
-                >
-                  @if (!hasSelection()) {
-                    Sua curadoria em BH
-                  } @else if (matchedLancamentos().length > 0) {
-                    {{ matchedCountHeadline() }}
-                  } @else {
-                    Nenhum match exato agora
-                  }
-                </h3>
-                <p class="text-[14px] font-normal leading-[1.5] text-ink-inverse/82">
-                  @if (!hasSelection()) {
-                    Comece combinando objetivo, tamanho ou bairro ao lado.
-                  } @else if (matchedLancamentos().length > 0) {
-                    Toque em um lançamento para ver plantas e simular entrada.
-                  } @else {
-                    Explore o catálogo completo ou cadastre um alerta de bairro.
-                  }
-                </p>
-              </div>
-
-              @if (previewLaunches().length > 0) {
-                <ul class="space-y-2.5">
-                  @for (launch of previewLaunches(); track launch.slug) {
-                    <li>
-                      <a
-                        [routerLink]="['/lancamentos', launch.slug]"
-                        class="group flex items-center gap-3 rounded-[18px] border border-ink-inverse/14 bg-ink-inverse/8 p-2.5 transition-[background-color,border-color] duration-150 hover:border-accent/60 hover:bg-ink-inverse/14"
-                      >
-                        <img
-                          [src]="launch.imagem"
-                          [alt]="launch.imagemAlt"
-                          width="72"
-                          height="54"
-                          loading="lazy"
-                          decoding="async"
-                          class="h-13 w-16 shrink-0 rounded-[12px] object-cover"
-                        />
-                        <div class="min-w-0 flex-1">
-                          <p class="font-display truncate text-[1rem] font-medium leading-[1.25] text-ink-inverse">
-                            {{ launch.nome }}
-                          </p>
-                          <p class="truncate text-[13px] font-normal text-ink-inverse/78 tabular-nums">
-                            {{ launch.bairro }} · {{ launch.metragem }}
-                          </p>
-                        </div>
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.8"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="h-4 w-4 shrink-0 text-accent transition-transform duration-150 group-hover:translate-x-0.5"
-                        >
-                          <path d="M7.5 5 12.5 10 7.5 15" />
-                        </svg>
-                      </a>
-                    </li>
-                  }
-                </ul>
+            <div class="space-y-1 text-[15px] leading-[1.5] text-ink-muted">
+              @if (hasSelection()) {
+                @if (matchedLancamentos().length > 0) {
+                  <p class="tabular-nums text-ink">
+                    {{ matchedSummary() }}
+                  </p>
+                } @else {
+                  <p>
+                    Nenhum lançamento exato com essa combinação. Explore o
+                    catálogo completo em BH.
+                  </p>
+                }
               }
             </div>
 
-            <a
-              [routerLink]="['/lancamentos']"
-              [queryParams]="ctaQueryParams()"
-              class="terraco-btn terraco-btn-ipe inline-flex min-h-[48px] w-full items-center justify-center rounded-pill bg-accent px-6 py-3 text-[14px] font-medium leading-[1.35] text-ink hover:bg-accent-hover tabular-nums"
-            >
-              {{ ctaLabel() }}
-            </a>
-          </div>
-        </div>
+            <div class="flex flex-wrap items-center gap-4">
+              @if (hasSelection()) {
+                <button
+                  type="button"
+                  (click)="clearSelections()"
+                  class="terraco-link-underline inline-flex min-h-[44px] items-center px-1 text-sm font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+                >
+                  Limpar
+                </button>
+              }
 
-        <!-- Bairros em foco (Fachada Viva arched cards) -->
-        <div class="mt-14 sm:mt-16">
-          <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <h3
-              class="font-display text-[1.375rem] font-medium not-italic leading-[1.2] tracking-[-0.02em] text-ink text-balance"
-            >
-              Guias de bairros em Belo Horizonte
-            </h3>
-            <p class="text-[14px] font-normal text-ink-muted">
-              Mobilidade, rotina a pé e lançamentos por região.
-            </p>
-          </div>
-
-          <nav
-            aria-label="Guias de bairros em BH"
-            class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            @for (bairro of bairrosGuides; track bairro.slug; let i = $index) {
               <a
-                [routerLink]="['/bairros', bairro.slug]"
-                [class]="'terraco-arch-card flex flex-col justify-between gap-4 p-5 ' + archTintClass(i)"
+                [routerLink]="['/lancamentos']"
+                [queryParams]="ctaQueryParams()"
+                class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-6 py-3 text-[15px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover tabular-nums"
               >
-                <div class="space-y-1.5 pt-1">
-                  <p class="text-[13px] font-normal text-ink-muted">
-                    {{ bairro.regiao }}
-                  </p>
-                  <p
-                    class="font-display text-[1.25rem] font-medium leading-[1.2] tracking-[-0.015em] text-ink"
-                  >
-                    {{ bairro.nome }}
-                  </p>
-                  <p class="line-clamp-2 text-[14px] font-normal leading-[1.5] text-ink-muted">
-                    {{ bairro.resumo }}
-                  </p>
-                </div>
-
-                <span class="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand">
-                  <span>Ver guia do bairro</span>
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-3.5 w-3.5"
-                  >
-                    <path d="M7.5 5 12.5 10 7.5 15" />
-                  </svg>
-                </span>
+                {{ ctaLabel() }}
               </a>
-            }
-          </nav>
+            </div>
+          </div>
         </div>
+
+        <nav
+          aria-label="Guias de bairros em BH"
+          class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-1 text-sm"
+        >
+          <span class="font-medium text-ink">Guias de bairros em BH</span>
+          @for (guide of neighborhoodGuides; track guide.route) {
+            <a
+              [routerLink]="guide.route"
+              class="terraco-link-underline inline-flex min-h-[44px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink"
+            >
+              {{ guide.label }}
+            </a>
+          }
+        </nav>
       </div>
     </section>
   `,
@@ -336,7 +243,7 @@ export class GuidedDiscoveryComponent {
   readonly objetivoOptions = OBJETIVO_OPTIONS;
   readonly tipologiaOptions = TIPOLOGIA_OPTIONS;
   readonly regiaoOptions = REGIAO_OPTIONS;
-  readonly bairrosGuides = BAIRROS_BH;
+  readonly neighborhoodGuides = NEIGHBORHOOD_GUIDES;
 
   readonly objetivo = signal<ObjetivoOption | null>(null);
   readonly tipologia = signal<TipologiaOption | null>(null);
@@ -388,15 +295,13 @@ export class GuidedDiscoveryComponent {
     return rankLancamentosByObjetivo(filtered, selectedObjetivo);
   });
 
-  readonly previewLaunches = computed(() =>
-    this.matchedLancamentos().slice(0, 3)
-  );
-
-  readonly matchedCountHeadline = computed(() => {
-    const count = this.matchedLancamentos().length;
-    return count === 1
-      ? '1 lançamento combina com você'
-      : `${count} lançamentos combinam com você`;
+  readonly matchedSummary = computed(() => {
+    const matches = this.matchedLancamentos();
+    const names = matches.map((item) => item.nome).join(', ');
+    if (matches.length === 1) {
+      return `1 lançamento combina com sua seleção: ${names}.`;
+    }
+    return `${matches.length} lançamentos combinam com sua seleção: ${names}.`;
   });
 
   readonly ctaLabel = computed(() => {
@@ -460,16 +365,12 @@ export class GuidedDiscoveryComponent {
     this.regiao.set(null);
   }
 
-  archTintClass(index: number): string {
-    return ARCH_TINT_CLASSES[index % ARCH_TINT_CLASSES.length];
-  }
-
   segmentClass(selected: boolean): string {
     const base =
-      'terraco-m3-group-item inline-flex min-h-[44px] cursor-pointer items-center justify-center border px-3.5 py-2 text-center text-[13px] leading-[1.35]';
+      'terraco-m3-group-item inline-flex min-h-[44px] cursor-pointer items-center justify-center border px-4 py-2 text-center text-[13px] leading-[1.35]';
     if (selected) {
       return `${base} border-brand bg-brand font-medium text-ink-inverse shadow-chip hover:bg-brand-hover`;
     }
-    return `${base} border-border-subtle bg-surface/70 font-normal text-ink hover:border-border-strong hover:bg-surface`;
+    return `${base} border-border-subtle bg-surface/75 font-normal text-ink hover:border-border-strong hover:bg-surface`;
   }
 }

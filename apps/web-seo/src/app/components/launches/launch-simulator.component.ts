@@ -58,20 +58,21 @@ function resolveInitialPropertyValue(item: Lancamento): number {
       -webkit-appearance: none;
       appearance: none;
       width: 100%;
-      height: 8px;
+      height: 6px;
       border-radius: 9999px;
+      background-color: var(--color-border-subtle);
       cursor: pointer;
     }
 
     .simulator-range::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       border-radius: 9999px;
       background-color: var(--color-brand-primary);
       border: 3px solid var(--color-bg-elevated);
-      box-shadow: 0 3px 10px rgba(30, 29, 27, 0.22);
+      box-shadow: 0 2px 8px rgba(30, 29, 27, 0.18);
       transition: transform 140ms var(--ease-ui), background-color 140ms var(--ease-ui);
     }
 
@@ -81,12 +82,12 @@ function resolveInitialPropertyValue(item: Lancamento): number {
     }
 
     .simulator-range::-moz-range-thumb {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       border-radius: 9999px;
       background-color: var(--color-brand-primary);
       border: 3px solid var(--color-bg-elevated);
-      box-shadow: 0 3px 10px rgba(30, 29, 27, 0.22);
+      box-shadow: 0 2px 8px rgba(30, 29, 27, 0.18);
       transition: transform 140ms var(--ease-ui), background-color 140ms var(--ease-ui);
     }
 
@@ -100,34 +101,34 @@ function resolveInitialPropertyValue(item: Lancamento): number {
       id="simulador"
       aria-labelledby="simulator-heading"
       data-testid="launch-simulator"
-      class="rounded-xl border border-border-subtle bg-elevated p-5 shadow-card sm:p-8 scroll-mt-28"
+      class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8 scroll-mt-24"
     >
       <div class="space-y-1.5">
         <h2
           id="simulator-heading"
-          class="font-display text-[clamp(1.375rem,2.4vw,1.75rem)] font-medium not-italic leading-[1.16] tracking-[-0.02em] text-ink text-balance"
+          class="font-display text-[clamp(1.25rem,2vw,1.5rem)] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
         >
           Simule entrada e parcela
         </h2>
-        <p class="text-[14px] font-normal leading-[1.55] text-ink-muted sm:text-[15px]">
-          Ajuste valor, entrada, FGTS e prazo para estimar seu financiamento no {{ item().nome }}, sem cadastro.
+        <p class="text-[14px] font-normal leading-[1.5] text-ink-muted sm:text-[15px]">
+          Ajuste valor, entrada, FGTS e prazo para estimar o financiamento do {{ item().nome }}.
         </p>
       </div>
 
       <div class="mt-6 grid gap-6 lg:grid-cols-12 lg:gap-8">
-        <!-- Controles táteis -->
+        <!-- Controles da simulação -->
         <div class="space-y-5 lg:col-span-7">
-          <div class="space-y-3">
+          <div class="space-y-2.5">
             <div class="flex flex-wrap items-baseline justify-between gap-2">
               <label
                 for="simulator-property-value"
-                class="text-[14px] font-medium text-ink"
+                class="text-[14px] font-normal text-ink"
               >
                 Valor do imóvel
               </label>
               <span
                 data-testid="simulator-property-value-display"
-                class="font-display text-[1.375rem] font-medium leading-[1.15] tracking-[-0.015em] text-ink tabular-nums"
+                class="text-[18px] font-medium leading-[1.2] tracking-[-0.01em] text-ink tabular-nums"
               >
                 {{ formattedPropertyValue() }}
               </span>
@@ -140,7 +141,6 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               [max]="maxPropertyValue"
               [step]="propertyValueStep"
               [value]="propertyValue()"
-              [style.background]="sliderTrackBackground()"
               (input)="onPropertyValueInput($event)"
               aria-label="Valor do imóvel para simulação"
               class="simulator-range"
@@ -148,14 +148,14 @@ function resolveInitialPropertyValue(item: Lancamento): number {
 
             <div class="flex items-center justify-between gap-2 text-[13px] font-normal text-ink-muted">
               <span class="tabular-nums">{{ formattedMinValue }}</span>
-              <span class="text-center">{{ propertyValueHint() }}</span>
+              <span>{{ propertyValueHint() }}</span>
               <span class="tabular-nums">{{ formattedMaxValue }}</span>
             </div>
           </div>
 
           <div class="space-y-2">
             <div class="flex items-baseline justify-between gap-2">
-              <span class="text-[14px] font-medium text-ink">Entrada em recursos próprios</span>
+              <span class="text-[14px] font-normal text-ink">Entrada em recursos próprios</span>
               <span class="text-[13px] font-normal text-ink-muted tabular-nums">
                 {{ formattedCashDownPayment() }}
               </span>
@@ -172,8 +172,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="downPaymentPercent() === percent"
                   [class]="
                     downPaymentPercent() === percent
-                      ? 'terraco-m3-group-item flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
-                      : 'terraco-m3-group-item flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
+                      ? 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
                   "
                 >
                   {{ percent }}%
@@ -184,7 +184,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
 
           <div class="space-y-2">
             <div class="flex items-baseline justify-between gap-2">
-              <span class="text-[14px] font-medium text-ink">Uso de FGTS</span>
+              <span class="text-[14px] font-normal text-ink">Uso de FGTS</span>
               <span class="text-[13px] font-normal text-ink-muted tabular-nums">
                 {{ formattedFgts() }}
               </span>
@@ -201,8 +201,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="clampedFgts() === preset.value"
                   [class]="
                     clampedFgts() === preset.value
-                      ? 'terraco-m3-group-item flex min-h-[44px] cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
-                      : 'terraco-m3-group-item flex min-h-[44px] cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
+                      ? 'terraco-m3-group-item flex min-h-[42px] cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'terraco-m3-group-item flex min-h-[42px] cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
                   "
                 >
                   {{ preset.label }}
@@ -212,7 +212,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
           </div>
 
           <div class="space-y-2">
-            <span class="block text-[14px] font-medium text-ink">Prazo de financiamento</span>
+            <span class="block text-[14px] font-normal text-ink">Prazo de financiamento</span>
             <div
               role="group"
               aria-label="Prazo de financiamento em anos"
@@ -225,8 +225,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="termYears() === years"
                   [class]="
                     termYears() === years
-                      ? 'terraco-m3-group-item flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
-                      : 'terraco-m3-group-item flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
+                      ? 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
                   "
                 >
                   {{ years }} anos
@@ -236,48 +236,48 @@ function resolveInitialPropertyValue(item: Lancamento): number {
           </div>
         </div>
 
-        <!-- Painel de resultado em Verde Musgo Urbano + CTA Ipê Solar -->
+        <!-- Resumo da simulação + ponte para o App Flutter -->
         <div
-          class="terraco-cobogo-moss flex flex-col justify-between gap-6 rounded-[24px] bg-brand p-6 text-ink-inverse shadow-floating lg:col-span-5"
+          class="terraco-cobogo-band flex flex-col justify-between gap-5 rounded-md border border-border-subtle bg-canvas p-5 lg:col-span-5"
         >
           <div class="space-y-4">
             <div class="space-y-1">
-              <p class="text-[13px] font-normal text-ink-inverse/75">
+              <p class="text-[13px] font-normal text-ink-muted">
                 Parcela mensal estimada
               </p>
               <p
                 data-testid="simulator-monthly-payment"
-                class="font-display text-[clamp(1.875rem,3.2vw,2.25rem)] font-medium not-italic leading-[1.08] tracking-[-0.02em] text-accent tabular-nums"
+                class="font-display text-[clamp(1.75rem,3vw,2.125rem)] font-medium not-italic leading-[1.1] tracking-[-0.02em] text-brand tabular-nums"
               >
                 {{ formattedMonthlyPayment() }}
-                <span class="font-sans text-[14px] font-normal text-ink-inverse/80">/mês</span>
+                <span class="font-sans text-[14px] font-normal text-ink-muted">/mês</span>
               </p>
             </div>
 
-            <dl class="space-y-2.5 border-t border-ink-inverse/16 pt-4">
+            <dl class="space-y-2.5 border-t border-border-subtle pt-4">
               <div class="flex items-baseline justify-between gap-3">
-                <dt class="text-[13px] font-normal text-ink-inverse/75">
+                <dt class="text-[13px] font-normal text-ink-muted">
                   Entrada total (recursos + FGTS)
                 </dt>
-                <dd class="text-[14px] font-medium text-ink-inverse tabular-nums">
+                <dd class="text-[14px] font-medium text-ink tabular-nums">
                   {{ formattedDownPaymentTotal() }}
                 </dd>
               </div>
 
               <div class="flex items-baseline justify-between gap-3">
-                <dt class="text-[13px] font-normal text-ink-inverse/75">
+                <dt class="text-[13px] font-normal text-ink-muted">
                   Valor financiado
                 </dt>
-                <dd class="text-[14px] font-normal text-ink-inverse tabular-nums">
+                <dd class="text-[14px] font-normal text-ink tabular-nums">
                   {{ formattedFinancedAmount() }}
                 </dd>
               </div>
 
               <div class="flex items-baseline justify-between gap-3">
-                <dt class="text-[13px] font-normal text-ink-inverse/75">
+                <dt class="text-[13px] font-normal text-ink-muted">
                   Renda familiar sugerida
                 </dt>
-                <dd class="text-[14px] font-normal text-ink-inverse tabular-nums">
+                <dd class="text-[14px] font-normal text-ink tabular-nums">
                   {{ formattedSuggestedIncome() }}
                 </dd>
               </div>
@@ -290,7 +290,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="simulator-whatsapp-cta"
-              class="terraco-btn terraco-btn-ipe flex min-h-[48px] w-full items-center justify-center rounded-pill bg-accent px-5 py-3 text-center text-[13px] font-medium leading-[1.35] text-ink hover:bg-accent-hover"
+              class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
             >
               Enviar simulação no WhatsApp
             </a>
@@ -301,7 +301,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-testid="simulator-flutter-cta"
-                class="terraco-btn flex min-h-[42px] w-full items-center justify-center rounded-pill border border-ink-inverse/25 bg-ink-inverse/10 px-5 py-2 text-center text-[13px] font-normal leading-[1.35] text-ink-inverse hover:bg-ink-inverse/20"
+                class="terraco-btn flex min-h-[42px] w-full items-center justify-center rounded-pill border border-border-subtle bg-elevated px-5 py-2 text-center text-[13px] font-normal leading-[1.35] text-ink hover:border-ink/30 hover:bg-surface/60"
               >
                 Salvar simulação e ver plantas interativas
               </a>
@@ -352,22 +352,11 @@ export class LaunchSimulatorComponent {
     computation: () => 30,
   });
 
-  readonly sliderProgressPercent = computed(() => {
-    const span = MAX_PROPERTY_VALUE - MIN_PROPERTY_VALUE;
-    if (span <= 0) return 0;
-    return Math.round(((this.propertyValue() - MIN_PROPERTY_VALUE) / span) * 100);
-  });
-
-  readonly sliderTrackBackground = computed(() => {
-    const pct = this.sliderProgressPercent();
-    return `linear-gradient(to right, var(--color-brand-primary) 0%, var(--color-brand-primary) ${pct}%, var(--color-border-subtle) ${pct}%, var(--color-border-subtle) 100%)`;
-  });
-
   readonly propertyValueHint = computed(() => {
     const price = this.item().precoAPartirDe;
     return typeof price === 'number' && Number.isFinite(price) && price > 0
-      ? 'Baseado no valor inicial'
-      : 'Valor ajustável';
+      ? 'Baseado no valor inicial do lançamento'
+      : 'Valor de referência ajustável';
   });
 
   readonly cashDownPayment = computed(() =>
