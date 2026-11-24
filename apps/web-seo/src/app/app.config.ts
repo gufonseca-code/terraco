@@ -16,7 +16,6 @@ import {
 import {
   provideClientHydration,
   withEventReplay,
-  withIncrementalHydration,
 } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { routes } from './app.routes';
@@ -45,7 +44,7 @@ export const appConfig: ApplicationConfig = {
       }),
       withPreloading(PreloadAllModules),
     ),
-    provideClientHydration(withEventReplay(), withIncrementalHydration()),
+    provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch()),
     provideAppInitializer(() => {
       // Browser-guarded inside FirebaseService (no-op on SSR server).
