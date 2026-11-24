@@ -172,7 +172,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
       class="flex flex-1 flex-col justify-start bg-canvas py-4 sm:py-12 lg:py-16"
     >
       <div class="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div animate.enter="terraco-reveal" class="mb-3 sm:mb-6">
+        <div class="terraco-reveal mb-3 sm:mb-6">
           <a
             routerLink="/lancamentos"
             class="terraco-link-underline inline-flex min-h-[40px] items-center text-sm font-normal text-ink-muted transition-colors duration-150 hover:text-ink sm:min-h-[44px]"
@@ -182,8 +182,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         </div>
 
         <article
-          animate.enter="terraco-reveal-delay"
-          class="terraco-floating-card overflow-hidden rounded-lg bg-elevated"
+          class="terraco-reveal-delay terraco-floating-card overflow-hidden rounded-lg bg-elevated"
         >
           <div class="grid lg:grid-cols-12">
             <div

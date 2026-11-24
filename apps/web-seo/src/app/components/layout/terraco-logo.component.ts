@@ -94,7 +94,7 @@ export class TerracoStairsMarkComponent {
           <span aria-hidden="true" class="inline-flex items-baseline">
             @for (letter of wordmarkLetters; track $index) {
               <span
-                animate.enter="animate-letter-jump"
+                class="animate-letter-jump"
                 [style.animationDelay]="80 + $index * 100 + 'ms'"
               >{{ letter }}</span>
             }

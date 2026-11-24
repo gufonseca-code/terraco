@@ -31,7 +31,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
             aria-hidden="true"
             class="pointer-events-none absolute -inset-x-6 top-0 -bottom-20 -z-10 bg-gradient-to-b from-canvas/95 via-canvas/92 via-78% to-transparent md:hidden"
           ></div>
-          <div animate.enter="terraco-reveal" class="space-y-4">
+          <div class="terraco-reveal space-y-4">
             <h1
               id="hero-heading"
               class="font-display text-[clamp(2.25rem,4.5vw,3.25rem)] font-medium leading-[1.06] tracking-[-0.03em] text-ink max-w-[14ch] text-balance"
@@ -46,7 +46,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
             </p>
           </div>
 
-          <div animate.enter="terraco-reveal-delay" class="space-y-3">
+          <div class="terraco-reveal-delay space-y-3">
             <app-hero-search-form [suggestions]="suggestions" />
 
             <nav

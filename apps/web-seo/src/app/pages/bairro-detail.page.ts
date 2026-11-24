@@ -3,10 +3,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
   computed,
   effect,
   inject,
   input,
+  linkedSignal,
+  viewChildren,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -150,7 +153,7 @@ function buildBairroJsonLd(
           <article
             class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
           >
-            <header animate.enter="terraco-reveal" class="max-w-3xl space-y-4">
+            <header class="terraco-reveal max-w-3xl space-y-4">
               <nav aria-label="Navegação estrutural">
                 <ol
                   class="flex flex-wrap items-center gap-2 text-[14px] font-normal text-ink-muted"
@@ -198,8 +201,7 @@ function buildBairroJsonLd(
 
             <section
               aria-label="Guia editorial do bairro"
-              animate.enter="terraco-reveal-delay"
-              class="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3 sm:mt-14"
+              class="terraco-reveal-delay mt-12 grid grid-cols-1 gap-5 md:grid-cols-3 sm:mt-14"
             >
               <div
                 class="terraco-card rounded-lg border border-border-subtle bg-elevated p-6 shadow-card"
@@ -346,28 +348,62 @@ function buildBairroJsonLd(
                 Perguntas frequentes sobre {{ current.nome }}
               </h2>
 
-              <div class="mt-6 space-y-3">
-                @for (faq of current.faqs; track faq.pergunta) {
-                  <details
-                    class="group rounded-md border border-border-subtle bg-elevated px-5 py-4 transition-colors duration-150 open:border-ink/20"
+              <div class="terraco-m3-accordion-group mt-6">
+                @for (faq of current.faqs; track faq.pergunta; let i = $index) {
+                  @let isOpen = expandedFaqIndex() === i;
+                  <div
+                    class="terraco-m3-accordion-item"
+                    [attr.data-expanded]="isOpen"
                   >
-                    <summary
-                      class="flex cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-medium leading-[1.45] text-ink [&::-webkit-details-marker]:hidden"
-                    >
-                      <span>{{ faq.pergunta }}</span>
-                      <span
-                        aria-hidden="true"
-                        class="shrink-0 text-[18px] font-normal leading-none text-ink-muted transition-transform duration-150 group-open:rotate-45"
+                    <h3 class="font-sans">
+                      <button
+                        #faqTrigger
+                        type="button"
+                        [id]="'faq-trigger-' + current.slug + '-' + i"
+                        [attr.aria-expanded]="isOpen"
+                        [attr.aria-controls]="'faq-panel-' + current.slug + '-' + i"
+                        (click)="toggleFaq(i)"
+                        (keydown)="onFaqKeydown($event, i, current.faqs.length)"
+                        class="flex min-h-[56px] w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left text-[15px] font-medium leading-[1.45] text-ink transition-colors duration-150 focus-visible:outline-offset-[-2px]"
                       >
-                        +
-                      </span>
-                    </summary>
-                    <p
-                      class="mt-3 border-t border-border-subtle/70 pt-3 text-[14px] font-normal leading-[1.6] text-ink-muted"
+                        <span>{{ faq.pergunta }}</span>
+                        <span
+                          aria-hidden="true"
+                          class="terraco-m3-accordion-icon"
+                        >
+                          <svg
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.85"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="terraco-m3-accordion-chevron h-4 w-4"
+                          >
+                            <path d="m5.5 7.5 4.5 4.5 4.5-4.5" />
+                          </svg>
+                        </span>
+                      </button>
+                    </h3>
+
+                    <div
+                      role="region"
+                      [id]="'faq-panel-' + current.slug + '-' + i"
+                      [attr.aria-labelledby]="'faq-trigger-' + current.slug + '-' + i"
+                      [attr.inert]="isOpen ? null : true"
+                      class="terraco-m3-accordion-panel"
                     >
-                      {{ faq.resposta }}
-                    </p>
-                  </details>
+                      <div class="terraco-m3-accordion-body">
+                        <div class="px-5 pb-5">
+                          <p
+                            class="border-t border-border-subtle/70 pt-3.5 text-[14px] font-normal leading-[1.65] text-ink-muted"
+                          >
+                            {{ faq.resposta }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 }
               </div>
             </section>
@@ -397,7 +433,7 @@ function buildBairroJsonLd(
                 @for (other of otherBairros(); track other.slug) {
                   <a
                     [routerLink]="['/bairros', other.slug]"
-                    class="inline-flex min-h-[40px] items-center rounded-pill border border-border-subtle bg-elevated px-4 py-2 text-[13px] font-medium text-ink transition-colors duration-150 hover:border-ink/25 hover:bg-surface/60"
+                    class="terraco-m3-chip inline-flex min-h-[42px] items-center border border-border-subtle bg-elevated px-4 py-2 text-[13px] font-medium text-ink hover:border-border-strong hover:bg-surface/75"
                   >
                     {{ other.nome }}
                   </a>
@@ -465,6 +501,14 @@ export class BairroDetailPageComponent {
     return BAIRROS_BH.filter((item) => item.slug !== current?.slug);
   });
 
+  readonly expandedFaqIndex = linkedSignal<string, number | null>({
+    source: this.resolvedSlug,
+    computation: () => null,
+  });
+
+  private readonly faqTriggers =
+    viewChildren<ElementRef<HTMLButtonElement>>('faqTrigger');
+
   constructor() {
     effect(() => {
       const current = this.bairro();
@@ -480,6 +524,30 @@ export class BairroDetailPageComponent {
     this.destroyRef.onDestroy(() => {
       this.removeJsonLd();
     });
+  }
+
+  toggleFaq(index: number): void {
+    this.expandedFaqIndex.update((current) =>
+      current === index ? null : index
+    );
+  }
+
+  onFaqKeydown(event: KeyboardEvent, index: number, total: number): void {
+    if (total <= 1) return;
+    let nextIndex: number | null = null;
+    if (event.key === 'ArrowDown') {
+      nextIndex = (index + 1) % total;
+    } else if (event.key === 'ArrowUp') {
+      nextIndex = (index - 1 + total) % total;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = total - 1;
+    }
+    if (nextIndex !== null) {
+      event.preventDefault();
+      this.faqTriggers()[nextIndex]?.nativeElement.focus();
+    }
   }
 
   private upsertJsonLd(

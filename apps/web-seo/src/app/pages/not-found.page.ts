@@ -20,7 +20,7 @@ import { SeoService } from '../core';
         tabindex="-1"
         class="flex min-h-dvh flex-1 flex-col items-center justify-center px-6 py-12 text-center"
       >
-        <div animate.enter="terraco-reveal" class="max-w-md space-y-4">
+        <div class="terraco-reveal max-w-md space-y-4">
           <h1 class="font-display text-[clamp(2.25rem,4.5vw,3.25rem)] font-medium leading-[1.06] tracking-[-0.03em] text-ink text-balance">
             404
           </h1>

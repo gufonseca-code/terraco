@@ -232,7 +232,266 @@ h4 {
   box-shadow: none;
 }
 
-/* Botão pill de navegação na navbar */
+/* M3 Expressive: Adaptive Top Bar Shell (docked morph when mobile sheet opens) */
+.terraco-m3-topbar {
+  border-radius: 28px;
+  transition:
+    border-radius 280ms var(--ease-enter),
+    border-color 180ms var(--ease-ui),
+    box-shadow 220ms var(--ease-ui),
+    background-color 180ms var(--ease-ui);
+}
+
+.terraco-m3-topbar--open {
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+/* M3 Expressive: Desktop Tonal Navigation Rail */
+.terraco-m3-nav-rail {
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 85%, transparent);
+  background-color: color-mix(in srgb, var(--color-bg-surface) 75%, transparent);
+}
+
+.terraco-m3-rail-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 38px;
+  padding: 0 1rem;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.35;
+  white-space: nowrap;
+  transition:
+    border-radius 300ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 180ms var(--ease-enter);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-rail-item:hover {
+    background-color: color-mix(in srgb, var(--color-bg-elevated) 85%, transparent);
+    color: var(--color-text-primary);
+  }
+}
+
+.terraco-m3-rail-item:active {
+  border-radius: var(--radius-m3-md);
+  transform: scale(0.97);
+}
+
+.terraco-m3-rail-item[aria-expanded="true"] {
+  border-radius: var(--radius-m3-md);
+  border-color: color-mix(in srgb, var(--color-brand-primary) 30%, transparent);
+  background-color: color-mix(in srgb, var(--color-brand-primary) 10%, var(--color-bg-elevated));
+  color: var(--color-brand-primary);
+  font-weight: 500;
+}
+
+.terraco-m3-rail-item[aria-current="page"] {
+  border-radius: 20px;
+  border-color: var(--color-brand-primary);
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+  font-weight: 500;
+  box-shadow: var(--shadow-chip);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-rail-item[aria-current="page"]:hover {
+    border-color: var(--color-brand-primary-hover);
+    background-color: var(--color-brand-primary-hover);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-moss);
+  }
+}
+
+.terraco-m3-rail-item[aria-current="page"]:active {
+  border-radius: var(--radius-m3-md);
+  box-shadow: none;
+}
+
+/* M3 Expressive: Mobile Menu Toggle (20px circle -> 12px squircle in Verde Musgo) */
+.terraco-m3-menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 20px;
+  border: 1px solid var(--color-border-subtle);
+  background-color: color-mix(in srgb, var(--color-bg-surface) 80%, transparent);
+  color: var(--color-text-primary);
+  transition:
+    border-radius 320ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    transform 180ms var(--ease-enter);
+}
+
+.terraco-m3-menu-toggle[aria-expanded="true"] {
+  border-radius: var(--radius-m3-md);
+  border-color: var(--color-brand-primary);
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}
+
+.terraco-m3-menu-toggle:active {
+  border-radius: var(--radius-m3-md);
+  transform: scale(0.94);
+}
+
+/* Barras do ícone hambúrguer -> X (60fps GPU-composited) */
+.terraco-m3-burger-line {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 240ms var(--ease-enter);
+}
+
+.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--top {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--bottom {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+/* Folha flutuante mobile da navbar (entrada/saída suave só com transform + opacity) */
+@keyframes terraco-m3-sheet-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes terraco-m3-sheet-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0) scale(0.985);
+  }
+}
+
+.terraco-m3-sheet-enter {
+  transform-origin: top center;
+  will-change: transform, opacity;
+  animation: terraco-m3-sheet-in 240ms var(--ease-enter) both;
+}
+
+.terraco-m3-sheet-leave {
+  transform-origin: top center;
+  will-change: transform, opacity;
+  animation: terraco-m3-sheet-out 160ms var(--ease-ui) both;
+}
+
+/* M3 Expressive: Mobile Quick Pill + Tonal Action Button */
+.terraco-m3-nav-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 40px;
+  border: 1px solid var(--color-border-subtle);
+  background-color: color-mix(in srgb, var(--color-bg-surface) 75%, transparent);
+  color: var(--color-text-primary);
+  border-radius: 20px;
+  transition:
+    border-radius 300ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 180ms var(--ease-enter);
+}
+
+.terraco-m3-nav-item[aria-current="page"] {
+  border-color: var(--color-brand-primary);
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-chip);
+}
+
+.terraco-m3-nav-item:active {
+  border-radius: var(--radius-m3-md);
+  transform: scale(0.97);
+}
+
+/* M3 Expressive: Tonal Action Button (WhatsApp na Navbar) */
+.terraco-m3-nav-action {
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 40px;
+  border: 1px solid color-mix(in srgb, var(--color-brand-primary) 22%, transparent);
+  background-color: var(--color-success-bg);
+  color: var(--color-brand-primary);
+  border-radius: 20px;
+  transition:
+    border-radius 300ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 180ms var(--ease-enter);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-nav-action:hover {
+    border-color: var(--color-brand-primary);
+    background-color: var(--color-brand-primary);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-moss);
+  }
+}
+
+.terraco-m3-nav-action:active {
+  border-radius: var(--radius-m3-md);
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+/* M3 Expressive: Icon Action Button (circle -> squircle on press/hover) */
+.terraco-m3-icon-btn {
+  border-radius: 22px;
+  transition:
+    border-radius 300ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 180ms var(--ease-enter);
+}
+
+.terraco-m3-icon-btn:active {
+  border-radius: var(--radius-m3-md);
+  transform: scale(0.94);
+}
+
+/* Botão pill de navegação na navbar (legado/compatibilidade) */
 .terraco-nav-link {
   display: inline-flex;
   align-items: center;
@@ -453,6 +712,154 @@ h4 {
 
 .terraco-m3-select-card:active {
   transform: scale(0.985);
+}
+
+/* M3 Expressive: Connected Accordion (FAQ Bairros) */
+.terraco-m3-accordion-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.terraco-m3-accordion-item {
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition:
+    border-radius 280ms var(--ease-enter),
+    border-color 180ms var(--ease-ui),
+    background-color 180ms var(--ease-ui),
+    box-shadow 220ms var(--ease-ui);
+}
+
+.terraco-m3-accordion-group > .terraco-m3-accordion-item:first-child {
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.terraco-m3-accordion-group > .terraco-m3-accordion-item:last-child {
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-accordion-item:hover {
+    border-color: var(--color-border-strong);
+  }
+}
+
+.terraco-m3-accordion-item[data-expanded="true"] {
+  border-radius: var(--radius-lg);
+  border-color: color-mix(in srgb, var(--color-brand-primary) 35%, transparent);
+  box-shadow: var(--shadow-card);
+}
+
+.terraco-m3-accordion-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-secondary);
+  transition:
+    border-radius 320ms var(--ease-spring-fast),
+    background-color 180ms var(--ease-ui),
+    color 180ms var(--ease-ui);
+}
+
+[aria-expanded="true"] .terraco-m3-accordion-icon {
+  border-radius: 10px;
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}
+
+.terraco-m3-accordion-chevron {
+  transition: transform 260ms var(--ease-enter);
+}
+
+[aria-expanded="true"] .terraco-m3-accordion-chevron {
+  transform: rotate(180deg);
+}
+
+.terraco-m3-accordion-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 280ms var(--ease-enter),
+    opacity 180ms var(--ease-ui);
+}
+
+.terraco-m3-accordion-item[data-expanded="true"] .terraco-m3-accordion-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.terraco-m3-accordion-body {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* M3 Expressive: Search Bar com Shape Morphing (28px pill -> 28px/14px docked) */
+.terraco-m3-search {
+  border-radius: 28px;
+  transition:
+    border-radius 320ms var(--ease-spring-fast),
+    border-color 160ms var(--ease-ui),
+    box-shadow 220ms var(--ease-ui),
+    background-color 160ms var(--ease-ui);
+}
+
+.terraco-m3-search--open {
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+@keyframes terraco-search-panel-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes terraco-search-panel-slide-in {
+  from {
+    transform: translateY(-6px) scale(0.985);
+  }
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes terraco-search-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.985);
+  }
+}
+
+.terraco-search-panel-enter {
+  transform-origin: top center;
+  animation:
+    terraco-search-panel-fade-in 140ms var(--ease-ui) both,
+    terraco-search-panel-slide-in 320ms var(--ease-spring-fast) both;
+}
+
+.terraco-search-panel-leave {
+  transform-origin: top center;
+  animation: terraco-search-panel-out 130ms var(--ease-ui) both;
 }
 
 /* M3 Expressive: Floating Toolbar (Effects no opacity + Spatial spring no transform) */
@@ -948,24 +1355,28 @@ h4 {
 .svg-sway-a {
   transform-box: fill-box;
   transform-origin: 50% 94%;
+  will-change: transform;
   animation: terraco-sway-a 11s ease-in-out infinite;
 }
 
 .svg-sway-b {
   transform-box: fill-box;
   transform-origin: 50% 94%;
+  will-change: transform;
   animation: terraco-sway-b 12.5s ease-in-out infinite;
 }
 
 .svg-sway-fg {
   transform-box: fill-box;
   transform-origin: 65% 96%;
+  will-change: transform;
   animation: terraco-sway-fg 12s ease-in-out infinite;
 }
 
 .svg-sway-vine {
   transform-box: fill-box;
   transform-origin: 55% 6%;
+  will-change: transform;
   animation: terraco-vine-sway 10.5s ease-in-out infinite;
 }
 
@@ -985,6 +1396,10 @@ h4 {
   .terraco-lightbox-backdrop-leave,
   .terraco-toolbar-enter,
   .terraco-toolbar-leave,
+  .terraco-search-panel-enter,
+  .terraco-search-panel-leave,
+  .terraco-m3-sheet-enter,
+  .terraco-m3-sheet-leave,
   .terraco-skeleton::after,
   .hero-enter-title,
   .hero-enter-form,
@@ -1016,6 +1431,18 @@ h4 {
   .terraco-m3-group-item,
   .terraco-m3-icon-toggle,
   .terraco-m3-select-card,
+  .terraco-m3-search,
+  .terraco-m3-topbar,
+  .terraco-m3-rail-item,
+  .terraco-m3-menu-toggle,
+  .terraco-m3-burger-line,
+  .terraco-m3-nav-item,
+  .terraco-m3-nav-action,
+  .terraco-m3-icon-btn,
+  .terraco-m3-accordion-item,
+  .terraco-m3-accordion-icon,
+  .terraco-m3-accordion-chevron,
+  .terraco-m3-accordion-panel,
   .terraco-nav-link,
   .terraco-link-underline::after,
   .terraco-stairs-step,

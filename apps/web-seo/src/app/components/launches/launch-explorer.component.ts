@@ -16,6 +16,7 @@ import { BAIRROS_BH, type BairroGuide } from '../../core/bairros.data';
 import { LaunchCardComponent } from './launch-card.component';
 import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
 import { WhatsappAlertFormComponent } from './whatsapp-alert-form.component';
+import { M3SearchBarComponent } from '../shared/m3-search-bar.component';
 
 const TIPOLOGIA_FILTERS = [
   'Todas',
@@ -34,6 +35,7 @@ const TIPOLOGIA_FILTERS = [
     LaunchCardComponent,
     LaunchCardSkeletonComponent,
     WhatsappAlertFormComponent,
+    M3SearchBarComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -49,8 +51,7 @@ const TIPOLOGIA_FILTERS = [
         <div class="space-y-2.5">
           <h1
             id="lancamentos-heading"
-            animate.enter="terraco-reveal"
-            class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink text-balance"
+            class="terraco-reveal font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium leading-[1.12] tracking-[-0.02em] text-ink text-balance"
           >
             Lançamentos
           </h1>
@@ -62,44 +63,21 @@ const TIPOLOGIA_FILTERS = [
         @if (!isLoading() || lancamentos().length > 0) {
           <div class="flex flex-col gap-3">
             <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
-              <form
-                (submit)="handleSearchSubmit($event)"
-                role="search"
-                aria-label="Filtrar lançamentos"
-                class="flex w-full items-center gap-2 rounded-pill border border-border-subtle bg-elevated p-1.5 pl-5 shadow-chip transition-[border-color,box-shadow] duration-150 hover:border-ink/25 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 focus-within:shadow-card lg:max-w-md"
-              >
-                <label for="explorer-search" class="sr-only">
-                  Filtrar por bairro ou lançamento
-                </label>
-                <input
-                  #searchInputRef
-                  id="explorer-search"
-                  type="search"
-                  enterkeyhint="search"
-                  [value]="searchInput()"
-                  (input)="onSearchInput($event)"
-                  placeholder="Bairro ou lançamento"
-                  class="w-full min-w-0 bg-transparent py-2 pr-2 text-[15px] font-normal text-ink placeholder:text-ink-muted focus-visible:outline-none [&::-webkit-search-cancel-button]:hidden"
-                />
-                @if (searchInput().length > 0) {
-                  <button
-                    type="button"
-                    (click)="clearFilters()"
-                    aria-label="Limpar busca"
-                    animate.enter="terraco-chip-enter"
-                    animate.leave="terraco-chip-leave"
-                    class="inline-flex min-h-[40px] shrink-0 items-center rounded-pill px-3 text-sm font-normal text-ink-muted transition-colors duration-150 hover:bg-surface/70 hover:text-ink cursor-pointer"
-                  >
-                    Limpar
-                  </button>
-                }
-                <button
-                  type="submit"
-                  class="terraco-btn terraco-btn-moss inline-flex min-h-[40px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2 text-sm font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover cursor-pointer"
-                >
-                  Buscar
-                </button>
-              </form>
+              <app-m3-search-bar
+                #searchBarRef
+                inputId="explorer-search"
+                ariaLabel="Filtrar lançamentos"
+                labelText="Filtrar por bairro ou lançamento"
+                placeholder="Bairro ou lançamento"
+                submitLabel="Buscar"
+                size="compact"
+                [value]="searchInput()"
+                (valueChange)="onSearchValueChange($event)"
+                (submitted)="onSearchSubmitted($event)"
+                (neighborhoodSelected)="selectNeighborhood($event)"
+                (cleared)="clearFilters()"
+                class="w-full lg:max-w-md"
+              />
 
               <div
                 #filtersContainerRef
@@ -446,8 +424,8 @@ export class LaunchExplorerComponent {
     );
   });
 
-  private readonly searchInputRef =
-    viewChild<ElementRef<HTMLInputElement>>('searchInputRef');
+  private readonly searchBarRef =
+    viewChild<M3SearchBarComponent>('searchBarRef');
   private readonly filtersContainerRef =
     viewChild<ElementRef<HTMLElement>>('filtersContainerRef');
 
@@ -565,16 +543,13 @@ export class LaunchExplorerComponent {
     this.selectTipologia(tipologia);
   }
 
-  onSearchInput(event: Event): void {
-    const target = event.target as HTMLInputElement | null;
-    const value = target?.value ?? '';
+  onSearchValueChange(value: string): void {
     this.searchInput.set(value);
     this.lancamentosService.setSearchQuery(value);
   }
 
-  handleSearchSubmit(event: Event): void {
-    event.preventDefault();
-    const trimmed = this.searchInput().trim();
+  onSearchSubmitted(term: string): void {
+    const trimmed = term.trim();
     this.searchInput.set(trimmed);
     this.lancamentosService.setActiveFilter('Todos');
     this.lancamentosService.setSearchQuery(trimmed);
@@ -623,7 +598,7 @@ export class LaunchExplorerComponent {
     this.lancamentosService.setTipologiaFilter('Todas');
     this.lancamentosService.setObjetivoFilter(null);
     this.syncQueryParams({ q: '', tipologia: '', objetivo: '' });
-    this.searchInputRef()?.nativeElement.focus();
+    this.searchBarRef()?.focusInput();
   }
 
   private syncQueryParams(updates: {

@@ -112,7 +112,7 @@ import {
               type="button"
               (click)="close()"
               aria-label="Fechar comparador"
-              class="terraco-btn inline-flex min-h-[44px] min-w-[44px] shrink-0 cursor-pointer items-center justify-center rounded-pill border border-border-subtle bg-canvas text-ink hover:border-ink/25 hover:bg-surface"
+              class="terraco-m3-icon-btn inline-flex min-h-[44px] min-w-[44px] shrink-0 cursor-pointer items-center justify-center border border-border-subtle bg-canvas text-ink hover:border-ink/25 hover:bg-surface"
             >
               <svg
                 aria-hidden="true"
