@@ -249,7 +249,6 @@ h4 {
 
 /* M3 Expressive: Desktop Tonal Navigation Rail */
 .terraco-m3-nav-rail {
-  display: inline-flex;
   align-items: center;
   gap: 2px;
   padding: 4px;
@@ -390,7 +389,6 @@ h4 {
 
 /* M3 Expressive: Tonal Action Button (WhatsApp na Navbar) */
 .terraco-m3-nav-action {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.375rem;
