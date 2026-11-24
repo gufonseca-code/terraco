@@ -137,7 +137,7 @@ function splitHighlight(
             aria-label="Limpar busca"
             animate.enter="terraco-chip-enter"
             animate.leave="terraco-chip-leave"
-            class="terraco-btn inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-pill text-ink-muted hover:bg-surface hover:text-ink"
+            class="terraco-m3-icon-btn inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center text-ink-muted hover:bg-surface hover:text-ink"
           >
             <svg
               aria-hidden="true"
