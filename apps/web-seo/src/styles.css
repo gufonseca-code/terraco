@@ -230,13 +230,133 @@ h4 {
   box-shadow: none;
 }
 
-/* M3 Expressive: Connected Navigation Bar Items (Navbar) */
-.terraco-m3-nav-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
+/* M3 Expressive: Adaptive Top Bar Shell (docked morph when mobile sheet opens) */
+.terraco-m3-topbar {
+  border-radius: 28px;
+  transition:
+    border-radius 280ms var(--ease-enter),
+    border-color 180ms var(--ease-ui),
+    box-shadow 220ms var(--ease-ui),
+    background-color 180ms var(--ease-ui);
 }
 
+.terraco-m3-topbar--open {
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+/* M3 Expressive: Desktop Tonal Navigation Rail */
+.terraco-m3-nav-rail {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 85%, transparent);
+  background-color: color-mix(in srgb, var(--color-bg-surface) 75%, transparent);
+}
+
+.terraco-m3-rail-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 38px;
+  padding: 0 1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.35;
+  white-space: nowrap;
+  transition:
+    border-radius 280ms var(--ease-enter),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 160ms var(--ease-enter);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-rail-item:hover {
+    background-color: color-mix(in srgb, var(--color-bg-elevated) 85%, transparent);
+    color: var(--color-text-primary);
+  }
+}
+
+.terraco-m3-rail-item:active {
+  border-radius: var(--radius-m3-md);
+  transform: scale(0.97);
+}
+
+.terraco-m3-rail-item[aria-expanded="true"] {
+  border-radius: var(--radius-m3-md);
+  border-color: color-mix(in srgb, var(--color-brand-primary) 30%, transparent);
+  background-color: color-mix(in srgb, var(--color-brand-primary) 10%, var(--color-bg-elevated));
+  color: var(--color-brand-primary);
+  font-weight: 500;
+}
+
+.terraco-m3-rail-item[aria-current="page"] {
+  border-radius: var(--radius-pill);
+  border-color: var(--color-brand-primary);
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+  font-weight: 500;
+  box-shadow: var(--shadow-chip);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-rail-item[aria-current="page"]:hover {
+    border-color: var(--color-brand-primary-hover);
+    background-color: var(--color-brand-primary-hover);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-moss);
+  }
+}
+
+.terraco-m3-rail-item[aria-current="page"]:active {
+  border-radius: var(--radius-m3-md);
+  box-shadow: none;
+}
+
+/* M3 Expressive: Mobile Menu Toggle (circle -> 12px squircle in Verde Musgo) */
+.terraco-m3-menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-subtle);
+  background-color: color-mix(in srgb, var(--color-bg-surface) 80%, transparent);
+  color: var(--color-text-primary);
+  transition:
+    border-radius 280ms var(--ease-enter),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    transform 160ms var(--ease-enter);
+}
+
+.terraco-m3-menu-toggle[aria-expanded="true"] {
+  border-radius: var(--radius-m3-md);
+  border-color: var(--color-brand-primary);
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}
+
+.terraco-m3-menu-toggle:active {
+  transform: scale(0.94);
+}
+
+/* M3 Expressive: Mobile Quick Pill + Tonal Action Button */
 .terraco-m3-nav-item {
   display: inline-flex;
   align-items: center;
@@ -246,77 +366,26 @@ h4 {
   border: 1px solid var(--color-border-subtle);
   background-color: color-mix(in srgb, var(--color-bg-surface) 75%, transparent);
   color: var(--color-text-primary);
-  border-radius: var(--radius-morph-pill);
+  border-radius: var(--radius-pill);
   transition:
-    border-radius 320ms var(--ease-spring-fast),
+    border-radius 280ms var(--ease-enter),
     background-color 160ms var(--ease-ui),
     border-color 160ms var(--ease-ui),
     color 160ms var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
-    transform 180ms var(--ease-enter);
-}
-
-@media (min-width: 640px) {
-  .terraco-m3-nav-group > .terraco-m3-nav-slot:first-child .terraco-m3-nav-item,
-  .terraco-m3-nav-group > .terraco-m3-nav-item:first-child {
-    border-top-left-radius: var(--radius-morph-pill);
-    border-bottom-left-radius: var(--radius-morph-pill);
-    border-top-right-radius: var(--radius-sm);
-    border-bottom-right-radius: var(--radius-sm);
-  }
-
-  .terraco-m3-nav-group > .terraco-m3-nav-slot:last-child .terraco-m3-nav-item,
-  .terraco-m3-nav-group > .terraco-m3-nav-item:last-child {
-    border-top-left-radius: var(--radius-sm);
-    border-bottom-left-radius: var(--radius-sm);
-    border-top-right-radius: var(--radius-morph-pill);
-    border-bottom-right-radius: var(--radius-morph-pill);
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .terraco-m3-nav-item:hover {
-    border-color: var(--color-border-strong);
-    background-color: var(--color-bg-surface);
-    color: var(--color-text-primary);
-    box-shadow: var(--shadow-chip);
-  }
-}
-
-.terraco-m3-nav-item:active {
-  border-radius: var(--radius-m3-md);
-  transform: scale(0.97);
-  box-shadow: none;
-}
-
-.terraco-m3-nav-item[aria-expanded="true"] {
-  border-radius: var(--radius-m3-md) !important;
-  border-color: var(--color-brand-primary);
-  background-color: color-mix(in srgb, var(--color-brand-primary) 10%, var(--color-bg-elevated));
-  color: var(--color-brand-primary);
-  box-shadow: var(--shadow-chip);
+    transform 160ms var(--ease-enter);
 }
 
 .terraco-m3-nav-item[aria-current="page"] {
-  border-radius: var(--radius-morph-pill) !important;
   border-color: var(--color-brand-primary);
   background-color: var(--color-brand-primary);
   color: var(--color-text-inverse);
   box-shadow: var(--shadow-chip);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .terraco-m3-nav-item[aria-current="page"]:hover {
-    border-color: var(--color-brand-primary-hover);
-    background-color: var(--color-brand-primary-hover);
-    color: var(--color-text-inverse);
-    box-shadow: var(--shadow-moss);
-  }
-}
-
-.terraco-m3-nav-item[aria-current="page"]:active {
-  border-radius: var(--radius-m3-md) !important;
-  box-shadow: none;
+.terraco-m3-nav-item:active {
+  border-radius: var(--radius-m3-md);
+  transform: scale(0.97);
 }
 
 /* M3 Expressive: Tonal Action Button (WhatsApp na Navbar) */
@@ -329,14 +398,14 @@ h4 {
   border: 1px solid color-mix(in srgb, var(--color-brand-primary) 22%, transparent);
   background-color: var(--color-success-bg);
   color: var(--color-brand-primary);
-  border-radius: var(--radius-morph-pill);
+  border-radius: var(--radius-pill);
   transition:
-    border-radius 320ms var(--ease-spring-fast),
+    border-radius 280ms var(--ease-enter),
     background-color 160ms var(--ease-ui),
     border-color 160ms var(--ease-ui),
     color 160ms var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
-    transform 180ms var(--ease-enter);
+    transform 160ms var(--ease-enter);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1205,6 +1274,9 @@ h4 {
   .terraco-m3-icon-toggle,
   .terraco-m3-select-card,
   .terraco-m3-search,
+  .terraco-m3-topbar,
+  .terraco-m3-rail-item,
+  .terraco-m3-menu-toggle,
   .terraco-m3-nav-item,
   .terraco-m3-nav-action,
   .terraco-m3-accordion-item,

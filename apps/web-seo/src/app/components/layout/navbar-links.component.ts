@@ -4,6 +4,7 @@ import {
   ElementRef,
   computed,
   inject,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -12,33 +13,47 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { BAIRROS_BH, buildWhatsAppUrl } from '../../core';
 
+interface PrimaryNavItem {
+  readonly label: string;
+  readonly route: string;
+  readonly matchExact?: boolean;
+  readonly icon: 'home' | 'launches';
+}
+
+const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
+  { label: 'Início', route: '/', matchExact: true, icon: 'home' },
+  { label: 'Lançamentos', route: '/lancamentos', icon: 'launches' },
+];
+
 @Component({
   selector: 'app-navbar-links',
   imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:click)': 'onDocumentClick($event)',
-    '(document:keydown.escape)': 'closeBairrosMenu()',
+    '(document:keydown.escape)': 'closeAllMenus()',
   },
   template: `
     <nav
       #navRef
       data-testid="site-navbar"
       aria-label="Navegação principal"
-      class="flex items-center gap-2"
+      class="flex w-full items-center justify-end gap-2 md:justify-between md:pl-6"
     >
-      <!-- M3 Expressive Connected Navigation Group -->
-      <div class="terraco-m3-nav-group">
-        <a
-          routerLink="/lancamentos"
-          [attr.aria-current]="isCurrent() ? 'page' : null"
-          (click)="closeBairrosMenu()"
-          class="terraco-m3-nav-item px-4 text-sm font-medium leading-[1.35]"
-        >
-          Lançamentos
-        </a>
+      <!-- Desktop (md+): M3 Expressive Tonal Pill Rail (scalable for future items) -->
+      <div class="terraco-m3-nav-rail hidden md:inline-flex">
+        @for (item of primaryItems; track item.route) {
+          <a
+            [routerLink]="item.route"
+            [attr.aria-current]="isRouteActive(item) ? 'page' : null"
+            (click)="closeAllMenus()"
+            class="terraco-m3-rail-item"
+          >
+            {{ item.label }}
+          </a>
+        }
 
-        <div class="terraco-m3-nav-slot relative hidden sm:block">
+        <div class="relative">
           <button
             type="button"
             (click)="toggleBairrosMenu($event)"
@@ -46,7 +61,7 @@ import { BAIRROS_BH, buildWhatsAppUrl } from '../../core';
             aria-haspopup="menu"
             aria-controls="navbar-bairros-menu"
             [attr.aria-current]="isBairrosCurrent() ? 'page' : null"
-            class="terraco-m3-nav-item cursor-pointer px-4 text-sm font-medium leading-[1.35]"
+            class="terraco-m3-rail-item cursor-pointer"
           >
             <span>Bairros</span>
             <svg
@@ -74,7 +89,7 @@ import { BAIRROS_BH, buildWhatsAppUrl } from '../../core';
               aria-label="Guias de bairros em Belo Horizonte"
               animate.enter="terraco-search-panel-enter"
               animate.leave="terraco-search-panel-leave"
-              class="absolute right-0 top-full z-40 mt-2 w-64 overflow-hidden rounded-[22px] border border-border-subtle bg-elevated p-1.5 shadow-floating"
+              class="absolute right-0 top-full z-40 mt-2.5 w-64 overflow-hidden rounded-[22px] border border-border-subtle bg-elevated p-1.5 shadow-floating"
             >
               <p class="px-3 pt-1.5 pb-1 text-[13px] font-normal text-ink-muted">
                 Guias de bairros em BH
@@ -86,7 +101,7 @@ import { BAIRROS_BH, buildWhatsAppUrl } from '../../core';
                     role="menuitem"
                     [routerLink]="['/bairros', bairro.slug]"
                     [attr.aria-current]="active ? 'page' : null"
-                    (click)="closeBairrosMenu()"
+                    (click)="closeAllMenus()"
                     [class]="
                       active
                         ? 'flex min-h-[44px] items-center justify-between gap-3 rounded-[14px] bg-brand/10 px-3 py-2 text-[14px] font-medium text-brand transition-colors duration-150'
@@ -105,7 +120,7 @@ import { BAIRROS_BH, buildWhatsAppUrl } from '../../core';
         </div>
       </div>
 
-      <!-- M3 Expressive Tonal Action Pill -->
+      <!-- Desktop (md+): M3 Expressive Tonal Action Pill -->
       <a
         [href]="whatsappHref"
         target="_blank"
@@ -128,22 +143,228 @@ import { BAIRROS_BH, buildWhatsAppUrl } from '../../core';
         </svg>
         <span>WhatsApp</span>
       </a>
+
+      <!-- Mobile (< md): Quick Lançamentos Pill + M3 Expressive Menu Toggle -->
+      <div class="flex items-center gap-2 md:hidden">
+        <a
+          routerLink="/lancamentos"
+          [attr.aria-current]="isLancamentosCurrent() ? 'page' : null"
+          (click)="closeAllMenus()"
+          class="terraco-m3-nav-item px-3.5 text-[13px] font-medium leading-[1.35]"
+        >
+          Lançamentos
+        </a>
+
+        <button
+          #menuToggleRef
+          type="button"
+          (click)="toggleMobileMenu($event)"
+          [attr.aria-expanded]="mobileMenuOpen()"
+          aria-controls="navbar-mobile-sheet"
+          [attr.aria-label]="
+            mobileMenuOpen() ? 'Fechar menu de navegação' : 'Abrir menu de navegação'
+          "
+          class="terraco-m3-menu-toggle cursor-pointer"
+        >
+          @if (mobileMenuOpen()) {
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-5 w-5"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          } @else {
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-5 w-5"
+            >
+              <path d="M4 8h16" />
+              <path d="M4 16h16" />
+            </svg>
+          }
+        </button>
+      </div>
     </nav>
+
+    <!-- Mobile (< md): M3 Expressive Docked Floating Navigation Sheet -->
+    @if (mobileMenuOpen()) {
+      <div
+        aria-hidden="true"
+        (click)="closeMobileMenu()"
+        class="pointer-events-auto fixed inset-0 z-20 bg-ink/25 backdrop-blur-[2px] md:hidden"
+      ></div>
+
+      <div
+        id="navbar-mobile-sheet"
+        role="dialog"
+        aria-label="Menu de navegação"
+        animate.enter="terraco-search-panel-enter"
+        animate.leave="terraco-search-panel-leave"
+        class="pointer-events-auto absolute inset-x-0 top-full z-30 mt-1.5 overflow-hidden rounded-t-[14px] rounded-b-[28px] border border-border-subtle bg-elevated p-3 shadow-floating md:hidden"
+      >
+        <div class="space-y-1">
+          @for (item of primaryItems; track item.route) {
+            @let active = isRouteActive(item);
+            <a
+              [routerLink]="item.route"
+              [attr.aria-current]="active ? 'page' : null"
+              (click)="closeAllMenus()"
+              [class]="
+                active
+                  ? 'flex min-h-[48px] items-center justify-between gap-3 rounded-[16px] bg-brand/10 px-3 py-2.5 text-[15px] font-medium text-brand transition-colors duration-150'
+                  : 'flex min-h-[48px] items-center justify-between gap-3 rounded-[16px] px-3 py-2.5 text-[15px] font-normal text-ink transition-colors duration-150 hover:bg-surface/85'
+              "
+            >
+              <span class="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  [class]="
+                    active
+                      ? 'flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-brand text-ink-inverse'
+                      : 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface text-ink-muted'
+                  "
+                >
+                  @if (item.icon === 'home') {
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.85"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-4 w-4"
+                    >
+                      <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+                      <path
+                        d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                      />
+                    </svg>
+                  } @else {
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.85"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-4 w-4"
+                    >
+                      <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+                      <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+                      <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+                      <path d="M10 6h4" />
+                      <path d="M10 10h4" />
+                      <path d="M10 14h4" />
+                      <path d="M10 18h4" />
+                    </svg>
+                  }
+                </span>
+                <span>{{ item.label }}</span>
+              </span>
+              @if (active) {
+                <span
+                  aria-hidden="true"
+                  class="h-2 w-2 rounded-full bg-brand"
+                ></span>
+              }
+            </a>
+          }
+        </div>
+
+        <div class="mt-3 border-t border-border-subtle pt-3">
+          <p class="px-2 pb-2 text-[13px] font-normal text-ink-muted">
+            Guias de bairros em BH
+          </p>
+          <div class="grid grid-cols-2 gap-2">
+            @for (bairro of bairros; track bairro.slug) {
+              @let active = isBairroSlugCurrent(bairro.slug);
+              <a
+                [routerLink]="['/bairros', bairro.slug]"
+                [attr.aria-current]="active ? 'page' : null"
+                (click)="closeAllMenus()"
+                [class]="
+                  active
+                    ? 'flex min-h-[52px] flex-col justify-center rounded-[16px] border border-brand/35 bg-brand/10 px-3.5 py-2 transition-colors duration-150'
+                    : 'flex min-h-[52px] flex-col justify-center rounded-[16px] border border-border-subtle/80 bg-surface/65 px-3.5 py-2 transition-colors duration-150 hover:border-border-strong hover:bg-surface'
+                "
+              >
+                <span
+                  [class]="
+                    active
+                      ? 'text-[14px] font-medium leading-[1.3] text-brand'
+                      : 'text-[14px] font-medium leading-[1.3] text-ink'
+                  "
+                >
+                  {{ bairro.nome }}
+                </span>
+                <span class="text-[13px] font-normal leading-[1.3] text-ink-muted">
+                  {{ bairro.regiao }}
+                </span>
+              </a>
+            }
+          </div>
+        </div>
+
+        <div class="mt-3 border-t border-border-subtle pt-3">
+          <a
+            [href]="whatsappHref"
+            target="_blank"
+            rel="noopener noreferrer"
+            (click)="closeAllMenus()"
+            class="terraco-btn terraco-btn-moss flex min-h-[48px] w-full items-center justify-center gap-2 rounded-pill bg-brand px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.85"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4 shrink-0"
+            >
+              <path
+                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"
+              />
+            </svg>
+            <span>Falar no WhatsApp</span>
+          </a>
+        </div>
+      </div>
+    }
   `,
 })
 export class NavbarLinksComponent {
   private readonly router = inject(Router);
   private readonly currentUrl = signal<string>(this.router.url);
   private readonly navRef = viewChild<ElementRef<HTMLElement>>('navRef');
+  private readonly menuToggleRef =
+    viewChild<ElementRef<HTMLButtonElement>>('menuToggleRef');
 
+  readonly primaryItems = PRIMARY_NAV_ITEMS;
   readonly bairros = BAIRROS_BH;
   readonly bairrosMenuOpen = signal<boolean>(false);
+  readonly mobileMenuOpen = signal<boolean>(false);
+  readonly mobileOpenChange = output<boolean>();
 
   readonly whatsappHref = buildWhatsAppUrl(
     'Oi! Gostaria de conversar sobre os lançamentos da Terraço em BH.'
   );
 
-  readonly isCurrent = computed(() =>
+  readonly isLancamentosCurrent = computed(() =>
     this.currentUrl().startsWith('/lancamentos')
   );
 
@@ -162,8 +383,16 @@ export class NavbarLinksComponent {
       )
       .subscribe((event) => {
         this.currentUrl.set(event.urlAfterRedirects || event.url);
-        this.bairrosMenuOpen.set(false);
+        this.closeAllMenus();
       });
+  }
+
+  isRouteActive(item: PrimaryNavItem): boolean {
+    const cleanUrl = this.currentUrl().split(/[?#]/)[0] || '/';
+    if (item.matchExact) {
+      return cleanUrl === item.route;
+    }
+    return cleanUrl.startsWith(item.route);
   }
 
   isBairroSlugCurrent(slug: string): boolean {
@@ -175,15 +404,33 @@ export class NavbarLinksComponent {
     this.bairrosMenuOpen.update((open) => !open);
   }
 
-  closeBairrosMenu(): void {
+  toggleMobileMenu(event: Event): void {
+    event.stopPropagation();
+    const next = !this.mobileMenuOpen();
+    this.mobileMenuOpen.set(next);
     this.bairrosMenuOpen.set(false);
+    this.mobileOpenChange.emit(next);
+  }
+
+  closeMobileMenu(restoreFocus = false): void {
+    if (!this.mobileMenuOpen()) return;
+    this.mobileMenuOpen.set(false);
+    this.mobileOpenChange.emit(false);
+    if (restoreFocus) {
+      this.menuToggleRef()?.nativeElement.focus();
+    }
+  }
+
+  closeAllMenus(): void {
+    this.bairrosMenuOpen.set(false);
+    this.closeMobileMenu(false);
   }
 
   onDocumentClick(event: Event): void {
     const container = this.navRef()?.nativeElement;
     const target = event.target as Node | null;
     if (container && target && !container.contains(target)) {
-      this.closeBairrosMenu();
+      this.bairrosMenuOpen.set(false);
     }
   }
 }
