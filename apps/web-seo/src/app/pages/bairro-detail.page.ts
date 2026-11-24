@@ -1,3 +1,9 @@
+import {
+  AccordionContent,
+  AccordionGroup,
+  AccordionPanel,
+  AccordionTrigger,
+} from '@angular/aria/accordion';
 import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -129,6 +135,10 @@ function buildBairroJsonLd(
 @Component({
   selector: 'app-bairro-detail-page',
   imports: [
+    AccordionGroup,
+    AccordionTrigger,
+    AccordionPanel,
+    AccordionContent,
     NavbarComponent,
     FooterComponent,
     NotFoundPageComponent,
@@ -346,28 +356,63 @@ function buildBairroJsonLd(
                 Perguntas frequentes sobre {{ current.nome }}
               </h2>
 
-              <div class="mt-6 space-y-3">
-                @for (faq of current.faqs; track faq.pergunta) {
-                  <details
-                    class="group rounded-md border border-border-subtle bg-elevated px-5 py-4 transition-colors duration-150 open:border-ink/20"
+              <div
+                ngAccordionGroup
+                [multiExpandable]="false"
+                class="terraco-m3-accordion-group mt-6"
+              >
+                @for (faq of current.faqs; track faq.pergunta; let i = $index) {
+                  <div
+                    class="terraco-m3-accordion-item"
+                    [attr.data-expanded]="panel.visible()"
                   >
-                    <summary
-                      class="flex cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-medium leading-[1.45] text-ink [&::-webkit-details-marker]:hidden"
-                    >
-                      <span>{{ faq.pergunta }}</span>
-                      <span
-                        aria-hidden="true"
-                        class="shrink-0 text-[18px] font-normal leading-none text-ink-muted transition-transform duration-150 group-open:rotate-45"
+                    <h3 class="font-sans">
+                      <button
+                        type="button"
+                        ngAccordionTrigger
+                        [panel]="panel"
+                        [id]="'faq-trigger-' + current.slug + '-' + i"
+                        class="flex min-h-[56px] w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left text-[15px] font-medium leading-[1.45] text-ink transition-colors duration-150 focus-visible:rounded-[inherit]"
                       >
-                        +
-                      </span>
-                    </summary>
-                    <p
-                      class="mt-3 border-t border-border-subtle/70 pt-3 text-[14px] font-normal leading-[1.6] text-ink-muted"
+                        <span>{{ faq.pergunta }}</span>
+                        <span
+                          aria-hidden="true"
+                          class="terraco-m3-accordion-icon"
+                        >
+                          <svg
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.85"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="terraco-m3-accordion-chevron h-4 w-4"
+                          >
+                            <path d="m5.5 7.5 4.5 4.5 4.5-4.5" />
+                          </svg>
+                        </span>
+                      </button>
+                    </h3>
+
+                    <div
+                      ngAccordionPanel
+                      #panel="ngAccordionPanel"
+                      [id]="'faq-panel-' + current.slug + '-' + i"
                     >
-                      {{ faq.resposta }}
-                    </p>
-                  </details>
+                      <ng-template ngAccordionContent>
+                        <div
+                          animate.enter="terraco-accordion-enter"
+                          class="px-5 pb-5"
+                        >
+                          <p
+                            class="border-t border-border-subtle/70 pt-3.5 text-[14px] font-normal leading-[1.65] text-ink-muted"
+                          >
+                            {{ faq.resposta }}
+                          </p>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
                 }
               </div>
             </section>
@@ -397,7 +442,7 @@ function buildBairroJsonLd(
                 @for (other of otherBairros(); track other.slug) {
                   <a
                     [routerLink]="['/bairros', other.slug]"
-                    class="inline-flex min-h-[40px] items-center rounded-pill border border-border-subtle bg-elevated px-4 py-2 text-[13px] font-medium text-ink transition-colors duration-150 hover:border-ink/25 hover:bg-surface/60"
+                    class="terraco-m3-chip inline-flex min-h-[42px] items-center border border-border-subtle bg-elevated px-4 py-2 text-[13px] font-medium text-ink hover:border-border-strong hover:bg-surface/75"
                   >
                     {{ other.nome }}
                   </a>

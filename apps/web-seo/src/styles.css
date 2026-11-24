@@ -570,6 +570,102 @@ h4 {
   transform: scale(0.985);
 }
 
+/* M3 Expressive: Connected Accordion (FAQ Bairros) */
+.terraco-m3-accordion-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.terraco-m3-accordion-item {
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-sm);
+  transition:
+    border-radius 320ms var(--ease-spring-fast),
+    margin-block 320ms var(--ease-spring-fast),
+    border-color 160ms var(--ease-ui),
+    background-color 160ms var(--ease-ui),
+    box-shadow 220ms var(--ease-ui);
+}
+
+.terraco-m3-accordion-group > .terraco-m3-accordion-item:first-child {
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.terraco-m3-accordion-group > .terraco-m3-accordion-item:last-child {
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-accordion-item:hover {
+    border-color: var(--color-border-strong);
+  }
+}
+
+.terraco-m3-accordion-item[data-expanded="true"] {
+  border-radius: var(--radius-lg);
+  border-color: color-mix(in srgb, var(--color-brand-primary) 35%, transparent);
+  box-shadow: var(--shadow-card);
+  margin-block: 6px;
+}
+
+.terraco-m3-accordion-group > .terraco-m3-accordion-item:first-child[data-expanded="true"] {
+  margin-top: 0;
+}
+
+.terraco-m3-accordion-group > .terraco-m3-accordion-item:last-child[data-expanded="true"] {
+  margin-bottom: 0;
+}
+
+.terraco-m3-accordion-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-secondary);
+  transition:
+    border-radius 320ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    transform 320ms var(--ease-spring-fast);
+}
+
+[aria-expanded="true"] .terraco-m3-accordion-icon {
+  border-radius: 10px;
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}
+
+.terraco-m3-accordion-chevron {
+  transition: transform 320ms var(--ease-spring-fast);
+}
+
+[aria-expanded="true"] .terraco-m3-accordion-chevron {
+  transform: rotate(180deg);
+}
+
+@keyframes terraco-accordion-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.terraco-accordion-enter {
+  animation: terraco-accordion-fade-in 220ms var(--ease-enter) both;
+}
+
 /* M3 Expressive: Search Bar com Shape Morphing (28px pill -> 28px/14px docked) */
 .terraco-m3-search {
   border-radius: 28px;
@@ -1087,6 +1183,7 @@ h4 {
   .terraco-toolbar-leave,
   .terraco-search-panel-enter,
   .terraco-search-panel-leave,
+  .terraco-accordion-enter,
   .terraco-skeleton::after,
   .hero-enter-title,
   .hero-enter-form,
@@ -1117,6 +1214,9 @@ h4 {
   .terraco-m3-search,
   .terraco-m3-nav-item,
   .terraco-m3-nav-action,
+  .terraco-m3-accordion-item,
+  .terraco-m3-accordion-icon,
+  .terraco-m3-accordion-chevron,
   .terraco-nav-link,
   .terraco-link-underline::after,
   .terraco-stairs-step,
