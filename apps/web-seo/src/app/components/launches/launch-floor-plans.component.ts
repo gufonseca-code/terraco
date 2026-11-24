@@ -1,10 +1,11 @@
+import { Listbox, Option } from '@angular/aria/listbox';
+import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   input,
-  signal,
+  linkedSignal,
 } from '@angular/core';
 import {
   buildWhatsAppUrl,
@@ -44,7 +45,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 @Component({
   selector: 'app-launch-floor-plans',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ImageLightboxComponent],
+  imports: [NgOptimizedImage, Listbox, Option, ImageLightboxComponent],
   template: `
     @if (hasPlans()) {
       <section
@@ -68,7 +69,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
             </p>
           </div>
 
-          <p class="text-xs font-normal text-ink-muted tabular-nums">
+          <p class="text-[13px] font-normal text-ink-muted tabular-nums">
             {{ plans().length }}
             {{ plans().length === 1 ? 'planta disponível' : 'plantas disponíveis' }}
           </p>
@@ -78,7 +79,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
           <div
             role="group"
             aria-label="Filtrar plantas por tipologia"
-            class="mt-5 flex flex-wrap gap-2"
+            class="terraco-m3-group mt-5 w-fit max-w-full overflow-x-auto pb-1"
           >
             @for (category of categories(); track category.name) {
               <button
@@ -87,8 +88,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 [attr.aria-pressed]="selectedCategory() === category.name"
                 [class]="
                   selectedCategory() === category.name
-                    ? 'terraco-btn inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-brand bg-brand px-3.5 py-1.5 text-[13px] font-medium text-ink-inverse'
-                    : 'terraco-btn inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-border-subtle bg-surface px-3.5 py-1.5 text-[13px] font-medium text-ink hover:border-ink/30'
+                    ? 'terraco-m3-group-item inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-1.5 border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse shadow-chip'
+                    : 'terraco-m3-group-item inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-1.5 border border-border-subtle bg-surface px-4 py-1.5 text-[13px] font-medium text-ink hover:border-border-strong'
                 "
               >
                 <span>{{ category.name }}</span>
@@ -109,21 +110,26 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
         <div class="mt-6 grid gap-6 lg:grid-cols-12 lg:items-start">
           <!-- Selector list: horizontal scroll on mobile, vertical list on desktop -->
           <div
+            ngListbox
+            [value]="activePlanSelection()"
+            (valueChange)="onPlanSelectionChange($event)"
+            orientation="vertical"
+            [multi]="false"
+            selectionMode="follow"
             class="flex gap-2.5 overflow-x-auto pb-2 lg:col-span-5 lg:block lg:max-h-[560px] lg:space-y-2.5 lg:overflow-y-auto lg:pb-0 lg:pr-1"
-            role="listbox"
             aria-label="Lista de plantas"
           >
             @for (plan of filteredPlans(); track plan.id) {
               @let isSelected = activePlan()?.id === plan.id;
-              <button
-                type="button"
-                role="option"
-                [attr.aria-selected]="isSelected"
+              <div
+                ngOption
+                [value]="plan.id"
+                [label]="plan.titulo"
                 (click)="selectPlan(plan.id)"
                 [class]="
                   isSelected
-                    ? 'terraco-btn group flex w-[230px] shrink-0 flex-col justify-between gap-2 rounded-md border border-brand bg-brand/[0.06] p-3.5 text-left lg:w-full'
-                    : 'terraco-btn group flex w-[230px] shrink-0 flex-col justify-between gap-2 rounded-md border border-border-subtle bg-surface/65 p-3.5 text-left hover:border-ink/30 hover:bg-surface lg:w-full'
+                    ? 'terraco-m3-select-card group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 border border-brand bg-brand/[0.08] p-3.5 text-left shadow-chip lg:w-full'
+                    : 'terraco-m3-select-card group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 border border-border-subtle bg-surface/65 p-3.5 text-left hover:border-border-strong hover:bg-surface lg:w-full'
                 "
               >
                 <div class="flex items-start justify-between gap-3">
@@ -133,7 +139,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     >
                       {{ plan.titulo }}
                     </p>
-                    <p class="mt-0.5 text-[12px] font-normal text-ink-muted">
+                    <p class="mt-0.5 text-[13px] font-normal text-ink-muted">
                       {{ plan.quartos }} · {{ plan.banhos }}
                     </p>
                   </div>
@@ -145,7 +151,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 </div>
 
                 <div
-                  class="flex items-center justify-between gap-2 border-t border-border-subtle/70 pt-2 text-[12px]"
+                  class="flex items-center justify-between gap-2 border-t border-border-subtle/70 pt-2 text-[13px]"
                 >
                   @if (plan.precoAPartirDe) {
                     <span class="font-medium text-brand tabular-nums">
@@ -162,25 +168,21 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     </span>
                   }
                 </div>
-              </button>
+              </div>
             }
           </div>
 
           <!-- Active floor plan stage -->
           @if (activePlan(); as plan) {
-            <div
-              class="rounded-md border border-border-subtle bg-canvas p-4 sm:p-6 lg:col-span-7"
-            >
+            <div class="rounded-md bg-canvas p-4 sm:p-6 lg:col-span-7">
               <div
-                class="relative flex items-center justify-center overflow-hidden rounded-md border border-border-subtle bg-elevated p-3 sm:p-5"
+                class="relative flex items-center justify-center overflow-hidden rounded-md bg-elevated p-3 sm:p-5"
               >
                 <img
-                  [src]="plan.imagem"
+                  [ngSrc]="plan.imagem"
                   [alt]="plan.alt"
                   [width]="plan.width"
                   [height]="plan.height"
-                  loading="lazy"
-                  decoding="async"
                   class="max-h-[340px] w-auto object-contain sm:max-h-[400px]"
                 />
 
@@ -234,7 +236,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 
                   @if (plan.precoAPartirDe) {
                     <div class="sm:text-right">
-                      <p class="text-[12px] font-normal text-ink-muted">
+                      <p class="text-[13px] font-normal text-ink-muted">
                         A partir de
                       </p>
                       <p
@@ -248,10 +250,10 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 
                 <!-- Transparent specs row -->
                 <dl
-                  class="grid grid-cols-2 gap-3 rounded-md border border-border-subtle bg-elevated p-3.5 sm:grid-cols-3"
+                  class="grid grid-cols-2 gap-3 border-y border-border-subtle py-3.5 sm:grid-cols-3"
                 >
                   <div>
-                    <dt class="text-[12px] font-normal text-ink-muted">
+                    <dt class="text-[13px] font-normal text-ink-muted">
                       Área privativa
                     </dt>
                     <dd
@@ -261,7 +263,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-[12px] font-normal text-ink-muted">
+                    <dt class="text-[13px] font-normal text-ink-muted">
                       Configuração
                     </dt>
                     <dd class="mt-0.5 text-[14px] font-medium text-ink">
@@ -269,7 +271,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-[12px] font-normal text-ink-muted">
+                    <dt class="text-[13px] font-normal text-ink-muted">
                       Banhos
                     </dt>
                     <dd class="mt-0.5 text-[14px] font-medium text-ink">
@@ -280,7 +282,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 
                 @if (plan.entradaExemplo || plan.parcelaExemplo) {
                   <div
-                    class="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border-subtle bg-surface/60 px-3.5 py-2.5 text-[13px]"
+                    class="flex flex-wrap items-center justify-between gap-2 rounded-md bg-surface/75 px-3.5 py-2.5 text-[13px]"
                   >
                     <span class="font-normal text-ink-muted">
                       Referência de fluxo na obra:
@@ -302,7 +304,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 <!-- Progressive intent + contextual WhatsApp CTA -->
                 <div class="space-y-3 border-t border-border-subtle pt-4">
                   <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-[12px] font-normal text-ink-muted">
+                    <span class="text-[13px] font-normal text-ink-muted">
                       O que você precisa agora:
                     </span>
                     @for (intent of intentOptions; track intent.key) {
@@ -312,8 +314,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                         [attr.aria-pressed]="selectedIntent() === intent.key"
                         [class]="
                           selectedIntent() === intent.key
-                            ? 'terraco-btn rounded-pill border border-brand bg-brand/10 px-3 py-1 text-[12px] font-medium text-brand'
-                            : 'terraco-btn rounded-pill border border-border-subtle bg-elevated px-3 py-1 text-[12px] font-normal text-ink-muted hover:border-ink/30 hover:text-ink'
+                            ? 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-brand bg-brand/10 px-3.5 py-1.5 text-[13px] font-medium text-brand'
+                            : 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-border-subtle bg-elevated px-3.5 py-1.5 text-[13px] font-normal text-ink-muted hover:border-ink/30 hover:text-ink'
                         "
                       >
                         {{ intent.label }}
@@ -326,7 +328,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                       [href]="activePlanWhatsappHref()"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="terraco-btn inline-flex min-h-[44px] flex-1 items-center justify-center rounded-md bg-brand px-4 py-2.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover"
+                      class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] flex-1 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover"
                     >
                       {{ activeIntentOption().ctaLabel }}
                     </a>
@@ -338,24 +340,42 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
         </div>
       </section>
 
-      <app-image-lightbox
-        [images]="filteredPlanMedia()"
-        [initialIndex]="lightboxIndex()"
-        [isOpen]="lightboxOpen()"
-        (closed)="closeLightbox()"
-      />
+      @defer (when lightboxOpen()) {
+        <app-image-lightbox
+          [images]="filteredPlanMedia()"
+          [initialIndex]="lightboxIndex()"
+          [isOpen]="lightboxOpen()"
+          (closed)="closeLightbox()"
+        />
+      }
     }
   `,
 })
 export class LaunchFloorPlansComponent {
   readonly item = input.required<Lancamento>();
+  private readonly itemSlug = computed(() => this.item().slug);
   readonly intentOptions = PLAN_INTENT_OPTIONS;
 
-  readonly selectedCategory = signal<string>('Todas');
-  readonly selectedPlanId = signal<string | null>(null);
-  readonly selectedIntent = signal<PlanIntentKey>('tabela_planta');
-  readonly lightboxOpen = signal<boolean>(false);
-  readonly lightboxIndex = signal<number>(0);
+  readonly selectedCategory = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 'Todas',
+  });
+  readonly selectedPlanId = linkedSignal<string, string | null>({
+    source: this.itemSlug,
+    computation: () => null,
+  });
+  readonly selectedIntent = linkedSignal<string, PlanIntentKey>({
+    source: this.itemSlug,
+    computation: () => 'tabela_planta',
+  });
+  readonly lightboxOpen = linkedSignal({
+    source: this.itemSlug,
+    computation: () => false,
+  });
+  readonly lightboxIndex = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 0,
+  });
 
   readonly plans = computed<readonly LaunchFloorPlan[]>(
     () => this.item().plantas ?? []
@@ -389,6 +409,11 @@ export class LaunchFloorPlansComponent {
     if (list.length === 0) return null;
     const currentId = this.selectedPlanId();
     return list.find((plan) => plan.id === currentId) ?? list[0];
+  });
+
+  readonly activePlanSelection = computed<string[]>(() => {
+    const current = this.activePlan();
+    return current ? [current.id] : [];
   });
 
   readonly filteredPlanMedia = computed<readonly LaunchMediaItem[]>(() =>
@@ -436,19 +461,15 @@ export class LaunchFloorPlansComponent {
     );
   });
 
-  constructor() {
-    effect(() => {
-      this.item().slug;
-      this.selectedCategory.set('Todas');
-      this.selectedPlanId.set(null);
-      this.selectedIntent.set('tabela_planta');
-      this.lightboxOpen.set(false);
-      this.lightboxIndex.set(0);
-    });
-  }
-
   formatPrice(value: number): string {
     return formatCurrencyBRL(value);
+  }
+
+  onPlanSelectionChange(values: readonly string[]): void {
+    const nextId = values[0];
+    if (nextId) {
+      this.selectedPlanId.set(nextId);
+    }
   }
 
   selectCategory(category: string): void {

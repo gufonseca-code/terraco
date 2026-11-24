@@ -18,18 +18,19 @@ No Figma, crie um **Local Style > Fill** para cada token abaixo. Nomeie com o ca
 
 | Nome no Figma | Hex | Uso |
 | :--- | :--- | :--- |
-| `Color/Background/Canvas` | `#FAF7F0` | Fundo principal de páginas e app |
-| `Color/Background/Surface` | `#EFEAE0` | Cards secundários, inputs, barras |
+| `Color/Background/Canvas` | `#F8F5EA` | Fundo principal de páginas e app |
+| `Color/Background/Surface` | `#F1E9D8` | Cards secundários, inputs, barras |
 | `Color/Background/Elevated` | `#FFFDF9` | Cards elevados, modais |
 | `Color/Text/Primary` | `#1E1D1B` | Textos principais, wordmark |
 | `Color/Text/Secondary` | `#57534E` | Subtítulos, metadados, legendas |
-| `Color/Brand/Primary` | `#265C4B` | CTAs principais, headers escuros, links ativos |
-| `Color/Brand/Primary/Hover` | `#1D473A` | Hover/pressed de botões principais |
-| `Color/Brand/Accent` | `#F2B705` | Ícone do app, destaques, grafismos |
-| `Color/Brand/Highlight` | `#F07167` | Badges, favoritos, alertas gentis |
-| `Color/Border/Subtle` | `#E2DCD0` | Divisórias, contornos de cards (1px) |
-| `Color/Semantic/Success/Text` | `#265C4B` | Sucesso — texto e borda |
-| `Color/Semantic/Success/Bg` | `#E3F1EB` | Sucesso — fundo suave |
+| `Color/Brand/Primary` | `#2E5B46` | CTAs principais, headers escuros, links ativos |
+| `Color/Brand/Primary/Hover` | `#234736` | Hover/pressed de botões principais |
+| `Color/Brand/Accent` | `#EEB506` | Ícone do app, destaques, grafismos |
+| `Color/Brand/Highlight` | `#ED7467` | Favoritos e microinterações táteis (ícone `#1E1D1B` para contraste AA) |
+| `Color/Border/Subtle` | `#E4DCCB` | Divisórias, contornos de cards (1px) |
+| `Color/Border/Strong` | `#CFC5B2` | Contornos destacados e estados hover |
+| `Color/Semantic/Success/Text` | `#2E5B46` | Sucesso — texto e borda |
+| `Color/Semantic/Success/Bg` | `#E4F0EA` | Sucesso — fundo suave |
 | `Color/Semantic/Attention/Text` | `#8A6500` | Atenção — texto |
 | `Color/Semantic/Attention/Bg` | `#FEF3C7` | Atenção — fundo suave |
 | `Color/Semantic/Error/Text` | `#B9382E` | Erro — texto e borda |
@@ -42,18 +43,17 @@ No Figma, crie um **Local Style > Fill** para cada token abaixo. Nomeie com o ca
 ## 2. Tipografia (Text Styles)
 
 Crie um **Local Style > Text** para cada estilo. Fontes:  
-*Display:* `Recoleta` ou `Fraunces` (se usar Fraunces no Google Fonts, configure `font-variation-settings: "SOFT" 100, "WONK" 1`).  
-*Sans:* `Plus Jakarta Sans` ou `DM Sans`.
+*Display:* `Fraunces` (no Google Fonts, configure `font-variation-settings: "SOFT" 100, "WONK" 1`; sempre reto, sem itálico, pesos `400` ou `500`).  
+*Sans:* `Plus Jakarta Sans` (pesos `400` no corpo e `500` em ações/labels).
 
 | Nome no Figma | Família | Peso | Tamanho | Line-height | Uso |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `Text/Display/XL` | Recoleta/Fraunces | 700 | 48px | 1.10 | Hero principal desktop |
-| `Text/Display/LG` | Recoleta/Fraunces | 700 | 36px | 1.15 | Títulos de seção |
-| `Text/Heading/MD` | Recoleta/Fraunces | 600 | 24px | 1.25 | Títulos de cards em destaque / modais |
-| `Text/Body/LG` | Plus Jakarta Sans / DM Sans | 400 | 18px | 1.55 | Subtítulos, textos de apoio |
-| `Text/Body/MD` | Plus Jakarta Sans / DM Sans | 400 | 16px | 1.50 | Corpo padrão, descrições de imóveis |
-| `Text/UI/Label` | Plus Jakarta Sans / DM Sans | 600 | 14px | 1.35 | Botões, filtros, labels |
-| `Text/UI/Badge` | Plus Jakarta Sans / DM Sans | 600 | 12px | 1.20 | Tags (Sol da manhã, Aceita pet) |
+| `Text/Display/XL` | Fraunces | 500 | 48px | 1.06 | Hero principal desktop |
+| `Text/Display/LG` | Fraunces | 500 | 36px | 1.12 | Títulos de seção |
+| `Text/Heading/MD` | Fraunces | 500 | 24px | 1.20 | Títulos de cards em destaque / modais |
+| `Text/Body/MD` | Plus Jakarta Sans | 400 | 16px | 1.55 | Corpo padrão (`15px` dentro de cards) |
+| `Text/UI/Label` | Plus Jakarta Sans | 500 | 14px | 1.35 | Botões (`13px` em cards), filtros, labels |
+| `Text/UI/Meta` | Plus Jakarta Sans | 400 | 13px | 1.40 | Metadados discretos e rótulos de ficha |
 
 **Dica de preços:** para valores (`R$`) e tabelas comparativas, ative `font-variant-numeric: tabular-nums` (no Figma, painel de tipo > figura tabular).
 
@@ -101,30 +101,28 @@ No Figma, insira a cor `#1E1D1B` e ajuste a opacidade no seletor de cor do efeit
 Crie em `02-Components` como **Main Components** e publique no time (se for um arquivo de library).
 
 ### 6.1 Botão Primário (CTA)
-* Preenchimento: `Color/Brand/Accent` (`#F2B705`) ou `Color/Brand/Primary` (`#265C4B`) — definir qual é o CTA principal; DESIGN.md indica Amarelo Ipê para ícone/destaques e Verde Musgo para CTAs principais. Sugestão: CTA principal = Verde Musgo, destaque secundário = Amarelo Ipê.
-* Texto: `Text/UI/Label`, branco ou grafite dependendo do fundo.
+* Preenchimento: `Color/Brand/Primary` (`#2E5B46`).
+* Texto: `Text/UI/Label`, `Color/Text/Inverse` (`#F8F5EA`).
 * Raio: `Radius/Pill` (`9999px`).
-* Hover: troque preenchimento para `Color/Brand/Primary/Hover` (`#1D473A`).
+* Hover: troque preenchimento para `Color/Brand/Primary/Hover` (`#234736`).
 * Padding: `12px 24px` (ajuste ao conteúdo).
 
 ### 6.2 Botão Secundário
-* Preenchimento: `Color/Background/Surface` ou transparente.
+* Preenchimento: `Color/Background/Surface` ou `Color/Background/Elevated`.
 * Borda: `1px` `Color/Border/Subtle`.
 * Texto: `Text/UI/Label`, `Color/Text/Primary`.
-* Raio: `Radius/MD` (`16px`).
+* Raio: `Radius/Pill` (`9999px`).
 
 ### 6.3 Card de Imóvel
 * Preenchimento: `Color/Background/Elevated` (`#FFFDF9`).
 * Borda: `1px` `Color/Border/Subtle`.
-* Raio: `Radius/LG` (`24px`).
+* Raio: `Radius/XL` (`28px`).
 * Sombra: `Shadow/Card`.
-* Conteúdo: imagem de capa (raio `Radius/MD` nos cantos superiores), título `Text/Heading/MD`, preço `Text/Body/LG` com `tabular-nums`, tags (`Text/UI/Badge` com fundo `Color/Brand/Highlight` ou `Color/Brand/Accent`).
+* Conteúdo: imagem de capa enquadrada (`20px`), metadado de bairro (`Text/UI/Meta`), título `Text/Heading/MD`, CTA `Radius/Pill` e rodapé tonal (`Color/Background/Surface`) com specs (`tabular-nums`), sem badges decorativos.
 
-### 6.4 Badge / Tag
-* Preenchimento: `Color/Brand/Highlight` (`#F07167`) para alertas/gostos, `Color/Brand/Accent` (`#F2B705`) para destaques.
-* Texto: `Text/UI/Badge`, `Color/Text/Primary`.
-* Raio: `Radius/Pill`.
-* Padding: `4px 8px`.
+### 6.4 Botão de Favorito (Toggle)
+* Repouso: `Color/Background/Elevated` com borda `1px` `Color/Border/Subtle`, ícone `Color/Text/Primary`, raio `Radius/Pill`.
+* Salvo: `Color/Brand/Highlight` (`#ED7467`), ícone preenchido `Color/Text/Primary` (`#1E1D1B`, contraste AA > 6:1), raio `14px` (*squircle*).
 
 ### 6.5 Input
 * Fundo: `Color/Background/Surface`.

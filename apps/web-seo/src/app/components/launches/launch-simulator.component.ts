@@ -2,12 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   input,
-  signal,
+  linkedSignal,
 } from '@angular/core';
 import {
+  ENABLE_FLUTTER_APP_LINKS,
   FavoritesService,
   LancamentosService,
   buildWhatsAppUrl,
@@ -98,9 +98,10 @@ function resolveInitialPropertyValue(item: Lancamento): number {
   `,
   template: `
     <section
+      id="simulador"
       aria-labelledby="simulator-heading"
       data-testid="launch-simulator"
-      class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+      class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8 scroll-mt-24"
     >
       <div class="space-y-1.5">
         <h2
@@ -145,7 +146,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               class="simulator-range"
             />
 
-            <div class="flex items-center justify-between gap-2 text-[12px] font-normal text-ink-muted">
+            <div class="flex items-center justify-between gap-2 text-[13px] font-normal text-ink-muted">
               <span class="tabular-nums">{{ formattedMinValue }}</span>
               <span>{{ propertyValueHint() }}</span>
               <span class="tabular-nums">{{ formattedMaxValue }}</span>
@@ -162,7 +163,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
             <div
               role="group"
               aria-label="Percentual de entrada"
-              class="grid grid-cols-3 gap-2"
+              class="terraco-m3-group"
             >
               @for (percent of downPaymentPresets; track percent) {
                 <button
@@ -171,8 +172,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="downPaymentPercent() === percent"
                   [class]="
                     downPaymentPercent() === percent
-                      ? 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-brand bg-brand/10 px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-brand tabular-nums'
-                      : 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-border-subtle bg-surface/60 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink-muted tabular-nums hover:border-ink/25 hover:text-ink'
+                      ? 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
                   "
                 >
                   {{ percent }}%
@@ -191,7 +192,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
             <div
               role="group"
               aria-label="Valor estimado de FGTS"
-              class="grid grid-cols-2 gap-2 sm:grid-cols-4"
+              class="terraco-m3-group-grid grid-cols-2 sm:grid-cols-4"
             >
               @for (preset of fgtsPresets; track preset.value) {
                 <button
@@ -200,8 +201,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="clampedFgts() === preset.value"
                   [class]="
                     clampedFgts() === preset.value
-                      ? 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-brand bg-brand/10 px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-brand tabular-nums'
-                      : 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-border-subtle bg-surface/60 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink-muted tabular-nums hover:border-ink/25 hover:text-ink'
+                      ? 'terraco-m3-group-item flex min-h-[42px] cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'terraco-m3-group-item flex min-h-[42px] cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
                   "
                 >
                   {{ preset.label }}
@@ -215,7 +216,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
             <div
               role="group"
               aria-label="Prazo de financiamento em anos"
-              class="grid grid-cols-3 gap-2"
+              class="terraco-m3-group"
             >
               @for (years of termYearPresets; track years) {
                 <button
@@ -224,8 +225,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="termYears() === years"
                   [class]="
                     termYears() === years
-                      ? 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-brand bg-brand/10 px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-brand tabular-nums'
-                      : 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-border-subtle bg-surface/60 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink-muted tabular-nums hover:border-ink/25 hover:text-ink'
+                      ? 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
                   "
                 >
                   {{ years }} anos
@@ -285,29 +286,31 @@ function resolveInitialPropertyValue(item: Lancamento): number {
 
           <div class="space-y-2.5">
             <a
-              [href]="flutterDeepLink()"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="simulator-flutter-cta"
-              class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
-            >
-              Salvar simulação e ver plantas interativas
-            </a>
-
-            <a
               [href]="whatsappSimulationHref()"
               target="_blank"
               rel="noopener noreferrer"
               data-testid="simulator-whatsapp-cta"
-              class="terraco-btn flex min-h-[42px] w-full items-center justify-center rounded-pill border border-border-subtle bg-elevated px-5 py-2 text-center text-[13px] font-normal leading-[1.35] text-ink hover:border-ink/30 hover:bg-surface/60"
+              class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
             >
               Enviar simulação no WhatsApp
             </a>
+
+            @if (showFlutterAppCta) {
+              <a
+                [href]="flutterDeepLink()"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="simulator-flutter-cta"
+                class="terraco-btn flex min-h-[42px] w-full items-center justify-center rounded-pill border border-border-subtle bg-elevated px-5 py-2 text-center text-[13px] font-normal leading-[1.35] text-ink hover:border-ink/30 hover:bg-surface/60"
+              >
+                Salvar simulação e ver plantas interativas
+              </a>
+            }
           </div>
         </div>
       </div>
 
-      <p class="mt-5 border-t border-border-subtle pt-4 text-[12px] font-normal leading-[1.5] text-ink-muted">
+      <p class="mt-5 border-t border-border-subtle pt-4 text-[13px] font-normal leading-[1.5] text-ink-muted">
         Simulação estimativa para planejamento inicial. Taxas, correção (INCC/IPCA) e aprovação de crédito variam conforme o banco e a tabela vigente.
       </p>
     </section>
@@ -319,6 +322,7 @@ export class LaunchSimulatorComponent {
 
   readonly item = input.required<Lancamento>();
 
+  readonly showFlutterAppCta = ENABLE_FLUTTER_APP_LINKS;
   readonly minPropertyValue = MIN_PROPERTY_VALUE;
   readonly maxPropertyValue = MAX_PROPERTY_VALUE;
   readonly propertyValueStep = PROPERTY_VALUE_STEP;
@@ -329,10 +333,24 @@ export class LaunchSimulatorComponent {
   readonly fgtsPresets = FGTS_PRESETS;
   readonly termYearPresets = TERM_YEAR_PRESETS;
 
-  readonly propertyValue = signal<number>(DEFAULT_PROPERTY_VALUE);
-  readonly downPaymentPercent = signal<number>(20);
-  readonly fgtsAmount = signal<number>(0);
-  readonly termYears = signal<number>(30);
+  private readonly itemSlug = computed(() => this.item().slug);
+
+  readonly propertyValue = linkedSignal({
+    source: this.item,
+    computation: (currentItem) => resolveInitialPropertyValue(currentItem),
+  });
+  readonly downPaymentPercent = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 20,
+  });
+  readonly fgtsAmount = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 0,
+  });
+  readonly termYears = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 30,
+  });
 
   readonly propertyValueHint = computed(() => {
     const price = this.item().precoAPartirDe;
@@ -427,18 +445,6 @@ export class LaunchSimulatorComponent {
       `Gostaria de conferir a tabela atualizada e as condições de financiamento.`;
     return buildWhatsAppUrl(message);
   });
-
-  constructor() {
-    effect(() => {
-      const currentItem = this.item();
-      // Reset simulator state cleanly when navigating between launch slugs.
-      currentItem.slug;
-      this.propertyValue.set(resolveInitialPropertyValue(currentItem));
-      this.downPaymentPercent.set(20);
-      this.fgtsAmount.set(0);
-      this.termYears.set(30);
-    });
-  }
 
   onPropertyValueInput(event: Event): void {
     const inputEl = event.target as HTMLInputElement | null;

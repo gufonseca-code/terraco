@@ -1,3 +1,4 @@
+import { Listbox, Option } from '@angular/aria/listbox';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,13 +11,11 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import {
-  LancamentosService,
-  LeadsService,
-} from '../../core';
+import { LancamentosService } from '../../core';
 import { BAIRROS_BH, type BairroGuide } from '../../core/bairros.data';
 import { LaunchCardComponent } from './launch-card.component';
 import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
+import { WhatsappAlertFormComponent } from './whatsapp-alert-form.component';
 
 const TIPOLOGIA_FILTERS = [
   'Todas',
@@ -26,20 +25,16 @@ const TIPOLOGIA_FILTERS = [
   'Cobertura',
 ] as const;
 
-function formatBrazilianPhone(raw: string): string {
-  const digits = raw.replace(/\D/g, '').slice(0, 11);
-  if (digits.length === 0) return '';
-  if (digits.length <= 2) return `(${digits}`;
-  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-  if (digits.length <= 10) {
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-  }
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-}
-
 @Component({
   selector: 'app-launch-explorer',
-  imports: [RouterLink, LaunchCardComponent, LaunchCardSkeletonComponent],
+  imports: [
+    RouterLink,
+    Listbox,
+    Option,
+    LaunchCardComponent,
+    LaunchCardSkeletonComponent,
+    WhatsappAlertFormComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:click)': 'onDocumentClick($event)',
@@ -138,39 +133,39 @@ function formatBrazilianPhone(raw: string): string {
                     @if (neighborhoodMenuOpen()) {
                       <ul
                         id="bairro-filter-listbox"
-                        role="listbox"
+                        ngListbox
+                        [value]="selectedNeighborhoodValue()"
+                        (valueChange)="onNeighborhoodListboxChange($event)"
+                        [multi]="false"
+                        orientation="vertical"
                         aria-label="Filtrar por bairro"
                         animate.enter="terraco-chip-enter"
                         class="absolute left-0 top-full z-30 mt-2 min-w-[210px] rounded-[20px] border border-border-subtle bg-elevated p-1.5 shadow-card"
                       >
-                        <li>
-                          <button
-                            type="button"
-                            role="option"
-                            [attr.aria-selected]="!hasActiveNeighborhood()"
-                            (click)="selectNeighborhoodOption('Todos')"
-                            [class]="dropdownOptionClass(!hasActiveNeighborhood())"
-                          >
-                            <span>Todos os bairros</span>
-                            @if (!hasActiveNeighborhood()) {
-                              <span aria-hidden="true" class="text-brand">✓</span>
-                            }
-                          </button>
+                        <li
+                          ngOption
+                          value="Todos"
+                          label="Todos os bairros"
+                          (click)="selectNeighborhoodOption('Todos')"
+                          [class]="dropdownOptionClass(!hasActiveNeighborhood())"
+                        >
+                          <span>Todos os bairros</span>
+                          @if (!hasActiveNeighborhood()) {
+                            <span aria-hidden="true" class="text-brand">✓</span>
+                          }
                         </li>
                         @for (bairro of quickNeighborhoods(); track bairro) {
-                          <li>
-                            <button
-                              type="button"
-                              role="option"
-                              [attr.aria-selected]="isNeighborhoodActive(bairro)"
-                              (click)="selectNeighborhoodOption(bairro)"
-                              [class]="dropdownOptionClass(isNeighborhoodActive(bairro))"
-                            >
-                              <span>{{ bairro }}</span>
-                              @if (isNeighborhoodActive(bairro)) {
-                                <span aria-hidden="true" class="text-brand">✓</span>
-                              }
-                            </button>
+                          <li
+                            ngOption
+                            [value]="bairro"
+                            [label]="bairro"
+                            (click)="selectNeighborhoodOption(bairro)"
+                            [class]="dropdownOptionClass(isNeighborhoodActive(bairro))"
+                          >
+                            <span>{{ bairro }}</span>
+                            @if (isNeighborhoodActive(bairro)) {
+                              <span aria-hidden="true" class="text-brand">✓</span>
+                            }
                           </li>
                         }
                       </ul>
@@ -205,25 +200,27 @@ function formatBrazilianPhone(raw: string): string {
                   @if (tipologiaMenuOpen()) {
                     <ul
                       id="tipologia-filter-listbox"
-                      role="listbox"
+                      ngListbox
+                      [value]="selectedTipologiaValue()"
+                      (valueChange)="onTipologiaListboxChange($event)"
+                      [multi]="false"
+                      orientation="vertical"
                       aria-label="Filtrar por tipologia"
                       animate.enter="terraco-chip-enter"
                       class="absolute left-0 top-full z-30 mt-2 min-w-[220px] rounded-[20px] border border-border-subtle bg-elevated p-1.5 shadow-card"
                     >
                       @for (tipologia of tipologiaFilters; track tipologia) {
-                        <li>
-                          <button
-                            type="button"
-                            role="option"
-                            [attr.aria-selected]="isTipologiaActive(tipologia)"
-                            (click)="selectTipologiaOption(tipologia)"
-                            [class]="dropdownOptionClass(isTipologiaActive(tipologia))"
-                          >
-                            <span>{{ tipologia === 'Todas' ? 'Todas as tipologias' : tipologia }}</span>
-                            @if (isTipologiaActive(tipologia)) {
-                              <span aria-hidden="true" class="text-brand">✓</span>
-                            }
-                          </button>
+                        <li
+                          ngOption
+                          [value]="tipologia"
+                          [label]="tipologia === 'Todas' ? 'Todas as tipologias' : tipologia"
+                          (click)="selectTipologiaOption(tipologia)"
+                          [class]="dropdownOptionClass(isTipologiaActive(tipologia))"
+                        >
+                          <span>{{ tipologia === 'Todas' ? 'Todas as tipologias' : tipologia }}</span>
+                          @if (isTipologiaActive(tipologia)) {
+                            <span aria-hidden="true" class="text-brand">✓</span>
+                          }
                         </li>
                       }
                     </ul>
@@ -291,56 +288,14 @@ function formatBrazilianPhone(raw: string): string {
               </p>
             </div>
 
-            @if (demandSuccessTerm()) {
-              <div
-                role="status"
-                class="rounded-md border border-success-fg/20 bg-success-bg px-4 py-3 text-[14px] font-normal leading-[1.5] text-success-fg"
-              >
-                Combinado! Assim que entrar um novo lançamento para {{ demandSuccessTerm() }}, te chamamos no WhatsApp.
-              </div>
-            } @else {
-              <form
-                (submit)="handleDemandSubmit($event)"
-                novalidate
-                class="flex w-full max-w-md flex-col gap-2.5 sm:flex-row sm:items-center"
-              >
-                <label for="catalog-alert-whatsapp" class="sr-only">
-                  Seu WhatsApp com DDD
-                </label>
-                <input
-                  id="catalog-alert-whatsapp"
-                  type="tel"
-                  autocomplete="tel"
-                  inputmode="tel"
-                  placeholder="(31) 99999-9999"
-                  [value]="demandPhone()"
-                  (input)="onDemandPhoneInput($event)"
-                  [disabled]="demandSubmitting()"
-                  class="min-h-[44px] w-full min-w-0 flex-1 rounded-pill border border-border-subtle bg-canvas px-4 py-2.5 text-[15px] font-normal text-ink placeholder:text-ink-muted transition-[border-color,box-shadow] duration-150 focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/20 disabled:opacity-60"
-                />
-                <button
-                  type="submit"
-                  [disabled]="demandSubmitting()"
-                  class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-                >
-                  @if (demandSubmitting()) {
-                    Enviando...
-                  } @else {
-                    Me avise no WhatsApp
-                  }
-                </button>
-              </form>
-            }
+            <app-whatsapp-alert-form
+              inputId="catalog-alert-whatsapp"
+              [searchedTerm]="searchedTerm() || 'Belo Horizonte'"
+              [resetKey]="searchedTerm()"
+              [compact]="true"
+              [successMessage]="catalogSuccessMessage()"
+            />
           </div>
-
-          @if (demandError() && !demandSuccessTerm()) {
-            <p
-              role="alert"
-              class="mt-3 rounded-sm bg-error-bg px-3.5 py-2 text-[13px] font-normal text-error-fg"
-            >
-              {{ demandError() }}
-            </p>
-          }
         </aside>
       } @else if (!isLoading()) {
         <div
@@ -362,59 +317,14 @@ function formatBrazilianPhone(raw: string): string {
             Deixe seu WhatsApp que te avisamos assim que surgir uma boa oportunidade nessa região, sem spam.
           </p>
 
-          @if (demandSuccessTerm()) {
-            <div
-              role="status"
-              class="mt-5 rounded-md border border-success-fg/20 bg-success-bg px-4 py-3.5 text-[14px] font-normal leading-[1.5] text-success-fg"
-            >
-              @if (demandSuccessTerm() === 'essa região') {
-                Combinado! Assim que entrar um novo lançamento por aqui, te chamamos no WhatsApp.
-              } @else {
-                Combinado! Assim que entrar um lançamento em {{ demandSuccessTerm() }}, te chamamos no WhatsApp.
-              }
-            </div>
-          } @else {
-            <form
-              (submit)="handleDemandSubmit($event)"
-              novalidate
-              class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center"
-            >
-              <label for="demand-whatsapp" class="sr-only">
-                Seu WhatsApp com DDD
-              </label>
-              <input
-                id="demand-whatsapp"
-                type="tel"
-                autocomplete="tel"
-                inputmode="tel"
-                placeholder="(31) 99999-9999"
-                [value]="demandPhone()"
-                (input)="onDemandPhoneInput($event)"
-                [disabled]="demandSubmitting()"
-                class="min-h-[44px] w-full min-w-0 flex-1 rounded-pill border border-border-subtle bg-canvas px-4 py-2.5 text-[15px] font-normal text-ink placeholder:text-ink-muted transition-[border-color,box-shadow] duration-150 focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/20 disabled:opacity-60"
-              />
-              <button
-                type="submit"
-                [disabled]="demandSubmitting()"
-                class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-              >
-                @if (demandSubmitting()) {
-                  Enviando...
-                } @else {
-                  Me avise no WhatsApp
-                }
-              </button>
-            </form>
-
-            @if (demandError()) {
-              <p
-                role="alert"
-                class="mt-3 rounded-sm bg-error-bg px-3.5 py-2 text-[13px] font-normal text-error-fg"
-              >
-                {{ demandError() }}
-              </p>
-            }
-          }
+          <div class="mt-5">
+            <app-whatsapp-alert-form
+              inputId="demand-whatsapp"
+              [searchedTerm]="searchedTerm() || 'Belo Horizonte'"
+              [resetKey]="searchedTerm()"
+              [successMessage]="emptyStateSuccessMessage()"
+            />
+          </div>
 
           <div class="mt-6 border-t border-border-subtle pt-4">
             <button
@@ -449,7 +359,6 @@ export class LaunchExplorerComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly lancamentosService = inject(LancamentosService);
-  private readonly leadsService = inject(LeadsService);
 
   readonly lancamentos = this.lancamentosService.lancamentos;
   readonly filteredLancamentos = this.lancamentosService.filteredLancamentos;
@@ -457,6 +366,7 @@ export class LaunchExplorerComponent {
   readonly searchQuery = this.lancamentosService.searchQuery;
   readonly activeFilter = this.lancamentosService.activeFilter;
   readonly tipologiaFilter = this.lancamentosService.tipologiaFilter;
+  readonly objetivoFilter = this.lancamentosService.objetivoFilter;
   readonly isLoading = this.lancamentosService.isLoadingList;
   readonly tipologiaFilters = TIPOLOGIA_FILTERS;
   readonly bairrosGuides = BAIRROS_BH;
@@ -466,13 +376,22 @@ export class LaunchExplorerComponent {
   });
 
   readonly searchInput = signal<string>('');
-  readonly objetivoFilter = signal<string | null>(null);
   readonly neighborhoodMenuOpen = signal<boolean>(false);
   readonly tipologiaMenuOpen = signal<boolean>(false);
-  readonly demandPhone = signal<string>('');
-  readonly demandSubmitting = signal<boolean>(false);
-  readonly demandError = signal<string | null>(null);
-  readonly demandSuccessTerm = signal<string | null>(null);
+
+  readonly catalogSuccessMessage = computed(() => {
+    const term = this.searchedTerm();
+    return term
+      ? `Combinado! Assim que entrar um novo lançamento para ${term}, te chamamos no WhatsApp.`
+      : 'Combinado! Assim que entrar um novo lançamento em Belo Horizonte, te chamamos no WhatsApp.';
+  });
+
+  readonly emptyStateSuccessMessage = computed(() => {
+    const term = this.searchedTerm();
+    return term
+      ? `Combinado! Assim que entrar um lançamento em ${term}, te chamamos no WhatsApp.`
+      : 'Combinado! Assim que entrar um novo lançamento por aqui, te chamamos no WhatsApp.';
+  });
 
   readonly hasActiveNeighborhood = computed(() =>
     this.quickNeighborhoods().some((bairro) => this.isNeighborhoodActive(bairro))
@@ -540,7 +459,7 @@ export class LaunchExplorerComponent {
     const initialObjetivo = (initialMap.get('objetivo') ?? '').trim() || null;
     this.lancamentosService.setSearchQuery(initialQ);
     this.lancamentosService.setTipologiaFilter(initialTipologia);
-    this.objetivoFilter.set(initialObjetivo);
+    this.lancamentosService.setObjetivoFilter(initialObjetivo);
     this.searchInput.set(initialQ);
 
     effect(() => {
@@ -550,23 +469,21 @@ export class LaunchExplorerComponent {
       const objetivo = (map.get('objetivo') ?? '').trim() || null;
       this.lancamentosService.setSearchQuery(q);
       this.lancamentosService.setTipologiaFilter(tipologia);
-      this.objetivoFilter.set(objetivo);
+      this.lancamentosService.setObjetivoFilter(objetivo);
       this.searchInput.set(q);
-      this.demandSuccessTerm.set(null);
-      this.demandError.set(null);
     });
   }
 
   dropdownTriggerClass(active: boolean, open: boolean): string {
     const base =
-      'inline-flex min-h-[42px] items-center gap-2 rounded-pill border px-4 py-1.5 text-[13px] transition-[border-color,background-color,box-shadow] duration-150 cursor-pointer';
+      'terraco-m3-chip inline-flex min-h-[42px] items-center gap-2 border px-4 py-1.5 text-[13px] cursor-pointer';
     if (open) {
       return `${base} border-brand bg-elevated font-medium text-brand shadow-card`;
     }
     if (active) {
-      return `${base} border-brand bg-brand/10 font-medium text-brand`;
+      return `${base} terraco-m3-chip--active border-brand bg-brand/10 font-medium text-brand`;
     }
-    return `${base} border-border-subtle bg-elevated font-medium text-ink hover:border-ink/25 hover:bg-surface/60`;
+    return `${base} border-border-subtle bg-elevated font-medium text-ink hover:border-border-strong hover:bg-surface/60`;
   }
 
   dropdownOptionClass(selected: boolean): string {
@@ -606,6 +523,31 @@ export class LaunchExplorerComponent {
     }
   }
 
+  readonly selectedNeighborhoodValue = computed<string[]>(() => {
+    const active = this.quickNeighborhoods().find((bairro) =>
+      this.isNeighborhoodActive(bairro)
+    );
+    return [active ?? 'Todos'];
+  });
+
+  readonly selectedTipologiaValue = computed<string[]>(() => [
+    this.tipologiaFilter().trim() || 'Todas',
+  ]);
+
+  onNeighborhoodListboxChange(values: readonly string[]): void {
+    const next = values[0];
+    if (next) {
+      this.selectNeighborhoodOption(next);
+    }
+  }
+
+  onTipologiaListboxChange(values: readonly string[]): void {
+    const next = values[0];
+    if (next) {
+      this.selectTipologiaOption(next);
+    }
+  }
+
   selectNeighborhoodOption(bairro: string): void {
     this.closeMenus();
     if (bairro === 'Todos') {
@@ -628,8 +570,6 @@ export class LaunchExplorerComponent {
     const value = target?.value ?? '';
     this.searchInput.set(value);
     this.lancamentosService.setSearchQuery(value);
-    this.demandSuccessTerm.set(null);
-    this.demandError.set(null);
   }
 
   handleSearchSubmit(event: Event): void {
@@ -659,7 +599,7 @@ export class LaunchExplorerComponent {
   }
 
   clearObjetivo(): void {
-    this.objetivoFilter.set(null);
+    this.lancamentosService.setObjetivoFilter(null);
     this.syncQueryParams({ objetivo: '' });
   }
 
@@ -681,60 +621,9 @@ export class LaunchExplorerComponent {
     this.lancamentosService.setSearchQuery('');
     this.lancamentosService.setActiveFilter('Todos');
     this.lancamentosService.setTipologiaFilter('Todas');
-    this.objetivoFilter.set(null);
-    this.demandSuccessTerm.set(null);
-    this.demandError.set(null);
+    this.lancamentosService.setObjetivoFilter(null);
     this.syncQueryParams({ q: '', tipologia: '', objetivo: '' });
     this.searchInputRef()?.nativeElement.focus();
-  }
-
-  onDemandPhoneInput(event: Event): void {
-    const target = event.target as HTMLInputElement | null;
-    const formatted = formatBrazilianPhone(target?.value ?? '');
-    this.demandPhone.set(formatted);
-    if (target && target.value !== formatted) {
-      target.value = formatted;
-    }
-    if (this.demandError()) {
-      this.demandError.set(null);
-    }
-  }
-
-  async handleDemandSubmit(event: Event): Promise<void> {
-    event.preventDefault();
-    if (this.demandSubmitting()) {
-      return;
-    }
-
-    const phone = this.demandPhone().trim();
-    const digits = phone.replace(/\D/g, '');
-    if (digits.length < 10) {
-      this.demandError.set(
-        'Informe um WhatsApp válido com DDD (ex: (31) 99999-9999).'
-      );
-      return;
-    }
-
-    const term = this.searchedTerm();
-    this.demandSubmitting.set(true);
-    this.demandError.set(null);
-
-    try {
-      await this.leadsService.captureDemandLead({
-        phone,
-        searchedTerm: term || 'Belo Horizonte',
-      });
-      this.demandSuccessTerm.set(term || 'essa região');
-      this.demandPhone.set('');
-    } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : 'Não foi possível salvar seu WhatsApp agora. Tente novamente.';
-      this.demandError.set(message);
-    } finally {
-      this.demandSubmitting.set(false);
-    }
   }
 
   private syncQueryParams(updates: {

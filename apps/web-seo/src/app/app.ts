@@ -4,6 +4,7 @@ import {
   Component,
   DestroyRef,
   PLATFORM_ID,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -16,7 +17,8 @@ import {
   Router,
   RouterOutlet,
 } from '@angular/router';
-import { FavoritesTrayComponent } from './components/launches';
+import { FavoritesTrayComponent } from './components/launches/favorites-tray.component';
+import { FavoritesService } from './core';
 
 @Component({
   selector: 'app-root',
@@ -28,11 +30,13 @@ import { FavoritesTrayComponent } from './components/launches';
         aria-label="Carregando página"
         animate.enter="terraco-chip-enter"
         animate.leave="terraco-chip-leave"
-        class="terraco-skeleton pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 bg-brand/25"
+        class="terraco-skeleton pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 bg-accent"
       ></div>
     }
     <router-outlet />
-    <app-favorites-tray />
+    @defer (when hasFavorites()) {
+      <app-favorites-tray />
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -40,8 +44,12 @@ export class AppComponent {
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly favoritesService = inject(FavoritesService);
 
   readonly isNavigating = signal(false);
+  readonly hasFavorites = computed(
+    () => this.favoritesService.favorites().length > 0
+  );
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) {

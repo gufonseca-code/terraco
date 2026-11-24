@@ -1,15 +1,16 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgOptimizedImage, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
+  PLATFORM_ID,
   afterNextRender,
   computed,
   effect,
   inject,
   input,
-  signal,
+  linkedSignal,
   viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -27,6 +28,7 @@ import { FavoriteButtonComponent } from './favorite-button.component';
 import { ImageLightboxComponent } from './image-lightbox.component';
 import { LaunchFloorPlansComponent } from './launch-floor-plans.component';
 import { LaunchSimulatorComponent } from './launch-simulator.component';
+import { formatBrazilianPhone } from './whatsapp-alert-form.component';
 
 export type LaunchIntentKey =
   | 'plantas_valores'
@@ -156,6 +158,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 @Component({
   selector: 'app-prime-view-landing',
   imports: [
+    NgOptimizedImage,
     RouterLink,
     FavoriteButtonComponent,
     ImageLightboxComponent,
@@ -190,15 +193,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               <img
                 #heroImg
                 data-testid="launch-hero-image"
-                [src]="item().imagem"
+                [ngSrc]="item().imagem"
                 [alt]="item().imagemAlt"
                 [width]="item().imagemWidth"
                 [height]="item().imagemHeight"
+                priority
                 [style.view-transition-name]="'launch-image-' + item().slug"
                 (load)="markImageLoaded()"
                 (error)="markImageLoaded()"
-                fetchpriority="high"
-                decoding="async"
                 class="relative z-[1] h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
               />
               @if (hasGallery()) {
@@ -342,8 +344,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.aria-pressed]="selectedIntent() === option.key"
                       [class]="
                         selectedIntent() === option.key
-                          ? 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-brand bg-brand/10 px-3 py-1.5 text-center text-[13px] font-medium leading-[1.3] text-brand'
-                          : 'terraco-btn flex min-h-[40px] items-center justify-center rounded-pill border border-border-subtle bg-surface/60 px-3 py-1.5 text-center text-[13px] font-normal leading-[1.3] text-ink-muted hover:border-ink/25 hover:text-ink'
+                          ? 'terraco-m3-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-center text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip'
+                          : 'terraco-m3-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-center text-[13px] font-normal leading-[1.3] text-ink hover:border-border-strong hover:bg-surface'
                       "
                     >
                       {{ option.label }}
@@ -381,7 +383,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         <button
                           type="button"
                           (click)="toggleCallbackForm()"
-                          class="text-[12px] font-normal text-ink-muted hover:text-ink"
+                          class="text-[13px] font-normal text-ink-muted hover:text-ink"
                         >
                           Fechar
                         </button>
@@ -411,7 +413,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         <button
                           type="submit"
                           [disabled]="callbackSubmitting()"
-                          class="terraco-btn inline-flex min-h-[40px] shrink-0 items-center justify-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[12px] font-medium text-ink-inverse hover:bg-brand-hover disabled:opacity-60"
+                          class="terraco-btn inline-flex min-h-[40px] shrink-0 items-center justify-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover disabled:opacity-60"
                         >
                           {{ callbackSubmitting() ? 'Enviando...' : 'Solicitar' }}
                         </button>
@@ -420,7 +422,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       @if (callbackError(); as errorMsg) {
                         <p
                           role="alert"
-                          class="text-[12px] font-normal text-highlight"
+                          class="rounded-sm bg-error-bg px-3 py-2 text-[13px] font-normal text-error-fg"
                         >
                           {{ errorMsg }}
                         </p>
@@ -442,7 +444,54 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           </div>
         </article>
 
-        <div class="mt-8 space-y-8 sm:mt-10 sm:space-y-10">
+        <nav
+          aria-label="Seções do empreendimento"
+          class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-border-subtle pb-3 text-[14px]"
+        >
+          <a
+            href="#sobre"
+            (click)="scrollToSection($event, 'sobre')"
+            class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+          >
+            Sobre
+          </a>
+          @if (item().diferenciais.length > 0) {
+            <a
+              href="#diferenciais"
+              (click)="scrollToSection($event, 'diferenciais')"
+              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+            >
+              Diferenciais
+            </a>
+          }
+          @if (item().plantas?.length) {
+            <a
+              href="#plantas"
+              (click)="scrollToSection($event, 'plantas')"
+              class="terraco-link-underline inline-flex min-h-[40px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+            >
+              Plantas
+            </a>
+          }
+          <a
+            href="#simulador"
+            (click)="scrollToSection($event, 'simulador')"
+            class="terraco-link-underline inline-flex min-h-[40px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+          >
+            Simular entrada
+          </a>
+          @if (hasGallery()) {
+            <a
+              href="#galeria"
+              (click)="scrollToSection($event, 'galeria')"
+              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+            >
+              Galeria
+            </a>
+          }
+        </nav>
+
+        <div class="mt-8 space-y-12 sm:mt-10 sm:space-y-14">
           @if (item().condicoesEspeciais?.length) {
             <section
               aria-labelledby="special-conditions-heading"
@@ -458,7 +507,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               <p
                 class="mt-2 max-w-3xl text-[15px] font-normal leading-[1.5] text-ink-muted"
               >
-                Facilidades vigentes para entrada e financiamento — consulte a
+                Facilidades vigentes para entrada e financiamento. Consulte a
                 disponibilidade da unidade.
               </p>
 
@@ -501,18 +550,19 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           }
 
           <section
+            id="sobre"
             aria-labelledby="about-heading"
-            class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+            class="scroll-mt-24"
           >
             <h2
               id="about-heading"
-              class="font-display text-[clamp(1.25rem,2vw,1.5rem)] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+              class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
             >
               Sobre o empreendimento
             </h2>
 
             <p
-              class="mt-3 max-w-3xl text-[15px] font-normal leading-[1.6] text-ink sm:text-base"
+              class="mt-3 max-w-3xl text-base font-normal leading-[1.65] text-ink"
             >
               {{ item().resumo }}
             </p>
@@ -533,22 +583,23 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
           @if (item().diferenciais.length > 0) {
             <section
+              id="diferenciais"
               aria-labelledby="features-heading"
-              class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+              class="border-t border-border-subtle pt-10 scroll-mt-24"
             >
               <h2
                 id="features-heading"
-                class="font-display text-[clamp(1.25rem,2vw,1.5rem)] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+                class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
               >
                 Diferenciais &amp; Lazer
               </h2>
 
               <ul
-                class="mt-5 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2"
+                class="mt-6 grid grid-cols-1 gap-x-10 gap-y-3.5 sm:grid-cols-2"
               >
                 @for (diferencial of item().diferenciais; track diferencial) {
                   <li
-                    class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.5] text-ink"
+                    class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.55] text-ink"
                   >
                     <svg
                       aria-hidden="true"
@@ -558,7 +609,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       stroke-width="2"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      class="mt-0.5 h-4 w-4 shrink-0 text-brand"
+                      class="mt-1 h-4 w-4 shrink-0 text-brand"
                     >
                       <path d="M4.5 10.5 8 14l7.5-8" />
                     </svg>
@@ -569,24 +620,41 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </section>
           }
 
-          <app-launch-floor-plans [item]="item()" />
+          @defer (on viewport; hydrate on interaction) {
+            <app-launch-floor-plans [item]="item()" />
+          } @placeholder {
+            <div
+              id="plantas"
+              aria-hidden="true"
+              class="min-h-[480px] rounded-lg border border-border-subtle bg-elevated scroll-mt-24"
+            ></div>
+          }
 
-          <app-launch-simulator [item]="item()" />
+          @defer (on viewport; hydrate on interaction) {
+            <app-launch-simulator [item]="item()" />
+          } @placeholder {
+            <div
+              id="simulador"
+              aria-hidden="true"
+              class="min-h-[440px] rounded-lg border border-border-subtle bg-elevated scroll-mt-24"
+            ></div>
+          }
 
           @if (hasGallery()) {
             <section
+              id="galeria"
               aria-labelledby="gallery-heading"
-              class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+              class="border-t border-border-subtle pt-10 scroll-mt-24"
             >
               <h2
                 id="gallery-heading"
-                class="font-display text-[clamp(1.25rem,2vw,1.5rem)] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+                class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
               >
                 Galeria do empreendimento
               </h2>
 
               <div
-                class="mt-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3"
+                class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3"
               >
                 @for (media of galleryImages(); track media.url; let i = $index) {
                   <button
@@ -595,7 +663,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [attr.aria-label]="
                       'Ampliar imagem ' + (i + 1) + ': ' + media.alt
                     "
-                    class="group relative aspect-[4/3] overflow-hidden rounded-md border border-border-subtle bg-surface text-left transition-colors duration-150 hover:border-brand/40"
+                    class="group relative aspect-[4/3] overflow-hidden rounded-md border border-border-subtle bg-surface text-left transition-colors duration-150 hover:border-brand/40 cursor-pointer"
                   >
                     <img
                       [src]="media.url"
@@ -614,31 +682,66 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         </div>
       </div>
 
-      <app-image-lightbox
-        [images]="galleryImages()"
-        [initialIndex]="lightboxIndex()"
-        [isOpen]="lightboxOpen()"
-        (closed)="closeLightbox()"
-      />
+      @defer (when lightboxOpen()) {
+        <app-image-lightbox
+          [images]="galleryImages()"
+          [initialIndex]="lightboxIndex()"
+          [isOpen]="lightboxOpen()"
+          (closed)="closeLightbox()"
+        />
+      }
     </section>
   `,
 })
 export class PrimeViewLandingComponent {
   private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
   private readonly leadsService = inject(LeadsService);
 
   readonly item = input.required<Lancamento>();
-  readonly imageLoaded = signal<boolean>(false);
-  readonly selectedIntent = signal<LaunchIntentKey>('plantas_valores');
-  readonly lightboxOpen = signal<boolean>(false);
-  readonly lightboxIndex = signal<number>(0);
+  private readonly itemSlug = computed(() => this.item().slug);
 
-  readonly callbackOpen = signal<boolean>(false);
-  readonly callbackName = signal<string>('');
-  readonly callbackPhone = signal<string>('');
-  readonly callbackError = signal<string | null>(null);
-  readonly callbackSubmitted = signal<boolean>(false);
+  readonly imageLoaded = linkedSignal({
+    source: this.itemSlug,
+    computation: () => {
+      const el = this.heroImg()?.nativeElement;
+      return Boolean(el?.complete && el.naturalWidth > 0);
+    },
+  });
+  readonly selectedIntent = linkedSignal<string, LaunchIntentKey>({
+    source: this.itemSlug,
+    computation: () => 'plantas_valores',
+  });
+  readonly lightboxOpen = linkedSignal({
+    source: this.itemSlug,
+    computation: () => false,
+  });
+  readonly lightboxIndex = linkedSignal({
+    source: this.itemSlug,
+    computation: () => 0,
+  });
+
+  readonly callbackOpen = linkedSignal({
+    source: this.itemSlug,
+    computation: () => false,
+  });
+  readonly callbackName = linkedSignal({
+    source: this.itemSlug,
+    computation: () => '',
+  });
+  readonly callbackPhone = linkedSignal({
+    source: this.itemSlug,
+    computation: () => '',
+  });
+  readonly callbackError = linkedSignal<string, string | null>({
+    source: this.itemSlug,
+    computation: () => null,
+  });
+  readonly callbackSubmitted = linkedSignal({
+    source: this.itemSlug,
+    computation: () => false,
+  });
   readonly callbackSubmitting = this.leadsService.submitting;
 
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
@@ -701,21 +804,6 @@ export class PrimeViewLandingComponent {
     });
 
     effect(() => {
-      // Reset per-launch interactive state when navigating between slugs.
-      this.item().slug;
-      this.selectedIntent.set('plantas_valores');
-      this.lightboxOpen.set(false);
-      this.lightboxIndex.set(0);
-      this.callbackOpen.set(false);
-      this.callbackName.set('');
-      this.callbackPhone.set('');
-      this.callbackError.set(null);
-      this.callbackSubmitted.set(false);
-      const el = this.heroImg()?.nativeElement;
-      this.imageLoaded.set(Boolean(el?.complete && el.naturalWidth > 0));
-    });
-
-    effect(() => {
       const currentItem = this.item();
       const jsonLd = buildJsonLd(currentItem);
       const serialized = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
@@ -766,9 +854,31 @@ export class PrimeViewLandingComponent {
     this.callbackName.set(inputEl?.value ?? '');
   }
 
+  scrollToSection(event: MouseEvent, sectionId: string): void {
+    event.preventDefault();
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    const target = this.document.getElementById(sectionId);
+    if (!target) {
+      return;
+    }
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    target.scrollIntoView({
+      behavior: reducedMotion ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }
+
   onCallbackPhoneInput(event: Event): void {
     const inputEl = event.target as HTMLInputElement | null;
-    this.callbackPhone.set(inputEl?.value ?? '');
+    const formatted = formatBrazilianPhone(inputEl?.value ?? '');
+    this.callbackPhone.set(formatted);
+    if (inputEl && inputEl.value !== formatted) {
+      inputEl.value = formatted;
+    }
     if (this.callbackError()) {
       this.callbackError.set(null);
     }

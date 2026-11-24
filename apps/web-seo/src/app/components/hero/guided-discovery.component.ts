@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LancamentosService } from '../../core';
+import { LancamentosService, rankLancamentosByObjetivo } from '../../core';
 
 type ObjetivoOption = 'Sair do aluguel' | 'Dar um upgrade' | 'Investir';
 type TipologiaOption =
@@ -128,13 +128,13 @@ function normalizeText(value: string): string {
               <legend class="text-sm font-medium leading-[1.35] text-ink">
                 Seu objetivo
               </legend>
-              <div class="flex flex-wrap gap-2.5">
+              <div class="terraco-m3-group-grid grid-cols-1 sm:w-fit sm:grid-cols-3">
                 @for (option of objetivoOptions; track option) {
                   <button
                     type="button"
                     [attr.aria-pressed]="objetivo() === option"
                     (click)="toggleObjetivo(option)"
-                    [class]="chipClass(objetivo() === option)"
+                    [class]="segmentClass(objetivo() === option)"
                   >
                     {{ option }}
                   </button>
@@ -146,13 +146,13 @@ function normalizeText(value: string): string {
               <legend class="text-sm font-medium leading-[1.35] text-ink">
                 Tipologia
               </legend>
-              <div class="flex flex-wrap gap-2.5">
+              <div class="terraco-m3-group-grid grid-cols-1 sm:w-fit sm:grid-cols-3">
                 @for (option of tipologiaOptions; track option) {
                   <button
                     type="button"
                     [attr.aria-pressed]="tipologia() === option"
                     (click)="toggleTipologia(option)"
-                    [class]="chipClass(tipologia() === option)"
+                    [class]="segmentClass(tipologia() === option)"
                   >
                     {{ option }}
                   </button>
@@ -164,13 +164,13 @@ function normalizeText(value: string): string {
               <legend class="text-sm font-medium leading-[1.35] text-ink">
                 Região de BH
               </legend>
-              <div class="flex flex-wrap gap-2.5">
+              <div class="terraco-m3-group-grid grid-cols-2 sm:w-fit sm:grid-cols-4">
                 @for (option of regiaoOptions; track option) {
                   <button
                     type="button"
                     [attr.aria-pressed]="regiao() === option"
                     (click)="toggleRegiao(option)"
-                    [class]="chipClass(regiao() === option)"
+                    [class]="segmentClass(regiao() === option)"
                   >
                     {{ option }}
                   </button>
@@ -260,8 +260,9 @@ export class GuidedDiscoveryComponent {
     const items = this.lancamentosService.lancamentos();
     const selectedTipologia = this.tipologia();
     const selectedRegiao = this.regiao();
+    const selectedObjetivo = this.objetivo();
 
-    return items.filter((item) => {
+    const filtered = items.filter((item) => {
       if (selectedRegiao && selectedRegiao !== 'Qualquer região') {
         const regiaoText = normalizeText(
           `${item.bairro} ${item.endereco} ${item.resumo}`
@@ -290,6 +291,8 @@ export class GuidedDiscoveryComponent {
 
       return true;
     });
+
+    return rankLancamentosByObjetivo(filtered, selectedObjetivo);
   });
 
   readonly matchedSummary = computed(() => {
@@ -362,12 +365,12 @@ export class GuidedDiscoveryComponent {
     this.regiao.set(null);
   }
 
-  chipClass(selected: boolean): string {
+  segmentClass(selected: boolean): string {
     const base =
-      'terraco-btn inline-flex min-h-[44px] cursor-pointer items-center justify-center rounded-pill border px-4 py-2 text-sm font-normal leading-[1.35]';
+      'terraco-m3-group-item inline-flex min-h-[44px] cursor-pointer items-center justify-center border px-4 py-2 text-center text-[13px] leading-[1.35]';
     if (selected) {
-      return `${base} border-brand bg-brand font-medium text-ink-inverse hover:bg-brand-hover`;
+      return `${base} border-brand bg-brand font-medium text-ink-inverse shadow-chip hover:bg-brand-hover`;
     }
-    return `${base} border-border-subtle bg-canvas text-ink hover:border-ink/25 hover:bg-surface`;
+    return `${base} border-border-subtle bg-surface/75 font-normal text-ink hover:border-border-strong hover:bg-surface`;
   }
 }

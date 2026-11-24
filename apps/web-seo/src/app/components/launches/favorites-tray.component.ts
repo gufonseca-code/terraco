@@ -31,9 +31,9 @@ import {
     @if (savedLaunches().length > 0 && !isOpen()) {
       <aside
         aria-label="Lançamentos salvos"
-        animate.enter="terraco-chip-enter"
-        animate.leave="terraco-chip-leave"
-        class="fixed bottom-4 left-1/2 z-40 flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-2.5 rounded-pill border border-border-subtle bg-elevated/95 px-4 py-2.5 shadow-floating backdrop-blur-md sm:gap-3"
+        animate.enter="terraco-toolbar-enter"
+        animate.leave="terraco-toolbar-leave"
+        class="fixed bottom-4 left-1/2 z-40 flex min-h-[56px] max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-2.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-2 shadow-floating backdrop-blur-md sm:gap-3 sm:px-4"
       >
         <div class="flex items-center gap-2 pl-0.5 text-sm font-normal text-ink">
           <svg
@@ -136,7 +136,7 @@ import {
                 <tr class="border-b border-border-subtle">
                   <th
                     scope="col"
-                    class="sticky left-0 z-10 w-36 bg-elevated px-4 py-4 align-bottom text-xs font-medium text-ink-muted sm:w-44 sm:px-6"
+                    class="sticky left-0 z-10 w-36 bg-elevated px-4 py-4 align-bottom text-[13px] font-medium text-ink-muted sm:w-44 sm:px-6"
                   >
                     Comparativo
                   </th>
@@ -180,7 +180,7 @@ import {
                             type="button"
                             (click)="removeLaunch(launch.slug)"
                             [attr.aria-label]="'Remover ' + launch.nome + ' dos salvos'"
-                            class="terraco-btn inline-flex min-h-[32px] shrink-0 cursor-pointer items-center rounded-pill px-2.5 text-[12px] font-medium text-ink-muted hover:bg-surface hover:text-ink"
+                            class="terraco-btn inline-flex min-h-[36px] shrink-0 cursor-pointer items-center rounded-pill px-2.5 text-[13px] font-medium text-ink-muted hover:bg-surface hover:text-ink"
                           >
                             Remover
                           </button>
@@ -275,6 +275,53 @@ import {
                     </td>
                   }
                 </tr>
+
+                <tr>
+                  <th
+                    scope="row"
+                    class="sticky left-0 z-10 bg-elevated px-4 py-3.5 align-top font-medium text-ink-muted sm:px-6"
+                  >
+                    Construtora
+                  </th>
+                  @for (launch of savedLaunches(); track launch.slug) {
+                    <td class="px-4 py-3.5 align-top font-normal sm:px-5">
+                      {{ formatValue(launch.construtora) }}
+                    </td>
+                  }
+                </tr>
+
+                @if (hasAnySpecialConditions()) {
+                  <tr>
+                    <th
+                      scope="row"
+                      class="sticky left-0 z-10 bg-elevated px-4 py-4 align-top font-medium text-ink-muted sm:px-6"
+                    >
+                      Condições especiais
+                    </th>
+                    @for (launch of savedLaunches(); track launch.slug) {
+                      <td class="px-4 py-4 align-top font-normal sm:px-5">
+                        @if (launch.condicoesEspeciais?.length) {
+                          <ul class="space-y-1.5">
+                            @for (
+                              cond of (launch.condicoesEspeciais ?? []).slice(0, 2);
+                              track $index
+                            ) {
+                              <li class="flex items-start gap-2">
+                                <span
+                                  aria-hidden="true"
+                                  class="mt-2 h-1.5 w-1.5 shrink-0 rounded-pill bg-accent"
+                                ></span>
+                                <span>{{ cond }}</span>
+                              </li>
+                            }
+                          </ul>
+                        } @else {
+                          <span class="text-ink-muted">Sob consulta</span>
+                        }
+                      </td>
+                    }
+                  </tr>
+                }
 
                 <tr>
                   <th
@@ -379,6 +426,12 @@ export class FavoritesTrayComponent {
   });
 
   readonly savedCount = computed(() => this.savedLaunches().length);
+
+  readonly hasAnySpecialConditions = computed(() =>
+    this.savedLaunches().some(
+      (launch) => (launch.condicoesEspeciais?.length ?? 0) > 0
+    )
+  );
 
   readonly whatsappComparatorHref = computed(() => {
     const launches = this.savedLaunches();

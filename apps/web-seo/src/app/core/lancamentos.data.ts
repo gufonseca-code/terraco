@@ -1068,16 +1068,95 @@ export function normalizeSearchText(value: string): string {
     .trim();
 }
 
+export function scoreLancamentoForObjetivo(
+  item: Lancamento,
+  objetivo: string | null | undefined
+): number {
+  const normalizedObjetivo = normalizeSearchText(objetivo ?? '');
+  if (!normalizedObjetivo) {
+    return 0;
+  }
+
+  const haystack = normalizeSearchText(
+    [
+      item.quartos,
+      item.tipologias,
+      item.resumo,
+      item.bairro,
+      ...item.tags,
+      ...(item.condicoesEspeciais ?? []),
+      ...item.diferenciais,
+    ].join(' ')
+  );
+
+  let score = 0;
+
+  if (normalizedObjetivo.includes('aluguel')) {
+    if (haystack.includes('repasse caixa') || haystack.includes('entrada parcelada')) {
+      score += 3;
+    }
+    if (haystack.includes('itbi') || haystack.includes('fgts') || haystack.includes('bonus')) {
+      score += 2;
+    }
+    if (typeof item.precoAPartirDe === 'number' && item.precoAPartirDe > 0) {
+      if (item.precoAPartirDe <= 450_000) score += 3;
+      else if (item.precoAPartirDe <= 650_000) score += 1;
+    }
+    if (haystack.includes('1 quarto') || haystack.includes('2 quartos')) {
+      score += 1;
+    }
+    return score;
+  }
+
+  if (normalizedObjetivo.includes('upgrade')) {
+    if (haystack.includes('cobertura') || haystack.includes('garden')) score += 3;
+    if (haystack.includes('suite')) score += 2;
+    if (haystack.includes('2 vagas') || haystack.includes('lazer completo')) score += 2;
+    if (haystack.includes('vista panoramica') || haystack.includes('varanda')) score += 1;
+    return score;
+  }
+
+  if (normalizedObjetivo.includes('investir')) {
+    if (haystack.includes('studio') || haystack.includes('1 quarto')) score += 3;
+    if (haystack.includes('coworking') || haystack.includes('minimercado')) score += 2;
+    if (haystack.includes('santa efigenia') || haystack.includes('estoril')) score += 2;
+    if (haystack.includes('cashback') || haystack.includes('parcela fixa')) score += 1;
+    return score;
+  }
+
+  return 0;
+}
+
+export function rankLancamentosByObjetivo(
+  items: readonly Lancamento[],
+  objetivo: string | null | undefined
+): Lancamento[] {
+  const normalizedObjetivo = normalizeSearchText(objetivo ?? '');
+  if (!normalizedObjetivo) {
+    return [...items];
+  }
+
+  return [...items]
+    .map((item, index) => ({
+      item,
+      index,
+      score: scoreLancamentoForObjetivo(item, normalizedObjetivo),
+    }))
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .map((entry) => entry.item);
+}
+
 export function filterLancamentos(
   query: string,
   activeFilter: string,
   items: readonly Lancamento[] = LANCAMENTOS,
-  tipologiaFilter = 'Todas'
+  tipologiaFilter = 'Todas',
+  objetivoFilter: string | null = null
 ): Lancamento[] {
   const normalized = normalizeSearchText(query);
   const normalizedTipologia = normalizeSearchText(tipologiaFilter);
 
-  return items.filter((item) => {
+  const filtered = items.filter((item) => {
     const matchesFilter =
       activeFilter === 'Todos' ||
       normalizeSearchText(item.quartos).includes(normalizeSearchText(activeFilter)) ||
@@ -1113,6 +1192,8 @@ export function filterLancamentos(
 
     return searchable.includes(normalized);
   });
+
+  return rankLancamentosByObjetivo(filtered, objetivoFilter);
 }
 
 export function getLancamentoBySlug(slug: string): Lancamento | undefined {

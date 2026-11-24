@@ -4,50 +4,91 @@
   --font-fraunces: "Fraunces", Georgia, serif;
   --font-plus-jakarta: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
 
-  /* Terraço — Paleta Ipê & Grafite (Creme Papel #FAF7F0 global) */
-  --color-bg-canvas: #FAF7F0;
-  --color-bg-surface: #EFEAE0;
+  /* Terraço — Paleta Ipê & Grafite (Creme Papel #F8F5EA global) */
+  --color-bg-canvas: #F8F5EA;
+  --color-bg-surface: #F1E9D8;
   --color-bg-elevated: #FFFDF9;
 
   --color-text-primary: #1E1D1B;
   --color-text-secondary: #57534E;
-  --color-text-inverse: #FAF7F0;
+  --color-text-inverse: #F8F5EA;
 
-  --color-brand-primary: #265C4B;
-  --color-brand-primary-hover: #1D473A;
-  --color-brand-accent: #F2B705;
-  --color-brand-highlight: #F07167;
+  --color-brand-primary: #2E5B46;
+  --color-brand-primary-hover: #234736;
+  --color-brand-accent: #EEB506;
+  --color-brand-highlight: #ED7467;
 
-  --color-border-subtle: #E2DCD0;
+  --color-border-subtle: #E4DCCB;
+  --color-border-strong: #CFC5B2;
 
   /* Estados Semânticos */
-  --color-success-fg: #265C4B;
-  --color-success-bg: #E3F1EB;
+  --color-success-fg: #2E5B46;
+  --color-success-bg: #E4F0EA;
   --color-warning-fg: #8A6500;
   --color-warning-bg: #FEF3C7;
   --color-error-fg: #B9382E;
   --color-error-bg: #FDE8E6;
 
-  /* Raios de Borda */
+  /* Raios de Borda (Escala M3 Expressive) */
+  --radius-xs: 4px;
   --radius-sm: 8px;
+  --radius-m3-md: 12px;
   --radius-md: 16px;
+  --radius-morph-pill: 22px;
   --radius-lg: 24px;
+  --radius-xl: 28px;
   --radius-pill: 9999px;
 
   /* Sombras Quentes (nunca cinza frio ou preto puro) */
   --shadow-chip: 0 2px 8px -2px rgba(30, 29, 27, 0.08);
   --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.07);
   --shadow-card-hover: 0 14px 32px -10px rgba(30, 29, 27, 0.11);
-  --shadow-moss: 0 10px 24px -8px rgba(38, 92, 75, 0.32);
+  --shadow-moss: 0 10px 24px -8px rgba(46, 91, 70, 0.30);
   --shadow-floating:
     0 24px 56px -14px rgba(30, 29, 27, 0.14),
     0 4px 12px -2px rgba(30, 29, 27, 0.05);
 
-  /* Curvas e tempos de microinteração */
+  /* Curvas e tempos de microinteração (M3 Expressive Spatial & Effects) */
   --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
   --resize-dur: 300ms;
   --resize-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring-fast: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring-default: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@supports (animation-timing-function: linear(0, 1)) {
+  :root {
+    --ease-spring-fast: linear(
+      0,
+      0.012 1.2%,
+      0.05 2.5%,
+      0.193 5.4%,
+      0.728 14.5%,
+      0.946 19.6%,
+      1.031 23.3%,
+      1.062 27.1%,
+      1.057 31.7%,
+      1.012 43.8%,
+      0.996 54.6%,
+      1.001 74%,
+      1
+    );
+    --ease-spring-default: linear(
+      0,
+      0.008 1%,
+      0.036 2.2%,
+      0.145 4.8%,
+      0.631 13.5%,
+      0.896 19.3%,
+      1.028 24.4%,
+      1.059 28.9%,
+      1.044 35.1%,
+      1.004 49%,
+      0.997 62%,
+      1
+    );
+  }
 }
 
 @theme inline {
@@ -65,6 +106,7 @@
   --color-highlight: var(--color-brand-highlight);
   --color-border: var(--color-border-subtle);
   --color-border-subtle: var(--color-border-subtle);
+  --color-border-strong: var(--color-border-strong);
 
   --color-success-fg: var(--color-success-fg);
   --color-success-bg: var(--color-success-bg);
@@ -76,9 +118,12 @@
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-sans: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
 
+  --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
+  --radius-m3-md: var(--radius-m3-md);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
   --radius-pill: var(--radius-pill);
 
   --shadow-chip: var(--shadow-chip);
@@ -88,13 +133,8 @@
 
 html {
   scroll-padding-top: 5.5rem;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) var(--color-bg-canvas);
 }
 
 body {
@@ -103,8 +143,6 @@ body {
   font-family: var(--font-sans);
   font-weight: 400;
   text-rendering: optimizeLegibility;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 }
 
 h1,
@@ -251,8 +289,8 @@ h4 {
   left: 0;
   right: 0;
   bottom: 8px;
-  height: 1px;
-  background-color: var(--color-brand-primary);
+  height: 2px;
+  background-color: var(--color-brand-accent);
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 180ms var(--ease-ui);
@@ -280,21 +318,181 @@ h4 {
   will-change: width, height;
 }
 
-/* Placa de galeria (/lancamentos) com elevação e borda arquitetônica */
+/* Placa de galeria (/lancamentos & Home) — M3 Expressive Tonal Card */
 .terraco-plate {
   isolation: isolate;
   border: 1px solid var(--color-border-subtle);
   box-shadow: var(--shadow-card);
   transition:
     border-color 180ms var(--ease-ui),
-    box-shadow 220ms var(--ease-ui);
+    box-shadow 220ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .terraco-plate:hover {
-    border-color: rgba(38, 92, 75, 0.35);
+    border-color: rgba(46, 91, 70, 0.32);
     box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
   }
+}
+
+/* M3 Expressive: Filter / Intent Chip com Shape Morphing (22px -> 12px) */
+.terraco-m3-chip {
+  border-radius: var(--radius-morph-pill);
+  transition:
+    border-radius 320ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
+}
+
+.terraco-m3-chip[aria-pressed="true"],
+.terraco-m3-chip[aria-expanded="true"],
+.terraco-m3-chip--active {
+  border-radius: var(--radius-m3-md);
+}
+
+.terraco-m3-chip:active {
+  transform: scale(0.97);
+}
+
+/* M3 Expressive: Connected Button Group (gap 3px, pontas 22px, internas 8px) */
+.terraco-m3-group {
+  display: flex;
+  gap: 3px;
+}
+
+.terraco-m3-group-item {
+  border-radius: var(--radius-sm);
+  transition:
+    border-radius 320ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
+}
+
+.terraco-m3-group > .terraco-m3-group-item:first-child {
+  border-top-left-radius: var(--radius-morph-pill);
+  border-bottom-left-radius: var(--radius-morph-pill);
+}
+
+.terraco-m3-group > .terraco-m3-group-item:last-child {
+  border-top-right-radius: var(--radius-morph-pill);
+  border-bottom-right-radius: var(--radius-morph-pill);
+}
+
+.terraco-m3-group > .terraco-m3-group-item[aria-pressed="true"] {
+  border-radius: var(--radius-morph-pill);
+}
+
+.terraco-m3-group-item:active {
+  transform: scale(0.975);
+}
+
+/* Variante de Connected Group que faz wrap em grid 2x2 no mobile e vira linha única em sm+ */
+.terraco-m3-group-grid {
+  display: grid;
+  gap: 3px;
+}
+
+.terraco-m3-group-grid > .terraco-m3-group-item[aria-pressed="true"] {
+  border-radius: var(--radius-morph-pill);
+}
+
+@media (min-width: 640px) {
+  .terraco-m3-group-grid > .terraco-m3-group-item:first-child {
+    border-top-left-radius: var(--radius-morph-pill);
+    border-bottom-left-radius: var(--radius-morph-pill);
+  }
+
+  .terraco-m3-group-grid > .terraco-m3-group-item:last-child {
+    border-top-right-radius: var(--radius-morph-pill);
+    border-bottom-right-radius: var(--radius-morph-pill);
+  }
+}
+
+/* M3 Expressive: Toggle Icon Button (22px circle -> 14px squircle) */
+.terraco-m3-icon-toggle {
+  border-radius: var(--radius-morph-pill);
+  transition:
+    border-radius 340ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    color 160ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
+}
+
+.terraco-m3-icon-toggle[aria-pressed="true"] {
+  border-radius: 14px;
+}
+
+.terraco-m3-icon-toggle:active {
+  transform: scale(0.93);
+}
+
+/* M3 Expressive: Card de seleção de planta com shape morphing suave (16px -> 22px) */
+.terraco-m3-select-card {
+  border-radius: var(--radius-md);
+  transition:
+    border-radius 320ms var(--ease-spring-fast),
+    background-color 160ms var(--ease-ui),
+    border-color 160ms var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
+}
+
+.terraco-m3-select-card[aria-selected="true"] {
+  border-radius: var(--radius-morph-pill);
+}
+
+.terraco-m3-select-card:active {
+  transform: scale(0.985);
+}
+
+/* M3 Expressive: Floating Toolbar (Effects no opacity + Spatial spring no transform) */
+@keyframes terraco-toolbar-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes terraco-toolbar-slide-in {
+  from {
+    transform: translateY(16px) scale(0.95);
+  }
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes terraco-toolbar-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+}
+
+.terraco-toolbar-enter {
+  animation:
+    terraco-toolbar-fade-in 160ms var(--ease-ui) both,
+    terraco-toolbar-slide-in 380ms var(--ease-spring-default) both;
+}
+
+.terraco-toolbar-leave {
+  animation: terraco-toolbar-out 160ms var(--ease-ui) both;
 }
 
 /* Card flutuante (/lancamentos/[slug]) com destaque interno e profundidade quente */
@@ -785,6 +983,8 @@ h4 {
   .terraco-chip-leave,
   .terraco-lightbox-backdrop-enter,
   .terraco-lightbox-backdrop-leave,
+  .terraco-toolbar-enter,
+  .terraco-toolbar-leave,
   .terraco-skeleton::after,
   .hero-enter-title,
   .hero-enter-form,
@@ -812,6 +1012,10 @@ h4 {
   .terraco-card-media-img,
   .terraco-card-media-scrim,
   .terraco-card-media-hint,
+  .terraco-m3-chip,
+  .terraco-m3-group-item,
+  .terraco-m3-icon-toggle,
+  .terraco-m3-select-card,
   .terraco-nav-link,
   .terraco-link-underline::after,
   .terraco-stairs-step,

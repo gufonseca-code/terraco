@@ -1,44 +1,48 @@
 :root {
   /* Terraço — Paleta Ipê & Grafite */
-  --color-bg-canvas: #FAF7F0;
-  --color-bg-surface: #EFEAE0;
+  --color-bg-canvas: #F8F5EA;
+  --color-bg-surface: #F1E9D8;
   --color-bg-elevated: #FFFDF9;
 
   --color-text-primary: #1E1D1B;
   --color-text-secondary: #57534E;
-  --color-text-inverse: #FAF7F0;
+  --color-text-inverse: #F8F5EA;
 
-  --color-brand-primary: #265C4B;
-  --color-brand-primary-hover: #1D473A;
-  --color-brand-accent: #F2B705;
-  --color-brand-highlight: #F07167;
+  --color-brand-primary: #2E5B46;
+  --color-brand-primary-hover: #234736;
+  --color-brand-accent: #EEB506;
+  --color-brand-highlight: #ED7467;
 
-  --color-border-subtle: #E2DCD0;
+  --color-border-subtle: #E4DCCB;
+  --color-border-strong: #CFC5B2;
 
   /* Estados Semânticos */
-  --color-success-fg: #265C4B;
-  --color-success-bg: #E3F1EB;
+  --color-success-fg: #2E5B46;
+  --color-success-bg: #E4F0EA;
   --color-warning-fg: #8A6500;
   --color-warning-bg: #FEF3C7;
   --color-error-fg: #B9382E;
   --color-error-bg: #FDE8E6;
 
   /* Tipografia */
-  --font-display: 'Recoleta', 'Fraunces', Georgia, serif;
-  --font-sans: 'Plus Jakarta Sans', 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
-  --text-display-xl: 3rem;     /* 48px */
-  --text-display-lg: 2.25rem;  /* 36px */
-  --text-heading-md: 1.5rem;   /* 24px */
-  --text-body-lg: 1.125rem;    /* 18px */
-  --text-body-md: 1rem;        /* 16px */
-  --text-ui-label: 0.875rem;   /* 14px */
-  --text-ui-badge: 0.75rem;    /* 12px */
+  --text-display-xl: 3rem;      /* 48px */
+  --text-display-lg: 2.25rem;   /* 36px */
+  --text-heading-md: 1.5rem;    /* 24px */
+  --text-body-md: 1rem;         /* 16px */
+  --text-ui-label: 0.875rem;    /* 14px */
+  --text-ui-meta: 0.8125rem;    /* 13px */
 
-  /* Raios de Borda */
+  /* Raios de Borda (Escala M3 Expressive) */
+  --radius-xs: 4px;
   --radius-sm: 8px;
+  --radius-m3-md: 12px;
   --radius-md: 16px;
+  --radius-morph-pill: 22px;
   --radius-lg: 24px;
+  --radius-xl: 28px;
   --radius-pill: 9999px;
 
   /* Espaçamento */
@@ -51,6 +55,17 @@
   --space-3xl: 64px;
 
   /* Sombras Quentes */
-  --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.08);
-  --shadow-floating: 0 16px 40px -8px rgba(30, 29, 27, 0.12);
+  --shadow-chip: 0 2px 8px -2px rgba(30, 29, 27, 0.08);
+  --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.07);
+  --shadow-card-hover: 0 14px 32px -10px rgba(30, 29, 27, 0.11);
+  --shadow-moss: 0 10px 24px -8px rgba(46, 91, 70, 0.30);
+  --shadow-floating:
+    0 24px 56px -14px rgba(30, 29, 27, 0.14),
+    0 4px 12px -2px rgba(30, 29, 27, 0.05);
+
+  /* Curvas de Microinteração (M3 Expressive) */
+  --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring-fast: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring-default: cubic-bezier(0.22, 1, 0.36, 1);
 }

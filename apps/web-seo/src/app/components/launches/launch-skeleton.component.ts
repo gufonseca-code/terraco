@@ -16,39 +16,36 @@ import { CardResizeDirective } from '../../core';
       aria-label="Carregando lançamento"
       animate.enter="terraco-reveal"
       animate.leave="terraco-chip-leave"
-      class="terraco-plate flex h-full flex-col overflow-hidden rounded-lg bg-elevated"
+      class="terraco-plate flex h-full flex-col overflow-hidden rounded-xl bg-elevated"
     >
-      <div
-        aria-hidden="true"
-        class="terraco-skeleton h-60 w-full shrink-0 rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle sm:h-64"
-      ></div>
+      <div aria-hidden="true" class="p-2.5 pb-0">
+        <div
+          class="terraco-skeleton aspect-[16/10] w-full rounded-[20px]"
+        ></div>
+      </div>
 
       <div
         aria-hidden="true"
-        class="flex flex-1 flex-col justify-between gap-4 px-5 py-4 sm:px-6 sm:py-5"
+        class="flex flex-1 flex-col justify-between gap-4 px-5 py-4 sm:py-5"
       >
         <div class="space-y-2">
           <div class="terraco-skeleton h-3.5 w-32 rounded-sm"></div>
           <div class="terraco-skeleton h-7 w-44 rounded-sm"></div>
         </div>
-        <div class="terraco-skeleton h-11 w-44 shrink-0 rounded-pill"></div>
+        <div class="terraco-skeleton h-11 w-full rounded-pill"></div>
       </div>
 
       <div
         aria-hidden="true"
-        class="mt-auto grid grid-cols-1 divide-y divide-border-subtle border-t border-border-subtle bg-surface/45 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+        class="mx-2.5 mb-2.5 grid grid-cols-2 overflow-hidden rounded-[18px] bg-surface/75"
       >
-        <div class="space-y-2 px-5 py-3 sm:px-5">
+        <div class="space-y-2 border-r border-border-subtle/70 px-4 py-3">
           <div class="terraco-skeleton h-3 w-20 rounded-sm"></div>
           <div class="terraco-skeleton h-4 w-24 rounded-sm"></div>
         </div>
-        <div class="space-y-2 px-5 py-3 sm:px-5">
+        <div class="space-y-2 px-4 py-3">
           <div class="terraco-skeleton h-3 w-16 rounded-sm"></div>
           <div class="terraco-skeleton h-4 w-24 rounded-sm"></div>
-        </div>
-        <div class="space-y-2 px-5 py-3 sm:px-5">
-          <div class="terraco-skeleton h-3 w-14 rounded-sm"></div>
-          <div class="terraco-skeleton h-4 w-28 rounded-sm"></div>
         </div>
       </div>
     </article>
