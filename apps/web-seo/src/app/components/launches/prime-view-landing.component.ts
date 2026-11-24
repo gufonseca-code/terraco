@@ -12,6 +12,7 @@ import {
   input,
   linkedSignal,
   viewChild,
+  viewChildren,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
@@ -179,25 +180,45 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
   template: `
     <section
       aria-labelledby="launch-heading"
-      class="flex flex-1 flex-col justify-start bg-canvas py-4 sm:py-12 lg:py-16"
+      class="flex flex-1 flex-col justify-start bg-canvas pt-2 pb-10 sm:py-8 lg:py-10"
     >
       <div class="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div class="terraco-reveal mb-3 sm:mb-6">
+        <div class="terraco-reveal mb-2 flex items-center justify-between gap-3 sm:mb-4">
           <a
             routerLink="/lancamentos"
-            class="terraco-link-underline inline-flex min-h-[40px] items-center text-sm font-normal text-ink-muted transition-colors duration-150 hover:text-ink sm:min-h-[44px]"
+            class="terraco-link-underline inline-flex min-h-[34px] items-center gap-1.5 text-[14px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink sm:min-h-[40px]"
           >
-            Voltar para lançamentos
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4 shrink-0"
+            >
+              <path d="M12.5 5 7.5 10l5 5" />
+            </svg>
+            <span>Voltar para lançamentos</span>
           </a>
+
+          @if (item().construtora) {
+            <p class="hidden text-[13px] font-normal text-ink-muted sm:block">
+              {{ item().construtora }}
+            </p>
+          }
         </div>
 
+        <!-- M3 Expressive Compact Hero Card (28px outer shell / 20px concentric media inset) -->
         <article
-          class="terraco-reveal-delay terraco-floating-card overflow-hidden rounded-lg bg-elevated"
+          class="terraco-reveal-delay terraco-floating-card overflow-hidden rounded-[28px] bg-elevated p-2 sm:p-2.5"
         >
-          <div class="grid lg:grid-cols-12">
+          <div class="grid gap-3 sm:gap-4 lg:grid-cols-12 lg:gap-5">
+            <!-- Mídia principal com cantos concêntricos e altura contida -->
             <div
               [class.terraco-skeleton]="!imageLoaded()"
-              class="group relative aspect-[2/1] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface sm:aspect-[5/3] lg:col-span-7 lg:aspect-auto lg:min-h-[460px] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] lg:border-b-0 lg:border-r lg:border-border-subtle"
+              class="group relative aspect-[21/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/9] lg:col-span-7 lg:aspect-auto lg:min-h-[390px] lg:max-h-[430px] lg:rounded-[22px]"
             >
               <img
                 #heroImg
@@ -210,8 +231,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 [style.view-transition-name]="'launch-image-' + item().slug"
                 (load)="markImageLoaded()"
                 (error)="markImageLoaded()"
-                class="relative z-[1] h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
+                class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center lg:absolute lg:inset-0 lg:rounded-[22px]"
               />
+
               @if (hasGallery()) {
                 <button
                   type="button"
@@ -219,77 +241,107 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   [attr.aria-label]="'Abrir galeria de imagens de ' + item().nome"
                   class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
                 ></button>
-              }
-            </div>
 
-            <div
-              class="flex flex-col justify-between gap-4 p-4 sm:gap-5 sm:p-6 lg:col-span-5 lg:gap-6 lg:p-6"
-            >
-              <div class="flex items-start justify-between gap-3">
-                <div class="min-w-0 space-y-1.5 sm:space-y-2">
-                  <p class="text-[13px] font-normal leading-[1.4] text-ink-muted">
-                    @if (bairroGuideSlug(); as guideSlug) {
-                      <a
-                        [routerLink]="['/bairros', guideSlug]"
-                        class="terraco-link-underline text-ink transition-colors duration-150 hover:text-brand"
-                      >{{ item().bairro }}</a>
-                    } @else {
-                      <span>{{ item().bairro }}</span>
-                    }<span>, {{ item().cidade }}, {{ item().uf }}</span>
-                  </p>
-
-                  <h1
-                    id="launch-heading"
-                    [style.view-transition-name]="'launch-title-' + item().slug"
-                    class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.02em] text-ink text-balance"
+                <button
+                  type="button"
+                  (click)="openLightbox(0)"
+                  class="terraco-btn absolute right-2.5 bottom-2.5 z-10 inline-flex min-h-[34px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3 py-1 text-[12px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-brand/40 sm:right-3 sm:bottom-3 sm:min-h-[38px] sm:px-3.5 sm:text-[13px]"
+                >
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-3.5 w-3.5"
                   >
-                    {{ item().nome }}
-                  </h1>
-                </div>
+                    <rect x="3" y="3" width="18" height="18" rx="3" />
+                    <circle cx="9" cy="9" r="1.5" />
+                    <path d="m21 15-4.5-4.5L7 20" />
+                  </svg>
+                  <span class="tabular-nums">{{ galleryImages().length }} fotos</span>
+                </button>
+              }
 
+              <div class="absolute top-2.5 right-2.5 z-10 sm:top-3 sm:right-3">
                 <app-favorite-button
                   [slug]="item().slug"
                   [nome]="item().nome"
                 />
               </div>
+            </div>
 
+            <!-- Painel compacto de decisão e conversão -->
+            <div
+              class="flex min-w-0 flex-col justify-between gap-2.5 px-2 pt-0.5 pb-1.5 sm:gap-3.5 sm:px-3 sm:py-2 lg:col-span-5 lg:py-3 lg:pr-3.5 lg:pl-0"
+            >
+              <div class="min-w-0 space-y-0.5">
+                <p class="text-[13px] font-normal leading-[1.35] text-ink-muted">
+                  @if (bairroGuideSlug(); as guideSlug) {
+                    <a
+                      [routerLink]="['/bairros', guideSlug]"
+                      class="terraco-link-underline text-ink transition-colors duration-150 hover:text-brand"
+                    >{{ item().bairro }}</a>
+                  } @else {
+                    <span>{{ item().bairro }}</span>
+                  }<span>, {{ item().cidade }}, {{ item().uf }}</span>
+                </p>
+
+                <h1
+                  id="launch-heading"
+                  [style.view-transition-name]="'launch-title-' + item().slug"
+                  class="font-display text-[clamp(1.625rem,3vw,2.125rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
+                >
+                  {{ item().nome }}
+                </h1>
+              </div>
+
+              <!-- Ficha técnica enxuta em container tonal Areia Suave -->
               <dl
-                class="grid grid-cols-2 gap-x-4 gap-y-3 border-y border-border-subtle py-3 sm:gap-x-6 sm:gap-y-4 sm:py-4"
+                class="grid grid-cols-2 gap-x-3 gap-y-2 rounded-[18px] bg-surface/80 px-3.5 py-2.5 sm:gap-x-4 sm:gap-y-2.5 sm:px-4 sm:py-3"
               >
-                <div class="space-y-1">
-                  <dt class="text-[13px] font-normal text-ink-muted">
+                <div class="space-y-0.5">
+                  <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
                     Dormitórios
                   </dt>
                   <dd
-                    class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
+                    class="text-[13px] font-medium leading-[1.3] text-ink tabular-nums sm:text-[14px]"
                   >
                     {{ item().quartos }}
                   </dd>
                 </div>
 
-                <div class="space-y-1">
-                  <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
+                <div class="space-y-0.5">
+                  <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                    Metragem
+                  </dt>
                   <dd
-                    class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
+                    class="text-[13px] font-medium leading-[1.3] text-ink tabular-nums sm:text-[14px]"
                   >
                     {{ item().metragem }}
                   </dd>
                 </div>
 
-                <div class="space-y-1">
-                  <dt class="text-[13px] font-normal text-ink-muted">
-                    Tipologias
-                  </dt>
-                  <dd class="text-[15px] font-normal leading-[1.4] text-ink">
-                    {{ item().tipologias }}
-                  </dd>
-                </div>
-
-                @if (item().vagas) {
-                  <div class="space-y-1">
-                    <dt class="text-[13px] font-normal text-ink-muted">Vagas</dt>
+                @if (formattedPrice(); as price) {
+                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
+                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                      A partir de
+                    </dt>
                     <dd
-                      class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
+                      class="text-[13px] font-medium leading-[1.3] text-brand tabular-nums sm:text-[14px]"
+                    >
+                      {{ price }}
+                    </dd>
+                  </div>
+                } @else if (item().vagas) {
+                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
+                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                      Vagas
+                    </dt>
+                    <dd
+                      class="text-[13px] font-normal leading-[1.3] text-ink tabular-nums sm:text-[14px]"
                     >
                       {{ item().vagas }}
                     </dd>
@@ -297,52 +349,34 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 }
 
                 @if (item().entrega) {
-                  <div class="space-y-1">
-                    <dt class="text-[13px] font-normal text-ink-muted">
-                      Previsão de entrega
+                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
+                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                      Entrega
                     </dt>
                     <dd
-                      class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
+                      class="text-[13px] font-normal leading-[1.3] text-ink tabular-nums sm:text-[14px]"
                     >
                       {{ item().entrega }}
                     </dd>
                   </div>
-                }
-
-                @if (formattedPrice(); as price) {
-                  <div class="space-y-1">
-                    <dt class="text-[13px] font-normal text-ink-muted">
-                      A partir de
+                } @else {
+                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
+                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                      Tipologias
                     </dt>
-                    <dd
-                      class="text-[15px] font-medium leading-[1.4] text-ink tabular-nums"
-                    >
-                      {{ price }}
-                    </dd>
-                  </div>
-                }
-
-                @if (item().construtora) {
-                  <div class="space-y-1">
-                    <dt class="text-[13px] font-normal text-ink-muted">
-                      Construtora
-                    </dt>
-                    <dd class="text-[15px] font-normal leading-[1.4] text-ink">
-                      {{ item().construtora }}
+                    <dd class="line-clamp-1 text-[13px] font-normal leading-[1.3] text-ink sm:text-[14px]">
+                      {{ item().tipologias }}
                     </dd>
                   </div>
                 }
               </dl>
 
-              <div class="space-y-3">
-                <p class="text-[14px] font-normal leading-[1.45] text-ink-muted">
-                  Como podemos ajudar sobre o {{ item().nome }}?
-                </p>
-
+              <!-- Chips de intenção M3 Expressive (1 linha rolável no mobile, 2x2 no desktop) + CTA principal -->
+              <div class="min-w-0 space-y-2 sm:space-y-2.5">
                 <div
                   role="group"
                   aria-label="Assunto para conversa no WhatsApp"
-                  class="grid grid-cols-2 gap-2"
+                  class="terraco-no-scrollbar flex w-full min-w-0 gap-1.5 overflow-x-auto pb-0.5 lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0"
                 >
                   @for (option of intentOptions; track option.key) {
                     <button
@@ -351,8 +385,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.aria-pressed]="selectedIntent() === option.key"
                       [class]="
                         selectedIntent() === option.key
-                          ? 'terraco-m3-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-center text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip'
-                          : 'terraco-m3-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-center text-[13px] font-normal leading-[1.3] text-ink hover:border-border-strong hover:bg-surface'
+                          ? 'terraco-m3-chip flex min-h-[36px] shrink-0 cursor-pointer items-center justify-center border border-ink bg-ink px-3.5 py-1 text-center text-[13px] font-medium leading-[1.25] whitespace-nowrap text-ink-inverse shadow-chip lg:min-h-[40px] lg:whitespace-normal'
+                          : 'terraco-m3-chip flex min-h-[36px] shrink-0 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3.5 py-1 text-center text-[13px] font-normal leading-[1.25] whitespace-nowrap text-ink hover:border-border-strong hover:bg-surface lg:min-h-[40px] lg:whitespace-normal'
                       "
                     >
                       {{ option.label }}
@@ -364,24 +398,25 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   [href]="whatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-sm font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover sm:min-h-[50px] sm:py-3"
+                  class="terraco-btn terraco-btn-moss flex min-h-[44px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover sm:min-h-[48px] sm:py-2.5"
                 >
                   Falar no WhatsApp
                 </a>
 
-                <div class="pt-1">
+                <div>
                   @if (callbackSubmitted()) {
                     <p
                       role="status"
                       data-testid="launch-callback-success"
-                      class="rounded-md border border-brand/25 bg-surface/60 px-3.5 py-2.5 text-[13px] font-normal leading-[1.45] text-ink"
+                      class="rounded-[14px] border border-brand/25 bg-surface/60 px-3.5 py-2 text-[13px] font-normal leading-[1.45] text-ink"
                     >
                       Recebemos seu contato. Um especialista retorna em instantes sobre {{ selectedIntentLabel() }}.
                     </p>
                   } @else if (callbackOpen()) {
                     <form
                       (submit)="submitCallbackLead($event)"
-                      class="space-y-2.5 rounded-md border border-border-subtle bg-surface/55 p-3.5"
+                      animate.enter="terraco-chip-enter"
+                      class="space-y-2.5 rounded-[18px] border border-border-subtle bg-surface/60 p-3.5"
                     >
                       <div class="flex items-center justify-between gap-2">
                         <span class="text-[13px] font-medium text-ink">
@@ -390,7 +425,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         <button
                           type="button"
                           (click)="toggleCallbackForm()"
-                          class="text-[13px] font-normal text-ink-muted hover:text-ink"
+                          class="cursor-pointer text-[13px] font-normal text-ink-muted hover:text-ink"
                         >
                           Fechar
                         </button>
@@ -403,7 +438,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         placeholder="Seu nome (opcional)"
                         aria-label="Seu nome"
                         autocomplete="name"
-                        class="min-h-[40px] w-full rounded-md border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
+                        class="min-h-[40px] w-full rounded-[12px] border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
                       />
 
                       <div class="flex flex-col gap-2 sm:flex-row">
@@ -415,12 +450,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                           aria-label="Seu WhatsApp com DDD"
                           autocomplete="tel"
                           required
-                          class="min-h-[40px] flex-1 rounded-md border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
+                          class="min-h-[40px] flex-1 rounded-[12px] border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
                         />
                         <button
                           type="submit"
                           [disabled]="callbackSubmitting()"
-                          class="terraco-btn inline-flex min-h-[40px] shrink-0 items-center justify-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover disabled:opacity-60"
+                          class="terraco-btn inline-flex min-h-[40px] shrink-0 cursor-pointer items-center justify-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover disabled:opacity-60"
                         >
                           {{ callbackSubmitting() ? 'Enviando...' : 'Solicitar' }}
                         </button>
@@ -440,7 +475,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       type="button"
                       (click)="toggleCallbackForm()"
                       data-testid="launch-callback-toggle"
-                      class="terraco-link-underline w-full text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+                      class="terraco-link-underline w-full cursor-pointer py-0.5 text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
                     >
                       Prefere que um especialista te chame?
                     </button>
@@ -451,12 +486,15 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           </div>
         </article>
 
+        <!-- Trilha fixa M3 Expressive com scroll-spy (visível já na dobra mobile) -->
         <nav
           aria-label="Seções do empreendimento"
-          class="terraco-no-scrollbar sticky top-3 z-20 mt-6 flex items-center gap-1.5 overflow-x-auto rounded-[22px] border border-border-subtle bg-elevated/92 p-1.5 shadow-card backdrop-blur-md"
+          class="terraco-no-scrollbar sticky top-3 z-20 mt-3.5 flex items-center gap-1.5 overflow-x-auto rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-card backdrop-blur-md sm:mt-5"
         >
           @if (item().condicoesEspeciais?.length) {
             <a
+              #sectionNavLink
+              data-section-id="condicoes"
               href="#condicoes"
               (click)="scrollToSection($event, 'condicoes')"
               [attr.aria-current]="activeSection() === 'condicoes' ? 'true' : null"
@@ -466,6 +504,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </a>
           }
           <a
+            #sectionNavLink
+            data-section-id="sobre"
             href="#sobre"
             (click)="scrollToSection($event, 'sobre')"
             [attr.aria-current]="activeSection() === 'sobre' ? 'true' : null"
@@ -475,6 +515,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           </a>
           @if (item().diferenciais.length > 0) {
             <a
+              #sectionNavLink
+              data-section-id="diferenciais"
               href="#diferenciais"
               (click)="scrollToSection($event, 'diferenciais')"
               [attr.aria-current]="activeSection() === 'diferenciais' ? 'true' : null"
@@ -485,6 +527,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           }
           @if (item().plantas?.length) {
             <a
+              #sectionNavLink
+              data-section-id="plantas"
               href="#plantas"
               (click)="scrollToSection($event, 'plantas')"
               [attr.aria-current]="activeSection() === 'plantas' ? 'true' : null"
@@ -494,6 +538,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </a>
           }
           <a
+            #sectionNavLink
+            data-section-id="simulador"
             href="#simulador"
             (click)="scrollToSection($event, 'simulador')"
             [attr.aria-current]="activeSection() === 'simulador' ? 'true' : null"
@@ -503,6 +549,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           </a>
           @if (hasGallery()) {
             <a
+              #sectionNavLink
+              data-section-id="galeria"
               href="#galeria"
               (click)="scrollToSection($event, 'galeria')"
               [attr.aria-current]="activeSection() === 'galeria' ? 'true' : null"
@@ -513,6 +561,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           }
           @if (otherLaunches().length > 0) {
             <a
+              #sectionNavLink
+              data-section-id="outros-lancamentos"
               href="#outros-lancamentos"
               (click)="scrollToSection($event, 'outros-lancamentos')"
               [attr.aria-current]="activeSection() === 'outros-lancamentos' ? 'true' : null"
@@ -893,6 +943,8 @@ export class PrimeViewLandingComponent {
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
 
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
+  private readonly sectionNavLinks =
+    viewChildren<ElementRef<HTMLAnchorElement>>('sectionNavLink');
 
   readonly bairroGuideSlug = computed<string | null>(() => {
     const currentBairro = this.item().bairro;
@@ -997,6 +1049,26 @@ export class PrimeViewLandingComponent {
     });
 
     effect(() => {
+      const currentSection = this.activeSection();
+      if (!isPlatformBrowser(this.platformId)) {
+        return;
+      }
+      const activeEl = this.sectionNavLinks().find(
+        (ref) => ref.nativeElement.dataset['sectionId'] === currentSection
+      )?.nativeElement;
+      if (activeEl) {
+        const reducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
+        activeEl.scrollIntoView({
+          behavior: reducedMotion ? 'auto' : 'smooth',
+          inline: 'center',
+          block: 'nearest',
+        });
+      }
+    });
+
+    effect(() => {
       const currentItem = this.item();
       const jsonLd = buildJsonLd(currentItem);
       const serialized = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
@@ -1049,7 +1121,7 @@ export class PrimeViewLandingComponent {
 
   sectionNavPillClass(sectionId: string): string {
     const base =
-      'terraco-m3-chip inline-flex min-h-[38px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap';
+      'terraco-m3-chip inline-flex min-h-[36px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap';
     if (this.activeSection() === sectionId) {
       return `${base} terraco-m3-chip--active bg-brand font-medium text-ink-inverse shadow-chip`;
     }
