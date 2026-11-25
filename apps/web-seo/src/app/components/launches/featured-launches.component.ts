@@ -69,8 +69,8 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                   <div class="terraco-skeleton h-8 w-52 rounded-sm"></div>
                   <div class="terraco-skeleton h-4 w-full rounded-sm"></div>
                 </div>
-                <div class="terraco-skeleton h-10 w-full rounded-pill"></div>
-                <div class="terraco-skeleton h-28 w-full rounded-[18px]"></div>
+                <div class="terraco-skeleton h-20 w-full rounded-sm"></div>
+                <div class="terraco-skeleton h-10 w-44 rounded-pill"></div>
               </div>
             </div>
           </div>
@@ -170,7 +170,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                 </div>
 
                 <div
-                  class="flex flex-col justify-between gap-4 p-5 sm:p-6 lg:col-span-5 lg:p-6"
+                  class="flex flex-col justify-between gap-5 p-5 sm:p-6 lg:col-span-5 lg:p-6"
                 >
                   <div>
                     <p class="text-[13px] font-normal text-ink-muted">
@@ -196,34 +196,25 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                     </p>
                   </div>
 
-                  <a
-                    [routerLink]="['/lancamentos', lead.slug]"
-                    class="terraco-btn terraco-btn-moss inline-flex min-h-[42px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
-                  >
-                    Conhecer lançamento
-                  </a>
-
                   <dl
-                    class="grid grid-cols-2 overflow-hidden rounded-[18px] bg-surface/75"
+                    class="grid grid-cols-2 gap-x-6 gap-y-3 border-t border-border-subtle/80 pt-4"
                   >
-                    <div
-                      class="space-y-0.5 border-r border-border-subtle/70 px-4 py-3"
-                    >
+                    <div class="space-y-0.5">
                       <dt class="text-[13px] font-normal text-ink-muted">
                         Dormitórios
                       </dt>
                       <dd
-                        class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums"
+                        class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
                       >
                         {{ lead.quartos }}
                       </dd>
                     </div>
-                    <div class="space-y-0.5 px-4 py-3">
+                    <div class="space-y-0.5">
                       <dt class="text-[13px] font-normal text-ink-muted">
                         Metragem
                       </dt>
                       <dd
-                        class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums"
+                        class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
                       >
                         {{ lead.metragem }}
                       </dd>
@@ -232,9 +223,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                     @if (leadSpec) {
                       <div
                         [class]="
-                          entrega
-                            ? 'space-y-0.5 border-t border-r border-border-subtle/70 px-4 py-3'
-                            : 'col-span-2 space-y-0.5 border-t border-border-subtle/70 px-4 py-3'
+                          entrega ? 'space-y-0.5' : 'col-span-2 space-y-0.5'
                         "
                       >
                         <dt class="text-[13px] font-normal text-ink-muted">
@@ -243,8 +232,8 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                         <dd
                           [class]="
                             leadSpec.tabular
-                              ? 'text-[14px] font-normal leading-[1.4] text-ink tabular-nums'
-                              : 'text-[14px] font-normal leading-[1.4] text-ink'
+                              ? 'text-[14px] font-medium leading-[1.4] text-ink tabular-nums'
+                              : 'text-[14px] font-medium leading-[1.4] text-ink'
                           "
                         >
                           {{ leadSpec.value }}
@@ -252,20 +241,27 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                       </div>
                     }
                     @if (entrega) {
-                      <div
-                        class="space-y-0.5 border-t border-border-subtle/70 px-4 py-3"
-                      >
+                      <div class="space-y-0.5">
                         <dt class="text-[13px] font-normal text-ink-muted">
                           Entrega
                         </dt>
                         <dd
-                          class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums"
+                          class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
                         >
                           {{ entrega }}
                         </dd>
                       </div>
                     }
                   </dl>
+
+                  <div class="border-t border-border-subtle/70 pt-4">
+                    <a
+                      [routerLink]="['/lancamentos', lead.slug]"
+                      class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] w-fit items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+                    >
+                      Conhecer lançamento
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>

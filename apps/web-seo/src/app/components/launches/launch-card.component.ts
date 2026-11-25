@@ -101,7 +101,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
         </div>
       </div>
 
-      <div class="flex flex-1 flex-col justify-between gap-4 px-5 py-4 sm:py-5">
+      <div class="flex flex-1 flex-col gap-4 px-5 py-5">
         <div class="space-y-1">
           <p class="text-[13px] font-normal text-ink-muted">
             {{ item.bairro }}, {{ item.cidade }}
@@ -146,57 +146,74 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
           }
         </div>
 
-        <a
-          [routerLink]="['/lancamentos', item.slug]"
-          class="terraco-btn terraco-btn-moss inline-flex min-h-[42px] w-full items-center justify-center rounded-pill bg-brand px-4 py-2 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+        <dl
+          class="grid grid-cols-2 gap-x-6 gap-y-3 border-t border-border-subtle/80 pt-4"
         >
-          Conhecer lançamento
-        </a>
-      </div>
-
-      <dl class="mx-2.5 mb-2.5 grid grid-cols-2 overflow-hidden rounded-[18px] bg-surface/75">
-        <div class="space-y-0.5 border-r border-border-subtle/70 px-4 py-3">
-          <dt class="text-[13px] font-normal text-ink-muted">Dormitórios</dt>
-          <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
-            {{ item.quartos }}
-          </dd>
-        </div>
-        <div class="space-y-0.5 px-4 py-3">
-          <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
-          <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
-            {{ item.metragem }}
-          </dd>
-        </div>
-        @let entrega = item.entrega?.trim();
-        <div
-          [class]="
-            entrega
-              ? 'space-y-0.5 border-t border-r border-border-subtle/70 px-4 py-3'
-              : 'col-span-2 space-y-0.5 border-t border-border-subtle/70 px-4 py-3'
-          "
-        >
-          <dt class="text-[13px] font-normal text-ink-muted">
-            {{ spec.label }}
-          </dt>
-          <dd
-            [class]="
-              spec.tabular
-                ? 'text-[14px] font-normal leading-[1.4] text-ink tabular-nums'
-                : 'text-[14px] font-normal leading-[1.4] text-ink'
-            "
-          >
-            {{ spec.value }}
-          </dd>
-        </div>
-        @if (entrega) {
-          <div class="space-y-0.5 border-t border-border-subtle/70 px-4 py-3">
-            <dt class="text-[13px] font-normal text-ink-muted">Entrega</dt>
-            <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
-              {{ entrega }}
+          <div class="space-y-0.5">
+            <dt class="text-[13px] font-normal text-ink-muted">Dormitórios</dt>
+            <dd
+              class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
+            >
+              {{ item.quartos }}
             </dd>
           </div>
-        }
-      </dl>
+          <div class="space-y-0.5">
+            <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
+            <dd
+              class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
+            >
+              {{ item.metragem }}
+            </dd>
+          </div>
+          @let entrega = item.entrega?.trim();
+          <div [class]="entrega ? 'space-y-0.5' : 'col-span-2 space-y-0.5'">
+            <dt class="text-[13px] font-normal text-ink-muted">
+              {{ spec.label }}
+            </dt>
+            <dd
+              [class]="
+                spec.tabular
+                  ? 'text-[14px] font-medium leading-[1.4] text-ink tabular-nums'
+                  : 'text-[14px] font-medium leading-[1.4] text-ink'
+              "
+            >
+              {{ spec.value }}
+            </dd>
+          </div>
+          @if (entrega) {
+            <div class="space-y-0.5">
+              <dt class="text-[13px] font-normal text-ink-muted">Entrega</dt>
+              <dd
+                class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
+              >
+                {{ entrega }}
+              </dd>
+            </div>
+          }
+        </dl>
+
+        <div class="mt-auto border-t border-border-subtle/70 pt-4">
+          <a
+            [routerLink]="['/lancamentos', item.slug]"
+            class="terraco-btn inline-flex min-h-[40px] w-fit items-center gap-2 rounded-pill border border-border-strong bg-canvas/70 px-4 py-2 text-[13px] font-medium leading-[1.35] text-brand hover:border-brand hover:bg-brand hover:text-ink-inverse"
+          >
+            <span>Conhecer lançamento</span>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4 shrink-0"
+            >
+              <path d="M4.5 10h11" />
+              <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+            </svg>
+          </a>
+        </div>
+      </div>
     </article>
   `,
 })
