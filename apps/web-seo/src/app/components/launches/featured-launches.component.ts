@@ -41,7 +41,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
       <section
         id="lancamentos-selecionados"
         aria-labelledby="featured-launches-heading"
-        class="bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
+        class="bg-canvas py-10 sm:py-16 lg:py-24 scroll-mt-20"
       >
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2
@@ -53,7 +53,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
 
           <div
             aria-hidden="true"
-            class="terraco-plate mt-8 overflow-hidden rounded-xl bg-elevated sm:mt-10"
+            class="terraco-plate mt-5 overflow-hidden rounded-xl bg-elevated sm:mt-8 lg:mt-10"
           >
             <div class="grid lg:grid-cols-12">
               <div class="p-2.5 pb-0 lg:col-span-7 lg:p-3 lg:pr-0">
@@ -75,9 +75,15 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
             </div>
           </div>
 
-          <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-6">
-            <app-launch-card-skeleton />
-            <app-launch-card-skeleton />
+          <div
+            class="terraco-no-scrollbar -mx-4 mt-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-6 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:gap-6"
+          >
+            <app-launch-card-skeleton
+              class="w-[82vw] max-w-[340px] shrink-0 snap-start md:w-auto md:max-w-none"
+            />
+            <app-launch-card-skeleton
+              class="w-[82vw] max-w-[340px] shrink-0 snap-start md:w-auto md:max-w-none"
+            />
           </div>
         </div>
       </section>
@@ -85,11 +91,11 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
       <section
         id="lancamentos-selecionados"
         aria-labelledby="featured-launches-heading"
-        class="bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
+        class="bg-canvas py-10 sm:py-16 lg:py-24 scroll-mt-20"
       >
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div
-            class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
+            class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4"
           >
             <h2
               id="featured-launches-heading"
@@ -100,7 +106,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
 
             <a
               routerLink="/lancamentos"
-              class="terraco-btn inline-flex min-h-[42px] shrink-0 items-center justify-center rounded-pill border border-border-strong bg-elevated px-5 py-2 text-[13px] font-medium leading-[1.35] text-ink hover:border-brand hover:text-brand"
+              class="terraco-btn inline-flex min-h-[42px] w-fit shrink-0 items-center justify-center rounded-pill border border-border-strong bg-elevated px-5 py-2 text-[13px] font-medium leading-[1.35] text-ink hover:border-brand hover:text-brand"
             >
               Explorar todos os lançamentos
             </a>
@@ -110,7 +116,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
             @let leadSpec = leadThirdSpec();
             <article
               appScrollReveal
-              class="terraco-plate mt-8 overflow-hidden rounded-xl bg-elevated sm:mt-10"
+              class="terraco-plate mt-5 overflow-hidden rounded-xl bg-elevated sm:mt-8 lg:mt-10"
             >
               <div class="grid lg:grid-cols-12 lg:items-stretch">
                 <div class="p-2.5 pb-0 lg:col-span-7 lg:p-3 lg:pr-0">
@@ -271,8 +277,8 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
             <div
               [class]="
                 secondaryLaunches().length >= 3
-                  ? 'mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6 sm:mt-8'
-                  : 'mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-6 sm:mt-8'
+                  ? 'terraco-no-scrollbar -mx-4 mt-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-6 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:mt-8 lg:grid-cols-3 lg:gap-6'
+                  : 'terraco-no-scrollbar -mx-4 mt-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-6 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:mt-8 lg:gap-6'
               "
             >
               @for (launch of secondaryLaunches(); track launch.slug) {
@@ -282,13 +288,14 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                   [launch]="launch"
                   headingLevel="h3"
                   [priority]="$index < 2"
+                  class="w-[82vw] max-w-[340px] shrink-0 snap-start md:w-auto md:max-w-none"
                 />
               }
             </div>
           }
 
           <div
-            class="mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-muted sm:mt-10"
+            class="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-muted sm:mt-8 lg:mt-10"
           >
             <span>Em dúvida por onde começar?</span>
             <a
