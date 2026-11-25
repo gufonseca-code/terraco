@@ -106,86 +106,84 @@ function normalizeText(value: string): string {
     <section
       id="descoberta-guiada"
       aria-labelledby="guided-discovery-heading"
-      class="border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
+      class="border-t border-border-subtle bg-canvas py-10 sm:py-16 lg:py-24 scroll-mt-20"
     >
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
-          class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-x-12 lg:gap-y-8 xl:gap-x-16"
+          class="grid gap-6 sm:gap-8 lg:grid-cols-12 lg:items-start lg:gap-x-12 lg:gap-y-8 xl:gap-x-16"
         >
-          <div class="max-w-xl space-y-3 lg:col-span-5 lg:col-start-1 lg:row-start-1">
+          <div class="max-w-xl space-y-2 sm:space-y-3 lg:col-span-5 lg:col-start-1 lg:row-start-1">
             <h2
               id="guided-discovery-heading"
               class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
             >
               Qual momento combina com você?
             </h2>
-            <p class="text-[16px] font-normal leading-[1.55] text-ink-muted">
+            <p class="text-[15px] font-normal leading-[1.55] text-ink-muted sm:text-[16px]">
               Combine objetivo, tipologia e região sem cadastro.
             </p>
           </div>
 
           <div
-            class="rounded-[24px] bg-surface/60 p-5 sm:p-7 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1"
+            class="space-y-4 sm:space-y-5 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1"
           >
-            <div class="space-y-6">
-              <fieldset class="space-y-2.5">
-                <legend class="text-[14px] font-medium leading-[1.35] text-ink">
-                  Seu objetivo
-                </legend>
-                <div class="terraco-m3-group-grid w-full grid-cols-1 sm:grid-cols-3">
-                  @for (option of objetivoOptions; track option) {
-                    <button
-                      type="button"
-                      [attr.aria-pressed]="objetivo() === option"
-                      (click)="toggleObjetivo(option)"
-                      [class]="segmentClass(objetivo() === option)"
-                    >
-                      {{ option }}
-                    </button>
-                  }
-                </div>
-              </fieldset>
+            <fieldset class="space-y-2">
+              <legend class="text-[14px] font-medium leading-[1.35] text-ink">
+                Seu objetivo
+              </legend>
+              <div class="flex flex-wrap gap-2 sm:grid sm:grid-cols-3 sm:gap-2.5">
+                @for (option of objetivoOptions; track option) {
+                  <button
+                    type="button"
+                    [attr.aria-pressed]="objetivo() === option"
+                    (click)="toggleObjetivo(option)"
+                    [class]="segmentClass(objetivo() === option)"
+                  >
+                    {{ option }}
+                  </button>
+                }
+              </div>
+            </fieldset>
 
-              <fieldset class="space-y-2.5">
-                <legend class="text-[14px] font-medium leading-[1.35] text-ink">
-                  Tipologia
-                </legend>
-                <div class="terraco-m3-group-grid w-full grid-cols-1 sm:grid-cols-3">
-                  @for (option of tipologiaOptions; track option) {
-                    <button
-                      type="button"
-                      [attr.aria-pressed]="tipologia() === option"
-                      (click)="toggleTipologia(option)"
-                      [class]="segmentClass(tipologia() === option)"
-                    >
-                      {{ option }}
-                    </button>
-                  }
-                </div>
-              </fieldset>
+            <fieldset class="space-y-2">
+              <legend class="text-[14px] font-medium leading-[1.35] text-ink">
+                Tipologia
+              </legend>
+              <div class="flex flex-wrap gap-2 sm:grid sm:grid-cols-3 sm:gap-2.5">
+                @for (option of tipologiaOptions; track option) {
+                  <button
+                    type="button"
+                    [attr.aria-pressed]="tipologia() === option"
+                    (click)="toggleTipologia(option)"
+                    [class]="segmentClass(tipologia() === option)"
+                  >
+                    {{ option }}
+                  </button>
+                }
+              </div>
+            </fieldset>
 
-              <fieldset class="space-y-2.5">
-                <legend class="text-[14px] font-medium leading-[1.35] text-ink">
-                  Região de BH
-                </legend>
-                <div class="terraco-m3-group-grid w-full grid-cols-2 sm:grid-cols-4">
-                  @for (option of regiaoOptions; track option) {
-                    <button
-                      type="button"
-                      [attr.aria-pressed]="regiao() === option"
-                      (click)="toggleRegiao(option)"
-                      [class]="segmentClass(regiao() === option)"
-                    >
-                      {{ option }}
-                    </button>
-                  }
-                </div>
-              </fieldset>
-            </div>
+            <fieldset class="space-y-2">
+              <legend class="text-[14px] font-medium leading-[1.35] text-ink">
+                Região de BH
+              </legend>
+              <div class="flex flex-wrap gap-2 sm:grid sm:grid-cols-4 sm:gap-2.5">
+                @for (option of regiaoOptions; track option) {
+                  <button
+                    type="button"
+                    [attr.aria-pressed]="regiao() === option"
+                    (click)="toggleRegiao(option)"
+                    [class]="segmentClass(regiao() === option)"
+                  >
+                    {{ option }}
+                  </button>
+                }
+              </div>
+            </fieldset>
           </div>
 
           <div
-            class="border-t border-border-subtle/80 pt-5 lg:col-span-5 lg:col-start-1 lg:row-start-2 lg:self-end"
+            class="border-t border-border-subtle/80 pt-4 sm:pt-5 lg:col-span-5 lg:col-start-1 lg:row-start-2 lg:self-end"
           >
             <div class="text-[15px] font-normal leading-[1.55] text-ink-muted">
               @if (hasSelection()) {
@@ -211,7 +209,7 @@ function normalizeText(value: string): string {
               <a
                 [routerLink]="['/lancamentos']"
                 [queryParams]="ctaQueryParams()"
-                class="terraco-btn terraco-btn-moss inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover tabular-nums"
+                class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] w-fit items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover tabular-nums"
               >
                 {{ ctaLabel() }}
               </a>
@@ -229,7 +227,7 @@ function normalizeText(value: string): string {
           </div>
         </div>
 
-        <div class="mt-10 flex flex-col gap-3 sm:mt-12 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mt-7 flex flex-col gap-2 sm:mt-10 sm:flex-row sm:items-center sm:justify-between sm:gap-3 lg:mt-12">
           <nav
             aria-label="Guias de bairros em BH"
             class="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm"
@@ -384,10 +382,10 @@ export class GuidedDiscoveryComponent {
 
   segmentClass(selected: boolean): string {
     const base =
-      'terraco-m3-group-item inline-flex min-h-[48px] w-full cursor-pointer items-center justify-center border px-3.5 py-2.5 text-center text-[14px] leading-[1.3]';
+      'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center justify-center border px-4 py-2 text-center text-[13px] leading-[1.3] sm:min-h-[46px] sm:w-full sm:px-3.5 sm:text-[14px]';
     if (selected) {
       return `${base} border-brand bg-brand font-medium text-ink-inverse shadow-chip hover:bg-brand-hover`;
     }
-    return `${base} border-border-subtle bg-elevated/90 font-normal text-ink hover:border-border-strong hover:bg-elevated`;
+    return `${base} border-border-subtle bg-elevated font-normal text-ink hover:border-border-strong hover:bg-surface/75`;
   }
 }
