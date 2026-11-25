@@ -136,10 +136,16 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
                   [attr.aria-pressed]="active"
                   [class]="
                     active
-                      ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-ink-inverse bg-ink-inverse px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink shadow-chip sm:min-h-[44px] sm:text-[14px]'
+                      ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-ink-inverse/75 bg-ink-inverse/16 px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:min-h-[44px] sm:text-[14px]'
                       : 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:min-h-[44px] sm:text-[14px]'
                   "
                 >
+                  @if (active) {
+                    <span
+                      aria-hidden="true"
+                      class="h-2 w-2 shrink-0 rounded-full bg-accent"
+                    ></span>
+                  }
                   <span>{{ option.label }}</span>
                 </button>
               }
@@ -147,7 +153,7 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
 
             <div class="mt-6 border-t border-ink-inverse/15 pt-5 sm:mt-7 sm:pt-6">
               <p
-                class="max-w-[54ch] border-l-2 border-ink-inverse/30 pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/85"
+                class="max-w-[54ch] border-l-2 border-accent pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
               >
                 “{{ selectedIntent().message }}”
               </p>

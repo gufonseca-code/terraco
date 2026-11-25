@@ -65,7 +65,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
               <a
                 href="#lancamentos-selecionados"
                 (click)="scrollToFeatured($event)"
-                class="terraco-link-underline inline-flex min-h-[44px] items-center text-sm font-medium text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
+                class="terraco-link-underline inline-flex min-h-[44px] items-center text-sm font-medium text-ink transition-colors duration-150 hover:text-action-hover focus-visible:text-action-hover"
               >
                 Ver lançamentos
               </a>

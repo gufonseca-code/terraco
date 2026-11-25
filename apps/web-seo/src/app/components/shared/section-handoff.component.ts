@@ -22,7 +22,7 @@ import {
       <a
         [href]="'#' + targetId()"
         (click)="scrollToTarget($event)"
-        class="terraco-link-underline group inline-flex min-h-[44px] items-center gap-1.5 font-medium text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
+        class="terraco-link-underline group inline-flex min-h-[44px] items-center gap-1.5 font-medium text-ink transition-colors duration-150 hover:text-action-hover focus-visible:text-action-hover"
       >
         <span>{{ label() }}</span>
         <svg
