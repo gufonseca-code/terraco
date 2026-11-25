@@ -109,81 +109,85 @@ function normalizeText(value: string): string {
       class="border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
     >
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="max-w-2xl space-y-3">
-          <h2
-            id="guided-discovery-heading"
-            class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
-          >
-            Qual momento combina com você?
-          </h2>
-          <p class="text-base font-normal leading-[1.55] text-ink-muted">
-            Combine objetivo, tipologia e região sem cadastro.
-          </p>
-        </div>
-
         <div
-          class="terraco-card mt-8 rounded-lg border border-border-subtle bg-elevated p-6 shadow-card sm:mt-10 sm:p-8"
+          class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-x-12 lg:gap-y-8 xl:gap-x-16"
         >
-          <div class="space-y-6">
-            <fieldset class="space-y-2.5">
-              <legend class="text-sm font-medium leading-[1.35] text-ink">
-                Seu objetivo
-              </legend>
-              <div class="terraco-m3-group-grid grid-cols-1 sm:w-fit sm:grid-cols-3">
-                @for (option of objetivoOptions; track option) {
-                  <button
-                    type="button"
-                    [attr.aria-pressed]="objetivo() === option"
-                    (click)="toggleObjetivo(option)"
-                    [class]="segmentClass(objetivo() === option)"
-                  >
-                    {{ option }}
-                  </button>
-                }
-              </div>
-            </fieldset>
-
-            <fieldset class="space-y-2.5">
-              <legend class="text-sm font-medium leading-[1.35] text-ink">
-                Tipologia
-              </legend>
-              <div class="terraco-m3-group-grid grid-cols-1 sm:w-fit sm:grid-cols-3">
-                @for (option of tipologiaOptions; track option) {
-                  <button
-                    type="button"
-                    [attr.aria-pressed]="tipologia() === option"
-                    (click)="toggleTipologia(option)"
-                    [class]="segmentClass(tipologia() === option)"
-                  >
-                    {{ option }}
-                  </button>
-                }
-              </div>
-            </fieldset>
-
-            <fieldset class="space-y-2.5">
-              <legend class="text-sm font-medium leading-[1.35] text-ink">
-                Região de BH
-              </legend>
-              <div class="terraco-m3-group-grid grid-cols-2 sm:w-fit sm:grid-cols-4">
-                @for (option of regiaoOptions; track option) {
-                  <button
-                    type="button"
-                    [attr.aria-pressed]="regiao() === option"
-                    (click)="toggleRegiao(option)"
-                    [class]="segmentClass(regiao() === option)"
-                  >
-                    {{ option }}
-                  </button>
-                }
-              </div>
-            </fieldset>
+          <div class="max-w-xl space-y-3 lg:col-span-5 lg:col-start-1 lg:row-start-1">
+            <h2
+              id="guided-discovery-heading"
+              class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
+            >
+              Qual momento combina com você?
+            </h2>
+            <p class="text-[16px] font-normal leading-[1.55] text-ink-muted">
+              Combine objetivo, tipologia e região sem cadastro.
+            </p>
           </div>
 
           <div
-            class="mt-8 flex flex-col gap-4 border-t border-border-subtle pt-6 sm:flex-row sm:items-center sm:justify-between"
+            class="terraco-plate rounded-[28px] bg-elevated p-6 sm:p-8 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1"
           >
-            <div class="space-y-1 text-[15px] leading-[1.5] text-ink-muted">
+            <div class="space-y-6 sm:space-y-7">
+              <fieldset class="space-y-2.5">
+                <legend class="text-[14px] font-medium leading-[1.35] text-ink">
+                  Seu objetivo
+                </legend>
+                <div class="terraco-m3-group-grid grid-cols-1 sm:w-fit sm:grid-cols-3">
+                  @for (option of objetivoOptions; track option) {
+                    <button
+                      type="button"
+                      [attr.aria-pressed]="objetivo() === option"
+                      (click)="toggleObjetivo(option)"
+                      [class]="segmentClass(objetivo() === option)"
+                    >
+                      {{ option }}
+                    </button>
+                  }
+                </div>
+              </fieldset>
+
+              <fieldset class="space-y-2.5">
+                <legend class="text-[14px] font-medium leading-[1.35] text-ink">
+                  Tipologia
+                </legend>
+                <div class="terraco-m3-group-grid grid-cols-1 sm:w-fit sm:grid-cols-3">
+                  @for (option of tipologiaOptions; track option) {
+                    <button
+                      type="button"
+                      [attr.aria-pressed]="tipologia() === option"
+                      (click)="toggleTipologia(option)"
+                      [class]="segmentClass(tipologia() === option)"
+                    >
+                      {{ option }}
+                    </button>
+                  }
+                </div>
+              </fieldset>
+
+              <fieldset class="space-y-2.5">
+                <legend class="text-[14px] font-medium leading-[1.35] text-ink">
+                  Região de BH
+                </legend>
+                <div class="terraco-m3-group-grid grid-cols-2 sm:w-fit sm:grid-cols-4">
+                  @for (option of regiaoOptions; track option) {
+                    <button
+                      type="button"
+                      [attr.aria-pressed]="regiao() === option"
+                      (click)="toggleRegiao(option)"
+                      [class]="segmentClass(regiao() === option)"
+                    >
+                      {{ option }}
+                    </button>
+                  }
+                </div>
+              </fieldset>
+            </div>
+          </div>
+
+          <div
+            class="rounded-[24px] bg-surface/70 p-5 sm:p-6 lg:col-span-5 lg:col-start-1 lg:row-start-2"
+          >
+            <div class="text-[15px] font-normal leading-[1.55] text-ink-muted">
               @if (hasSelection()) {
                 @if (matchedLancamentos().length > 0) {
                   <p class="tabular-nums text-ink">
@@ -195,32 +199,37 @@ function normalizeText(value: string): string {
                     catálogo completo em BH.
                   </p>
                 }
+              } @else {
+                <p>
+                  Escolha uma ou mais opções para ver quais lançamentos combinam
+                  com o seu momento.
+                </p>
               }
             </div>
 
-            <div class="flex flex-wrap items-center gap-4">
+            <div class="mt-5 flex flex-wrap items-center gap-4">
+              <a
+                [routerLink]="['/lancamentos']"
+                [queryParams]="ctaQueryParams()"
+                class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover tabular-nums"
+              >
+                {{ ctaLabel() }}
+              </a>
+
               @if (hasSelection()) {
                 <button
                   type="button"
                   (click)="clearSelections()"
-                  class="terraco-link-underline inline-flex min-h-[44px] items-center px-1 text-sm font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+                  class="terraco-link-underline inline-flex min-h-[44px] items-center px-1 text-[14px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
                 >
                   Limpar
                 </button>
               }
-
-              <a
-                [routerLink]="['/lancamentos']"
-                [queryParams]="ctaQueryParams()"
-                class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-6 py-3 text-[15px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover tabular-nums"
-              >
-                {{ ctaLabel() }}
-              </a>
             </div>
           </div>
         </div>
 
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mt-10 flex flex-col gap-3 sm:mt-12 sm:flex-row sm:items-center sm:justify-between">
           <nav
             aria-label="Guias de bairros em BH"
             class="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm"
