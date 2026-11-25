@@ -10,34 +10,27 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       aria-label="Carregando lançamento"
       animate.enter="terraco-reveal"
       animate.leave="terraco-chip-leave"
-      class="terraco-plate max-w-xl overflow-hidden rounded-xl bg-elevated"
+      class="flex flex-col gap-3.5"
     >
-      <div aria-hidden="true" class="p-2.5 pb-0">
-        <div
-          class="terraco-skeleton aspect-[16/10] w-full rounded-[20px]"
-        ></div>
+      <div
+        aria-hidden="true"
+        class="terraco-skeleton aspect-[16/10] w-full rounded-[20px]"
+      ></div>
+
+      <div aria-hidden="true" class="space-y-2">
+        <div class="terraco-skeleton h-3.5 w-32 rounded-sm"></div>
+        <div class="terraco-skeleton h-6 w-44 rounded-sm"></div>
       </div>
 
       <div
         aria-hidden="true"
-        class="flex flex-col gap-4 px-5 py-4 sm:py-5"
+        class="grid grid-cols-2 gap-x-5 gap-y-2.5 border-t border-border-subtle pt-3"
       >
-        <div class="space-y-2">
-          <div class="terraco-skeleton h-3.5 w-32 rounded-sm"></div>
-          <div class="terraco-skeleton h-7 w-44 rounded-sm"></div>
-        </div>
-        <div class="terraco-skeleton h-11 w-full rounded-pill"></div>
-      </div>
-
-      <div
-        aria-hidden="true"
-        class="mx-2.5 mb-2.5 grid grid-cols-2 overflow-hidden rounded-[18px] bg-surface/75"
-      >
-        <div class="space-y-2 border-r border-border-subtle/70 px-4 py-3">
+        <div class="space-y-1.5">
           <div class="terraco-skeleton h-3 w-20 rounded-sm"></div>
           <div class="terraco-skeleton h-4 w-24 rounded-sm"></div>
         </div>
-        <div class="space-y-2 px-4 py-3">
+        <div class="space-y-1.5">
           <div class="terraco-skeleton h-3 w-16 rounded-sm"></div>
           <div class="terraco-skeleton h-4 w-24 rounded-sm"></div>
         </div>

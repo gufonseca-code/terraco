@@ -41,48 +41,44 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
       <section
         id="lancamentos-selecionados"
         aria-labelledby="featured-launches-heading"
-        class="bg-canvas py-10 sm:py-16 lg:py-24 scroll-mt-20"
+        class="border-t border-border-subtle bg-canvas py-12 sm:py-16 lg:py-24 scroll-mt-20"
       >
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2
             id="featured-launches-heading"
-            class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
+            class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.1] tracking-[-0.025em] text-ink text-balance"
           >
             Lançamentos selecionados em BH
           </h2>
 
           <div
             aria-hidden="true"
-            class="terraco-plate mt-5 overflow-hidden rounded-xl bg-elevated sm:mt-8 lg:mt-10"
+            class="mt-6 grid gap-6 sm:mt-8 lg:mt-10 lg:grid-cols-12 lg:items-center lg:gap-10"
           >
-            <div class="grid lg:grid-cols-12">
-              <div class="p-2.5 pb-0 lg:col-span-7 lg:p-3 lg:pr-0">
-                <div
-                  class="terraco-skeleton aspect-[16/10] w-full rounded-[20px] lg:aspect-auto lg:min-h-[300px]"
-                ></div>
-              </div>
+            <div class="lg:col-span-7">
               <div
-                class="flex flex-col justify-between gap-4 p-5 sm:p-6 lg:col-span-5 lg:p-6"
-              >
-                <div class="space-y-2.5">
-                  <div class="terraco-skeleton h-3.5 w-36 rounded-sm"></div>
-                  <div class="terraco-skeleton h-8 w-52 rounded-sm"></div>
-                  <div class="terraco-skeleton h-4 w-full rounded-sm"></div>
-                </div>
-                <div class="terraco-skeleton h-20 w-full rounded-sm"></div>
-                <div class="terraco-skeleton h-10 w-44 rounded-pill"></div>
+                class="terraco-skeleton aspect-[16/10] w-full rounded-[20px]"
+              ></div>
+            </div>
+            <div class="flex flex-col gap-4 lg:col-span-5">
+              <div class="space-y-2.5">
+                <div class="terraco-skeleton h-3.5 w-36 rounded-sm"></div>
+                <div class="terraco-skeleton h-8 w-52 rounded-sm"></div>
+                <div class="terraco-skeleton h-4 w-full rounded-sm"></div>
               </div>
+              <div class="terraco-skeleton h-20 w-full rounded-sm"></div>
+              <div class="terraco-skeleton h-11 w-44 rounded-pill"></div>
             </div>
           </div>
 
           <div
-            class="terraco-no-scrollbar -mx-4 mt-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-6 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:gap-6"
+            class="terraco-no-scrollbar -mx-4 mt-8 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-10 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pb-0 lg:mt-12 lg:pt-10"
           >
             <app-launch-card-skeleton
-              class="w-[82vw] max-w-[340px] shrink-0 snap-start md:w-auto md:max-w-none"
+              class="w-[82vw] max-w-[332px] shrink-0 snap-start md:w-auto md:max-w-none"
             />
             <app-launch-card-skeleton
-              class="w-[82vw] max-w-[340px] shrink-0 snap-start md:w-auto md:max-w-none"
+              class="w-[82vw] max-w-[332px] shrink-0 snap-start md:w-auto md:max-w-none"
             />
           </div>
         </div>
@@ -91,24 +87,37 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
       <section
         id="lancamentos-selecionados"
         aria-labelledby="featured-launches-heading"
-        class="bg-canvas py-10 sm:py-16 lg:py-24 scroll-mt-20"
+        class="border-t border-border-subtle bg-canvas py-12 sm:py-16 lg:py-24 scroll-mt-20"
       >
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div
-            class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4"
+            class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6"
           >
             <h2
               id="featured-launches-heading"
-              class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
+              class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.1] tracking-[-0.025em] text-ink text-balance"
             >
               Lançamentos selecionados em BH
             </h2>
 
             <a
               routerLink="/lancamentos"
-              class="terraco-btn inline-flex min-h-[42px] w-fit shrink-0 items-center justify-center rounded-pill border border-border-strong bg-elevated px-5 py-2 text-[13px] font-medium leading-[1.35] text-ink hover:border-brand hover:text-brand"
+              class="terraco-link-underline group inline-flex min-h-[44px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
             >
-              Explorar todos os lançamentos
+              <span>Ver catálogo completo</span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+              >
+                <path d="M4.5 10h11" />
+                <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+              </svg>
             </a>
           </div>
 
@@ -116,158 +125,135 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
             @let leadSpec = leadThirdSpec();
             <article
               appScrollReveal
-              class="terraco-plate mt-5 overflow-hidden rounded-xl bg-elevated sm:mt-8 lg:mt-10"
+              class="mt-6 grid gap-6 sm:mt-8 lg:mt-10 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
             >
-              <div class="grid lg:grid-cols-12 lg:items-stretch">
-                <div class="p-2.5 pb-0 lg:col-span-7 lg:p-3 lg:pr-0">
-                  <div
-                    [class.terraco-skeleton]="!leadImageLoaded()"
-                    class="relative aspect-[16/10] h-full overflow-hidden rounded-[20px] bg-surface lg:aspect-auto lg:min-h-[300px]"
+              <div class="lg:col-span-7">
+                <div
+                  [class.terraco-skeleton]="!leadImageLoaded()"
+                  class="group relative aspect-[16/10] overflow-hidden rounded-[20px] bg-surface"
+                >
+                  <a
+                    [routerLink]="['/lancamentos', lead.slug]"
+                    class="relative z-[1] block h-full w-full overflow-hidden rounded-[20px]"
+                    [attr.aria-label]="'Conhecer ' + lead.nome"
                   >
-                    <a
-                      [routerLink]="['/lancamentos', lead.slug]"
-                      class="relative z-[1] block h-full w-full overflow-hidden rounded-[20px]"
-                      [attr.aria-label]="'Conhecer ' + lead.nome"
-                    >
-                      <img
-                        #leadCoverImg
-                        data-testid="lancamentos-cover-image"
-                        [attr.data-slug]="lead.slug"
-                        [ngSrc]="lead.imagem"
-                        [alt]="lead.imagemAlt"
-                        [width]="lead.imagemWidth"
-                        [height]="lead.imagemHeight"
-                        priority
-                        [style.view-transition-name]="
-                          'launch-image-' + lead.slug
-                        "
-                        (load)="markLeadImageLoaded()"
-                        (error)="markLeadImageLoaded()"
-                        class="h-full w-full rounded-[20px] object-cover object-center"
-                      />
-                    </a>
+                    <img
+                      #leadCoverImg
+                      data-testid="lancamentos-cover-image"
+                      [attr.data-slug]="lead.slug"
+                      [ngSrc]="lead.imagem"
+                      [alt]="lead.imagemAlt"
+                      [width]="lead.imagemWidth"
+                      [height]="lead.imagemHeight"
+                      priority
+                      [style.view-transition-name]="
+                        'launch-image-' + lead.slug
+                      "
+                      (load)="markLeadImageLoaded()"
+                      (error)="markLeadImageLoaded()"
+                      class="h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
+                    />
+                  </a>
 
-                    @if (lead.badge) {
-                      <span
-                        class="pointer-events-none absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-pill bg-accent px-3 py-1 text-[13px] font-medium leading-[1.3] text-ink shadow-chip"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          class="h-3.5 w-3.5 shrink-0"
-                        >
-                          <path
-                            d="M12 1.5c1.1 0 2 .7 2.4 1.6.9-.4 2-.2 2.7.5.7.7.9 1.8.5 2.7.9.4 1.6 1.3 1.6 2.4 0 1.1-.7 2-1.6 2.4.4.9.2 2-.5 2.7-.7.7-1.8.9-2.7.5-.4.9-1.3 1.6-2.4 1.6-1.1 0-2-.7-2.4-1.6-.9.4-2 .2-2.7-.5-.7-.7-.9-1.8-.5-2.7-.9-.4-1.6-1.3-1.6-2.4 0-1.1.7-2 1.6-2.4-.4-.9-.2-2 .5-2.7.7-.7 1.8-.9 2.7-.5C10 2.2 10.9 1.5 12 1.5Z"
-                            transform="translate(0 3)"
-                          />
-                        </svg>
-                        <span>{{ lead.badge }}</span>
-                      </span>
-                    }
-
-                    <div class="absolute top-3 right-3 z-10">
-                      <app-favorite-button
-                        [slug]="lead.slug"
-                        [nome]="lead.nome"
-                      />
-                    </div>
+                  <div class="absolute top-3 right-3 z-10">
+                    <app-favorite-button
+                      [slug]="lead.slug"
+                      [nome]="lead.nome"
+                    />
                   </div>
                 </div>
+              </div>
 
-                <div
-                  class="flex flex-col justify-between gap-5 p-5 sm:p-6 lg:col-span-5 lg:p-6"
-                >
-                  <div>
-                    <p class="text-[13px] font-normal text-ink-muted">
-                      {{ lead.bairro }}, {{ lead.cidade }}
-                    </p>
+              <div class="flex flex-col gap-5 lg:col-span-5">
+                <div>
+                  <p class="text-[13px] font-normal text-ink-muted">
+                    {{ lead.bairro }}, {{ lead.cidade }}
+                  </p>
 
-                    <h3
-                      [style.view-transition-name]="'launch-title-' + lead.slug"
-                      class="mt-1 font-display text-[clamp(1.375rem,2.2vw,1.625rem)] font-medium not-italic leading-[1.16] tracking-[-0.02em] text-ink text-balance"
-                    >
-                      <a
-                        [routerLink]="['/lancamentos', lead.slug]"
-                        class="transition-colors duration-150 hover:text-brand"
-                      >
-                        {{ lead.nome }}
-                      </a>
-                    </h3>
-
-                    <p
-                      class="mt-2 text-[15px] font-normal leading-[1.55] text-ink-muted"
-                    >
-                      {{ lead.tagline }}
-                    </p>
-                  </div>
-
-                  <dl
-                    class="grid grid-cols-2 gap-x-6 gap-y-3 border-t border-border-subtle/80 pt-4"
+                  <h3
+                    [style.view-transition-name]="'launch-title-' + lead.slug"
+                    class="mt-1 font-display text-[clamp(1.5rem,2.4vw,1.875rem)] font-medium not-italic leading-[1.14] tracking-[-0.02em] text-ink text-balance"
                   >
-                    <div class="space-y-0.5">
-                      <dt class="text-[13px] font-normal text-ink-muted">
-                        Dormitórios
-                      </dt>
-                      <dd
-                        class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
-                      >
-                        {{ lead.quartos }}
-                      </dd>
-                    </div>
-                    <div class="space-y-0.5">
-                      <dt class="text-[13px] font-normal text-ink-muted">
-                        Metragem
-                      </dt>
-                      <dd
-                        class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
-                      >
-                        {{ lead.metragem }}
-                      </dd>
-                    </div>
-                    @let entrega = lead.entrega?.trim();
-                    @if (leadSpec) {
-                      <div
-                        [class]="
-                          entrega ? 'space-y-0.5' : 'col-span-2 space-y-0.5'
-                        "
-                      >
-                        <dt class="text-[13px] font-normal text-ink-muted">
-                          {{ leadSpec.label }}
-                        </dt>
-                        <dd
-                          [class]="
-                            leadSpec.tabular
-                              ? 'text-[14px] font-medium leading-[1.4] text-ink tabular-nums'
-                              : 'text-[14px] font-medium leading-[1.4] text-ink'
-                          "
-                        >
-                          {{ leadSpec.value }}
-                        </dd>
-                      </div>
-                    }
-                    @if (entrega) {
-                      <div class="space-y-0.5">
-                        <dt class="text-[13px] font-normal text-ink-muted">
-                          Entrega
-                        </dt>
-                        <dd
-                          class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
-                        >
-                          {{ entrega }}
-                        </dd>
-                      </div>
-                    }
-                  </dl>
-
-                  <div class="border-t border-border-subtle/70 pt-4">
                     <a
                       [routerLink]="['/lancamentos', lead.slug]"
-                      class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] w-fit items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+                      class="transition-colors duration-150 hover:text-brand"
                     >
-                      Conhecer lançamento
+                      {{ lead.nome }}
                     </a>
+                  </h3>
+
+                  <p
+                    class="mt-2 max-w-[46ch] text-[15px] font-normal leading-[1.55] text-ink-muted sm:text-[16px]"
+                  >
+                    {{ lead.tagline }}
+                  </p>
+                </div>
+
+                <dl
+                  class="grid grid-cols-2 gap-x-6 gap-y-3 border-t border-border-subtle pt-4"
+                >
+                  <div class="space-y-0.5">
+                    <dt class="text-[13px] font-normal text-ink-muted">
+                      Dormitórios
+                    </dt>
+                    <dd
+                      class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
+                    >
+                      {{ lead.quartos }}
+                    </dd>
                   </div>
+                  <div class="space-y-0.5">
+                    <dt class="text-[13px] font-normal text-ink-muted">
+                      Metragem
+                    </dt>
+                    <dd
+                      class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
+                    >
+                      {{ lead.metragem }}
+                    </dd>
+                  </div>
+                  @let entrega = lead.entrega?.trim();
+                  @if (leadSpec) {
+                    <div
+                      [class]="
+                        entrega ? 'space-y-0.5' : 'col-span-2 space-y-0.5'
+                      "
+                    >
+                      <dt class="text-[13px] font-normal text-ink-muted">
+                        {{ leadSpec.label }}
+                      </dt>
+                      <dd
+                        [class]="
+                          leadSpec.tabular
+                            ? 'text-[14px] font-medium leading-[1.4] text-ink tabular-nums'
+                            : 'text-[14px] font-medium leading-[1.4] text-ink'
+                        "
+                      >
+                        {{ leadSpec.value }}
+                      </dd>
+                    </div>
+                  }
+                  @if (entrega) {
+                    <div class="space-y-0.5">
+                      <dt class="text-[13px] font-normal text-ink-muted">
+                        Entrega
+                      </dt>
+                      <dd
+                        class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
+                      >
+                        {{ entrega }}
+                      </dd>
+                    </div>
+                  }
+                </dl>
+
+                <div class="pt-1">
+                  <a
+                    [routerLink]="['/lancamentos', lead.slug]"
+                    class="terraco-btn inline-flex min-h-[44px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+                  >
+                    Conhecer lançamento
+                  </a>
                 </div>
               </div>
             </article>
@@ -275,27 +261,26 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
 
           @if (secondaryLaunches().length > 0) {
             <div
+              appScrollReveal
               [class]="
                 secondaryLaunches().length >= 3
-                  ? 'terraco-no-scrollbar -mx-4 mt-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-6 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:mt-8 lg:grid-cols-3 lg:gap-6'
-                  : 'terraco-no-scrollbar -mx-4 mt-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-6 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:mt-8 lg:gap-6'
+                  ? 'terraco-no-scrollbar -mx-4 mt-10 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-12 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pt-10 md:pb-0 lg:mt-14 lg:grid-cols-3 lg:pt-12'
+                  : 'terraco-no-scrollbar -mx-4 mt-10 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-12 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pt-10 md:pb-0 lg:mt-14 lg:pt-12'
               "
             >
               @for (launch of secondaryLaunches(); track launch.slug) {
                 <app-launch-card
-                  appScrollReveal
-                  [revealDelayMs]="($index % 2) * 90"
                   [launch]="launch"
                   headingLevel="h3"
                   [priority]="$index < 2"
-                  class="w-[82vw] max-w-[340px] shrink-0 snap-start md:w-auto md:max-w-none"
+                  class="w-[82vw] max-w-[332px] shrink-0 snap-start md:w-auto md:max-w-none"
                 />
               }
             </div>
           }
 
           <div
-            class="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-muted sm:mt-8 lg:mt-10"
+            class="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-ink-muted sm:mt-10 lg:mt-12"
           >
             <span>Em dúvida por onde começar?</span>
             <a

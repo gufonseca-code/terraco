@@ -4,28 +4,33 @@
   --font-fraunces: "Fraunces", Georgia, serif;
   --font-plus-jakarta: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
 
-  /* Terraço — Paleta Ipê & Grafite (Creme Papel #F8F5EA global) */
-  --color-bg-canvas: #F8F5EA;
-  --color-bg-surface: #F1E9D8;
-  --color-bg-elevated: #FFFDF9;
+  /* Terraço — Paleta Bairro Arborizado & Warm Tech (branding/tokens.css) */
+  --color-bg-canvas: #FAF8F4;
+  --color-bg-surface: #F3EFE6;
+  --color-bg-elevated: #FFFFFF;
 
-  --color-text-primary: #1E1D1B;
-  --color-text-secondary: #57534E;
-  --color-text-inverse: #F8F5EA;
+  --color-text-primary: #1C1B19;
+  --color-text-secondary: #5C5852;
+  --color-text-inverse: #FAF8F4;
 
-  --color-brand-primary: #2E5B46;
-  --color-brand-primary-hover: #234736;
-  --color-brand-accent: #EEB506;
-  --color-brand-highlight: #ED7467;
+  --color-brand-primary: #1F6F50;
+  --color-brand-primary-hover: #17573E;
+  --color-brand-accent: #F7C957;
+  --color-brand-highlight: #F06A36;
 
-  --color-border-subtle: #E4DCCB;
-  --color-border-strong: #CFC5B2;
+  /* Ação principal Terracota Solar com contraste AA para texto branco */
+  --color-action-primary: #C84B1B;
+  --color-action-primary-hover: #AD3E14;
+  --color-action-primary-soft: #FDECE5;
+
+  --color-border-subtle: rgba(28, 27, 25, 0.10);
+  --color-border-strong: rgba(28, 27, 25, 0.22);
 
   /* Estados Semânticos */
-  --color-success-fg: #2E5B46;
-  --color-success-bg: #E4F0EA;
+  --color-success-fg: #1F6F50;
+  --color-success-bg: #E5F2EC;
   --color-warning-fg: #8A6500;
-  --color-warning-bg: #FEF3C7;
+  --color-warning-bg: #FFF6DC;
   --color-error-fg: #B9382E;
   --color-error-bg: #FDE8E6;
 
@@ -113,6 +118,9 @@
   --color-brand-hover: var(--color-brand-primary-hover);
   --color-accent: var(--color-brand-accent);
   --color-highlight: var(--color-brand-highlight);
+  --color-action: var(--color-action-primary);
+  --color-action-hover: var(--color-action-primary-hover);
+  --color-action-soft: var(--color-action-primary-soft);
   --color-border: var(--color-border-subtle);
   --color-border-subtle: var(--color-border-subtle);
   --color-border-strong: var(--color-border-strong);
@@ -180,16 +188,16 @@ h4 {
   background-image:
     linear-gradient(
       180deg,
-      rgba(241, 233, 216, 0.55) 0%,
-      rgba(241, 233, 216, 0.12) 45%,
-      rgba(241, 233, 216, 0.6) 100%
+      rgba(243, 239, 230, 0.65) 0%,
+      rgba(243, 239, 230, 0.2) 45%,
+      rgba(243, 239, 230, 0.7) 100%
     ),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23CFC5B2' stroke-width='1' stroke-opacity='0.44'%3E%3Crect x='4' y='4' width='48' height='48' rx='10'/%3E%3Ccircle cx='28' cy='28' r='11'/%3E%3Cpath d='M28 4v13M28 39v13M4 28h13M39 28h13'/%3E%3C/g%3E%3C/svg%3E");
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%231C1B19' stroke-width='1' stroke-opacity='0.07'%3E%3Crect x='4' y='4' width='48' height='48' rx='10'/%3E%3Ccircle cx='28' cy='28' r='11'/%3E%3Cpath d='M28 4v13M28 39v13M4 28h13M39 28h13'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 100% 100%, 56px 56px;
 }
 
 .terraco-cobogo-band {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%232E5B46' stroke-width='1' stroke-opacity='0.075'%3E%3Crect x='5' y='5' width='54' height='54' rx='12'/%3E%3Ccircle cx='32' cy='32' r='13'/%3E%3Cpath d='M32 5v14M32 45v14M5 32h14M45 32h14'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%231F6F50' stroke-width='1' stroke-opacity='0.075'%3E%3Crect x='5' y='5' width='54' height='54' rx='12'/%3E%3Ccircle cx='32' cy='32' r='13'/%3E%3Cpath d='M32 5v14M32 45v14M5 32h14M45 32h14'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 64px 64px;
 }
 

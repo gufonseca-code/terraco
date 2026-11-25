@@ -23,22 +23,22 @@ export interface JourneyDestination {
       @if (variant() === 'editorial') {
         <section
           [attr.aria-labelledby]="headingId()"
-          class="bg-canvas py-16 sm:py-20 lg:py-24"
+          class="bg-canvas py-12 sm:py-16 lg:py-24"
         >
           <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             <div
-              class="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-12 xl:gap-16"
+              class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12 xl:gap-16"
             >
               <div class="lg:col-span-5">
                 <h2
                   [id]="headingId()"
-                  class="max-w-md font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
+                  class="max-w-md font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.1] tracking-[-0.025em] text-ink text-balance"
                 >
                   {{ heading() }}
                 </h2>
                 @if (subtitle(); as sub) {
                   <p
-                    class="mt-3 max-w-md text-[16px] font-normal leading-[1.55] text-ink-muted"
+                    class="mt-3 max-w-md text-[15px] font-normal leading-[1.55] text-ink-muted sm:text-[16px]"
                   >
                     {{ sub }}
                   </p>
@@ -54,9 +54,9 @@ export interface JourneyDestination {
                     [routerLink]="dest.route"
                     [fragment]="dest.fragment"
                     [queryParams]="dest.queryParams"
-                    class="group flex flex-col gap-4 py-6 transition-colors duration-150 motion-reduce:transition-none sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-7"
+                    class="group flex flex-col gap-3 py-5 transition-colors duration-150 motion-reduce:transition-none sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-6"
                   >
-                    <div class="max-w-lg space-y-1.5">
+                    <div class="max-w-lg space-y-1">
                       <h3
                         class="font-display text-[1.25rem] font-medium not-italic leading-[1.22] tracking-[-0.015em] text-ink transition-colors duration-150 motion-reduce:transition-none group-hover:text-brand text-balance"
                       >
@@ -70,7 +70,7 @@ export interface JourneyDestination {
                     </div>
 
                     <span
-                      class="terraco-btn inline-flex min-h-[42px] w-fit shrink-0 items-center gap-2 rounded-pill border border-border-subtle bg-elevated px-4 py-2 text-[13px] font-medium leading-[1.35] text-brand transition-colors duration-150 motion-reduce:transition-none group-hover:border-brand group-hover:bg-brand group-hover:text-ink-inverse"
+                      class="inline-flex min-h-[40px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-brand transition-colors duration-150 motion-reduce:transition-none group-hover:text-brand-hover"
                     >
                       <span>{{ dest.actionLabel }}</span>
                       <svg
