@@ -82,9 +82,18 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
 
       <div class="mt-3.5 flex flex-1 flex-col gap-3">
         <div class="space-y-0.5">
-          <p class="text-[13px] font-normal text-ink-muted">
-            {{ item.bairro }}, {{ item.cidade }}
-          </p>
+          <div class="flex flex-wrap items-center gap-2">
+            <p class="text-[13px] font-normal text-ink-muted">
+              {{ item.bairro }}, {{ item.cidade }}
+            </p>
+            @if (item.badge) {
+              <span
+                class="inline-flex items-center rounded-pill bg-success-bg px-2.5 py-0.5 text-[12px] font-medium leading-[1.3] text-success-fg"
+              >
+                {{ item.badge }}
+              </span>
+            }
+          </div>
 
           @if (headingLevel() === 'h3') {
             <h3

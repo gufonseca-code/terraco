@@ -34,7 +34,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
             [href]="whatsappHref"
             target="_blank"
             rel="noopener noreferrer"
-            class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-6 py-3 text-[15px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+            class="terraco-btn inline-flex min-h-[44px] items-center justify-center rounded-pill bg-action px-6 py-3 text-[15px] font-medium leading-[1.35] text-white hover:bg-action-hover"
           >
             Falar no WhatsApp
           </a>

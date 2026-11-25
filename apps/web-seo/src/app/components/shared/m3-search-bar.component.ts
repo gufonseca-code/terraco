@@ -352,8 +352,8 @@ export class M3SearchBarComponent {
   readonly submitButtonClasses = computed(() => {
     const isHero = this.size() === 'hero';
     return isHero
-      ? 'terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover sm:px-6'
-      : 'terraco-btn terraco-btn-moss inline-flex min-h-[40px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-brand px-5 py-2 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover';
+      ? 'terraco-btn inline-flex min-h-[44px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover sm:px-6'
+      : 'terraco-btn inline-flex min-h-[40px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-action px-5 py-2 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover';
   });
 
   optionId(index: number): string {

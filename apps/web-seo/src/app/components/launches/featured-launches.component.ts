@@ -166,9 +166,18 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
 
               <div class="flex flex-col gap-5 lg:col-span-5">
                 <div>
-                  <p class="text-[13px] font-normal text-ink-muted">
-                    {{ lead.bairro }}, {{ lead.cidade }}
-                  </p>
+                  <div class="flex flex-wrap items-center gap-2.5">
+                    <p class="text-[13px] font-normal text-ink-muted">
+                      {{ lead.bairro }}, {{ lead.cidade }}
+                    </p>
+                    @if (lead.badge) {
+                      <span
+                        class="inline-flex items-center rounded-pill bg-success-bg px-2.5 py-0.5 text-[12px] font-medium leading-[1.3] text-success-fg"
+                      >
+                        {{ lead.badge }}
+                      </span>
+                    }
+                  </div>
 
                   <h3
                     [style.view-transition-name]="'launch-title-' + lead.slug"

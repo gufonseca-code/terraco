@@ -75,7 +75,7 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
     <section
       id="como-funciona"
       aria-labelledby="trust-concierge-heading"
-      class="bg-brand py-12 text-ink-inverse sm:py-16 lg:py-24 scroll-mt-24"
+      class="bg-ink py-12 text-ink-inverse sm:py-16 lg:py-24 scroll-mt-24"
     >
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
@@ -100,7 +100,7 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
                     {{ pillar.title }}
                   </h3>
                   <p
-                    class="mt-1.5 max-w-[46ch] text-[15px] font-normal leading-[1.55] text-ink-inverse/85 sm:text-[16px]"
+                    class="mt-1.5 max-w-[46ch] text-[15px] font-normal leading-[1.55] text-ink-inverse/80 sm:text-[16px]"
                   >
                     {{ pillar.description }}
                   </p>
@@ -118,7 +118,7 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
               Quer falar direto sobre o seu plano?
             </h3>
             <p
-              class="mt-2 max-w-[52ch] text-[15px] font-normal leading-[1.55] text-ink-inverse/85 sm:text-[16px]"
+              class="mt-2 max-w-[52ch] text-[15px] font-normal leading-[1.55] text-ink-inverse/80 sm:text-[16px]"
             >
               Escolha o assunto para abrir o WhatsApp com a mensagem pronta.
             </p>
@@ -136,8 +136,8 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
                   [attr.aria-pressed]="active"
                   [class]="
                     active
-                      ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-accent bg-accent px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink shadow-chip sm:min-h-[44px] sm:text-[14px]'
-                      : 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-ink-inverse/25 bg-ink-inverse/10 px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse hover:border-ink-inverse/45 hover:bg-ink-inverse/15 sm:min-h-[44px] sm:text-[14px]'
+                      ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-ink-inverse bg-ink-inverse px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink shadow-chip sm:min-h-[44px] sm:text-[14px]'
+                      : 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:min-h-[44px] sm:text-[14px]'
                   "
                 >
                   <span>{{ option.label }}</span>
@@ -147,7 +147,7 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
 
             <div class="mt-6 border-t border-ink-inverse/15 pt-5 sm:mt-7 sm:pt-6">
               <p
-                class="max-w-[54ch] border-l-2 border-accent/80 pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
+                class="max-w-[54ch] border-l-2 border-ink-inverse/30 pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/85"
               >
                 “{{ selectedIntent().message }}”
               </p>
@@ -156,7 +156,7 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
                 [href]="whatsappHref()"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="terraco-btn mt-5 inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-ink-inverse px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-ink hover:bg-surface"
+                class="terraco-btn mt-5 inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
               >
                 Falar no WhatsApp
               </a>

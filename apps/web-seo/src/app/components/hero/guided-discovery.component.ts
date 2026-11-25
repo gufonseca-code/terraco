@@ -407,7 +407,7 @@ export class GuidedDiscoveryComponent {
     const base =
       'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center justify-center border px-4 py-2 text-center text-[13px] leading-[1.3] sm:min-h-[44px] sm:px-4.5 sm:text-[14px]';
     if (selected) {
-      return `${base} border-brand bg-brand font-medium text-ink-inverse shadow-chip hover:bg-brand-hover`;
+      return `${base} border-ink bg-ink font-medium text-ink-inverse shadow-chip hover:bg-ink/90`;
     }
     return `${base} border-border-subtle bg-canvas font-normal text-ink hover:border-border-strong hover:bg-elevated`;
   }

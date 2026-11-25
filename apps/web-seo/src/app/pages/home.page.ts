@@ -72,7 +72,7 @@ const HOME_NEXT_DESTINATIONS: readonly JourneyDestination[] = [
         } @placeholder {
           <section
             aria-hidden="true"
-            class="min-h-[420px] bg-brand py-12 sm:py-16 lg:py-24"
+            class="min-h-[420px] bg-ink py-12 sm:py-16 lg:py-24"
           ></section>
         }
         <app-next-journey

@@ -317,7 +317,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             target="_blank"
             rel="noopener noreferrer"
             (click)="closeAllMenus()"
-            class="terraco-btn terraco-btn-moss flex min-h-[48px] w-full items-center justify-center gap-2 rounded-pill bg-brand px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+            class="terraco-btn flex min-h-[48px] w-full items-center justify-center gap-2 rounded-pill bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
           >
             <svg
               aria-hidden="true"
