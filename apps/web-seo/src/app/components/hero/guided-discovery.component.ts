@@ -125,14 +125,14 @@ function normalizeText(value: string): string {
           </div>
 
           <div
-            class="terraco-plate rounded-[28px] bg-elevated p-6 sm:p-8 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1"
+            class="rounded-[24px] bg-surface/60 p-5 sm:p-7 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1"
           >
-            <div class="space-y-6 sm:space-y-7">
+            <div class="space-y-6">
               <fieldset class="space-y-2.5">
                 <legend class="text-[14px] font-medium leading-[1.35] text-ink">
                   Seu objetivo
                 </legend>
-                <div class="terraco-m3-group-grid grid-cols-1 sm:w-fit sm:grid-cols-3">
+                <div class="terraco-m3-group-grid w-full grid-cols-1 sm:grid-cols-3">
                   @for (option of objetivoOptions; track option) {
                     <button
                       type="button"
@@ -150,7 +150,7 @@ function normalizeText(value: string): string {
                 <legend class="text-[14px] font-medium leading-[1.35] text-ink">
                   Tipologia
                 </legend>
-                <div class="terraco-m3-group-grid grid-cols-1 sm:w-fit sm:grid-cols-3">
+                <div class="terraco-m3-group-grid w-full grid-cols-1 sm:grid-cols-3">
                   @for (option of tipologiaOptions; track option) {
                     <button
                       type="button"
@@ -168,7 +168,7 @@ function normalizeText(value: string): string {
                 <legend class="text-[14px] font-medium leading-[1.35] text-ink">
                   Região de BH
                 </legend>
-                <div class="terraco-m3-group-grid grid-cols-2 sm:w-fit sm:grid-cols-4">
+                <div class="terraco-m3-group-grid w-full grid-cols-2 sm:grid-cols-4">
                   @for (option of regiaoOptions; track option) {
                     <button
                       type="button"
@@ -185,12 +185,12 @@ function normalizeText(value: string): string {
           </div>
 
           <div
-            class="rounded-[24px] bg-surface/70 p-5 sm:p-6 lg:col-span-5 lg:col-start-1 lg:row-start-2 lg:self-end"
+            class="border-t border-border-subtle/80 pt-5 lg:col-span-5 lg:col-start-1 lg:row-start-2 lg:self-end"
           >
             <div class="text-[15px] font-normal leading-[1.55] text-ink-muted">
               @if (hasSelection()) {
                 @if (matchedLancamentos().length > 0) {
-                  <p class="tabular-nums text-ink">
+                  <p class="font-medium tabular-nums text-ink">
                     {{ matchedSummary() }}
                   </p>
                 } @else {
@@ -207,11 +207,11 @@ function normalizeText(value: string): string {
               }
             </div>
 
-            <div class="mt-5 flex flex-wrap items-center gap-4">
+            <div class="mt-4 flex flex-wrap items-center gap-4">
               <a
                 [routerLink]="['/lancamentos']"
                 [queryParams]="ctaQueryParams()"
-                class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover tabular-nums"
+                class="terraco-btn terraco-btn-moss inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover tabular-nums"
               >
                 {{ ctaLabel() }}
               </a>
@@ -384,10 +384,10 @@ export class GuidedDiscoveryComponent {
 
   segmentClass(selected: boolean): string {
     const base =
-      'terraco-m3-group-item inline-flex min-h-[44px] cursor-pointer items-center justify-center border px-4 py-2 text-center text-[13px] leading-[1.35]';
+      'terraco-m3-group-item inline-flex min-h-[48px] w-full cursor-pointer items-center justify-center border px-3.5 py-2.5 text-center text-[14px] leading-[1.3]';
     if (selected) {
       return `${base} border-brand bg-brand font-medium text-ink-inverse shadow-chip hover:bg-brand-hover`;
     }
-    return `${base} border-border-subtle bg-surface/75 font-normal text-ink hover:border-border-strong hover:bg-surface`;
+    return `${base} border-border-subtle bg-elevated/90 font-normal text-ink hover:border-border-strong hover:bg-elevated`;
   }
 }
