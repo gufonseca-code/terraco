@@ -1,0 +1,98 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 132 52"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+  class="block h-full w-auto"
+>
+  <defs>
+    <clipPath id="terraco-arch-clip-1">
+      <path d="M4 21a16 16 0 0 1 32 0v27H4V21Z" />
+    </clipPath>
+    <clipPath id="terraco-arch-clip-2">
+      <path d="M50 21a16 16 0 0 1 32 0v27H50V21Z" />
+    </clipPath>
+    <clipPath id="terraco-arch-clip-3">
+      <path d="M96 21a16 16 0 0 1 32 0v27H96V21Z" />
+    </clipPath>
+  </defs>
+
+  <!-- Arch 1: Urban Leaf Green (#1F6F50) + sun + fern -->
+  <g>
+    <path d="M4 21a16 16 0 0 1 32 0v27H4V21Z" fill="#FFF6DC" />
+    <g clip-path="url(#terraco-arch-clip-1)">
+      <circle cx="29" cy="14" r="9" fill="#F7C957" />
+      <path
+        d="M11 49c2-11 7-20 14-27-3 9-4 17-3 27H11Z"
+        fill="#1F6F50"
+      />
+      <path
+        d="M5 49c4-8 10-14 18-17-6 5-9 11-10 17H5Z"
+        fill="#2E8B67"
+      />
+      <path
+        d="M20 49c2-7 7-13 15-16-4 5-6 10-6 16h-9Z"
+        fill="#17573E"
+      />
+    </g>
+    <path
+      d="M4 21a16 16 0 0 1 32 0v27H4V21Z"
+      stroke="#1F6F50"
+      stroke-width="3.5"
+      stroke-linejoin="round"
+    />
+  </g>
+
+  <!-- Arch 2: Terracota Solar (#F06A36) + sun + tropical leaves -->
+  <g>
+    <path d="M50 21a16 16 0 0 1 32 0v27H50V21Z" fill="#FFF6DC" />
+    <g clip-path="url(#terraco-arch-clip-2)">
+      <circle cx="74" cy="14" r="9.5" fill="#F7C957" />
+      <path
+        d="M52 49c1-10 6-18 15-21-2 7-1 14 2 21H52Z"
+        fill="#2E8B67"
+      />
+      <path
+        d="M65 49c3-9 9-16 17-19-3 6-4 12-3 19H65Z"
+        fill="#1F6F50"
+      />
+      <circle cx="62" cy="36" r="1.4" fill="#FFF6DC" />
+      <circle cx="72" cy="38" r="1.3" fill="#FFF6DC" />
+    </g>
+    <path
+      d="M50 21a16 16 0 0 1 32 0v27H50V21Z"
+      stroke="#F06A36"
+      stroke-width="3.5"
+      stroke-linejoin="round"
+    />
+  </g>
+
+  <!-- Arch 3: Solar Yellow (#F7C957) + sun + monstera -->
+  <g>
+    <path d="M96 21a16 16 0 0 1 32 0v27H96V21Z" fill="#FFF6DC" />
+    <g clip-path="url(#terraco-arch-clip-3)">
+      <circle cx="118" cy="13" r="9" fill="#FDE6A4" />
+      <path
+        d="M111 49V31c0-5 4-9 9-9 4 0 8 3 8 8 0 6-4 11-9 12v7h-8Z"
+        fill="#1F6F50"
+      />
+      <path
+        d="M97 49c0-8 5-14 12-15 3 4 4 9 3 15H97Z"
+        fill="#2E8B67"
+      />
+      <path
+        d="M119 29h6M118 34h7M102 41h6"
+        stroke="#FFF6DC"
+        stroke-width="1.6"
+        stroke-linecap="round"
+      />
+    </g>
+    <path
+      d="M96 21a16 16 0 0 1 32 0v27H96V21Z"
+      stroke="#F7C957"
+      stroke-width="3.5"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>

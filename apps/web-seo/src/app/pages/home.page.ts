@@ -55,9 +55,7 @@ const HOME_NEXT_DESTINATIONS: readonly JourneyDestination[] = [
     <div class="flex min-h-dvh flex-col bg-canvas">
       <app-navbar [animateLogo]="true" />
       <main id="homepage" tabindex="-1" class="flex flex-1 flex-col">
-        <div class="flex min-h-[calc(100dvh-4.5rem)] flex-col">
-          <app-hero-search />
-        </div>
+        <app-hero-search />
         <app-featured-launches />
         @defer (on viewport; hydrate on viewport) {
           <app-guided-discovery />

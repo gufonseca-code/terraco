@@ -87,22 +87,22 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
       <section
         id="lancamentos-selecionados"
         aria-labelledby="featured-launches-heading"
-        class="border-t border-border-subtle bg-canvas py-12 sm:py-16 lg:py-24 scroll-mt-20"
+        class="border-t border-border-subtle bg-canvas pt-6 pb-12 sm:py-14 lg:py-20 scroll-mt-20"
       >
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div
-            class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6"
+            class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-6"
           >
             <h2
               id="featured-launches-heading"
-              class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.1] tracking-[-0.025em] text-ink text-balance"
+              class="max-w-2xl font-display text-[clamp(1.625rem,3vw,2.25rem)] font-medium not-italic leading-[1.1] tracking-[-0.025em] text-ink text-balance"
             >
               Lançamentos selecionados em BH
             </h2>
 
             <a
               routerLink="/lancamentos"
-              class="terraco-link-underline group inline-flex min-h-[44px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
+              class="terraco-link-underline group inline-flex min-h-[40px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-ink transition-colors duration-150 hover:text-action-hover focus-visible:text-action-hover"
             >
               <span>Ver catálogo completo</span>
               <svg
@@ -124,8 +124,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
           @if (leadLaunch(); as lead) {
             @let leadSpec = leadThirdSpec();
             <article
-              appScrollReveal
-              class="mt-6 grid gap-6 sm:mt-8 lg:mt-10 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
+              class="mt-5 grid gap-5 sm:mt-8 lg:hidden"
             >
               <div class="lg:col-span-7">
                 <div
@@ -273,8 +272,8 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
               appScrollReveal
               [class]="
                 secondaryLaunches().length >= 3
-                  ? 'terraco-no-scrollbar -mx-4 mt-10 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-12 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pt-10 md:pb-0 lg:mt-14 lg:grid-cols-3 lg:pt-12'
-                  : 'terraco-no-scrollbar -mx-4 mt-10 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-12 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pt-10 md:pb-0 lg:mt-14 lg:pt-12'
+                  ? 'terraco-no-scrollbar -mx-4 mt-8 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-10 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pt-10 md:pb-0 lg:mt-8 lg:grid-cols-3 lg:border-t-0 lg:pt-0'
+                  : 'terraco-no-scrollbar -mx-4 mt-8 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-10 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pt-10 md:pb-0 lg:mt-8 lg:border-t-0 lg:pt-0'
               "
             >
               @for (launch of secondaryLaunches(); track launch.slug) {
