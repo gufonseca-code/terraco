@@ -652,9 +652,12 @@ h4 {
   display: none;
 }
 
-/* M3 Expressive: Filter / Intent Chip com Shape Morphing (pill -> 12px) */
+/* M3 Expressive: Filter / Intent Chip com Shape Morphing (22px -> 12px)
+   Nota: usa --radius-morph-pill (22px) em vez de 9999px porque interpolar 9999px -> 12px
+   com spring overshoot (1.057) gera valores negativos (0px = quadrado) e comprime a
+   transição visual nos últimos frames. Em chips de 36–44px, 22px já é pill perfeito. */
 .terraco-m3-chip {
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-morph-pill);
   transition:
     border-radius var(--duration-spring-fast) var(--ease-spring-fast),
     background-color var(--duration-ui) var(--ease-ui),
