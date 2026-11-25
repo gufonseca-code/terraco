@@ -14,23 +14,21 @@ import { TerracoLogoComponent } from './terraco-logo.component';
   template: `
     <header
       data-testid="site-header"
-      class="pointer-events-none sticky top-0 z-30 px-4 pt-2 sm:px-6 sm:pt-3"
+      [class]="
+        mobileMenuOpen()
+          ? 'sticky top-0 z-30 border-b border-border-subtle bg-canvas/95 backdrop-blur-md'
+          : 'sticky top-0 z-30 border-b border-[rgba(28,27,25,0.08)] bg-canvas/90 backdrop-blur-md'
+      "
     >
-      <div class="relative mx-auto max-w-7xl">
-        <div
-          [class]="
-            mobileMenuOpen()
-              ? 'terraco-m3-topbar terraco-m3-topbar--open pointer-events-auto relative z-30 flex min-h-[58px] items-center justify-between gap-3 border border-brand/35 bg-elevated/95 px-3.5 py-1.5 shadow-floating backdrop-blur-md sm:px-5'
-              : 'terraco-m3-topbar pointer-events-auto relative z-30 flex min-h-[58px] items-center justify-between gap-3 border border-border-subtle bg-elevated/95 px-3.5 py-1.5 shadow-card backdrop-blur-md sm:px-5'
-          "
-        >
-          <a href="#homepage" class="skip-link">Pular para o conteúdo</a>
-          <app-terraco-logo [animate]="animateLogo()" />
-          <app-navbar-links
-            (mobileOpenChange)="mobileMenuOpen.set($event)"
-            class="flex flex-1 items-center justify-end"
-          />
-        </div>
+      <div
+        class="relative mx-auto flex min-h-[58px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8"
+      >
+        <a href="#homepage" class="skip-link">Pular para o conteúdo</a>
+        <app-terraco-logo [animate]="animateLogo()" />
+        <app-navbar-links
+          (mobileOpenChange)="mobileMenuOpen.set($event)"
+          class="flex flex-1 items-center justify-end"
+        />
       </div>
     </header>
   `,

@@ -14,18 +14,17 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { BAIRROS_BH, buildWhatsAppUrl } from '../../core';
+import { BAIRROS_BH, FavoritesService, buildWhatsAppUrl } from '../../core';
 
 interface PrimaryNavItem {
   readonly label: string;
   readonly route: string;
   readonly matchExact?: boolean;
-  readonly icon: 'home' | 'launches';
 }
 
 const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
-  { label: 'Início', route: '/', matchExact: true, icon: 'home' },
-  { label: 'Lançamentos', route: '/lancamentos', icon: 'launches' },
+  { label: 'Início', route: '/', matchExact: true },
+  { label: 'Lançamentos', route: '/lancamentos' },
 ];
 
 @Component({
@@ -41,18 +40,29 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
       #navRef
       data-testid="site-navbar"
       aria-label="Navegação principal"
-      class="flex w-full items-center justify-end gap-2 md:justify-between md:pl-6"
+      class="flex w-full items-center justify-end gap-3 md:justify-between md:pl-8"
     >
-      <!-- Desktop (md+): M3 Expressive Tonal Pill Rail (scalable for future items) -->
-      <div class="terraco-m3-nav-rail hidden md:inline-flex">
+      <!-- Desktop (md+): Clean flat links without box-inside-a-box -->
+      <div class="hidden items-center gap-6 md:flex">
         @for (item of primaryItems; track item.route) {
+          @let active = isRouteActive(item);
           <a
             [routerLink]="item.route"
-            [attr.aria-current]="isRouteActive(item) ? 'page' : null"
+            [attr.aria-current]="active ? 'page' : null"
             (click)="closeAllMenus()"
-            class="terraco-m3-rail-item"
+            [class]="
+              active
+                ? 'relative inline-flex min-h-[44px] items-center px-1 text-[14px] font-medium leading-[1.35] text-ink transition-colors duration-150'
+                : 'relative inline-flex min-h-[44px] items-center px-1 text-[14px] font-medium leading-[1.35] text-ink-muted transition-colors duration-150 hover:text-ink'
+            "
           >
-            {{ item.label }}
+            <span>{{ item.label }}</span>
+            @if (active) {
+              <span
+                aria-hidden="true"
+                class="absolute inset-x-1 bottom-1.5 h-[2px] rounded-full bg-highlight"
+              ></span>
+            }
           </a>
         }
 
@@ -64,7 +74,11 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             aria-haspopup="menu"
             aria-controls="navbar-bairros-menu"
             [attr.aria-current]="isBairrosCurrent() ? 'page' : null"
-            class="terraco-m3-rail-item cursor-pointer"
+            [class]="
+              isBairrosCurrent() || bairrosMenuOpen()
+                ? 'relative inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 px-1 text-[14px] font-medium leading-[1.35] text-ink transition-colors duration-150'
+                : 'relative inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 px-1 text-[14px] font-medium leading-[1.35] text-ink-muted transition-colors duration-150 hover:text-ink'
+            "
           >
             <span>Bairros</span>
             <svg
@@ -77,12 +91,18 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
               stroke-linejoin="round"
               [class]="
                 bairrosMenuOpen()
-                  ? 'h-4 w-4 shrink-0 rotate-180 transition-transform duration-150'
-                  : 'h-4 w-4 shrink-0 transition-transform duration-150'
+                  ? 'h-4 w-4 shrink-0 rotate-180 transition-transform duration-150 motion-reduce:transition-none'
+                  : 'h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none'
               "
             >
               <path d="m5.5 7.5 4.5 4.5 4.5-4.5" />
             </svg>
+            @if (isBairrosCurrent()) {
+              <span
+                aria-hidden="true"
+                class="absolute inset-x-1 bottom-1.5 h-[2px] rounded-full bg-highlight"
+              ></span>
+            }
           </button>
 
           @if (bairrosMenuOpen()) {
@@ -92,7 +112,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
               aria-label="Guias de bairros em Belo Horizonte"
               animate.enter="terraco-search-panel-enter"
               animate.leave="terraco-search-panel-leave"
-              class="absolute right-0 top-full z-40 mt-2.5 w-64 overflow-hidden rounded-[22px] border border-border-subtle bg-elevated p-1.5 shadow-floating"
+              class="absolute left-0 top-full z-40 mt-2 w-64 overflow-hidden rounded-[18px] border border-border-subtle bg-elevated p-1.5 shadow-floating"
             >
               <p class="px-3 pt-1.5 pb-1 text-[13px] font-normal text-ink-muted">
                 Guias de bairros em BH
@@ -107,11 +127,19 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
                     (click)="closeAllMenus()"
                     [class]="
                       active
-                        ? 'flex min-h-[44px] items-center justify-between gap-3 rounded-[14px] bg-brand/10 px-3 py-2 text-[14px] font-medium text-brand transition-colors duration-150'
-                        : 'flex min-h-[44px] items-center justify-between gap-3 rounded-[14px] px-3 py-2 text-[14px] font-normal text-ink transition-colors duration-150 hover:bg-surface/85'
+                        ? 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] bg-surface px-3 py-2 text-[14px] font-medium text-ink transition-colors duration-150'
+                        : 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] px-3 py-2 text-[14px] font-normal text-ink transition-colors duration-150 hover:bg-surface/75'
                     "
                   >
-                    <span>{{ bairro.nome }}</span>
+                    <span class="flex items-center gap-2">
+                      @if (active) {
+                        <span
+                          aria-hidden="true"
+                          class="h-1.5 w-1.5 shrink-0 rounded-full bg-highlight"
+                        ></span>
+                      }
+                      <span>{{ bairro.nome }}</span>
+                    </span>
                     <span class="text-[13px] font-normal text-ink-muted">
                       {{ bairro.regiao }}
                     </span>
@@ -123,40 +151,81 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
         </div>
       </div>
 
-      <!-- Desktop (md+): M3 Expressive Tonal Action Pill -->
-      <a
-        [href]="whatsappHref"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="terraco-m3-nav-action hidden px-4 text-sm font-medium leading-[1.35] md:inline-flex"
-      >
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.85"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="h-4 w-4 shrink-0"
-        >
-          <path
-            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"
-          />
-        </svg>
-        <span>WhatsApp</span>
-      </a>
+      <!-- Desktop (md+): Live saved signal (only when > 0) + Discreet WhatsApp link -->
+      <div class="hidden items-center gap-3 md:flex">
+        @if (favoritesCount() > 0) {
+          <a
+            routerLink="/lancamentos"
+            [attr.aria-label]="
+              favoritesCount() === 1
+                ? '1 lançamento salvo'
+                : favoritesCount() + ' lançamentos salvos'
+            "
+            class="inline-flex min-h-[38px] items-center gap-1.5 rounded-pill px-3 py-1.5 text-[13px] font-medium leading-[1.35] text-ink-muted tabular-nums transition-colors duration-150 hover:bg-surface hover:text-ink"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="h-3.5 w-3.5 shrink-0 text-highlight"
+            >
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              />
+            </svg>
+            <span>{{ favoritesCount() }}</span>
+          </a>
+        }
 
-      <!-- Mobile (< md): Quick Lançamentos Pill + M3 Expressive Menu Toggle -->
-      <div class="flex items-center gap-2 md:hidden">
         <a
-          routerLink="/lancamentos"
-          [attr.aria-current]="isLancamentosCurrent() ? 'page' : null"
-          (click)="closeAllMenus()"
-          class="terraco-m3-nav-item px-3.5 text-[13px] font-medium leading-[1.35]"
+          [href]="whatsappHref"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-border-strong/75 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink transition-colors duration-150 hover:border-ink hover:bg-surface/65"
         >
-          Lançamentos
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-4 w-4 shrink-0 text-ink-muted"
+          >
+            <path
+              d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"
+            />
+          </svg>
+          <span>WhatsApp</span>
         </a>
+      </div>
+
+      <!-- Mobile (< md): Optional live saved count + Single clean menu toggle -->
+      <div class="flex items-center gap-1.5 md:hidden">
+        @if (favoritesCount() > 0) {
+          <a
+            routerLink="/lancamentos"
+            [attr.aria-label]="
+              favoritesCount() === 1
+                ? '1 lançamento salvo'
+                : favoritesCount() + ' lançamentos salvos'
+            "
+            class="inline-flex h-10 items-center gap-1 rounded-[12px] px-2.5 text-[13px] font-medium text-ink tabular-nums transition-colors duration-150 hover:bg-surface/80"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="h-3.5 w-3.5 shrink-0 text-highlight"
+            >
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              />
+            </svg>
+            <span>{{ favoritesCount() }}</span>
+          </a>
+        }
 
         <button
           #menuToggleRef
@@ -167,7 +236,11 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
           [attr.aria-label]="
             mobileMenuOpen() ? 'Fechar menu de navegação' : 'Abrir menu de navegação'
           "
-          class="terraco-m3-menu-toggle cursor-pointer"
+          [class]="
+            mobileMenuOpen()
+              ? 'inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-[12px] bg-surface text-ink transition-colors duration-150'
+              : 'inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-[12px] text-ink transition-colors duration-150 hover:bg-surface/80'
+          "
         >
           <svg
             aria-hidden="true"
@@ -197,7 +270,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
       </div>
     </nav>
 
-    <!-- Mobile (< md): M3 Expressive Docked Floating Navigation Sheet -->
+    <!-- Mobile (< md): Clean full-width dropdown drawer -->
     @if (mobileMenuOpen()) {
       <div
         #mobileSheetRef
@@ -206,7 +279,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
         aria-label="Menu de navegação"
         animate.enter="terraco-m3-sheet-enter"
         animate.leave="terraco-m3-sheet-leave"
-        class="pointer-events-auto absolute inset-x-0 top-full z-40 mt-1.5 overflow-hidden rounded-t-[14px] rounded-b-[28px] border border-border-subtle bg-elevated p-3 shadow-floating md:hidden"
+        class="pointer-events-auto absolute inset-x-0 top-full z-40 border-b border-border-subtle bg-canvas/98 px-4 py-4 shadow-floating backdrop-blur-md sm:px-6 md:hidden"
       >
         <div class="space-y-1">
           @for (item of primaryItems; track item.route) {
@@ -217,60 +290,15 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
               (click)="navigateFromMobileSheet($event, [item.route])"
               [class]="
                 active
-                  ? 'flex min-h-[48px] items-center justify-between gap-3 rounded-[16px] bg-surface px-3 py-2.5 text-[15px] font-medium text-ink transition-colors duration-150'
-                  : 'flex min-h-[48px] items-center justify-between gap-3 rounded-[16px] px-3 py-2.5 text-[15px] font-normal text-ink transition-colors duration-150 hover:bg-surface/75'
+                  ? 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] bg-surface px-3 py-2 text-[15px] font-medium text-ink transition-colors duration-150'
+                  : 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] px-3 py-2 text-[15px] font-normal text-ink transition-colors duration-150 hover:bg-surface/75'
               "
             >
-              <span class="flex items-center gap-3">
-                <span
-                  aria-hidden="true"
-                  [class]="
-                    active
-                      ? 'flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] border border-border-subtle bg-elevated text-ink'
-                      : 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface text-ink-muted'
-                  "
-                >
-                  @if (item.icon === 'home') {
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.85"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="h-4 w-4"
-                    >
-                      <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
-                      <path
-                        d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
-                      />
-                    </svg>
-                  } @else {
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.85"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="h-4 w-4"
-                    >
-                      <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
-                      <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
-                      <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
-                      <path d="M10 6h4" />
-                      <path d="M10 10h4" />
-                      <path d="M10 14h4" />
-                      <path d="M10 18h4" />
-                    </svg>
-                  }
-                </span>
-                <span>{{ item.label }}</span>
-              </span>
+              <span>{{ item.label }}</span>
               @if (active) {
                 <span
                   aria-hidden="true"
-                  class="h-2 w-2 rounded-full bg-brand"
+                  class="h-2 w-2 rounded-full bg-highlight"
                 ></span>
               }
             </a>
@@ -278,10 +306,10 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
         </div>
 
         <div class="mt-3 border-t border-border-subtle pt-3">
-          <p class="px-2 pb-2 text-[13px] font-normal text-ink-muted">
+          <p class="px-3 pb-2 text-[13px] font-normal text-ink-muted">
             Guias de bairros em BH
           </p>
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid grid-cols-2 gap-1.5">
             @for (bairro of bairros; track bairro.slug) {
               @let active = isBairroSlugCurrent(bairro.slug);
               <a
@@ -290,18 +318,18 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
                 (click)="navigateFromMobileSheet($event, ['/bairros', bairro.slug])"
                 [class]="
                   active
-                    ? 'flex min-h-[52px] flex-col justify-center rounded-[16px] border border-brand/35 bg-brand/10 px-3.5 py-2 transition-colors duration-150'
-                    : 'flex min-h-[52px] flex-col justify-center rounded-[16px] border border-border-subtle/80 bg-surface/65 px-3.5 py-2 transition-colors duration-150 hover:border-border-strong hover:bg-surface'
+                    ? 'flex min-h-[48px] flex-col justify-center rounded-[12px] bg-surface px-3 py-2 transition-colors duration-150'
+                    : 'flex min-h-[48px] flex-col justify-center rounded-[12px] px-3 py-2 transition-colors duration-150 hover:bg-surface/75'
                 "
               >
-                <span
-                  [class]="
-                    active
-                      ? 'text-[14px] font-medium leading-[1.3] text-brand'
-                      : 'text-[14px] font-medium leading-[1.3] text-ink'
-                  "
-                >
-                  {{ bairro.nome }}
+                <span class="flex items-center gap-1.5 text-[14px] font-medium leading-[1.3] text-ink">
+                  @if (active) {
+                    <span
+                      aria-hidden="true"
+                      class="h-1.5 w-1.5 shrink-0 rounded-full bg-highlight"
+                    ></span>
+                  }
+                  <span>{{ bairro.nome }}</span>
                 </span>
                 <span class="text-[13px] font-normal leading-[1.3] text-ink-muted">
                   {{ bairro.regiao }}
@@ -311,13 +339,13 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
           </div>
         </div>
 
-        <div class="mt-3 border-t border-border-subtle pt-3">
+        <div class="mt-4 border-t border-border-subtle pt-3.5">
           <a
             [href]="whatsappHref"
             target="_blank"
             rel="noopener noreferrer"
             (click)="closeAllMenus()"
-            class="terraco-btn flex min-h-[48px] w-full items-center justify-center gap-2 rounded-pill bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+            class="terraco-btn flex min-h-[46px] w-full items-center justify-center gap-2 rounded-pill bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
           >
             <svg
               aria-hidden="true"
@@ -344,6 +372,7 @@ export class NavbarLinksComponent {
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly favoritesService = inject(FavoritesService);
   private readonly currentUrl = signal<string>(this.router.url);
   private readonly navRef = viewChild<ElementRef<HTMLElement>>('navRef');
   private readonly mobileSheetRef =
@@ -359,12 +388,12 @@ export class NavbarLinksComponent {
   readonly mobileMenuOpen = signal<boolean>(false);
   readonly mobileOpenChange = output<boolean>();
 
-  readonly whatsappHref = buildWhatsAppUrl(
-    'Oi! Gostaria de conversar sobre os lançamentos da Terraço em BH.'
+  readonly favoritesCount = computed(
+    () => this.favoritesService.favorites().length
   );
 
-  readonly isLancamentosCurrent = computed(() =>
-    this.currentUrl().startsWith('/lancamentos')
+  readonly whatsappHref = buildWhatsAppUrl(
+    'Oi! Gostaria de conversar sobre os lançamentos da Terraço em BH.'
   );
 
   readonly isBairrosCurrent = computed(() =>
