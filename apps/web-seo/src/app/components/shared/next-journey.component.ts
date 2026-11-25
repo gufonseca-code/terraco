@@ -20,70 +20,145 @@ export interface JourneyDestination {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (destinations().length > 0) {
-      <section
-        [attr.aria-labelledby]="headingId()"
-        class="border-t border-border-subtle bg-canvas py-12 sm:py-16"
-      >
-        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div class="max-w-2xl space-y-1.5">
-            <h2
-              [id]="headingId()"
-              class="font-display text-[clamp(1.375rem,2.4vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
+      @if (variant() === 'editorial') {
+        <section
+          [attr.aria-labelledby]="headingId()"
+          class="bg-canvas py-16 sm:py-20 lg:py-24"
+        >
+          <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div
+              class="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-12 xl:gap-16"
             >
-              {{ heading() }}
-            </h2>
-            @if (subtitle(); as sub) {
-              <p class="text-[15px] font-normal leading-[1.55] text-ink-muted">
-                {{ sub }}
-              </p>
-            }
-          </div>
-
-          <nav
-            [attr.aria-label]="heading()"
-            [class]="gridClass()"
-          >
-            @for (dest of destinations(); track dest.title) {
-              <a
-                [routerLink]="dest.route"
-                [fragment]="dest.fragment"
-                [queryParams]="dest.queryParams"
-                class="terraco-journey-card group flex flex-col justify-between gap-4 bg-elevated p-5 sm:p-6"
-              >
-                <div class="space-y-1.5">
-                  <h3
-                    class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink transition-colors duration-150 group-hover:text-brand text-balance"
-                  >
-                    {{ dest.title }}
-                  </h3>
-                  <p class="text-[14px] font-normal leading-[1.55] text-ink-muted">
-                    {{ dest.description }}
-                  </p>
-                </div>
-
-                <span
-                  class="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand transition-colors duration-150 group-hover:text-brand-hover"
+              <div class="lg:col-span-5">
+                <h2
+                  [id]="headingId()"
+                  class="max-w-md font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
                 >
-                  <span>{{ dest.actionLabel }}</span>
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+                  {{ heading() }}
+                </h2>
+                @if (subtitle(); as sub) {
+                  <p
+                    class="mt-3 max-w-md text-[16px] font-normal leading-[1.55] text-ink-muted"
                   >
-                    <path d="M4.5 10h11" />
-                    <path d="m11 5.5 4.5 4.5-4.5 4.5" />
-                  </svg>
-                </span>
-              </a>
-            }
-          </nav>
-        </div>
-      </section>
+                    {{ sub }}
+                  </p>
+                }
+              </div>
+
+              <nav
+                [attr.aria-label]="heading()"
+                class="divide-y divide-border-subtle border-y border-border-subtle lg:col-span-7"
+              >
+                @for (dest of destinations(); track dest.title) {
+                  <a
+                    [routerLink]="dest.route"
+                    [fragment]="dest.fragment"
+                    [queryParams]="dest.queryParams"
+                    class="group flex flex-col gap-4 py-6 transition-colors duration-150 motion-reduce:transition-none sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-7"
+                  >
+                    <div class="max-w-lg space-y-1.5">
+                      <h3
+                        class="font-display text-[1.25rem] font-medium not-italic leading-[1.22] tracking-[-0.015em] text-ink transition-colors duration-150 motion-reduce:transition-none group-hover:text-brand text-balance"
+                      >
+                        {{ dest.title }}
+                      </h3>
+                      <p
+                        class="text-[15px] font-normal leading-[1.55] text-ink-muted"
+                      >
+                        {{ dest.description }}
+                      </p>
+                    </div>
+
+                    <span
+                      class="terraco-btn inline-flex min-h-[42px] w-fit shrink-0 items-center gap-2 rounded-pill border border-border-subtle bg-elevated px-4 py-2 text-[13px] font-medium leading-[1.35] text-brand transition-colors duration-150 motion-reduce:transition-none group-hover:border-brand group-hover:bg-brand group-hover:text-ink-inverse"
+                    >
+                      <span>{{ dest.actionLabel }}</span>
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+                      >
+                        <path d="M4.5 10h11" />
+                        <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                      </svg>
+                    </span>
+                  </a>
+                }
+              </nav>
+            </div>
+          </div>
+        </section>
+      } @else {
+        <section
+          [attr.aria-labelledby]="headingId()"
+          class="border-t border-border-subtle bg-canvas py-12 sm:py-16"
+        >
+          <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl space-y-1.5">
+              <h2
+                [id]="headingId()"
+                class="font-display text-[clamp(1.375rem,2.4vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
+              >
+                {{ heading() }}
+              </h2>
+              @if (subtitle(); as sub) {
+                <p class="text-[15px] font-normal leading-[1.55] text-ink-muted">
+                  {{ sub }}
+                </p>
+              }
+            </div>
+
+            <nav
+              [attr.aria-label]="heading()"
+              [class]="gridClass()"
+            >
+              @for (dest of destinations(); track dest.title) {
+                <a
+                  [routerLink]="dest.route"
+                  [fragment]="dest.fragment"
+                  [queryParams]="dest.queryParams"
+                  class="terraco-journey-card group flex flex-col justify-between gap-4 bg-elevated p-5 sm:p-6"
+                >
+                  <div class="space-y-1.5">
+                    <h3
+                      class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink transition-colors duration-150 group-hover:text-brand text-balance"
+                    >
+                      {{ dest.title }}
+                    </h3>
+                    <p class="text-[14px] font-normal leading-[1.55] text-ink-muted">
+                      {{ dest.description }}
+                    </p>
+                  </div>
+
+                  <span
+                    class="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand transition-colors duration-150 group-hover:text-brand-hover"
+                  >
+                    <span>{{ dest.actionLabel }}</span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+                    >
+                      <path d="M4.5 10h11" />
+                      <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                    </svg>
+                  </span>
+                </a>
+              }
+            </nav>
+          </div>
+        </section>
+      }
     }
   `,
 })
@@ -91,6 +166,7 @@ export class NextJourneyComponent {
   readonly heading = input<string>('Continue explorando');
   readonly subtitle = input<string | null>(null);
   readonly headingId = input<string>('next-journey-heading');
+  readonly variant = input<'cards' | 'editorial'>('cards');
   readonly destinations = input.required<readonly JourneyDestination[]>();
 
   readonly gridClass = computed(() => {

@@ -64,7 +64,7 @@ const HOME_NEXT_DESTINATIONS: readonly JourneyDestination[] = [
         } @placeholder {
           <section
             aria-hidden="true"
-            class="min-h-[420px] border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24"
+            class="min-h-[420px] bg-canvas py-16 sm:py-20 lg:py-24"
           ></section>
         }
         @defer (on viewport; hydrate on viewport) {
@@ -72,12 +72,13 @@ const HOME_NEXT_DESTINATIONS: readonly JourneyDestination[] = [
         } @placeholder {
           <section
             aria-hidden="true"
-            class="min-h-[440px] border-t border-border-subtle bg-surface/45 py-16 sm:py-20 lg:py-24"
+            class="min-h-[440px] bg-surface/45 py-16 sm:py-20 lg:py-24"
           ></section>
         }
         <app-next-journey
           heading="Por onde seguir agora"
           subtitle="Escolha um dos caminhos abaixo para continuar sua pesquisa em Belo Horizonte."
+          variant="editorial"
           [destinations]="nextDestinations"
         />
       </main>
