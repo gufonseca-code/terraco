@@ -33,7 +33,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
         aria-labelledby="featured-launches-heading"
         class="bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
       >
-        <div class="mx-auto max-w-6xl px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2
             id="featured-launches-heading"
             class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
@@ -41,7 +41,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
             Lançamentos selecionados em BH
           </h2>
           <div
-            class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 sm:mt-10"
+            class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6 sm:mt-10"
           >
             <app-launch-card-skeleton />
             <app-launch-card-skeleton />
@@ -55,7 +55,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
         aria-labelledby="featured-launches-heading"
         class="bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
       >
-        <div class="mx-auto max-w-6xl px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div
             class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
           >
@@ -75,7 +75,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
           </div>
 
           <div
-            class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 sm:mt-10"
+            class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6 sm:mt-10"
           >
             @for (launch of featuredLaunches(); track launch.slug) {
               <app-launch-card

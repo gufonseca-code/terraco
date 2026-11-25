@@ -16,7 +16,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
       data-testid="site-header"
       class="pointer-events-none sticky top-0 z-30 px-4 pt-2 sm:px-6 sm:pt-3"
     >
-      <div class="relative mx-auto max-w-6xl">
+      <div class="relative mx-auto max-w-7xl">
         <div
           [class]="
             mobileMenuOpen()

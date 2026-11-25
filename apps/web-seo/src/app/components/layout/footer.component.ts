@@ -13,7 +13,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
       class="terraco-cobogo-surface mt-auto border-t border-border-subtle bg-surface scroll-mt-24"
     >
       <div
-        class="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-12 sm:py-14 lg:px-8 md:flex-row md:items-end md:justify-between"
+        class="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-14 lg:px-8 md:flex-row md:items-end md:justify-between"
       >
         <div class="max-w-md space-y-3">
           <app-terraco-logo [animate]="false" />
@@ -43,7 +43,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
 
       <div class="border-t border-border-subtle/80">
         <div
-          class="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-4 text-sm font-normal text-ink-muted sm:flex-row sm:items-center sm:justify-between lg:px-8"
+          class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 text-sm font-normal text-ink-muted sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8"
         >
           <nav
             aria-label="Guias de bairros em BH"

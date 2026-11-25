@@ -158,7 +158,7 @@ function buildBairroJsonLd(
           class="flex min-h-dvh flex-1 flex-col bg-canvas"
         >
           <article
-            class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
+            class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
           >
             <header class="terraco-reveal max-w-3xl space-y-4">
               <nav aria-label="Navegação estrutural">
@@ -286,7 +286,7 @@ function buildBairroJsonLd(
 
               @if (matchingLaunches().length > 0) {
                 <div
-                  class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+                  class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6"
                 >
                   @for (launch of matchingLaunches(); track launch.slug) {
                     <app-launch-card
@@ -307,7 +307,7 @@ function buildBairroJsonLd(
                       </h3>
 
                       <div
-                        class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+                        class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6"
                       >
                         @for (launch of nearbyLaunches(); track launch.slug) {
                           <app-launch-card

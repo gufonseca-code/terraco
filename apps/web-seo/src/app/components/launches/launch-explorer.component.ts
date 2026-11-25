@@ -50,7 +50,7 @@ const TIPOLOGIA_FILTERS = [
   template: `
     <section
       aria-labelledby="lancamentos-heading"
-      class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
+      class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
     >
       <div class="space-y-6">
         <div class="space-y-2.5">
@@ -240,11 +240,11 @@ const TIPOLOGIA_FILTERS = [
       </div>
 
       @if (isLoading() && lancamentos().length === 0) {
-        <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           <app-launch-card-skeleton />
         </div>
       } @else if (filteredLancamentos().length > 0) {
-        <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           @for (launch of filteredLancamentos(); track launch.slug) {
             <app-launch-card
               [launch]="launch"

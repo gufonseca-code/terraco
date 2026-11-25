@@ -245,7 +245,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 <button
                   type="button"
                   (click)="openLightbox(0)"
-                  class="terraco-btn absolute right-2.5 bottom-2.5 z-10 inline-flex min-h-[34px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3 py-1 text-[12px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-brand/40 sm:right-3 sm:bottom-3 sm:min-h-[38px] sm:px-3.5 sm:text-[13px]"
+                  class="terraco-btn absolute right-2.5 bottom-2.5 z-10 inline-flex min-h-[34px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-brand/40 sm:right-3 sm:bottom-3 sm:min-h-[38px] sm:px-3.5"
                 >
                   <svg
                     aria-hidden="true"
@@ -303,7 +303,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 class="grid grid-cols-2 gap-x-3 gap-y-2 rounded-[18px] bg-surface/80 px-3.5 py-2.5 sm:gap-x-4 sm:gap-y-2.5 sm:px-4 sm:py-3"
               >
                 <div class="space-y-0.5">
-                  <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                  <dt class="text-[13px] font-normal text-ink-muted">
                     Dormitórios
                   </dt>
                   <dd
@@ -314,7 +314,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 </div>
 
                 <div class="space-y-0.5">
-                  <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                  <dt class="text-[13px] font-normal text-ink-muted">
                     Metragem
                   </dt>
                   <dd
@@ -326,7 +326,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                 @if (formattedPrice(); as price) {
                   <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
-                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                    <dt class="text-[13px] font-normal text-ink-muted">
                       A partir de
                     </dt>
                     <dd
@@ -337,7 +337,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   </div>
                 } @else if (item().vagas) {
                   <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
-                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                    <dt class="text-[13px] font-normal text-ink-muted">
                       Vagas
                     </dt>
                     <dd
@@ -350,7 +350,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                 @if (item().entrega) {
                   <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
-                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                    <dt class="text-[13px] font-normal text-ink-muted">
                       Entrega
                     </dt>
                     <dd
@@ -361,7 +361,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   </div>
                 } @else {
                   <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
-                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                    <dt class="text-[13px] font-normal text-ink-muted">
                       Tipologias
                     </dt>
                     <dd class="line-clamp-1 text-[13px] font-normal leading-[1.3] text-ink sm:text-[14px]">

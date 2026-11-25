@@ -76,6 +76,25 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
             />
           </a>
 
+          @if (item.badge) {
+            <span
+              class="pointer-events-none absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-pill bg-accent px-3 py-1 text-[13px] font-medium leading-[1.3] text-ink shadow-chip"
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="h-3.5 w-3.5 shrink-0"
+              >
+                <path
+                  d="M12 1.5c1.1 0 2 .7 2.4 1.6.9-.4 2-.2 2.7.5.7.7.9 1.8.5 2.7.9.4 1.6 1.3 1.6 2.4 0 1.1-.7 2-1.6 2.4.4.9.2 2-.5 2.7-.7.7-1.8.9-2.7.5-.4.9-1.3 1.6-2.4 1.6-1.1 0-2-.7-2.4-1.6-.9.4-2 .2-2.7-.5-.7-.7-.9-1.8-.5-2.7-.9-.4-1.6-1.3-1.6-2.4 0-1.1.7-2 1.6-2.4-.4-.9-.2-2 .5-2.7.7-.7 1.8-.9 2.7-.5C10 2.2 10.9 1.5 12 1.5Z"
+                  transform="translate(0 3)"
+                />
+              </svg>
+              <span>{{ item.badge }}</span>
+            </span>
+          }
+
           <div class="absolute top-3 right-3 z-10">
             <app-favorite-button [slug]="item.slug" [nome]="item.nome" />
           </div>

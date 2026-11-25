@@ -73,7 +73,7 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
       aria-labelledby="trust-concierge-heading"
       class="border-t border-border-subtle bg-surface/45 py-16 sm:py-20 lg:py-24 scroll-mt-24"
     >
-      <div class="mx-auto max-w-6xl px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2
           id="trust-concierge-heading"
           class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"

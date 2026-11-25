@@ -108,7 +108,7 @@ function normalizeText(value: string): string {
       aria-labelledby="guided-discovery-heading"
       class="border-t border-border-subtle bg-canvas py-16 sm:py-20 lg:py-24 scroll-mt-20"
     >
-      <div class="mx-auto max-w-6xl px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl space-y-3">
           <h2
             id="guided-discovery-heading"

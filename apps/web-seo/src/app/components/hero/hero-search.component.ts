@@ -22,7 +22,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
       class="relative flex flex-1 flex-col overflow-hidden lg:justify-center"
     >
       <!-- Rail editorial alinhado à Navbar -->
-      <div class="relative z-10 mx-auto w-full max-w-6xl px-6 lg:px-8">
+      <div class="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
           class="relative space-y-5 py-6 sm:space-y-6 sm:py-8 lg:max-w-[50%] lg:space-y-8 lg:py-12"
         >

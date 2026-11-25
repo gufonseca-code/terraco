@@ -29,6 +29,24 @@
   --color-error-fg: #B9382E;
   --color-error-bg: #FDE8E6;
 
+  /* Tipografia (Escala e Métricas) */
+  --text-display-xl: 3rem;      /* 48px */
+  --text-display-lg: 2.25rem;   /* 36px */
+  --text-heading-md: 1.5rem;    /* 24px */
+  --text-body-md: 1rem;         /* 16px */
+  --text-ui-label: 0.875rem;    /* 14px */
+  --text-ui-meta: 0.8125rem;    /* 13px */
+
+  --leading-display-xl: 1.06;
+  --leading-display-lg: 1.12;
+  --leading-heading-md: 1.2;
+  --leading-body-md: 1.55;
+  --leading-ui-label: 1.35;
+  --leading-ui-meta: 1.4;
+
+  --tracking-display-xl: -0.03em;
+  --tracking-display-lg: -0.025em;
+
   /* Raios de Borda (Escala M3 Expressive) */
   --radius-xs: 4px;
   --radius-sm: 8px;
@@ -39,6 +57,15 @@
   --radius-xl: 28px;
   --radius-pill: 9999px;
 
+  /* Espaçamento */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
   /* Sombras Quentes (nunca cinza frio ou preto puro) */
   --shadow-chip: 0 2px 8px -2px rgba(30, 29, 27, 0.08);
   --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.07);
@@ -48,7 +75,11 @@
     0 24px 56px -14px rgba(30, 29, 27, 0.14),
     0 4px 12px -2px rgba(30, 29, 27, 0.05);
 
-  /* Curvas e tempos de microinteração (M3 Expressive Spatial & Effects) */
+  /* Durações & Curvas de Microinteração (M3 Expressive Spatial & Effects) */
+  --duration-ui: 160ms;
+  --duration-spring-fast: 320ms;
+  --duration-spring-default: 420ms;
+
   --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring-fast: cubic-bezier(0.22, 1, 0.36, 1);
@@ -58,33 +89,13 @@
 @supports (animation-timing-function: linear(0, 1)) {
   :root {
     --ease-spring-fast: linear(
-      0,
-      0.012 1.2%,
-      0.05 2.5%,
-      0.193 5.4%,
-      0.728 14.5%,
-      0.946 19.6%,
-      1.031 23.3%,
-      1.062 27.1%,
-      1.057 31.7%,
-      1.012 43.8%,
-      0.996 54.6%,
-      1.001 74%,
-      1
+      0, 0.009, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938 17.6%, 1.017 20.6%,
+      1.049 23.8%, 1.057 27.6%, 1.044 33.4%, 1.008 45.2%, 0.996 56.1%, 1
     );
     --ease-spring-default: linear(
-      0,
-      0.008 1%,
-      0.036 2.2%,
-      0.145 4.8%,
-      0.631 13.5%,
-      0.896 19.3%,
-      1.028 24.4%,
-      1.059 28.9%,
-      1.044 35.1%,
-      1.004 49%,
-      0.997 62%,
-      1
+      0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%,
+      0.937 38.1%, 0.968 41.8%, 0.991 45.7%, 1.006 50.1%, 1.015 55%,
+      1.017 63.9%, 1.001 83.4%, 1
     );
   }
 }
@@ -148,6 +159,7 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 1;
   font-weight: 500;
   font-style: normal;
   text-wrap: balance;
@@ -291,10 +303,10 @@ h4 {
   line-height: 1.35;
   white-space: nowrap;
   transition:
-    border-radius 300ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 180ms var(--ease-enter);
 }
@@ -436,10 +448,10 @@ h4 {
   color: var(--color-text-primary);
   border-radius: 20px;
   transition:
-    border-radius 300ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 180ms var(--ease-enter);
 }
@@ -467,10 +479,10 @@ h4 {
   color: var(--color-brand-primary);
   border-radius: 20px;
   transition:
-    border-radius 300ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 180ms var(--ease-enter);
 }
@@ -494,10 +506,10 @@ h4 {
 .terraco-m3-icon-btn {
   border-radius: 22px;
   transition:
-    border-radius 300ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 180ms var(--ease-enter);
 }
@@ -640,14 +652,14 @@ h4 {
   display: none;
 }
 
-/* M3 Expressive: Filter / Intent Chip com Shape Morphing (22px -> 12px) */
+/* M3 Expressive: Filter / Intent Chip com Shape Morphing (pill -> 12px) */
 .terraco-m3-chip {
-  border-radius: var(--radius-morph-pill);
+  border-radius: var(--radius-pill);
   transition:
-    border-radius 320ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 220ms var(--ease-enter);
 }
@@ -723,10 +735,10 @@ h4 {
 .terraco-m3-icon-toggle {
   border-radius: var(--radius-morph-pill);
   transition:
-    border-radius 340ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 220ms var(--ease-enter);
 }
@@ -938,12 +950,12 @@ h4 {
 
 .terraco-toolbar-enter {
   animation:
-    terraco-toolbar-fade-in 160ms var(--ease-ui) both,
-    terraco-toolbar-slide-in 380ms var(--ease-spring-default) both;
+    terraco-toolbar-fade-in var(--duration-ui) var(--ease-ui) both,
+    terraco-toolbar-slide-in var(--duration-spring-default) var(--ease-spring-default) both;
 }
 
 .terraco-toolbar-leave {
-  animation: terraco-toolbar-out 160ms var(--ease-ui) both;
+  animation: terraco-toolbar-out var(--duration-ui) var(--ease-ui) both;
 }
 
 /* Card flutuante (/lancamentos/[slug]) com destaque interno e profundidade quente */

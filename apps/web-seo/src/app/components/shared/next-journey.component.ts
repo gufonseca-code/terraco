@@ -24,7 +24,7 @@ export interface JourneyDestination {
         [attr.aria-labelledby]="headingId()"
         class="border-t border-border-subtle bg-canvas py-12 sm:py-16"
       >
-        <div class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div class="max-w-2xl space-y-1.5">
             <h2
               [id]="headingId()"
