@@ -58,19 +58,19 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
             <div class="grid lg:grid-cols-12">
               <div class="p-2.5 pb-0 lg:col-span-7 lg:p-3 lg:pr-0">
                 <div
-                  class="terraco-skeleton aspect-[16/10] w-full rounded-[20px] lg:aspect-auto lg:min-h-[380px]"
+                  class="terraco-skeleton aspect-[16/10] w-full rounded-[20px] lg:aspect-auto lg:min-h-[300px]"
                 ></div>
               </div>
               <div
-                class="flex flex-col justify-between gap-5 p-5 sm:p-6 lg:col-span-5 lg:p-8"
+                class="flex flex-col justify-between gap-4 p-5 sm:p-6 lg:col-span-5 lg:p-6"
               >
                 <div class="space-y-2.5">
                   <div class="terraco-skeleton h-3.5 w-36 rounded-sm"></div>
                   <div class="terraco-skeleton h-8 w-52 rounded-sm"></div>
                   <div class="terraco-skeleton h-4 w-full rounded-sm"></div>
                 </div>
+                <div class="terraco-skeleton h-10 w-full rounded-pill"></div>
                 <div class="terraco-skeleton h-28 w-full rounded-[18px]"></div>
-                <div class="terraco-skeleton h-11 w-full rounded-pill"></div>
               </div>
             </div>
           </div>
@@ -116,7 +116,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                 <div class="p-2.5 pb-0 lg:col-span-7 lg:p-3 lg:pr-0">
                   <div
                     [class.terraco-skeleton]="!leadImageLoaded()"
-                    class="relative aspect-[16/10] h-full overflow-hidden rounded-[20px] bg-surface lg:aspect-auto lg:min-h-[380px]"
+                    class="relative aspect-[16/10] h-full overflow-hidden rounded-[20px] bg-surface lg:aspect-auto lg:min-h-[300px]"
                   >
                     <a
                       [routerLink]="['/lancamentos', lead.slug]"
@@ -170,7 +170,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                 </div>
 
                 <div
-                  class="flex flex-col justify-between gap-5 p-5 sm:p-6 lg:col-span-5 lg:p-8"
+                  class="flex flex-col justify-between gap-4 p-5 sm:p-6 lg:col-span-5 lg:p-6"
                 >
                   <div>
                     <p class="text-[13px] font-normal text-ink-muted">
@@ -190,11 +190,18 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                     </h3>
 
                     <p
-                      class="mt-2.5 text-[15px] font-normal leading-[1.55] text-ink-muted"
+                      class="mt-2 text-[15px] font-normal leading-[1.55] text-ink-muted"
                     >
                       {{ lead.tagline }}
                     </p>
                   </div>
+
+                  <a
+                    [routerLink]="['/lancamentos', lead.slug]"
+                    class="terraco-btn terraco-btn-moss inline-flex min-h-[42px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+                  >
+                    Conhecer lançamento
+                  </a>
 
                   <dl
                     class="grid grid-cols-2 overflow-hidden rounded-[18px] bg-surface/75"
@@ -259,13 +266,6 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                       </div>
                     }
                   </dl>
-
-                  <a
-                    [routerLink]="['/lancamentos', lead.slug]"
-                    class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
-                  >
-                    Conhecer lançamento
-                  </a>
                 </div>
               </div>
             </article>

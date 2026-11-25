@@ -185,7 +185,7 @@ function normalizeText(value: string): string {
           </div>
 
           <div
-            class="rounded-[24px] bg-surface/70 p-5 sm:p-6 lg:col-span-5 lg:col-start-1 lg:row-start-2"
+            class="rounded-[24px] bg-surface/70 p-5 sm:p-6 lg:col-span-5 lg:col-start-1 lg:row-start-2 lg:self-end"
           >
             <div class="text-[15px] font-normal leading-[1.55] text-ink-muted">
               @if (hasSelection()) {
