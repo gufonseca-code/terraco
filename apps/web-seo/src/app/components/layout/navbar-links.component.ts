@@ -217,8 +217,8 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
               (click)="navigateFromMobileSheet($event, [item.route])"
               [class]="
                 active
-                  ? 'flex min-h-[48px] items-center justify-between gap-3 rounded-[16px] bg-ink/8 px-3 py-2.5 text-[15px] font-medium text-ink transition-colors duration-150'
-                  : 'flex min-h-[48px] items-center justify-between gap-3 rounded-[16px] px-3 py-2.5 text-[15px] font-normal text-ink transition-colors duration-150 hover:bg-surface/85'
+                  ? 'flex min-h-[48px] items-center justify-between gap-3 rounded-[16px] bg-surface px-3 py-2.5 text-[15px] font-medium text-ink transition-colors duration-150'
+                  : 'flex min-h-[48px] items-center justify-between gap-3 rounded-[16px] px-3 py-2.5 text-[15px] font-normal text-ink transition-colors duration-150 hover:bg-surface/75'
               "
             >
               <span class="flex items-center gap-3">
@@ -226,7 +226,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
                   aria-hidden="true"
                   [class]="
                     active
-                      ? 'flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-ink text-ink-inverse'
+                      ? 'flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] border border-border-subtle bg-elevated text-ink'
                       : 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface text-ink-muted'
                   "
                 >

@@ -44,7 +44,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
         >
           <div class="space-y-4 sm:space-y-5 lg:col-span-6 lg:space-y-6">
             <div class="terraco-reveal space-y-3 sm:space-y-4">
-              <app-botanical-arch-motif class="h-8 sm:h-9" />
+              <app-botanical-arch-motif class="h-32 sm:h-36 lg:h-40" />
 
               <h1
                 id="hero-heading"
