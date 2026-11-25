@@ -371,12 +371,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 }
               </dl>
 
-              <!-- Chips de intenção M3 Expressive (1 linha rolável no mobile, 2x2 no desktop) + CTA principal -->
+              <!-- Chips de intenção M3 Expressive em grid 2x2 + CTA principal -->
               <div class="min-w-0 space-y-2 sm:space-y-2.5">
                 <div
                   role="group"
                   aria-label="Assunto para conversa no WhatsApp"
-                  class="terraco-no-scrollbar flex w-full min-w-0 gap-1.5 overflow-x-auto pb-0.5 lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0"
+                  class="grid w-full min-w-0 grid-cols-2 gap-2"
                 >
                   @for (option of intentOptions; track option.key) {
                     <button
@@ -385,8 +385,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.aria-pressed]="selectedIntent() === option.key"
                       [class]="
                         selectedIntent() === option.key
-                          ? 'terraco-m3-chip flex min-h-[36px] shrink-0 cursor-pointer items-center justify-center border border-ink bg-ink px-3.5 py-1 text-center text-[13px] font-medium leading-[1.25] whitespace-nowrap text-ink-inverse shadow-chip lg:min-h-[40px] lg:whitespace-normal'
-                          : 'terraco-m3-chip flex min-h-[36px] shrink-0 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3.5 py-1 text-center text-[13px] font-normal leading-[1.25] whitespace-nowrap text-ink hover:border-border-strong hover:bg-surface lg:min-h-[40px] lg:whitespace-normal'
+                          ? 'terraco-m3-chip flex min-h-[40px] w-full cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-center text-[13px] font-medium leading-[1.25] text-ink-inverse shadow-chip'
+                          : 'terraco-m3-chip flex min-h-[40px] w-full cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-center text-[13px] font-normal leading-[1.25] text-ink hover:border-border-strong hover:bg-surface'
                       "
                     >
                       {{ option.label }}
