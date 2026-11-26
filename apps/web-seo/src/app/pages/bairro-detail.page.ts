@@ -14,10 +14,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { BotanicalArchMotifComponent } from '../components/hero';
-import {
-  LaunchCardComponent,
-  WhatsappAlertFormComponent,
-} from '../components/launches';
+import { LaunchCardComponent } from '../components/launches';
 import { FooterComponent, NavbarComponent } from '../components/layout';
 import {
   type JourneyDestination,
@@ -150,7 +147,6 @@ function buildBairroJsonLd(
     NotFoundPageComponent,
     BotanicalArchMotifComponent,
     LaunchCardComponent,
-    WhatsappAlertFormComponent,
     NextJourneyComponent,
     SectionHandoffComponent,
     RouterLink,
@@ -299,18 +295,11 @@ function buildBairroJsonLd(
                     <div
                       class="grid gap-2 py-6 sm:grid-cols-12 sm:items-baseline sm:gap-6 sm:py-7"
                     >
-                      <div class="flex items-baseline gap-3 sm:col-span-4">
-                        <span
-                          class="text-[13px] font-medium text-brand tabular-nums"
-                        >
-                          {{ pillar.index }}
-                        </span>
-                        <h3
-                          class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance"
-                        >
-                          {{ pillar.title }}
-                        </h3>
-                      </div>
+                      <h3
+                        class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance sm:col-span-4"
+                      >
+                        {{ pillar.title }}
+                      </h3>
                       <p
                         class="max-w-[58ch] text-[15px] font-normal leading-[1.6] text-ink-muted sm:col-span-8"
                       >
@@ -374,7 +363,7 @@ function buildBairroJsonLd(
                   }
                 </div>
               } @else {
-                <div class="mt-8 space-y-10">
+                <div class="mt-8 space-y-6">
                   @if (nearbyLaunches().length > 0) {
                     <div class="space-y-5">
                       <h3
@@ -397,33 +386,34 @@ function buildBairroJsonLd(
                     </div>
                   }
 
-                  <div
-                    class="max-w-xl rounded-[20px] border border-border-subtle bg-surface p-6 sm:p-8"
-                  >
-                    <h3
-                      class="font-display text-[1.25rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance"
+                  <div class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2">
+                    <a
+                      [href]="bairroWhatsappHref()"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="group inline-flex min-h-[40px] items-center gap-1.5 text-[14px] font-medium text-brand transition-colors duration-150 motion-reduce:transition-none hover:text-brand-hover"
                     >
-                      Quer ser avisado de novos lançamentos no {{ current.nome }}?
-                    </h3>
-                    <p
-                      class="mt-2 text-[14px] font-normal leading-[1.55] text-ink-muted sm:text-[15px]"
+                      <span>Receber aviso no WhatsApp sobre {{ current.nome }}</span>
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+                      >
+                        <path d="M4.5 10h11" />
+                        <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                      </svg>
+                    </a>
+                    <a
+                      routerLink="/lancamentos"
+                      class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
                     >
-                      Deixe seu WhatsApp que te chamamos assim que surgir uma
-                      boa oportunidade no bairro, sem spam.
-                    </p>
-
-                    <div class="mt-5">
-                      <app-whatsapp-alert-form
-                        inputId="bairro-alert-whatsapp"
-                        [searchedTerm]="current.nome"
-                        [resetKey]="current.slug"
-                        [successMessage]="
-                          'Combinado! Assim que entrar um lançamento em ' +
-                          current.nome +
-                          ', te avisamos no WhatsApp.'
-                        "
-                      />
-                    </div>
+                      Explorar todos os lançamentos em BH
+                    </a>
                   </div>
                 </div>
               }
