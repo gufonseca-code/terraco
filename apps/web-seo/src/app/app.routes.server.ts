@@ -22,6 +22,10 @@ export const serverRoutes: ServerRoute[] = [
     },
   },
   {
+    path: 'bairros',
+    renderMode: RenderMode.Prerender,
+  },
+  {
     path: 'bairros/:slug',
     renderMode: RenderMode.Prerender,
     fallback: PrerenderFallback.Server,

@@ -12,10 +12,12 @@ import {
   input,
   linkedSignal,
   viewChild,
+  viewChildren,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   BAIRROS_BH,
+  LancamentosService,
   LeadsService,
   SITE_NAME,
   SITE_URL,
@@ -24,8 +26,14 @@ import {
   type Lancamento,
   type LaunchMediaItem,
 } from '../../core';
+import {
+  type JourneyDestination,
+  NextJourneyComponent,
+} from '../shared/next-journey.component';
+import { SectionHandoffComponent } from '../shared/section-handoff.component';
 import { FavoriteButtonComponent } from './favorite-button.component';
 import { ImageLightboxComponent } from './image-lightbox.component';
+import { LaunchCardComponent } from './launch-card.component';
 import { LaunchFloorPlansComponent } from './launch-floor-plans.component';
 import { LaunchSimulatorComponent } from './launch-simulator.component';
 import { formatBrazilianPhone } from './whatsapp-alert-form.component';
@@ -162,32 +170,55 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
     RouterLink,
     FavoriteButtonComponent,
     ImageLightboxComponent,
+    LaunchCardComponent,
     LaunchFloorPlansComponent,
     LaunchSimulatorComponent,
+    NextJourneyComponent,
+    SectionHandoffComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
       aria-labelledby="launch-heading"
-      class="flex flex-1 flex-col justify-start bg-canvas py-4 sm:py-12 lg:py-16"
+      class="flex flex-1 flex-col justify-start bg-canvas pt-2 pb-10 sm:py-8 lg:py-10"
     >
       <div class="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div class="terraco-reveal mb-3 sm:mb-6">
+        <div class="terraco-reveal mb-2 flex items-center justify-between gap-3 sm:mb-4">
           <a
             routerLink="/lancamentos"
-            class="terraco-link-underline inline-flex min-h-[40px] items-center text-sm font-normal text-ink-muted transition-colors duration-150 hover:text-ink sm:min-h-[44px]"
+            class="terraco-link-underline inline-flex min-h-[34px] items-center gap-1.5 text-[14px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink sm:min-h-[40px]"
           >
-            Voltar para lançamentos
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4 shrink-0"
+            >
+              <path d="M12.5 5 7.5 10l5 5" />
+            </svg>
+            <span>Voltar para lançamentos</span>
           </a>
+
+          @if (item().construtora) {
+            <p class="hidden text-[13px] font-normal text-ink-muted sm:block">
+              {{ item().construtora }}
+            </p>
+          }
         </div>
 
+        <!-- M3 Expressive Compact Hero Card (28px outer shell / 20px concentric media inset) -->
         <article
-          class="terraco-reveal-delay terraco-floating-card overflow-hidden rounded-lg bg-elevated"
+          class="terraco-reveal-delay terraco-floating-card overflow-hidden rounded-[28px] bg-elevated p-2 sm:p-2.5"
         >
-          <div class="grid lg:grid-cols-12">
+          <div class="grid gap-3 sm:gap-4 lg:grid-cols-12 lg:gap-5">
+            <!-- Mídia principal com cantos concêntricos e altura contida -->
             <div
               [class.terraco-skeleton]="!imageLoaded()"
-              class="group relative aspect-[2/1] w-full overflow-hidden rounded-t-[calc(var(--radius-lg)-1px)] border-b border-border-subtle bg-surface sm:aspect-[5/3] lg:col-span-7 lg:aspect-auto lg:min-h-[460px] lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)] lg:border-b-0 lg:border-r lg:border-border-subtle"
+              class="group relative aspect-[21/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/9] lg:col-span-7 lg:aspect-auto lg:min-h-[390px] lg:max-h-[430px] lg:rounded-[22px]"
             >
               <img
                 #heroImg
@@ -200,8 +231,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 [style.view-transition-name]="'launch-image-' + item().slug"
                 (load)="markImageLoaded()"
                 (error)="markImageLoaded()"
-                class="relative z-[1] h-full w-full rounded-t-[calc(var(--radius-lg)-1px)] object-cover object-center lg:rounded-tr-none lg:rounded-l-[calc(var(--radius-lg)-1px)]"
+                class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center lg:absolute lg:inset-0 lg:rounded-[22px]"
               />
+
               @if (hasGallery()) {
                 <button
                   type="button"
@@ -209,79 +241,107 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   [attr.aria-label]="'Abrir galeria de imagens de ' + item().nome"
                   class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
                 ></button>
-              }
-            </div>
 
-            <div
-              class="flex flex-col justify-between gap-4 p-4 sm:gap-5 sm:p-6 lg:col-span-5 lg:gap-6 lg:p-6"
-            >
-              <div class="flex items-start justify-between gap-3">
-                <div class="min-w-0 space-y-1.5 sm:space-y-2">
-                  <p class="text-[13px] font-normal leading-[1.4] text-ink-muted">
-                    @if (bairroGuideSlug(); as guideSlug) {
-                      <a
-                        [routerLink]="['/bairros', guideSlug]"
-                        class="terraco-link-underline text-ink transition-colors duration-150 hover:text-brand"
-                      >
-                        {{ item().bairro }}
-                      </a>
-                    } @else {
-                      <span>{{ item().bairro }}</span>
-                    }<span>, {{ item().cidade }}, {{ item().uf }}</span>
-                  </p>
-
-                  <h1
-                    id="launch-heading"
-                    [style.view-transition-name]="'launch-title-' + item().slug"
-                    class="font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.02em] text-ink text-balance"
+                <button
+                  type="button"
+                  (click)="openLightbox(0)"
+                  class="terraco-btn absolute right-2.5 bottom-2.5 z-10 inline-flex min-h-[34px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-brand/40 sm:right-3 sm:bottom-3 sm:min-h-[38px] sm:px-3.5"
+                >
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-3.5 w-3.5"
                   >
-                    {{ item().nome }}
-                  </h1>
-                </div>
+                    <rect x="3" y="3" width="18" height="18" rx="3" />
+                    <circle cx="9" cy="9" r="1.5" />
+                    <path d="m21 15-4.5-4.5L7 20" />
+                  </svg>
+                  <span class="tabular-nums">{{ galleryImages().length }} fotos</span>
+                </button>
+              }
 
+              <div class="absolute top-2.5 right-2.5 z-10 sm:top-3 sm:right-3">
                 <app-favorite-button
                   [slug]="item().slug"
                   [nome]="item().nome"
                 />
               </div>
+            </div>
 
+            <!-- Painel compacto de decisão e conversão -->
+            <div
+              class="flex min-w-0 flex-col justify-between gap-2.5 px-2 pt-0.5 pb-1.5 sm:gap-3.5 sm:px-3 sm:py-2 lg:col-span-5 lg:py-3 lg:pr-3.5 lg:pl-0"
+            >
+              <div class="min-w-0 space-y-0.5">
+                <p class="text-[13px] font-normal leading-[1.35] text-ink-muted">
+                  @if (bairroGuideSlug(); as guideSlug) {
+                    <a
+                      [routerLink]="['/bairros', guideSlug]"
+                      class="terraco-link-underline text-ink transition-colors duration-150 hover:text-brand"
+                    >{{ item().bairro }}</a>
+                  } @else {
+                    <span>{{ item().bairro }}</span>
+                  }<span>, {{ item().cidade }}, {{ item().uf }}</span>
+                </p>
+
+                <h1
+                  id="launch-heading"
+                  [style.view-transition-name]="'launch-title-' + item().slug"
+                  class="font-display text-[clamp(1.625rem,3vw,2.125rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
+                >
+                  {{ item().nome }}
+                </h1>
+              </div>
+
+              <!-- Ficha técnica enxuta em container tonal Areia Suave -->
               <dl
-                class="grid grid-cols-2 gap-x-4 gap-y-3 border-y border-border-subtle py-3 sm:gap-x-6 sm:gap-y-4 sm:py-4"
+                class="grid grid-cols-2 gap-x-3 gap-y-2 rounded-[18px] bg-surface/80 px-3.5 py-2.5 sm:gap-x-4 sm:gap-y-2.5 sm:px-4 sm:py-3"
               >
-                <div class="space-y-1">
+                <div class="space-y-0.5">
                   <dt class="text-[13px] font-normal text-ink-muted">
                     Dormitórios
                   </dt>
                   <dd
-                    class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
+                    class="text-[13px] font-medium leading-[1.3] text-ink tabular-nums sm:text-[14px]"
                   >
                     {{ item().quartos }}
                   </dd>
                 </div>
 
-                <div class="space-y-1">
-                  <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
+                <div class="space-y-0.5">
+                  <dt class="text-[13px] font-normal text-ink-muted">
+                    Metragem
+                  </dt>
                   <dd
-                    class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
+                    class="text-[13px] font-medium leading-[1.3] text-ink tabular-nums sm:text-[14px]"
                   >
                     {{ item().metragem }}
                   </dd>
                 </div>
 
-                <div class="space-y-1">
-                  <dt class="text-[13px] font-normal text-ink-muted">
-                    Tipologias
-                  </dt>
-                  <dd class="text-[15px] font-normal leading-[1.4] text-ink">
-                    {{ item().tipologias }}
-                  </dd>
-                </div>
-
-                @if (item().vagas) {
-                  <div class="space-y-1">
-                    <dt class="text-[13px] font-normal text-ink-muted">Vagas</dt>
+                @if (formattedPrice(); as price) {
+                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
+                    <dt class="text-[13px] font-normal text-ink-muted">
+                      A partir de
+                    </dt>
                     <dd
-                      class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
+                      class="text-[13px] font-medium leading-[1.3] text-brand tabular-nums sm:text-[14px]"
+                    >
+                      {{ price }}
+                    </dd>
+                  </div>
+                } @else if (item().vagas) {
+                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
+                    <dt class="text-[13px] font-normal text-ink-muted">
+                      Vagas
+                    </dt>
+                    <dd
+                      class="text-[13px] font-normal leading-[1.3] text-ink tabular-nums sm:text-[14px]"
                     >
                       {{ item().vagas }}
                     </dd>
@@ -289,52 +349,34 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 }
 
                 @if (item().entrega) {
-                  <div class="space-y-1">
+                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
                     <dt class="text-[13px] font-normal text-ink-muted">
-                      Previsão de entrega
+                      Entrega
                     </dt>
                     <dd
-                      class="text-[15px] font-normal leading-[1.4] text-ink tabular-nums"
+                      class="text-[13px] font-normal leading-[1.3] text-ink tabular-nums sm:text-[14px]"
                     >
                       {{ item().entrega }}
                     </dd>
                   </div>
-                }
-
-                @if (formattedPrice(); as price) {
-                  <div class="space-y-1">
+                } @else {
+                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
                     <dt class="text-[13px] font-normal text-ink-muted">
-                      A partir de
+                      Tipologias
                     </dt>
-                    <dd
-                      class="text-[15px] font-medium leading-[1.4] text-ink tabular-nums"
-                    >
-                      {{ price }}
-                    </dd>
-                  </div>
-                }
-
-                @if (item().construtora) {
-                  <div class="space-y-1">
-                    <dt class="text-[13px] font-normal text-ink-muted">
-                      Construtora
-                    </dt>
-                    <dd class="text-[15px] font-normal leading-[1.4] text-ink">
-                      {{ item().construtora }}
+                    <dd class="line-clamp-1 text-[13px] font-normal leading-[1.3] text-ink sm:text-[14px]">
+                      {{ item().tipologias }}
                     </dd>
                   </div>
                 }
               </dl>
 
-              <div class="space-y-3">
-                <p class="text-[14px] font-normal leading-[1.45] text-ink-muted">
-                  Como podemos ajudar sobre o {{ item().nome }}?
-                </p>
-
+              <!-- Chips de intenção M3 Expressive em grid 2x2 + CTA principal -->
+              <div class="min-w-0 space-y-2 sm:space-y-2.5">
                 <div
                   role="group"
                   aria-label="Assunto para conversa no WhatsApp"
-                  class="grid grid-cols-2 gap-2"
+                  class="grid w-full min-w-0 grid-cols-2 gap-2"
                 >
                   @for (option of intentOptions; track option.key) {
                     <button
@@ -343,8 +385,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.aria-pressed]="selectedIntent() === option.key"
                       [class]="
                         selectedIntent() === option.key
-                          ? 'terraco-m3-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-center text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip'
-                          : 'terraco-m3-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-center text-[13px] font-normal leading-[1.3] text-ink hover:border-border-strong hover:bg-surface'
+                          ? 'terraco-m3-chip flex min-h-[40px] w-full cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-center text-[13px] font-medium leading-[1.25] text-ink-inverse shadow-chip'
+                          : 'terraco-m3-chip flex min-h-[40px] w-full cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-center text-[13px] font-normal leading-[1.25] text-ink hover:border-border-strong hover:bg-surface'
                       "
                     >
                       {{ option.label }}
@@ -356,24 +398,25 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   [href]="whatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-6 py-2.5 text-sm font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover sm:min-h-[50px] sm:py-3"
+                  class="terraco-btn terraco-btn-moss flex min-h-[44px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover sm:min-h-[48px] sm:py-2.5"
                 >
                   Falar no WhatsApp
                 </a>
 
-                <div class="pt-1">
+                <div>
                   @if (callbackSubmitted()) {
                     <p
                       role="status"
                       data-testid="launch-callback-success"
-                      class="rounded-md border border-brand/25 bg-surface/60 px-3.5 py-2.5 text-[13px] font-normal leading-[1.45] text-ink"
+                      class="rounded-[14px] border border-brand/25 bg-surface/60 px-3.5 py-2 text-[13px] font-normal leading-[1.45] text-ink"
                     >
                       Recebemos seu contato. Um especialista retorna em instantes sobre {{ selectedIntentLabel() }}.
                     </p>
                   } @else if (callbackOpen()) {
                     <form
                       (submit)="submitCallbackLead($event)"
-                      class="space-y-2.5 rounded-md border border-border-subtle bg-surface/55 p-3.5"
+                      animate.enter="terraco-chip-enter"
+                      class="space-y-2.5 rounded-[18px] border border-border-subtle bg-surface/60 p-3.5"
                     >
                       <div class="flex items-center justify-between gap-2">
                         <span class="text-[13px] font-medium text-ink">
@@ -382,7 +425,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         <button
                           type="button"
                           (click)="toggleCallbackForm()"
-                          class="text-[13px] font-normal text-ink-muted hover:text-ink"
+                          class="cursor-pointer text-[13px] font-normal text-ink-muted hover:text-ink"
                         >
                           Fechar
                         </button>
@@ -395,7 +438,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         placeholder="Seu nome (opcional)"
                         aria-label="Seu nome"
                         autocomplete="name"
-                        class="min-h-[40px] w-full rounded-md border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
+                        class="min-h-[40px] w-full rounded-[12px] border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
                       />
 
                       <div class="flex flex-col gap-2 sm:flex-row">
@@ -407,12 +450,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                           aria-label="Seu WhatsApp com DDD"
                           autocomplete="tel"
                           required
-                          class="min-h-[40px] flex-1 rounded-md border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
+                          class="min-h-[40px] flex-1 rounded-[12px] border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
                         />
                         <button
                           type="submit"
                           [disabled]="callbackSubmitting()"
-                          class="terraco-btn inline-flex min-h-[40px] shrink-0 items-center justify-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover disabled:opacity-60"
+                          class="terraco-btn inline-flex min-h-[40px] shrink-0 cursor-pointer items-center justify-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover disabled:opacity-60"
                         >
                           {{ callbackSubmitting() ? 'Enviando...' : 'Solicitar' }}
                         </button>
@@ -432,7 +475,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       type="button"
                       (click)="toggleCallbackForm()"
                       data-testid="launch-callback-toggle"
-                      class="terraco-link-underline w-full text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+                      class="terraco-link-underline w-full cursor-pointer py-0.5 text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
                     >
                       Prefere que um especialista te chame?
                     </button>
@@ -443,49 +486,90 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           </div>
         </article>
 
+        <!-- Trilha fixa M3 Expressive com scroll-spy (visível já na dobra mobile) -->
         <nav
+          #sectionNav
           aria-label="Seções do empreendimento"
-          class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-border-subtle pb-3 text-[14px]"
+          class="terraco-no-scrollbar sticky top-3 z-20 mt-3.5 flex items-center gap-1.5 overflow-x-auto rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-card backdrop-blur-md sm:mt-5"
         >
+          @if (item().condicoesEspeciais?.length) {
+            <a
+              #sectionNavLink
+              data-section-id="condicoes"
+              href="#condicoes"
+              (click)="scrollToSection($event, 'condicoes')"
+              [attr.aria-current]="activeSection() === 'condicoes' ? 'true' : null"
+              [class]="sectionNavPillClass('condicoes')"
+            >
+              Condições
+            </a>
+          }
           <a
+            #sectionNavLink
+            data-section-id="sobre"
             href="#sobre"
             (click)="scrollToSection($event, 'sobre')"
-            class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+            [attr.aria-current]="activeSection() === 'sobre' ? 'true' : null"
+            [class]="sectionNavPillClass('sobre')"
           >
             Sobre
           </a>
           @if (item().diferenciais.length > 0) {
             <a
+              #sectionNavLink
+              data-section-id="diferenciais"
               href="#diferenciais"
               (click)="scrollToSection($event, 'diferenciais')"
-              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+              [attr.aria-current]="activeSection() === 'diferenciais' ? 'true' : null"
+              [class]="sectionNavPillClass('diferenciais')"
             >
               Diferenciais
             </a>
           }
           @if (item().plantas?.length) {
             <a
+              #sectionNavLink
+              data-section-id="plantas"
               href="#plantas"
               (click)="scrollToSection($event, 'plantas')"
-              class="terraco-link-underline inline-flex min-h-[40px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+              [attr.aria-current]="activeSection() === 'plantas' ? 'true' : null"
+              [class]="sectionNavPillClass('plantas')"
             >
               Plantas
             </a>
           }
           <a
+            #sectionNavLink
+            data-section-id="simulador"
             href="#simulador"
             (click)="scrollToSection($event, 'simulador')"
-            class="terraco-link-underline inline-flex min-h-[40px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+            [attr.aria-current]="activeSection() === 'simulador' ? 'true' : null"
+            [class]="sectionNavPillClass('simulador')"
           >
             Simular entrada
           </a>
           @if (hasGallery()) {
             <a
+              #sectionNavLink
+              data-section-id="galeria"
               href="#galeria"
               (click)="scrollToSection($event, 'galeria')"
-              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+              [attr.aria-current]="activeSection() === 'galeria' ? 'true' : null"
+              [class]="sectionNavPillClass('galeria')"
             >
               Galeria
+            </a>
+          }
+          @if (otherLaunches().length > 0) {
+            <a
+              #sectionNavLink
+              data-section-id="outros-lancamentos"
+              href="#outros-lancamentos"
+              (click)="scrollToSection($event, 'outros-lancamentos')"
+              [attr.aria-current]="activeSection() === 'outros-lancamentos' ? 'true' : null"
+              [class]="sectionNavPillClass('outros-lancamentos')"
+            >
+              Outros em BH
             </a>
           }
         </nav>
@@ -493,8 +577,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         <div class="mt-8 space-y-12 sm:mt-10 sm:space-y-14">
           @if (item().condicoesEspeciais?.length) {
             <section
+              id="condicoes"
               aria-labelledby="special-conditions-heading"
-              class="rounded-lg border border-brand/25 bg-surface/55 p-5 sm:p-8"
+              class="terraco-cobogo-band rounded-lg border border-brand/25 bg-surface/55 p-5 sm:p-8 scroll-mt-24"
             >
               <h2
                 id="special-conditions-heading"
@@ -578,6 +663,16 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 </div>
               </dl>
             }
+
+            @if (item().diferenciais.length > 0) {
+              <div class="mt-5">
+                <app-section-handoff
+                  prompt="Quer ver o que o condomínio oferece?"
+                  label="Explorar diferenciais e lazer"
+                  targetId="diferenciais"
+                />
+              </div>
+            }
           </section>
 
           @if (item().diferenciais.length > 0) {
@@ -616,6 +711,16 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   </li>
                 }
               </ul>
+
+              @if (item().plantas?.length) {
+                <div class="mt-6">
+                  <app-section-handoff
+                    prompt="Próximo passo:"
+                    label="Ver plantas e metragens"
+                    targetId="plantas"
+                  />
+                </div>
+              }
             </section>
           }
 
@@ -678,7 +783,52 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </div>
             </section>
           }
+
+          @if (otherLaunches().length > 0) {
+            <section
+              id="outros-lancamentos"
+              aria-labelledby="other-launches-heading"
+              class="border-t border-border-subtle pt-10 scroll-mt-24"
+            >
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div class="space-y-1">
+                  <h2
+                    id="other-launches-heading"
+                    class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
+                  >
+                    Outros lançamentos em BH para comparar
+                  </h2>
+                  <p class="text-[14px] font-normal text-ink-muted">
+                    Compare plantas, bairros e condições antes de decidir.
+                  </p>
+                </div>
+
+                <a
+                  routerLink="/lancamentos"
+                  class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+                >
+                  Ver catálogo completo
+                </a>
+              </div>
+
+              <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+                @for (other of otherLaunches(); track other.slug) {
+                  <app-launch-card
+                    [launch]="other"
+                    headingLevel="h3"
+                  />
+                }
+              </div>
+            </section>
+          }
         </div>
+      </div>
+
+      <div class="mt-12 sm:mt-14">
+        <app-next-journey
+          heading="Continue sua pesquisa"
+          [destinations]="nextDestinations()"
+        />
       </div>
 
       @defer (when lightboxOpen()) {
@@ -697,9 +847,57 @@ export class PrimeViewLandingComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
   private readonly leadsService = inject(LeadsService);
+  private readonly lancamentosService = inject(LancamentosService);
 
   readonly item = input.required<Lancamento>();
   private readonly itemSlug = computed(() => this.item().slug);
+
+  readonly activeSection = linkedSignal<string, string>({
+    source: this.itemSlug,
+    computation: () =>
+      this.item().condicoesEspeciais?.length ? 'condicoes' : 'sobre',
+  });
+
+  readonly otherLaunches = computed<readonly Lancamento[]>(() =>
+    this.lancamentosService
+      .lancamentos()
+      .filter((launch) => launch.slug !== this.item().slug)
+  );
+
+  readonly nextDestinations = computed<readonly JourneyDestination[]>(() => {
+    const current = this.item();
+    const guideSlug = this.bairroGuideSlug();
+    const list: JourneyDestination[] = [];
+
+    if (guideSlug) {
+      list.push({
+        title: `Guia do bairro ${current.bairro}`,
+        description: `Mobilidade, serviços e perguntas frequentes sobre morar no ${current.bairro}.`,
+        actionLabel: `Conhecer ${current.bairro}`,
+        route: ['/bairros', guideSlug],
+      });
+    }
+
+    list.push(
+      {
+        title: 'Todos os lançamentos em BH',
+        description:
+          'Filtre por bairro, tipologia e salve seus preferidos para comparar lado a lado.',
+        actionLabel: 'Abrir catálogo',
+        route: '/lancamentos',
+      },
+      {
+        title: 'Descobrir pelo seu momento',
+        description:
+          'Combine objetivo, tamanho e região sem cadastro para encontrar o imóvel ideal.',
+        actionLabel: 'Usar descoberta guiada',
+        route: '/',
+        fragment: 'descoberta-guiada',
+      }
+    );
+
+    return list;
+  });
 
   readonly imageLoaded = linkedSignal({
     source: this.itemSlug,
@@ -746,6 +944,13 @@ export class PrimeViewLandingComponent {
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
 
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
+  private readonly sectionNav =
+    viewChild<ElementRef<HTMLElement>>('sectionNav');
+  private readonly sectionNavLinks =
+    viewChildren<ElementRef<HTMLAnchorElement>>('sectionNavLink');
+
+  private ignoreScrollSpyUntil = 0;
+  private pendingScrollSettleTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly bairroGuideSlug = computed<string | null>(() => {
     const currentBairro = this.item().bairro;
@@ -800,6 +1005,87 @@ export class PrimeViewLandingComponent {
       if (el?.complete && el.naturalWidth > 0) {
         this.imageLoaded.set(true);
       }
+
+      if (
+        !isPlatformBrowser(this.platformId) ||
+        typeof IntersectionObserver === 'undefined'
+      ) {
+        return;
+      }
+
+      const sectionIds = [
+        'condicoes',
+        'sobre',
+        'diferenciais',
+        'plantas',
+        'simulador',
+        'galeria',
+        'outros-lancamentos',
+      ];
+      const targets = sectionIds
+        .map((id) => this.document.getElementById(id))
+        .filter((node): node is HTMLElement => Boolean(node));
+
+      if (targets.length === 0) {
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (
+            typeof performance !== 'undefined' &&
+            performance.now() < this.ignoreScrollSpyUntil
+          ) {
+            return;
+          }
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort(
+              (a, b) =>
+                a.boundingClientRect.top - b.boundingClientRect.top
+            );
+          if (visible[0]?.target.id) {
+            this.activeSection.set(visible[0].target.id);
+          }
+        },
+        { rootMargin: '-18% 0px -62% 0px', threshold: 0 }
+      );
+
+      for (const target of targets) {
+        observer.observe(target);
+      }
+
+      this.destroyRef.onDestroy(() => {
+        observer.disconnect();
+        if (this.pendingScrollSettleTimer !== null) {
+          clearTimeout(this.pendingScrollSettleTimer);
+          this.pendingScrollSettleTimer = null;
+        }
+      });
+    });
+
+    effect(() => {
+      const currentSection = this.activeSection();
+      if (!isPlatformBrowser(this.platformId)) {
+        return;
+      }
+      const navEl = this.sectionNav()?.nativeElement;
+      const activeEl = this.sectionNavLinks().find(
+        (ref) => ref.nativeElement.dataset['sectionId'] === currentSection
+      )?.nativeElement;
+      if (navEl && activeEl) {
+        const reducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
+        const targetLeft =
+          activeEl.offsetLeft -
+          navEl.clientWidth / 2 +
+          activeEl.offsetWidth / 2;
+        navEl.scrollTo({
+          left: Math.max(0, targetLeft),
+          behavior: reducedMotion ? 'auto' : 'smooth',
+        });
+      }
     });
 
     effect(() => {
@@ -853,22 +1139,65 @@ export class PrimeViewLandingComponent {
     this.callbackName.set(inputEl?.value ?? '');
   }
 
+  sectionNavPillClass(sectionId: string): string {
+    const base =
+      'terraco-m3-chip inline-flex min-h-[36px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap';
+    if (this.activeSection() === sectionId) {
+      return `${base} terraco-m3-chip--active bg-brand font-medium text-ink-inverse shadow-chip`;
+    }
+    return `${base} bg-elevated font-normal text-ink-muted hover:bg-surface hover:text-ink`;
+  }
+
   scrollToSection(event: MouseEvent, sectionId: string): void {
     event.preventDefault();
+    this.activeSection.set(sectionId);
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
+
     const target = this.document.getElementById(sectionId);
     if (!target) {
       return;
     }
-    const reducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches;
-    target.scrollIntoView({
-      behavior: reducedMotion ? 'auto' : 'smooth',
-      block: 'start',
-    });
+
+    if (typeof performance !== 'undefined') {
+      this.ignoreScrollSpyUntil = performance.now() + 900;
+    }
+
+    const win = this.document.defaultView;
+    const reducedMotion = Boolean(
+      win?.matchMedia('(prefers-reduced-motion: reduce)').matches
+    );
+    const navHeight =
+      this.sectionNav()?.nativeElement.getBoundingClientRect().height ?? 50;
+    const stickyOffset = navHeight + 24;
+
+    const scrollToTarget = (smooth: boolean) => {
+      const freshTarget = this.document.getElementById(sectionId);
+      if (!freshTarget || !win) return;
+      const top =
+        freshTarget.getBoundingClientRect().top + win.scrollY - stickyOffset;
+      win.scrollTo({
+        top: Math.max(0, top),
+        behavior: smooth && !reducedMotion ? 'smooth' : 'auto',
+      });
+    };
+
+    scrollToTarget(true);
+
+    if (this.pendingScrollSettleTimer !== null) {
+      clearTimeout(this.pendingScrollSettleTimer);
+    }
+    // Re-align once after @defer hydration or smooth scroll if layout shifted.
+    this.pendingScrollSettleTimer = setTimeout(() => {
+      this.pendingScrollSettleTimer = null;
+      const freshTarget = this.document.getElementById(sectionId);
+      if (!freshTarget) return;
+      const currentTop = freshTarget.getBoundingClientRect().top;
+      if (Math.abs(currentTop - stickyOffset) > 28) {
+        scrollToTarget(false);
+      }
+    }, 520);
   }
 
   onCallbackPhoneInput(event: Event): void {

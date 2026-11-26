@@ -42,22 +42,26 @@ const WHATSAPP_INTENT_OPTIONS: readonly WhatsAppIntentOption[] = [
 ];
 
 interface TrustPillar {
+  readonly index: string;
   readonly title: string;
   readonly description: string;
 }
 
 const TRUST_PILLARS: readonly TrustPillar[] = [
   {
+    index: '01',
     title: 'Ficha completa antes do contato',
     description:
       'Metragem, faixa de preço e previsão de entrega ficam abertas na página para você avaliar sem cadastro.',
   },
   {
+    index: '02',
     title: 'Sem ligações nem spam',
     description:
       'A conversa começa no WhatsApp apenas com o assunto que você escolher, sem repassar seu número.',
   },
   {
+    index: '03',
     title: 'Online ou presencial em BH',
     description:
       'Compare plantas pelo celular ou agende visita direta ao decorado nos bairros de Belo Horizonte.',
@@ -71,75 +75,98 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
     <section
       id="como-funciona"
       aria-labelledby="trust-concierge-heading"
-      class="border-t border-border-subtle bg-surface/45 py-16 sm:py-20 lg:py-24 scroll-mt-24"
+      class="bg-ink py-12 text-ink-inverse sm:py-16 lg:py-24 scroll-mt-24"
     >
-      <div class="mx-auto max-w-6xl px-6 lg:px-8">
-        <h2
-          id="trust-concierge-heading"
-          class="max-w-2xl font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.12] tracking-[-0.025em] text-ink text-balance"
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div
+          class="grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-12 xl:gap-16"
         >
-          Atendimento claro em BH, no seu ritmo
-        </h2>
-
-        <div class="mt-8 grid gap-6 sm:mt-10 md:grid-cols-3">
-          @for (pillar of pillars; track pillar.title) {
-            <div
-              class="flex flex-col gap-2 rounded-lg border border-border-subtle bg-elevated/80 p-6"
+          <div class="lg:col-span-5">
+            <h2
+              id="trust-concierge-heading"
+              class="max-w-md font-display text-[clamp(1.75rem,3vw,2.25rem)] font-medium not-italic leading-[1.1] tracking-[-0.025em] text-ink-inverse text-balance"
             >
-              <h3
-                class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance"
-              >
-                {{ pillar.title }}
-              </h3>
-              <p class="text-[15px] font-normal leading-[1.55] text-ink-muted">
-                {{ pillar.description }}
-              </p>
-            </div>
-          }
-        </div>
+              Atendimento claro em BH, no seu ritmo
+            </h2>
 
-        <div class="terraco-plate mt-8 rounded-lg bg-elevated p-6 sm:p-8">
-          <div
-            class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
-          >
-            <div class="space-y-4">
-              <h3
-                class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink text-balance"
-              >
-                Quer falar direto sobre o seu plano?
-              </h3>
-
-              <div
-                role="group"
-                aria-label="Assunto para conversa no WhatsApp"
-                class="flex flex-wrap gap-2"
-              >
-                @for (option of intentOptions; track option.id) {
-                  @let active = selectedIntentId() === option.id;
-                  <button
-                    type="button"
-                    (click)="selectIntent(option.id)"
-                    [attr.aria-pressed]="active"
-                    [class]="
-                      active
-                        ? 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-ink bg-ink px-4 py-2 text-[14px] font-medium leading-[1.3] text-ink-inverse shadow-chip'
-                        : 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-border-subtle bg-canvas px-4 py-2 text-[14px] font-normal leading-[1.3] text-ink hover:border-border-strong hover:bg-surface'
-                    "
+            <ul
+              class="mt-6 divide-y divide-ink-inverse/15 border-t border-ink-inverse/15 sm:mt-8"
+            >
+              @for (pillar of pillars; track pillar.index) {
+                <li class="py-4 first:pt-5 last:pb-0 sm:py-5 sm:first:pt-6">
+                  <h3
+                    class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink-inverse text-balance"
                   >
-                    {{ option.label }}
-                  </button>
-                }
-              </div>
+                    {{ pillar.title }}
+                  </h3>
+                  <p
+                    class="mt-1.5 max-w-[46ch] text-[15px] font-normal leading-[1.55] text-ink-inverse/80 sm:text-[16px]"
+                  >
+                    {{ pillar.description }}
+                  </p>
+                </li>
+              }
+            </ul>
+          </div>
+
+          <div
+            class="border-t border-ink-inverse/15 pt-8 lg:col-span-7 lg:border-t-0 lg:border-l lg:border-ink-inverse/15 lg:pt-0 lg:pl-12 xl:pl-16"
+          >
+            <h3
+              class="font-display text-[clamp(1.375rem,2.4vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink-inverse text-balance"
+            >
+              Quer falar direto sobre o seu plano?
+            </h3>
+            <p
+              class="mt-2 max-w-[52ch] text-[15px] font-normal leading-[1.55] text-ink-inverse/80 sm:text-[16px]"
+            >
+              Escolha o assunto para abrir o WhatsApp com a mensagem pronta.
+            </p>
+
+            <div
+              role="group"
+              aria-label="Assunto para conversa no WhatsApp"
+              class="mt-5 flex flex-wrap gap-2.5 sm:mt-6"
+            >
+              @for (option of intentOptions; track option.id) {
+                @let active = selectedIntentId() === option.id;
+                <button
+                  type="button"
+                  (click)="selectIntent(option.id)"
+                  [attr.aria-pressed]="active"
+                  [class]="
+                    active
+                      ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-ink-inverse/75 bg-ink-inverse/16 px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:min-h-[44px] sm:text-[14px]'
+                      : 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:min-h-[44px] sm:text-[14px]'
+                  "
+                >
+                  @if (active) {
+                    <span
+                      aria-hidden="true"
+                      class="h-2 w-2 shrink-0 rounded-full bg-accent"
+                    ></span>
+                  }
+                  <span>{{ option.label }}</span>
+                </button>
+              }
             </div>
 
-            <a
-              [href]="whatsappHref()"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-pill bg-brand px-6 py-3 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
-            >
-              Falar no WhatsApp
-            </a>
+            <div class="mt-6 border-t border-ink-inverse/15 pt-5 sm:mt-7 sm:pt-6">
+              <p
+                class="max-w-[54ch] border-l-2 border-accent pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
+              >
+                “{{ selectedIntent().message }}”
+              </p>
+
+              <a
+                [href]="whatsappHref()"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="terraco-btn mt-5 inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+              >
+                Falar no WhatsApp
+              </a>
+            </div>
           </div>
         </div>
       </div>

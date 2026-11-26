@@ -96,8 +96,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 <span
                   [class]="
                     selectedCategory() === category.name
-                      ? 'text-xs text-ink-inverse/80 tabular-nums'
-                      : 'text-xs text-ink-muted tabular-nums'
+                      ? 'text-[13px] text-ink-inverse/80 tabular-nums'
+                      : 'text-[13px] text-ink-muted tabular-nums'
                   "
                 >
                   {{ category.count }}
@@ -190,7 +190,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                   type="button"
                   (click)="openActivePlanLightbox()"
                   aria-label="Ampliar planta em tela cheia"
-                  class="terraco-btn absolute right-3 bottom-3 inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3 py-1.5 text-[12px] font-medium text-ink shadow-xs backdrop-blur-xs hover:border-ink/35"
+                  class="terraco-btn absolute right-3 bottom-3 inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3 py-1.5 text-[13px] font-medium text-ink shadow-xs backdrop-blur-xs hover:border-ink/35"
                 >
                   <svg
                     aria-hidden="true"

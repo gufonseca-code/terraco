@@ -238,7 +238,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
 
         <!-- Resumo da simulação + ponte para o App Flutter -->
         <div
-          class="flex flex-col justify-between gap-5 rounded-md border border-border-subtle bg-canvas p-5 lg:col-span-5"
+          class="terraco-cobogo-band flex flex-col justify-between gap-5 rounded-md border border-border-subtle bg-canvas p-5 lg:col-span-5"
         >
           <div class="space-y-4">
             <div class="space-y-1">

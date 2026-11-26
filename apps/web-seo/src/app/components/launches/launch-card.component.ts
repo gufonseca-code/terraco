@@ -48,45 +48,52 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
     @let spec = thirdSpec();
     <article
       [attr.id]="cardId()"
-      class="terraco-reveal-delay terraco-plate flex h-full flex-col overflow-hidden rounded-xl bg-elevated scroll-mt-24"
+      class="terraco-reveal-delay group flex h-full flex-col scroll-mt-24"
     >
-      <div class="p-2.5 pb-0">
-        <div
-          [class.terraco-skeleton]="!imageLoaded()"
-          class="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-surface"
+      <div
+        [class.terraco-skeleton]="!imageLoaded()"
+        class="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-surface"
+      >
+        <a
+          [routerLink]="['/lancamentos', item.slug]"
+          class="relative z-[1] block h-full w-full overflow-hidden rounded-[20px]"
+          [attr.aria-label]="'Conhecer ' + item.nome"
         >
-          <a
-            [routerLink]="['/lancamentos', item.slug]"
-            class="relative z-[1] block h-full w-full overflow-hidden rounded-[20px]"
-            [attr.aria-label]="'Conhecer ' + item.nome"
-          >
-            <img
-              #coverImg
-              data-testid="lancamentos-cover-image"
-              [attr.data-slug]="item.slug"
-              [ngSrc]="item.imagem"
-              [alt]="item.imagemAlt"
-              [width]="item.imagemWidth"
-              [height]="item.imagemHeight"
-              [priority]="priority()"
-              [style.view-transition-name]="'launch-image-' + item.slug"
-              (load)="markImageLoaded()"
-              (error)="markImageLoaded()"
-              class="h-full w-full rounded-[20px] object-cover object-center"
-            />
-          </a>
+          <img
+            #coverImg
+            data-testid="lancamentos-cover-image"
+            [attr.data-slug]="item.slug"
+            [ngSrc]="item.imagem"
+            [alt]="item.imagemAlt"
+            [width]="item.imagemWidth"
+            [height]="item.imagemHeight"
+            [priority]="priority()"
+            [style.view-transition-name]="'launch-image-' + item.slug"
+            (load)="markImageLoaded()"
+            (error)="markImageLoaded()"
+            class="h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
+          />
+        </a>
 
-          <div class="absolute top-3 right-3 z-10">
-            <app-favorite-button [slug]="item.slug" [nome]="item.nome" />
-          </div>
+        <div class="absolute top-3 right-3 z-10">
+          <app-favorite-button [slug]="item.slug" [nome]="item.nome" />
         </div>
       </div>
 
-      <div class="flex flex-1 flex-col justify-between gap-4 px-5 py-4 sm:py-5">
-        <div class="space-y-1">
-          <p class="text-[13px] font-normal text-ink-muted">
-            {{ item.bairro }}, {{ item.cidade }}
-          </p>
+      <div class="mt-3.5 flex flex-1 flex-col gap-3">
+        <div class="space-y-0.5">
+          <div class="flex flex-wrap items-center gap-2">
+            <p class="text-[13px] font-normal text-ink-muted">
+              {{ item.bairro }}, {{ item.cidade }}
+            </p>
+            @if (item.badge) {
+              <span
+                class="inline-flex items-center rounded-pill bg-success-bg px-2.5 py-0.5 text-[12px] font-medium leading-[1.3] text-success-fg"
+              >
+                {{ item.badge }}
+              </span>
+            }
+          </div>
 
           @if (headingLevel() === 'h3') {
             <h3
@@ -127,57 +134,74 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
           }
         </div>
 
-        <a
-          [routerLink]="['/lancamentos', item.slug]"
-          class="terraco-btn terraco-btn-moss inline-flex min-h-[42px] w-full items-center justify-center rounded-pill bg-brand px-4 py-2 text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+        <dl
+          class="grid grid-cols-2 gap-x-5 gap-y-2.5 border-t border-border-subtle pt-3"
         >
-          Conhecer lançamento
-        </a>
-      </div>
-
-      <dl class="mx-2.5 mb-2.5 grid grid-cols-2 overflow-hidden rounded-[18px] bg-surface/75">
-        <div class="space-y-0.5 border-r border-border-subtle/70 px-4 py-3">
-          <dt class="text-[13px] font-normal text-ink-muted">Dormitórios</dt>
-          <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
-            {{ item.quartos }}
-          </dd>
-        </div>
-        <div class="space-y-0.5 px-4 py-3">
-          <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
-          <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
-            {{ item.metragem }}
-          </dd>
-        </div>
-        @let entrega = item.entrega?.trim();
-        <div
-          [class]="
-            entrega
-              ? 'space-y-0.5 border-t border-r border-border-subtle/70 px-4 py-3'
-              : 'col-span-2 space-y-0.5 border-t border-border-subtle/70 px-4 py-3'
-          "
-        >
-          <dt class="text-[13px] font-normal text-ink-muted">
-            {{ spec.label }}
-          </dt>
-          <dd
-            [class]="
-              spec.tabular
-                ? 'text-[14px] font-normal leading-[1.4] text-ink tabular-nums'
-                : 'text-[14px] font-normal leading-[1.4] text-ink'
-            "
-          >
-            {{ spec.value }}
-          </dd>
-        </div>
-        @if (entrega) {
-          <div class="space-y-0.5 border-t border-border-subtle/70 px-4 py-3">
-            <dt class="text-[13px] font-normal text-ink-muted">Entrega</dt>
-            <dd class="text-[14px] font-normal leading-[1.4] text-ink tabular-nums">
-              {{ entrega }}
+          <div class="space-y-0.5">
+            <dt class="text-[13px] font-normal text-ink-muted">Dormitórios</dt>
+            <dd
+              class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
+            >
+              {{ item.quartos }}
             </dd>
           </div>
-        }
-      </dl>
+          <div class="space-y-0.5">
+            <dt class="text-[13px] font-normal text-ink-muted">Metragem</dt>
+            <dd
+              class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
+            >
+              {{ item.metragem }}
+            </dd>
+          </div>
+          @let entrega = item.entrega?.trim();
+          <div [class]="entrega ? 'space-y-0.5' : 'col-span-2 space-y-0.5'">
+            <dt class="text-[13px] font-normal text-ink-muted">
+              {{ spec.label }}
+            </dt>
+            <dd
+              [class]="
+                spec.tabular
+                  ? 'text-[14px] font-medium leading-[1.4] text-ink tabular-nums'
+                  : 'text-[14px] font-medium leading-[1.4] text-ink'
+              "
+            >
+              {{ spec.value }}
+            </dd>
+          </div>
+          @if (entrega) {
+            <div class="space-y-0.5">
+              <dt class="text-[13px] font-normal text-ink-muted">Entrega</dt>
+              <dd
+                class="text-[14px] font-medium leading-[1.4] text-ink tabular-nums"
+              >
+                {{ entrega }}
+              </dd>
+            </div>
+          }
+        </dl>
+
+        <div class="mt-auto pt-1">
+          <a
+            [routerLink]="['/lancamentos', item.slug]"
+            class="terraco-link-underline inline-flex min-h-[40px] w-fit items-center gap-1.5 text-[13px] font-medium leading-[1.35] text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
+          >
+            <span>Conhecer lançamento</span>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+            >
+              <path d="M4.5 10h11" />
+              <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+            </svg>
+          </a>
+        </div>
+      </div>
     </article>
   `,
 })

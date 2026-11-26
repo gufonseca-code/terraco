@@ -4,30 +4,53 @@
   --font-fraunces: "Fraunces", Georgia, serif;
   --font-plus-jakarta: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
 
-  /* Terraço — Paleta Ipê & Grafite (Creme Papel #F8F5EA global) */
-  --color-bg-canvas: #F8F5EA;
-  --color-bg-surface: #F1E9D8;
-  --color-bg-elevated: #FFFDF9;
+  /* Terraço — Paleta Bairro Arborizado & Warm Tech (branding/tokens.css) */
+  --color-bg-canvas: #FAF8F4;
+  --color-bg-surface: #F3EFE6;
+  --color-bg-elevated: #FFFFFF;
 
-  --color-text-primary: #1E1D1B;
-  --color-text-secondary: #57534E;
-  --color-text-inverse: #F8F5EA;
+  --color-text-primary: #1C1B19;
+  --color-text-secondary: #5C5852;
+  --color-text-inverse: #FAF8F4;
 
-  --color-brand-primary: #2E5B46;
-  --color-brand-primary-hover: #234736;
-  --color-brand-accent: #EEB506;
-  --color-brand-highlight: #ED7467;
+  --color-brand-primary: #1F6F50;
+  --color-brand-primary-hover: #17573E;
+  --color-brand-accent: #F7C957;
+  --color-brand-highlight: #F06A36;
 
-  --color-border-subtle: #E4DCCB;
-  --color-border-strong: #CFC5B2;
+  /* Ação principal Terracota Solar com contraste AA para texto branco */
+  --color-action-primary: #C84B1B;
+  --color-action-primary-hover: #AD3E14;
+  --color-action-primary-soft: #FDECE5;
+
+  --color-border-subtle: rgba(28, 27, 25, 0.10);
+  --color-border-strong: rgba(28, 27, 25, 0.22);
 
   /* Estados Semânticos */
-  --color-success-fg: #2E5B46;
-  --color-success-bg: #E4F0EA;
+  --color-success-fg: #1F6F50;
+  --color-success-bg: #E5F2EC;
   --color-warning-fg: #8A6500;
-  --color-warning-bg: #FEF3C7;
+  --color-warning-bg: #FFF6DC;
   --color-error-fg: #B9382E;
   --color-error-bg: #FDE8E6;
+
+  /* Tipografia (Escala e Métricas) */
+  --text-display-xl: 3rem;      /* 48px */
+  --text-display-lg: 2.25rem;   /* 36px */
+  --text-heading-md: 1.5rem;    /* 24px */
+  --text-body-md: 1rem;         /* 16px */
+  --text-ui-label: 0.875rem;    /* 14px */
+  --text-ui-meta: 0.8125rem;    /* 13px */
+
+  --leading-display-xl: 1.06;
+  --leading-display-lg: 1.12;
+  --leading-heading-md: 1.2;
+  --leading-body-md: 1.55;
+  --leading-ui-label: 1.35;
+  --leading-ui-meta: 1.4;
+
+  --tracking-display-xl: -0.03em;
+  --tracking-display-lg: -0.025em;
 
   /* Raios de Borda (Escala M3 Expressive) */
   --radius-xs: 4px;
@@ -39,6 +62,15 @@
   --radius-xl: 28px;
   --radius-pill: 9999px;
 
+  /* Espaçamento */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
   /* Sombras Quentes (nunca cinza frio ou preto puro) */
   --shadow-chip: 0 2px 8px -2px rgba(30, 29, 27, 0.08);
   --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.07);
@@ -48,7 +80,11 @@
     0 24px 56px -14px rgba(30, 29, 27, 0.14),
     0 4px 12px -2px rgba(30, 29, 27, 0.05);
 
-  /* Curvas e tempos de microinteração (M3 Expressive Spatial & Effects) */
+  /* Durações & Curvas de Microinteração (M3 Expressive Spatial & Effects) */
+  --duration-ui: 160ms;
+  --duration-spring-fast: 320ms;
+  --duration-spring-default: 420ms;
+
   --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
   --resize-dur: 300ms;
@@ -60,33 +96,13 @@
 @supports (animation-timing-function: linear(0, 1)) {
   :root {
     --ease-spring-fast: linear(
-      0,
-      0.012 1.2%,
-      0.05 2.5%,
-      0.193 5.4%,
-      0.728 14.5%,
-      0.946 19.6%,
-      1.031 23.3%,
-      1.062 27.1%,
-      1.057 31.7%,
-      1.012 43.8%,
-      0.996 54.6%,
-      1.001 74%,
-      1
+      0, 0.009, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938 17.6%, 1.017 20.6%,
+      1.049 23.8%, 1.057 27.6%, 1.044 33.4%, 1.008 45.2%, 0.996 56.1%, 1
     );
     --ease-spring-default: linear(
-      0,
-      0.008 1%,
-      0.036 2.2%,
-      0.145 4.8%,
-      0.631 13.5%,
-      0.896 19.3%,
-      1.028 24.4%,
-      1.059 28.9%,
-      1.044 35.1%,
-      1.004 49%,
-      0.997 62%,
-      1
+      0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%,
+      0.937 38.1%, 0.968 41.8%, 0.991 45.7%, 1.006 50.1%, 1.015 55%,
+      1.017 63.9%, 1.001 83.4%, 1
     );
   }
 }
@@ -104,6 +120,9 @@
   --color-brand-hover: var(--color-brand-primary-hover);
   --color-accent: var(--color-brand-accent);
   --color-highlight: var(--color-brand-highlight);
+  --color-action: var(--color-action-primary);
+  --color-action-hover: var(--color-action-primary-hover);
+  --color-action-soft: var(--color-action-primary-soft);
   --color-border: var(--color-border-subtle);
   --color-border-subtle: var(--color-border-subtle);
   --color-border-strong: var(--color-border-strong);
@@ -150,6 +169,7 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
+  font-variation-settings: "SOFT" 100, "WONK" 1;
   font-weight: 500;
   font-style: normal;
   text-wrap: balance;
@@ -165,10 +185,32 @@ h4 {
   font-variation-settings: "SOFT" 100, "WONK" 1;
 }
 
+/* Textura arquitetônica sutil de cobogó brasileiro (geometria leve em superfícies) */
+.terraco-cobogo-surface {
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(243, 239, 230, 0.65) 0%,
+      rgba(243, 239, 230, 0.2) 45%,
+      rgba(243, 239, 230, 0.7) 100%
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%231C1B19' stroke-width='1' stroke-opacity='0.07'%3E%3Crect x='4' y='4' width='48' height='48' rx='10'/%3E%3Ccircle cx='28' cy='28' r='11'/%3E%3Cpath d='M28 4v13M28 39v13M4 28h13M39 28h13'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 100% 100%, 56px 56px;
+}
+
+.terraco-cobogo-band {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%231F6F50' stroke-width='1' stroke-opacity='0.075'%3E%3Crect x='5' y='5' width='54' height='54' rx='12'/%3E%3Ccircle cx='32' cy='32' r='13'/%3E%3Cpath d='M32 5v14M32 45v14M5 32h14M45 32h14'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 64px 64px;
+}
+
 /* Anel de foco consistente e imediato */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-brand-primary);
+  outline: 2px solid var(--color-text-primary);
   outline-offset: 2px;
+}
+
+.bg-ink :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline-color: var(--color-brand-accent);
 }
 
 /* Link de salto para navegação por teclado */
@@ -232,6 +274,62 @@ h4 {
   box-shadow: none;
 }
 
+/* M3 Expressive: Tactile Shape-Morphing Controls in Integrated Navbar */
+.terraco-nav-morph {
+  border-radius: var(--radius-morph-pill);
+  transition:
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
+    transform 180ms var(--ease-enter);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-nav-morph:hover {
+    border-radius: var(--radius-m3-md);
+  }
+}
+
+.terraco-nav-morph:active,
+.terraco-nav-morph[aria-current="page"],
+.terraco-nav-morph[aria-expanded="true"] {
+  border-radius: var(--radius-m3-md);
+}
+
+.terraco-nav-morph:active {
+  transform: scale(0.97);
+}
+
+/* M3 Expressive: Tactile Mobile Menu Trigger (pill -> 14px squircle) */
+.terraco-nav-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-morph-pill);
+  border: 1px solid transparent;
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  transition:
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    transform 180ms var(--ease-enter);
+}
+
+.terraco-nav-menu-trigger[aria-expanded="true"] {
+  border-radius: 14px;
+  border-color: var(--color-border-subtle);
+}
+
+.terraco-nav-menu-trigger:active {
+  border-radius: 14px;
+  transform: scale(0.94);
+}
+
 /* M3 Expressive: Adaptive Top Bar Shell (docked morph when mobile sheet opens) */
 .terraco-m3-topbar {
   border-radius: 28px;
@@ -252,11 +350,11 @@ h4 {
 /* M3 Expressive: Desktop Tonal Navigation Rail */
 .terraco-m3-nav-rail {
   align-items: center;
-  gap: 2px;
-  padding: 4px;
+  gap: 4px;
+  padding: 3px;
   border-radius: var(--radius-pill);
-  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 85%, transparent);
-  background-color: color-mix(in srgb, var(--color-bg-surface) 75%, transparent);
+  border: 1px solid transparent;
+  background-color: transparent;
 }
 
 .terraco-m3-rail-item {
@@ -275,10 +373,10 @@ h4 {
   line-height: 1.35;
   white-space: nowrap;
   transition:
-    border-radius 300ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 180ms var(--ease-enter);
 }
@@ -297,27 +395,25 @@ h4 {
 
 .terraco-m3-rail-item[aria-expanded="true"] {
   border-radius: var(--radius-m3-md);
-  border-color: color-mix(in srgb, var(--color-brand-primary) 30%, transparent);
-  background-color: color-mix(in srgb, var(--color-brand-primary) 10%, var(--color-bg-elevated));
-  color: var(--color-brand-primary);
+  border-color: var(--color-border-strong);
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-primary);
   font-weight: 500;
 }
 
 .terraco-m3-rail-item[aria-current="page"] {
   border-radius: 20px;
-  border-color: var(--color-brand-primary);
-  background-color: var(--color-brand-primary);
-  color: var(--color-text-inverse);
+  border-color: var(--color-border-subtle);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-primary);
   font-weight: 500;
-  box-shadow: var(--shadow-chip);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .terraco-m3-rail-item[aria-current="page"]:hover {
-    border-color: var(--color-brand-primary-hover);
-    background-color: var(--color-brand-primary-hover);
-    color: var(--color-text-inverse);
-    box-shadow: var(--shadow-moss);
+    border-color: var(--color-border-strong);
+    background-color: var(--color-bg-surface);
+    color: var(--color-text-primary);
   }
 }
 
@@ -365,11 +461,13 @@ h4 {
   transition: transform 240ms var(--ease-enter);
 }
 
-.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--top {
+.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--top,
+.terraco-nav-menu-trigger[aria-expanded="true"] .terraco-m3-burger-line--top {
   transform: translateY(4px) rotate(45deg);
 }
 
-.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--bottom {
+.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--bottom,
+.terraco-nav-menu-trigger[aria-expanded="true"] .terraco-m3-burger-line--bottom {
   transform: translateY(-4px) rotate(-45deg);
 }
 
@@ -420,19 +518,19 @@ h4 {
   color: var(--color-text-primary);
   border-radius: 20px;
   transition:
-    border-radius 300ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 180ms var(--ease-enter);
 }
 
 .terraco-m3-nav-item[aria-current="page"] {
-  border-color: var(--color-brand-primary);
-  background-color: var(--color-brand-primary);
-  color: var(--color-text-inverse);
-  box-shadow: var(--shadow-chip);
+  border-color: var(--color-border-strong);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  font-weight: 500;
 }
 
 .terraco-m3-nav-item:active {
@@ -446,25 +544,25 @@ h4 {
   justify-content: center;
   gap: 0.375rem;
   min-height: 40px;
-  border: 1px solid color-mix(in srgb, var(--color-brand-primary) 22%, transparent);
-  background-color: var(--color-success-bg);
-  color: var(--color-brand-primary);
+  border: 1px solid color-mix(in srgb, var(--color-action-primary-hover) 28%, transparent);
+  background-color: var(--color-action-primary-soft);
+  color: var(--color-action-primary-hover);
   border-radius: 20px;
   transition:
-    border-radius 300ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 180ms var(--ease-enter);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .terraco-m3-nav-action:hover {
-    border-color: var(--color-brand-primary);
-    background-color: var(--color-brand-primary);
-    color: var(--color-text-inverse);
-    box-shadow: var(--shadow-moss);
+    border-color: var(--color-action-primary);
+    background-color: var(--color-action-primary);
+    color: #ffffff;
+    box-shadow: var(--shadow-chip);
   }
 }
 
@@ -478,10 +576,10 @@ h4 {
 .terraco-m3-icon-btn {
   border-radius: 22px;
   transition:
-    border-radius 300ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 180ms var(--ease-enter);
 }
@@ -596,14 +694,52 @@ h4 {
   }
 }
 
-/* M3 Expressive: Filter / Intent Chip com Shape Morphing (22px -> 12px) */
+/* M3 Expressive: Card de continuidade de jornada (próximo destino sem beco sem saída) */
+.terraco-journey-card {
+  border-radius: 22px;
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-radius 280ms var(--ease-spring-fast),
+    border-color 180ms var(--ease-ui),
+    box-shadow 220ms var(--ease-ui),
+    transform 220ms var(--ease-enter);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-journey-card:hover {
+    border-color: rgba(46, 91, 70, 0.36);
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+  }
+}
+
+.terraco-journey-card:active {
+  border-radius: var(--radius-md);
+  transform: scale(0.99);
+}
+
+/* Ocultar scrollbar visual mantendo rolagem horizontal tátil em trilhas mobile */
+.terraco-no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.terraco-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* M3 Expressive: Filter / Intent Chip com Shape Morphing (22px -> 12px)
+   Nota: usa --radius-morph-pill (22px) em vez de 9999px porque interpolar 9999px -> 12px
+   com spring overshoot (1.057) gera valores negativos (0px = quadrado) e comprime a
+   transição visual nos últimos frames. Em chips de 36–44px, 22px já é pill perfeito. */
 .terraco-m3-chip {
   border-radius: var(--radius-morph-pill);
   transition:
-    border-radius 320ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 220ms var(--ease-enter);
 }
@@ -679,10 +815,10 @@ h4 {
 .terraco-m3-icon-toggle {
   border-radius: var(--radius-morph-pill);
   transition:
-    border-radius 340ms var(--ease-spring-fast),
-    background-color 160ms var(--ease-ui),
-    border-color 160ms var(--ease-ui),
-    color 160ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
     transform 220ms var(--ease-enter);
 }
@@ -894,12 +1030,12 @@ h4 {
 
 .terraco-toolbar-enter {
   animation:
-    terraco-toolbar-fade-in 160ms var(--ease-ui) both,
-    terraco-toolbar-slide-in 380ms var(--ease-spring-default) both;
+    terraco-toolbar-fade-in var(--duration-ui) var(--ease-ui) both,
+    terraco-toolbar-slide-in var(--duration-spring-default) var(--ease-spring-default) both;
 }
 
 .terraco-toolbar-leave {
-  animation: terraco-toolbar-out 160ms var(--ease-ui) both;
+  animation: terraco-toolbar-out var(--duration-ui) var(--ease-ui) both;
 }
 
 /* Card flutuante (/lancamentos/[slug]) com destaque interno e profundidade quente */
@@ -1427,12 +1563,15 @@ h4 {
   .terraco-card-media-img,
   .terraco-card-media-scrim,
   .terraco-card-media-hint,
+  .terraco-journey-card,
   .terraco-m3-chip,
   .terraco-m3-group-item,
   .terraco-m3-icon-toggle,
   .terraco-m3-select-card,
   .terraco-m3-search,
   .terraco-m3-topbar,
+  .terraco-nav-morph,
+  .terraco-nav-menu-trigger,
   .terraco-m3-rail-item,
   .terraco-m3-menu-toggle,
   .terraco-m3-burger-line,

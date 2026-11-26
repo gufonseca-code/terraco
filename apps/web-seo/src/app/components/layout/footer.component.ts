@@ -10,10 +10,10 @@ import { TerracoLogoComponent } from './terraco-logo.component';
   template: `
     <footer
       id="contato"
-      class="mt-auto border-t border-border-subtle bg-surface scroll-mt-24"
+      class="terraco-cobogo-surface mt-auto border-t border-border-subtle bg-surface scroll-mt-24"
     >
       <div
-        class="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-12 sm:py-14 lg:px-8 md:flex-row md:items-end md:justify-between"
+        class="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-14 lg:px-8 md:flex-row md:items-end md:justify-between"
       >
         <div class="max-w-md space-y-3">
           <app-terraco-logo [animate]="false" />
@@ -34,7 +34,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
             [href]="whatsappHref"
             target="_blank"
             rel="noopener noreferrer"
-            class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] items-center justify-center rounded-pill bg-brand px-6 py-3 text-[15px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+            class="terraco-btn inline-flex min-h-[44px] items-center justify-center rounded-pill bg-action px-6 py-3 text-[15px] font-medium leading-[1.35] text-white hover:bg-action-hover"
           >
             Falar no WhatsApp
           </a>
@@ -43,7 +43,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
 
       <div class="border-t border-border-subtle/80">
         <div
-          class="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-4 text-sm font-normal text-ink-muted sm:flex-row sm:items-center sm:justify-between lg:px-8"
+          class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 text-sm font-normal text-ink-muted sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8"
         >
           <nav
             aria-label="Guias de bairros em BH"

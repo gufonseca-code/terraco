@@ -1,71 +1,56 @@
 :root {
-  /* Terraço — Paleta Ipê & Grafite */
-  --color-bg-canvas: #F8F5EA;
-  --color-bg-surface: #F1E9D8;
-  --color-bg-elevated: #FFFDF9;
+  /* Paleta base — Bairro Arborizado & Warm Tech */
+  --terraco-canvas: #FAF8F4;
+  --terraco-surface: #F3EFE6;
+  --terraco-elevated: #FFFFFF;
+  --terraco-ink: #1C1B19;
+  --terraco-ink-muted: #5C5852;
+  --terraco-ink-inverse: #FAF8F4;
 
-  --color-text-primary: #1E1D1B;
-  --color-text-secondary: #57534E;
-  --color-text-inverse: #F8F5EA;
+  /* Ações e semântica */
+  --terraco-action-primary: #F06A36; /* Primary action (terracota/coral vibrante) */
+  --terraco-action-primary-hover: #D95724;
+  --terraco-action-primary-soft: #FDECE5;
 
-  --color-brand-primary: #2E5B46;
-  --color-brand-primary-hover: #234736;
-  --color-brand-accent: #EEB506;
-  --color-brand-highlight: #ED7467;
+  --terraco-leaf: #1F6F50; /* Urban Leaf Green */
+  --terraco-leaf-hover: #17573E;
+  --terraco-leaf-soft: #E5F2EC;
 
-  --color-border-subtle: #E4DCCB;
-  --color-border-strong: #CFC5B2;
+  --terraco-solar: #F7C957; /* Solar accent */
+  --terraco-solar-soft: #FFF6DC;
 
-  /* Estados Semânticos */
-  --color-success-fg: #2E5B46;
-  --color-success-bg: #E4F0EA;
-  --color-warning-fg: #8A6500;
-  --color-warning-bg: #FEF3C7;
-  --color-error-fg: #B9382E;
-  --color-error-bg: #FDE8E6;
+  /* Bordas e divisórias sutis */
+  --terraco-border-subtle: rgba(28, 27, 25, 0.10);
+  --terraco-border-strong: rgba(28, 27, 25, 0.22);
 
   /* Tipografia */
   --font-display: 'Fraunces', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
-  --text-display-xl: 3rem;      /* 48px */
-  --text-display-lg: 2.25rem;   /* 36px */
-  --text-heading-md: 1.5rem;    /* 24px */
-  --text-body-md: 1rem;         /* 16px */
-  --text-ui-label: 0.875rem;    /* 14px */
-  --text-ui-meta: 0.8125rem;    /* 13px */
-
-  /* Raios de Borda (Escala M3 Expressive) */
-  --radius-xs: 4px;
+  /* Raios (menos "caixa pesada", mais orgânico e preciso) */
   --radius-sm: 8px;
-  --radius-m3-md: 12px;
-  --radius-md: 16px;
-  --radius-morph-pill: 22px;
-  --radius-lg: 24px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
   --radius-xl: 28px;
   --radius-pill: 9999px;
 
-  /* Espaçamento */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
-  --space-2xl: 48px;
-  --space-3xl: 64px;
+  /* Sombras suaves e quentes */
+  --shadow-chip: 0 2px 8px rgba(28, 27, 25, 0.06);
+  --shadow-card: 0 8px 24px rgba(28, 27, 25, 0.05);
+  --shadow-floating: 0 16px 40px rgba(28, 27, 25, 0.08);
 
-  /* Sombras Quentes */
-  --shadow-chip: 0 2px 8px -2px rgba(30, 29, 27, 0.08);
-  --shadow-card: 0 8px 24px -6px rgba(30, 29, 27, 0.07);
-  --shadow-card-hover: 0 14px 32px -10px rgba(30, 29, 27, 0.11);
-  --shadow-moss: 0 10px 24px -8px rgba(46, 91, 70, 0.30);
-  --shadow-floating:
-    0 24px 56px -14px rgba(30, 29, 27, 0.14),
-    0 4px 12px -2px rgba(30, 29, 27, 0.05);
+  /* Movimento (M3 Expressive) */
+  --ease-expressive: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+}
 
-  /* Curvas de Microinteração (M3 Expressive) */
-  --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-spring-fast: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-spring-default: cubic-bezier(0.22, 1, 0.36, 1);
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
+  }
 }

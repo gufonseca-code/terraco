@@ -38,6 +38,14 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'bairros',
+    loadComponent: () =>
+      import('./pages/bairros.page').then((m) => m.BairrosPageComponent),
+    resolve: {
+      lancamentos: lancamentosListResolver,
+    },
+  },
+  {
     path: 'bairros/:slug',
     loadComponent: () =>
       import('./pages/bairro-detail.page').then(

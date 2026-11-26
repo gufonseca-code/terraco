@@ -19,6 +19,11 @@ import {
 } from '../components/launches';
 import { FooterComponent, NavbarComponent } from '../components/layout';
 import {
+  type JourneyDestination,
+  NextJourneyComponent,
+} from '../components/shared/next-journey.component';
+import { SectionHandoffComponent } from '../components/shared/section-handoff.component';
+import {
   BAIRROS_BH,
   type BairroGuide,
   type Lancamento,
@@ -137,6 +142,8 @@ function buildBairroJsonLd(
     NotFoundPageComponent,
     LaunchCardComponent,
     WhatsappAlertFormComponent,
+    NextJourneyComponent,
+    SectionHandoffComponent,
     RouterLink,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -151,7 +158,7 @@ function buildBairroJsonLd(
           class="flex min-h-dvh flex-1 flex-col bg-canvas"
         >
           <article
-            class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
+            class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16"
           >
             <header class="terraco-reveal max-w-3xl space-y-4">
               <nav aria-label="Navegação estrutural">
@@ -197,6 +204,13 @@ function buildBairroJsonLd(
               >
                 {{ current.resumo }}
               </p>
+
+              <div class="pt-1">
+                <app-section-handoff
+                  label="Ir para lançamentos no bairro"
+                  targetId="bairro-lancamentos"
+                />
+              </div>
             </header>
 
             <section
@@ -250,8 +264,9 @@ function buildBairroJsonLd(
             </section>
 
             <section
+              id="bairro-lancamentos"
               aria-labelledby="bairro-lancamentos-heading"
-              class="mt-14 sm:mt-16"
+              class="mt-14 sm:mt-16 scroll-mt-24"
             >
               <div class="max-w-2xl space-y-2">
                 <h2
@@ -271,7 +286,7 @@ function buildBairroJsonLd(
 
               @if (matchingLaunches().length > 0) {
                 <div
-                  class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+                  class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6"
                 >
                   @for (launch of matchingLaunches(); track launch.slug) {
                     <app-launch-card
@@ -292,7 +307,7 @@ function buildBairroJsonLd(
                       </h3>
 
                       <div
-                        class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+                        class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6"
                       >
                         @for (launch of nearbyLaunches(); track launch.slug) {
                           <app-launch-card
@@ -335,11 +350,19 @@ function buildBairroJsonLd(
                   </div>
                 </div>
               }
+              <div class="mt-6">
+                <app-section-handoff
+                  prompt="Ainda tem dúvidas sobre a região?"
+                  [label]="'Ler perguntas frequentes sobre ' + current.nome"
+                  targetId="bairro-faq"
+                />
+              </div>
             </section>
 
             <section
+              id="bairro-faq"
               aria-labelledby="bairro-faq-heading"
-              class="mt-14 max-w-3xl sm:mt-16"
+              class="mt-14 max-w-3xl sm:mt-16 scroll-mt-24"
             >
               <h2
                 id="bairro-faq-heading"
@@ -441,6 +464,11 @@ function buildBairroJsonLd(
               </div>
             </section>
           </article>
+
+          <app-next-journey
+            heading="Continue sua pesquisa em BH"
+            [destinations]="nextDestinations()"
+          />
         </main>
 
         <app-footer />
@@ -499,6 +527,38 @@ export class BairroDetailPageComponent {
   readonly otherBairros = computed<BairroGuide[]>(() => {
     const current = this.bairro();
     return BAIRROS_BH.filter((item) => item.slug !== current?.slug);
+  });
+
+  readonly nextDestinations = computed<readonly JourneyDestination[]>(() => {
+    const nextBairro = this.otherBairros()[0];
+    const list: JourneyDestination[] = [
+      {
+        title: 'Catálogo completo em BH',
+        description:
+          'Compare todos os lançamentos com plantas, metragens e condições abertas.',
+        actionLabel: 'Ver lançamentos',
+        route: '/lancamentos',
+      },
+      {
+        title: 'Descobrir pelo seu momento',
+        description:
+          'Combine objetivo, tamanho e região de BH em poucos toques, sem cadastro.',
+        actionLabel: 'Usar descoberta guiada',
+        route: '/',
+        fragment: 'descoberta-guiada',
+      },
+    ];
+
+    if (nextBairro) {
+      list.push({
+        title: `Guia do bairro ${nextBairro.nome}`,
+        description: nextBairro.resumo,
+        actionLabel: `Explorar ${nextBairro.nome}`,
+        route: ['/bairros', nextBairro.slug],
+      });
+    }
+
+    return list;
   });
 
   readonly expandedFaqIndex = linkedSignal<string, number | null>({
