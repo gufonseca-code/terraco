@@ -6,6 +6,7 @@ import {
   ElementRef,
   PLATFORM_ID,
   afterNextRender,
+  afterRenderEffect,
   computed,
   effect,
   inject,
@@ -243,27 +244,29 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
       }
     }
 
-    .m3e-floating-fab {
+    .m3e-cta-pill {
       border-radius: 16px;
-      transform: translateY(16px) scale(0.86);
-      opacity: 0;
-      box-shadow: var(--shadow-float, var(--shadow-floating));
       transition:
-        opacity 220ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        transform 460ms cubic-bezier(0.34, 1.56, 0.64, 1),
-        border-radius 420ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        border-radius 280ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
         background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        max-width 360ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        opacity 220ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        transform 280ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        box-shadow 280ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
     }
 
-    .m3e-floating-fab[data-visible='true'] {
+    .m3e-cta-pill[data-state='docked']:hover,
+    .m3e-cta-pill[data-state='docked']:active {
+      border-radius: 12px;
+    }
+
+    .m3e-cta-pill[data-state='floating'],
+    .m3e-cta-pill[data-state='retracted'] {
       border-radius: 9999px;
-      transform: translateY(0) scale(1);
-      opacity: 1;
+      box-shadow: var(--shadow-float, var(--shadow-floating));
     }
 
-    .m3e-floating-fab[data-visible='true']:hover,
-    .m3e-floating-fab[data-visible='true']:active {
+    .m3e-cta-pill[data-state='floating']:hover,
+    .m3e-cta-pill[data-state='floating']:active {
       border-radius: 16px;
     }
 
@@ -276,7 +279,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
       .m3e-tab-chip,
       .m3e-tonal-btn,
       .m3e-action-pill,
-      .m3e-floating-fab {
+      .m3e-cta-pill {
         transition: none;
       }
 
@@ -332,10 +335,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           </div>
 
           <div
-            class="terraco-reveal-delay grid gap-5 sm:gap-7 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
+            class="grid gap-5 sm:gap-7 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
           >
             <!-- Mosaico fotográfico protagonista -->
-            <div class="lg:col-span-7">
+            <div class="terraco-reveal-delay lg:col-span-7">
               <div class="grid gap-3 lg:grid-cols-12">
                 <div
                   [class.terraco-skeleton]="!imageLoaded()"
@@ -490,16 +493,59 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </dl>
 
               <div class="space-y-2.5">
-                <a
-                  #heroCtaEl
-                  [href]="contextualWhatsappHref()"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-testid="hero-whatsapp-cta"
-                  class="m3e-action-pill flex min-h-[48px] w-full items-center justify-center bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
-                >
-                  Falar no WhatsApp
-                </a>
+                @let ctaState = ctaPillState();
+                <div #heroCtaSlot class="min-h-[52px]">
+                  <a
+                    #ctaPillEl
+                    [href]="contextualWhatsappHref()"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="whatsapp-cta-pill"
+                    [attr.data-state]="ctaState"
+                    [attr.aria-hidden]="ctaState === 'retracted' ? 'true' : null"
+                    [attr.tabindex]="ctaState === 'retracted' ? -1 : null"
+                    [attr.aria-label]="
+                      'Abrir WhatsApp: ' +
+                      floatingPillLabel() +
+                      ' — ' +
+                      item().nome
+                    "
+                    [class]="
+                      ctaState === 'docked'
+                        ? 'm3e-cta-pill relative flex min-h-[48px] w-full items-center justify-center gap-2.5 bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover'
+                        : ctaState === 'floating'
+                          ? 'm3e-cta-pill fixed right-4 bottom-5 z-40 inline-flex min-h-[48px] w-auto max-w-[calc(100vw-2rem)] translate-y-0 scale-100 items-center justify-center gap-2.5 bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.3] text-white opacity-100 hover:bg-action-hover md:right-7 md:bottom-7'
+                          : 'm3e-cta-pill pointer-events-none fixed right-4 bottom-5 z-40 inline-flex min-h-[48px] w-auto max-w-[calc(100vw-2rem)] translate-y-3 scale-90 items-center justify-center gap-2.5 bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.3] text-white opacity-0 md:right-7 md:bottom-7'
+                    "
+                  >
+                    @if (ctaState !== 'docked') {
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-[18px] w-[18px] shrink-0"
+                      >
+                        <path
+                          d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+                        />
+                      </svg>
+                    }
+                    <span class="min-w-0 overflow-hidden">
+                      @for (label of [floatingPillLabel()]; track label) {
+                        <span
+                          data-testid="whatsapp-cta-label"
+                          class="m3e-fab-label block truncate"
+                        >
+                          {{ label }}
+                        </span>
+                      }
+                    </span>
+                  </a>
+                </div>
 
                 <div class="hidden sm:block">
                   @if (callbackSubmitted()) {
@@ -1275,51 +1321,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         [destinations]="nextDestinations()"
       />
 
-      <!-- M3E Extended FAB flutuante dinâmico (Mobile e Desktop) -->
-      @let showFloatingFab = isPastFold() && !closingBandVisible();
-      <a
-        [href]="contextualWhatsappHref()"
-        target="_blank"
-        rel="noopener noreferrer"
-        data-testid="floating-whatsapp-fab"
-        [attr.data-visible]="showFloatingFab"
-        [attr.aria-hidden]="!showFloatingFab"
-        [attr.tabindex]="showFloatingFab ? null : -1"
-        [attr.aria-label]="
-          'Abrir WhatsApp: ' + floatingPillLabel() + ' — ' + item().nome
-        "
-        [class]="
-          showFloatingFab
-            ? 'm3e-floating-fab fixed right-4 bottom-5 z-40 inline-flex min-h-[48px] max-w-[calc(100vw-2rem)] items-center gap-2.5 bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.3] text-white hover:bg-action-hover md:right-7 md:bottom-7'
-            : 'm3e-floating-fab pointer-events-none fixed right-4 bottom-5 z-40 inline-flex min-h-[48px] max-w-[calc(100vw-2rem)] items-center gap-2.5 bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.3] text-white md:right-7 md:bottom-7'
-        "
-      >
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="h-[18px] w-[18px] shrink-0"
-        >
-          <path
-            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-          />
-        </svg>
-        <span class="min-w-0 overflow-hidden">
-          @for (label of [floatingPillLabel()]; track label) {
-            <span
-              data-testid="floating-fab-label"
-              class="m3e-fab-label block truncate"
-            >
-              {{ label }}
-            </span>
-          }
-        </span>
-      </a>
-
       @defer (when lightboxOpen()) {
         <app-image-lightbox
           [images]="galleryImages()"
@@ -1586,8 +1587,10 @@ export class PrimeViewLandingComponent {
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
 
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
-  private readonly heroCtaEl =
-    viewChild<ElementRef<HTMLAnchorElement>>('heroCtaEl');
+  private readonly heroCtaSlot =
+    viewChild<ElementRef<HTMLElement>>('heroCtaSlot');
+  private readonly ctaPillEl =
+    viewChild<ElementRef<HTMLAnchorElement>>('ctaPillEl');
   private readonly launchWhatsappBand =
     viewChild<ElementRef<HTMLElement>>('launchWhatsappBand');
   private readonly sectionNav =
@@ -1597,6 +1600,8 @@ export class PrimeViewLandingComponent {
 
   private ignoreScrollSpyUntil = 0;
   private pendingScrollSettleTimer: ReturnType<typeof setTimeout> | null = null;
+  private pendingFlipFromRect: DOMRect | null = null;
+  private activeFlipAnimation: Animation | null = null;
 
   readonly bairroGuideSlug = computed<string | null>(() => {
     const currentBairro = this.item().bairro;
@@ -1618,10 +1623,17 @@ export class PrimeViewLandingComponent {
     this.selectedIntentOption().buildMessage(this.item())
   );
 
+  readonly ctaPillState = computed<'docked' | 'floating' | 'retracted'>(() => {
+    if (!this.isPastFold()) {
+      return 'docked';
+    }
+    return this.closingBandVisible() ? 'retracted' : 'floating';
+  });
+
   readonly floatingPillLabel = computed<string>(() => {
     const launchName = this.item().nome;
     if (!this.isPastFold()) {
-      return `Falar sobre o ${launchName}`;
+      return 'Falar no WhatsApp';
     }
 
     switch (this.activeSection()) {
@@ -1756,20 +1768,38 @@ export class PrimeViewLandingComponent {
         observer.observe(target);
       }
 
-      const heroCta = this.heroCtaEl()?.nativeElement;
+      const ctaSlot = this.heroCtaSlot()?.nativeElement;
       let foldObserver: IntersectionObserver | null = null;
-      if (heroCta) {
+      if (ctaSlot) {
         foldObserver = new IntersectionObserver(
           (entries) => {
             const entry = entries[0];
             if (!entry) return;
-            this.isPastFold.set(
-              !entry.isIntersecting && entry.boundingClientRect.top < 0
+            const nextPastFold =
+              !entry.isIntersecting && entry.boundingClientRect.top < 0;
+            if (nextPastFold === this.isPastFold()) {
+              return;
+            }
+            const pillEl = this.ctaPillEl()?.nativeElement;
+            const reducedMotion = Boolean(
+              this.document.defaultView?.matchMedia(
+                '(prefers-reduced-motion: reduce)'
+              ).matches
             );
+            if (
+              pillEl &&
+              !this.closingBandVisible() &&
+              !reducedMotion &&
+              typeof pillEl.animate === 'function'
+            ) {
+              this.activeFlipAnimation?.cancel();
+              this.pendingFlipFromRect = pillEl.getBoundingClientRect();
+            }
+            this.isPastFold.set(nextPastFold);
           },
           { threshold: 0 }
         );
-        foldObserver.observe(heroCta);
+        foldObserver.observe(ctaSlot);
       }
 
       const closingBand = this.launchWhatsappBand()?.nativeElement;
@@ -1790,11 +1820,78 @@ export class PrimeViewLandingComponent {
         observer.disconnect();
         foldObserver?.disconnect();
         closingObserver?.disconnect();
+        this.activeFlipAnimation?.cancel();
         if (this.pendingScrollSettleTimer !== null) {
           clearTimeout(this.pendingScrollSettleTimer);
           this.pendingScrollSettleTimer = null;
         }
       });
+    });
+
+    afterRenderEffect(() => {
+      const pastFold = this.isPastFold();
+      if (!isPlatformBrowser(this.platformId) || !this.pendingFlipFromRect) {
+        return;
+      }
+
+      const first = this.pendingFlipFromRect;
+      this.pendingFlipFromRect = null;
+
+      const pillEl = this.ctaPillEl()?.nativeElement;
+      if (!pillEl || typeof pillEl.animate !== 'function') {
+        return;
+      }
+
+      const last = pillEl.getBoundingClientRect();
+      if (
+        first.width <= 0 ||
+        first.height <= 0 ||
+        last.width <= 0 ||
+        last.height <= 0
+      ) {
+        return;
+      }
+
+      const dx = first.left - last.left;
+      const dy = first.top - last.top;
+      const sx = first.width / last.width;
+      const sy = first.height / last.height;
+
+      if (
+        Math.abs(dx) < 1 &&
+        Math.abs(dy) < 1 &&
+        Math.abs(sx - 1) < 0.01 &&
+        Math.abs(sy - 1) < 0.01
+      ) {
+        return;
+      }
+
+      pillEl.style.transformOrigin = 'top left';
+      this.activeFlipAnimation = pillEl.animate(
+        [
+          {
+            transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`,
+            borderRadius: pastFold ? '16px' : '9999px',
+          },
+          {
+            transform: 'translate3d(0, 0, 0) scale(1, 1)',
+            borderRadius: pastFold ? '9999px' : '16px',
+          },
+        ],
+        {
+          duration: 480,
+          easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+          fill: 'none',
+        }
+      );
+      this.activeFlipAnimation.onfinish = () => {
+        pillEl.style.transformOrigin = '';
+        this.activeFlipAnimation = null;
+      };
+      this.activeFlipAnimation.oncancel = () => {
+        pillEl.style.transformOrigin = '';
+        this.activeFlipAnimation = null;
+      };
     });
 
     effect(() => {
