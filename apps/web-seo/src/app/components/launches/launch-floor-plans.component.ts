@@ -185,7 +185,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
             }
           </div>
 
-          <!-- Desktop/Tablet (>= md): Lista vertical ou grade tátil sem bordas coloridas -->
+          <!-- Desktop/Tablet (>= md): Lista editorial leve com item ativo em tonal #F3EFE6 -->
           <div
             ngListbox
             [value]="activePlanSelection()"
@@ -193,7 +193,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
             orientation="vertical"
             [multi]="false"
             selectionMode="follow"
-            class="hidden md:grid md:grid-cols-2 md:gap-2.5 lg:col-span-5 lg:block lg:max-h-[560px] lg:space-y-2.5 lg:overflow-y-auto lg:pr-1"
+            class="hidden rounded-[20px] bg-canvas p-2 md:grid md:grid-cols-2 md:gap-1.5 lg:col-span-5 lg:block lg:max-h-[560px] lg:space-y-1.5 lg:overflow-y-auto"
             aria-label="Lista de plantas"
           >
             @for (plan of filteredPlans(); track plan.id) {
@@ -205,8 +205,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 (click)="selectPlan(plan.id)"
                 [class]="
                   isSelected
-                    ? 'm3e-plan-item group flex w-full cursor-pointer flex-col justify-between gap-2 border border-transparent bg-[#1C1B19] p-3.5 text-left text-[#FAF8F4] shadow-chip'
-                    : 'm3e-plan-item group flex w-full cursor-pointer flex-col justify-between gap-2 border border-transparent bg-canvas/75 p-3.5 text-left text-[#1C1B19] hover:bg-canvas'
+                    ? 'm3e-plan-item group flex w-full cursor-pointer flex-col justify-between gap-2 border border-transparent bg-[#F3EFE6] p-3.5 text-left text-[#1C1B19]'
+                    : 'm3e-plan-item group flex w-full cursor-pointer flex-col justify-between gap-2 border border-transparent bg-transparent p-3.5 text-left text-[#1C1B19] hover:bg-[#F3EFE6]/55'
                 "
               >
                 <div class="flex items-start justify-between gap-3">
@@ -214,26 +214,20 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     <p
                       [class]="
                         isSelected
-                          ? 'truncate text-[14px] font-semibold leading-snug text-[#FAF8F4]'
+                          ? 'truncate text-[14px] font-semibold leading-snug text-[#1C1B19]'
                           : 'truncate text-[14px] font-medium leading-snug text-[#1C1B19]'
                       "
                     >
                       {{ plan.titulo }}
                     </p>
-                    <p
-                      [class]="
-                        isSelected
-                          ? 'mt-0.5 text-[13px] font-normal text-[#FAF8F4]/75'
-                          : 'mt-0.5 text-[13px] font-normal text-ink-muted'
-                      "
-                    >
+                    <p class="mt-0.5 text-[13px] font-normal text-ink-muted">
                       {{ plan.quartos }} · {{ plan.banhos }}
                     </p>
                   </div>
                   <span
                     [class]="
                       isSelected
-                        ? 'shrink-0 text-[13px] font-medium text-[#FAF8F4] tabular-nums'
+                        ? 'shrink-0 text-[13px] font-semibold text-[#1C1B19] tabular-nums'
                         : 'shrink-0 text-[13px] font-medium text-[#1C1B19] tabular-nums'
                     "
                   >
@@ -242,41 +236,25 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 </div>
 
                 <div
-                  [class]="
-                    isSelected
-                      ? 'flex items-center justify-between gap-2 border-t border-[#FAF8F4]/15 pt-2 text-[13px]'
-                      : 'flex items-center justify-between gap-2 border-t border-border-subtle/70 pt-2 text-[13px]'
-                  "
+                  class="flex items-center justify-between gap-2 border-t border-border-subtle/70 pt-2 text-[13px]"
                 >
                   @if (plan.precoAPartirDe) {
                     <span
                       [class]="
                         isSelected
-                          ? 'font-medium text-[#F7C957] tabular-nums'
+                          ? 'font-semibold text-[#1C1B19] tabular-nums'
                           : 'font-medium text-[#1C1B19] tabular-nums'
                       "
                     >
                       A partir de {{ formatPrice(plan.precoAPartirDe) }}
                     </span>
                   } @else {
-                    <span
-                      [class]="
-                        isSelected
-                          ? 'font-normal text-[#FAF8F4]/75'
-                          : 'font-normal text-ink-muted'
-                      "
-                    >
+                    <span class="font-normal text-ink-muted">
                       Valor sob consulta
                     </span>
                   }
                   @if (plan.unidades) {
-                    <span
-                      [class]="
-                        isSelected
-                          ? 'truncate text-[#FAF8F4]/75'
-                          : 'truncate text-ink-muted'
-                      "
-                    >
+                    <span class="truncate text-ink-muted">
                       {{ plan.unidades }}
                     </span>
                   }
