@@ -312,8 +312,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             }
           </div>
 
-          <!-- Cabeçalho editorial limpo -->
-          <div class="terraco-reveal mb-5 space-y-2 sm:mb-6">
+          <!-- Cabeçalho editorial limpo no topo acima do grid assimétrico -->
+          <div class="terraco-reveal space-y-2">
             <div class="flex flex-wrap items-center gap-2">
               <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
                 @if (bairroGuideSlug(); as guideSlug) {
@@ -334,128 +334,166 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               }
             </div>
 
-            <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-              <h1
-                id="launch-heading"
-                [style.view-transition-name]="'launch-title-' + item().slug"
-                class="font-display text-[clamp(1.75rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
-              >
-                {{ item().nome }}
-              </h1>
-              <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
-                {{ item().endereco }}
-              </p>
-            </div>
-          </div>
-
-          <!-- Mosaico fotográfico protagonista em largura total -->
-          <div class="terraco-reveal-delay grid gap-3 lg:grid-cols-12">
-            <div
-              [class.terraco-skeleton]="!imageLoaded()"
-              [class]="
-                heroSecondaryImages().length > 0
-                  ? 'group relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/9] lg:col-span-9 lg:rounded-[24px]'
-                  : 'group relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/9] lg:col-span-12 lg:rounded-[24px]'
-              "
-            >
-              <img
-                #heroImg
-                data-testid="launch-hero-image"
-                [ngSrc]="item().imagem"
-                [alt]="item().imagemAlt"
-                [width]="item().imagemWidth"
-                [height]="item().imagemHeight"
-                priority
-                [style.view-transition-name]="'launch-image-' + item().slug"
-                (load)="markImageLoaded()"
-                (error)="markImageLoaded()"
-                class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100 lg:rounded-[24px]"
-              />
-
-              @if (hasGallery()) {
-                <button
-                  type="button"
-                  (click)="openLightbox(0)"
-                  [attr.aria-label]="
-                    'Abrir galeria de imagens de ' + item().nome
-                  "
-                  class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
-                ></button>
-
-                <button
-                  type="button"
-                  (click)="openLightbox(0)"
-                  class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
+            <div class="flex items-start justify-between gap-4">
+              <div class="space-y-1">
+                <h1
+                  id="launch-heading"
+                  [style.view-transition-name]="'launch-title-' + item().slug"
+                  class="font-display text-[clamp(1.75rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
                 >
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.75"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-3.5 w-3.5"
-                  >
-                    <rect x="3" y="3" width="18" height="18" rx="3" />
-                    <circle cx="9" cy="9" r="1.5" />
-                    <path d="m21 15-4.5-4.5L7 20" />
-                  </svg>
-                  <span class="tabular-nums">
-                    {{ galleryImages().length }} fotos
-                  </span>
-                </button>
-              }
+                  {{ item().nome }}
+                </h1>
+                <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
+                  {{ item().endereco }}
+                </p>
+              </div>
 
-              <div class="absolute top-3 right-3 z-10">
+              <div class="shrink-0 pt-0.5">
                 <app-favorite-button
                   [slug]="item().slug"
                   [nome]="item().nome"
                 />
               </div>
             </div>
-
-            @if (heroSecondaryImages().length > 0) {
-              <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:gap-3">
-                @for (
-                  preview of heroSecondaryImages();
-                  track preview.url;
-                  let idx = $index
-                ) {
-                  <button
-                    type="button"
-                    (click)="openLightbox(idx)"
-                    [attr.aria-label]="'Ampliar foto: ' + preview.alt"
-                    class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer"
-                  >
-                    <img
-                      [src]="preview.url"
-                      [alt]="preview.alt"
-                      [attr.width]="preview.width ?? null"
-                      [attr.height]="preview.height ?? null"
-                      decoding="async"
-                      class="h-full w-full rounded-[18px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
-                    />
-                  </button>
-                }
-              </div>
-            }
           </div>
         </div>
       </section>
 
-      <!-- Barra de âncoras sticky + CTA condensado ao sair do card lateral -->
+      <!-- Barra superior fixa condensada ao rolar além da coluna sticky para seções largas -->
       <div
-        class="sticky top-[72px] z-20 mx-auto w-full max-w-7xl px-4 sm:top-[76px] sm:px-6 lg:px-8"
+        data-testid="topbar-condensed-cta"
+        [attr.data-visible]="showCondensedTopCta()"
+        [attr.aria-hidden]="!showCondensedTopCta()"
+        [class]="
+          showCondensedTopCta()
+            ? 'm3e-topbar-cta fixed inset-x-0 top-[72px] z-30 mx-auto w-full max-w-7xl translate-y-0 px-4 opacity-100 sm:top-[76px] sm:px-6 lg:px-8'
+            : 'm3e-topbar-cta pointer-events-none fixed inset-x-0 top-[72px] z-30 mx-auto w-full max-w-7xl -translate-y-1.5 px-4 opacity-0 sm:top-[76px] sm:px-6 lg:px-8'
+        "
       >
         <div
-          class="flex items-center justify-between gap-3 rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-chip backdrop-blur-md"
+          class="hidden items-center justify-between gap-3 rounded-pill border border-border-subtle bg-elevated/95 p-1.5 pl-4 shadow-chip backdrop-blur-md md:flex"
         >
-          <nav
-            #sectionNav
-            aria-label="Seções do empreendimento"
-            class="terraco-no-scrollbar flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto"
+          <div class="flex min-w-0 items-center gap-2 text-[13px]">
+            <span class="truncate font-medium text-ink">{{ item().nome }}</span>
+            <span aria-hidden="true" class="text-ink-muted/60">·</span>
+            <span class="truncate font-normal text-ink-muted">{{ item().bairro }}</span>
+          </div>
+
+          <a
+            [href]="contextualWhatsappHref()"
+            [attr.tabindex]="showCondensedTopCta() ? null : -1"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="topbar-whatsapp-cta"
+            class="m3e-action-pill inline-flex min-h-[38px] shrink-0 items-center justify-center bg-action px-4 py-1.5 text-[13px] font-medium leading-[1.3] text-white hover:bg-action-hover"
           >
+            Falar no WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- Grid assimétrico 2/3 esquerda (galeria + barra sticky + seções) + 1/3 direita (card sticky) -->
+      <section
+        aria-label="Galeria, detalhes e atendimento"
+        class="bg-canvas pb-12 sm:pb-16 lg:pb-20"
+      >
+        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="grid gap-8 md:grid-cols-12 md:items-start lg:gap-10">
+            <!-- Coluna esquerda (2/3) -->
+            <div class="min-w-0 space-y-10 sm:space-y-12 md:col-span-7 lg:col-span-8">
+              <!-- Mosaico fotográfico em proporção equilibrada (2/3) -->
+              <div class="terraco-reveal-delay grid gap-3 lg:grid-cols-12">
+                <div
+                  [class.terraco-skeleton]="!imageLoaded()"
+                  [class]="
+                    heroSecondaryImages().length > 0
+                      ? 'group relative aspect-[16/10] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface lg:col-span-9 lg:rounded-[24px]'
+                      : 'group relative aspect-[16/10] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface lg:col-span-12 lg:rounded-[24px]'
+                  "
+                >
+                  <img
+                    #heroImg
+                    data-testid="launch-hero-image"
+                    [ngSrc]="item().imagem"
+                    [alt]="item().imagemAlt"
+                    [width]="item().imagemWidth"
+                    [height]="item().imagemHeight"
+                    priority
+                    [style.view-transition-name]="'launch-image-' + item().slug"
+                    (load)="markImageLoaded()"
+                    (error)="markImageLoaded()"
+                    class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100 lg:rounded-[24px]"
+                  />
+
+                  @if (hasGallery()) {
+                    <button
+                      type="button"
+                      (click)="openLightbox(0)"
+                      [attr.aria-label]="
+                        'Abrir galeria de imagens de ' + item().nome
+                      "
+                      class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
+                    ></button>
+
+                    <button
+                      type="button"
+                      (click)="openLightbox(0)"
+                      class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-3.5 w-3.5"
+                      >
+                        <rect x="3" y="3" width="18" height="18" rx="3" />
+                        <circle cx="9" cy="9" r="1.5" />
+                        <path d="m21 15-4.5-4.5L7 20" />
+                      </svg>
+                      <span class="tabular-nums">
+                        {{ galleryImages().length }} fotos
+                      </span>
+                    </button>
+                  }
+                </div>
+
+                @if (heroSecondaryImages().length > 0) {
+                  <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:gap-3">
+                    @for (
+                      preview of heroSecondaryImages();
+                      track preview.url;
+                      let idx = $index
+                    ) {
+                      <button
+                        type="button"
+                        (click)="openLightbox(idx)"
+                        [attr.aria-label]="'Ampliar foto: ' + preview.alt"
+                        class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer"
+                      >
+                        <img
+                          [src]="preview.url"
+                          [alt]="preview.alt"
+                          [attr.width]="preview.width ?? null"
+                          [attr.height]="preview.height ?? null"
+                          decoding="async"
+                          class="h-full w-full rounded-[18px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+                        />
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+
+              <!-- Barra sticky de navegação entre seções (z-30) -->
+              <nav
+                #sectionNav
+                aria-label="Seções do empreendimento"
+                class="terraco-no-scrollbar sticky top-[72px] z-30 flex items-center gap-1.5 overflow-x-auto rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-chip backdrop-blur-md sm:top-[76px]"
+              >
           <a
             #sectionNavLink
             data-section-id="sobre"
@@ -548,45 +586,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               Comparar em BH
             </a>
           }
-          </nav>
+              </nav>
 
-          <!-- Resumo discreto + CTA compacto ao rolar além do card sticky lateral -->
-          <div
-            data-testid="topbar-condensed-cta"
-            [attr.data-visible]="showCondensedTopCta()"
-            [attr.aria-hidden]="!showCondensedTopCta()"
-            [class]="
-              showCondensedTopCta()
-                ? 'm3e-topbar-cta hidden shrink-0 translate-y-0 items-center gap-3 pr-1 opacity-100 md:flex'
-                : 'm3e-topbar-cta pointer-events-none hidden shrink-0 translate-y-1 items-center gap-3 pr-1 opacity-0 md:flex'
-            "
-          >
-            <span class="max-w-[200px] truncate text-[12px] font-normal text-ink-muted">
-              {{ item().nome }} · {{ item().bairro }}
-            </span>
-            <a
-              [href]="contextualWhatsappHref()"
-              [attr.tabindex]="showCondensedTopCta() ? null : -1"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="topbar-whatsapp-cta"
-              class="m3e-action-pill inline-flex min-h-[38px] items-center justify-center bg-action px-4 py-1.5 text-[13px] font-medium leading-[1.3] text-white hover:bg-action-hover"
-            >
-              Falar no WhatsApp
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Corpo editorial assimétrico (2/3 esquerda + 1/3 sticky direita) sobre #FAF8F4 -->
-      <section
-        aria-label="Detalhes, pilares e entorno"
-        class="bg-canvas pt-10 pb-12 sm:pt-12 sm:pb-16 lg:pb-20"
-      >
-        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div class="grid gap-10 md:grid-cols-12 md:items-start lg:gap-12">
-            <!-- Coluna editorial principal (2/3) -->
-            <div class="min-w-0 space-y-12 sm:space-y-14 md:col-span-7 lg:col-span-8">
               <!-- Sobre & Ficha Estrutural -->
               <section
                 id="sobre"
@@ -666,9 +667,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               aria-labelledby="pilares-heading"
               class="border-t border-border-subtle pt-12 scroll-mt-28"
             >
-              <div
-                class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
-              >
+              <div class="flex flex-col gap-4">
                 <div class="max-w-xl space-y-1.5">
                   <h2
                     id="pilares-heading"
@@ -684,7 +683,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 <div
                   role="group"
                   aria-label="Dimensões do empreendimento"
-                  class="flex flex-wrap items-center gap-2"
+                  class="flex flex-wrap items-center gap-2 lg:flex-nowrap"
                 >
                   @for (pilar of pilaresList(); track pilar.id) {
                     @let active = activePilar()?.id === pilar.id;
@@ -860,11 +859,11 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           }
             </div>
 
-            <!-- Coluna direita (1/3): Cartão de decisão calmo e sticky estilo Airbnb -->
+            <!-- Coluna direita (1/3): Cartão de decisão calmo e sticky desde a primeira dobra -->
             <aside
               aria-label="Resumo e atendimento direto"
               data-testid="sticky-decision-card"
-              class="hidden rounded-[24px] border border-border-subtle bg-surface p-6 md:sticky md:top-36 md:block md:col-span-5 lg:col-span-4"
+              class="hidden rounded-[24px] border border-border-subtle bg-surface p-6 md:sticky md:top-24 md:z-20 md:block md:col-span-5 lg:col-span-4"
             >
               <div class="space-y-4">
                 <div class="space-y-1">
@@ -1097,30 +1096,32 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               aria-labelledby="table-invite-heading"
               class="border-t border-border-subtle pt-12 scroll-mt-28"
             >
-              <div class="max-w-2xl space-y-3">
+              <div class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12">
                 <h2
                   id="table-invite-heading"
-                  class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                  class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance lg:col-span-4"
                 >
                   Tabela atualizada e condições sob consulta
                 </h2>
-                <p
-                  class="max-w-[58ch] text-[15px] font-normal leading-[1.55] text-ink-muted sm:text-base"
-                >
-                  Os valores do {{ item().nome }} variam conforme tipologia,
-                  andar e posição. Receba a tabela vigente direto no WhatsApp,
-                  sem cadastro nem compromisso.
-                </p>
-                <a
-                  [href]="contextualWhatsappHref()"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-testid="table-whatsapp-link"
-                  class="terraco-link-underline inline-flex items-center gap-1.5 text-[14px] font-medium text-brand hover:text-brand-hover"
-                >
-                  <span>Consultar tabela atualizada</span>
-                  <span aria-hidden="true">→</span>
-                </a>
+                <div class="space-y-4 lg:col-span-8">
+                  <p
+                    class="max-w-[58ch] text-[15px] font-normal leading-[1.55] text-ink-muted sm:text-base"
+                  >
+                    Os valores do {{ item().nome }} variam conforme tipologia,
+                    andar e posição. Receba a tabela vigente direto no WhatsApp,
+                    sem cadastro nem compromisso.
+                  </p>
+                  <a
+                    [href]="contextualWhatsappHref()"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="table-whatsapp-link"
+                    class="terraco-link-underline inline-flex items-center gap-1.5 text-[14px] font-medium text-brand hover:text-brand-hover"
+                  >
+                    <span>Consultar tabela atualizada</span>
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </div>
               </div>
             </section>
           }
@@ -1329,38 +1330,29 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         [destinations]="nextDestinations()"
       />
 
-      <!-- Mobile (< md): Barra inferior minimalista 64px estilo Airbnb -->
+      <!-- Mobile (< md): Barra inferior minimalista com CTA centralizado estilo Airbnb -->
       <aside
-        aria-label="Resumo e atendimento no WhatsApp"
+        aria-label="Atendimento no WhatsApp"
         data-testid="mobile-whatsapp-bar"
-        class="fixed inset-x-0 bottom-0 z-30 flex h-16 items-center justify-between gap-3 border-t border-border-subtle bg-canvas/95 px-4 backdrop-blur-md md:hidden"
+        [attr.data-visible]="!closingBandVisible()"
+        [attr.aria-hidden]="closingBandVisible() ? 'true' : null"
+        [class]="
+          closingBandVisible()
+            ? 'm3e-topbar-cta pointer-events-none fixed inset-x-0 bottom-0 z-40 flex translate-y-3 items-center justify-center border-t border-border-subtle bg-canvas/92 px-4 py-3 opacity-0 backdrop-blur-md md:hidden'
+            : 'm3e-topbar-cta fixed inset-x-0 bottom-0 z-40 flex translate-y-0 items-center justify-center border-t border-border-subtle bg-canvas/92 px-4 py-3 opacity-100 backdrop-blur-md md:hidden'
+        "
       >
-        <div class="min-w-0 flex-1">
-          @if (formattedPrice(); as price) {
-            <p class="truncate text-[14px] font-medium leading-[1.25] text-ink tabular-nums">
-              A partir de {{ price }}
-            </p>
-            <p class="truncate text-[12px] font-normal leading-[1.3] text-ink-muted">
-              {{ currentContextLabel() }}
-            </p>
-          } @else {
-            <p class="truncate text-[14px] font-medium leading-[1.25] text-ink">
-              {{ item().bairro }}
-            </p>
-            <p class="truncate text-[12px] font-normal leading-[1.3] text-ink-muted tabular-nums">
-              {{ item().metragem }} · {{ currentContextLabel() }}
-            </p>
-          }
-        </div>
-
         <a
           [href]="contextualWhatsappHref()"
+          [attr.tabindex]="closingBandVisible() ? -1 : null"
           target="_blank"
           rel="noopener noreferrer"
           data-testid="mobile-whatsapp-cta"
-          class="m3e-action-pill inline-flex min-h-[44px] shrink-0 items-center justify-center bg-action px-5 py-2 text-[13px] font-medium leading-[1.3] text-white hover:bg-action-hover"
+          class="m3e-action-pill inline-flex min-h-[48px] w-full max-w-sm items-center justify-center bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.3] text-white hover:bg-action-hover"
         >
-          Falar no WhatsApp
+          @for (label of [mobileCtaLabel()]; track label) {
+            <span class="m3e-tab-panel truncate">{{ label }}</span>
+          }
         </a>
       </aside>
 
@@ -1690,6 +1682,30 @@ export class PrimeViewLandingComponent {
     }
   });
 
+  readonly mobileCtaLabel = computed<string>(() => {
+    const launchName = this.item().nome;
+    switch (this.activeSection()) {
+      case 'pilares':
+        return 'Dúvidas sobre o condomínio';
+      case 'entorno':
+        return 'Perguntar sobre o bairro';
+      case 'plantas': {
+        const plan = this.activeFloorPlan();
+        return plan ? `Dúvida: ${plan.titulo}` : 'Dúvidas sobre as plantas';
+      }
+      case 'condicoes':
+        return this.hasPrice()
+          ? 'Simular e receber tabela'
+          : 'Receber tabela e condições';
+      case 'galeria':
+        return 'Agendar visita';
+      case 'outros-lancamentos':
+        return 'Comparar lançamentos';
+      default:
+        return `Falar sobre o ${launchName}`;
+    }
+  });
+
   readonly contextualWhatsappMessage = computed<string>(() => {
     const currentItem = this.item();
 
@@ -1961,7 +1977,7 @@ export class PrimeViewLandingComponent {
     );
     const navHeight =
       this.sectionNav()?.nativeElement.getBoundingClientRect().height ?? 50;
-    const stickyOffset = navHeight + 92;
+    const stickyOffset = Math.max(152, navHeight + 96);
 
     const scrollToTarget = (smooth: boolean) => {
       const freshTarget = this.document.getElementById(sectionId);

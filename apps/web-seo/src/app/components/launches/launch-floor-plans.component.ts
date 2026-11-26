@@ -89,7 +89,7 @@ import { ImageLightboxComponent } from './image-lightbox.component';
       <section
         id="plantas"
         aria-labelledby="floor-plans-heading"
-        class="scroll-mt-24"
+        class="scroll-mt-36"
       >
         <div
           class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
