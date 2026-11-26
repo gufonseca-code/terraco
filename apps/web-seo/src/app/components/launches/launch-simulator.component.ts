@@ -109,16 +109,21 @@ function resolveInitialPropertyValue(item: Lancamento): number {
     .sim-m3e-chip {
       border-radius: 9999px;
       transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
+        border-radius 240ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        border-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        transform 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
     }
 
     .sim-m3e-chip[aria-pressed='true'],
     .sim-tonal-btn:hover,
     .sim-tonal-btn:active {
-      border-radius: 12px;
+      border-radius: 14px;
+    }
+
+    .sim-m3e-chip:active {
+      transform: scale(0.97);
     }
 
     .sim-tonal-btn {
@@ -133,6 +138,10 @@ function resolveInitialPropertyValue(item: Lancamento): number {
       .sim-m3e-chip,
       .sim-tonal-btn {
         transition: none;
+      }
+
+      .sim-m3e-chip:active {
+        transform: none;
       }
     }
   `,

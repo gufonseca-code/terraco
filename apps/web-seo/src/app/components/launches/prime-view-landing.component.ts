@@ -198,16 +198,25 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
     .m3e-tab-chip {
       border-radius: 9999px;
       transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
+        border-radius 240ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        border-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        transform 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
     }
 
-    .m3e-tab-chip[aria-pressed='true'],
+    .m3e-tab-chip[aria-pressed='true'] {
+      border-radius: 14px;
+    }
+
+    .m3e-tab-chip:active,
+    .m3e-action-pill:active {
+      transform: scale(0.97);
+    }
+
     .m3e-tonal-btn:hover,
     .m3e-tonal-btn:active {
-      border-radius: 12px;
+      border-radius: 14px;
     }
 
     .m3e-tonal-btn {
@@ -259,6 +268,11 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
       .m3e-action-pill,
       .m3e-topbar-cta {
         transition: none;
+      }
+
+      .m3e-tab-chip:active,
+      .m3e-action-pill:active {
+        transform: none;
       }
 
       .m3e-tab-panel {
@@ -378,7 +392,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             [attr.aria-current]="activeSection() === 'sobre' ? 'true' : null"
             [class]="sectionNavPillClass('sobre')"
           >
-            Sobre
+            Visão geral
           </a>
           @if (pilaresList().length > 0) {
             <a
@@ -391,7 +405,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               "
               [class]="sectionNavPillClass('pilares')"
             >
-              Estrutura &amp; Lazer
+              Condomínio
             </a>
           }
           @if (entornoItems().length > 0) {
@@ -405,7 +419,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               "
               [class]="sectionNavPillClass('entorno')"
             >
-              Entorno
+              Localização
             </a>
           }
           @if (item().plantas?.length) {
@@ -446,20 +460,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               [class]="sectionNavPillClass('galeria')"
             >
               Galeria
-            </a>
-          }
-          @if (otherLaunches().length > 0) {
-            <a
-              #sectionNavLink
-              data-section-id="outros-lancamentos"
-              href="#outros-lancamentos"
-              (click)="scrollToSection($event, 'outros-lancamentos')"
-              [attr.aria-current]="
-                activeSection() === 'outros-lancamentos' ? 'true' : null
-              "
-              [class]="sectionNavPillClass('outros-lancamentos')"
-            >
-              Comparar em BH
             </a>
           }
           </nav>
@@ -903,7 +903,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 </dl>
 
                 <p class="text-[12px] font-normal text-ink-muted">
-                  Assunto atual:
+                  Foco atual:
                   <span class="font-medium text-ink">
                     {{ currentContextLabel() }}
                   </span>
@@ -1649,20 +1649,20 @@ export class PrimeViewLandingComponent {
     switch (this.activeSection()) {
       case 'pilares': {
         const pilar = this.activePilar();
-        return pilar ? `Estrutura · ${pilar.label}` : 'Estrutura & Lazer';
+        return pilar ? `Estrutura · ${pilar.label}` : 'Estrutura & lazer';
       }
       case 'entorno':
-        return 'Entorno & Deslocamentos';
+        return 'Bairro e acessos';
       case 'plantas': {
         const plan = this.activeFloorPlan();
-        return plan ? `Planta · ${plan.titulo}` : 'Plantas e tipologias';
+        return plan ? `Planta ${plan.titulo}` : 'Plantas e tipologias';
       }
       case 'condicoes':
-        return this.hasPrice() ? 'Simulador e condições' : 'Tabela e condições';
+        return this.hasPrice() ? 'Simulação e condições' : 'Tabela e condições';
       case 'galeria':
-        return 'Galeria';
+        return 'Galeria de fotos';
       case 'outros-lancamentos':
-        return 'Comparando em BH';
+        return 'Comparativo em BH';
       default:
         return 'Visão geral';
     }

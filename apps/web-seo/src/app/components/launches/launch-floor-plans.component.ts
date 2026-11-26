@@ -25,28 +25,38 @@ import { ImageLightboxComponent } from './image-lightbox.component';
     .m3e-chip {
       border-radius: 9999px;
       transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
+        border-radius 240ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        border-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        transform 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
     }
 
     .m3e-chip[aria-pressed='true'],
     .m3e-tonal-btn:hover,
     .m3e-tonal-btn:active {
-      border-radius: 12px;
+      border-radius: 14px;
+    }
+
+    .m3e-chip:active {
+      transform: scale(0.97);
     }
 
     .m3e-plan-item {
       border-radius: 20px;
       transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
+        border-radius 240ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        transform 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
     }
 
     .m3e-plan-item[aria-selected='true'] {
-      border-radius: 12px;
+      border-radius: 14px;
+    }
+
+    .m3e-plan-item:active {
+      transform: scale(0.985);
     }
 
     .m3e-tonal-btn {
@@ -77,6 +87,11 @@ import { ImageLightboxComponent } from './image-lightbox.component';
       .m3e-plan-item,
       .m3e-tonal-btn {
         transition: none;
+      }
+
+      .m3e-chip:active,
+      .m3e-plan-item:active {
+        transform: none;
       }
 
       .m3e-plan-stage {
