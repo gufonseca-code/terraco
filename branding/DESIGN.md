@@ -1,127 +1,141 @@
 # DESIGN.md — Identidade Visual **Terraço**
 
-> **Posicionamento:** Imobiliária digital *warm tech* brasileira — clara, humana, urbana e descomplicada.  
-> **Direção Visual:** Estética urbana de cidades brasileiras (varandas, cobogós, ruas arborizadas) com calor tátil e precisão digital.
+> **Posicionamento:** Plataforma imobiliária digital *warm tech* brasileira — calma, transparente, humana e centrada no morador.  
+> **Direção Visual:** Estética residencial de bairros arborizados brasileiros (varandas ensolaradas, cobogós, folhagens tropicais e luz natural) unida à clareza, leveza e precisão de produtos digitais contemporâneos (*Claude, Nubank, Notion, Airbnb*).
 
 ---
 
-## 1. Símbolo & Logotipo (**Degraus**)
+## 1. Símbolo & Logotipo (**Terraço**)
 
-O logotipo da **Terraço** combina o símbolo geométrico **Degraus** (três patamares horizontais escalonados que remetem a terraços em níveis e à evolução de fase) com o wordmark em **serifa arredondada** (*Recoleta* ou *Fraunces*).
+O logotipo da **Terraço** mantém o nome e a assinatura visual da marca: o símbolo geométrico **Degraus** (três patamares horizontais escalonados que remetem a terraços em níveis e evolução de fase) combinado ao wordmark em **serifa arredondada expressiva** (*Fraunces*).
 
 ### Versões Oficiais
-* **Web Lockup (Horizontal / Empilhado):** Símbolo **Degraus** + wordmark `Terraço` em Grafite Quente (`#1E1D1B`) sobre fundo Creme Papel (`#F8F5EA`), ou invertido em Creme Papel + Amarelo Ipê (`#EEB506`) sobre Verde Musgo (`#2E5B46`) / Grafite Quente (`#1E1D1B`).
-* **App Icon / Favicon:** Apenas o símbolo **Degraus** (3 barras arredondadas em proporção ascendente) centralizado no *squircle* em Amarelo Ipê (`#EEB506`) com barras em Grafite Quente (`#1E1D1B`).
-* **Supergraphic:** As 3 barras do símbolo podem ser ampliadas como grafismo de fundo, divisória de seção ou moldura em pôsteres, kits de boas-vindas e redes sociais.
+* **Web Lockup (Horizontal / Empilhado):** Símbolo **Degraus** + wordmark `Terraço` em Grafite Quente (`#1C1B19`) sobre fundo Papel Limpo (`#FAF8F4`), ou invertido em Papel Limpo (`#FAF8F4`) sobre Verde Folha Urbano (`#1F6F50`) / Grafite Quente (`#1C1B19`).
+* **Wordmark Specimen (Editorial):** Uso isolado do wordmark `Terraço` em serifa arredondada pesada (`#1C1B19`) permitido em cabeçalhos editoriais, capas e peças onde a marca já esteja contextualizada.
+* **App Icon / Favicon:** Símbolo **Degraus** centralizado no *squircle* em Verde Folha Urbano (`#1F6F50`) com barras em Papel Limpo (`#FAF8F4`), ou em Amarelo Solar (`#F7C957`) com barras em Grafite Quente (`#1C1B19`).
 
 ### Regras de Uso
 * **Área de respiro mínima:** `1×` a altura da barra superior do símbolo ao redor de todo o lockup.
 * **Tamanho mínimo:** `24px` de altura para o lockup completo na web; `16px` para o símbolo isolado em favicons.
-* **Proibido:** Aplicar gradientes 3D, distorcer as proporções dos degraus, ou usar azul corporativo como fundo principal.
+* **Proibido:** Aplicar gradientes 3D, distorcer as proporções dos degraus ou usar azul corporativo frio como fundo principal.
 
 ---
 
-## 2. Paleta de Cores (**Ipê & Grafite**)
+## 2. Paleta de Cores (**Bairro Arborizado & Warm Tech**)
 
-Seguimos a regra **60-30-10** para manter leveza visual e evitar a frieza do branco `#FFFFFF` e do preto `#000000` puros.
+Adotamos uma base neutra clara e quente que valoriza a fotografia real de arquitetura e reduz a fadiga visual, reservando o **Terracota/Coral** para ações principais e o **Verde Folha Urbano** para status, localização e indicadores positivos.
 
 | Token | Hex | Papel na Interface | Proporção |
 | :--- | :--- | :--- | :--- |
-| `color.bg.canvas` | `#F8F5EA` | **Creme Papel** — Fundo principal de páginas e app | 60% |
-| `color.bg.surface` | `#F1E9D8` | **Areia Suave** — Cards secundários, inputs e barras | 60% |
-| `color.bg.elevated` | `#FFFDF9` | **Branco Quente** — Cards elevados e modais | 60% |
-| `color.text.primary` | `#1E1D1B` | **Grafite Quente** — Textos principais e wordmark | 30% |
-| `color.text.secondary` | `#57534E` | **Grafite Médio** — Subtítulos, metadados e legendas | 30% |
-| `color.brand.primary` | `#2E5B46` | **Verde Musgo Urbano** — CTAs principais, headers escuros e links ativos | 30% |
-| `color.brand.primaryHover` | `#234736` | Estado hover/pressed de botões principais | — |
-| `color.brand.accent` | `#EEB506` | **Amarelo Ipê Solar** — Ícone do app, destaques de marca e grafismos | 10% |
-| `color.brand.highlight` | `#ED7467` | **Rosa Goiaba** — Favoritos e microinterações táteis (usar com ícone Grafite Quente `#1E1D1B` para contraste AA) | 10% |
-| `color.border.subtle` | `#E4DCCB` | **Borda Areia** — Divisórias e contornos de cards (`1px`) | — |
-| `color.border.strong` | `#CFC5B2` | **Borda Areia Forte** — Contornos destacados e estados hover | — |
+| `color.bg.canvas` | `#FAF8F4` | **Papel Limpo** — Fundo principal da página e do app (calmo e luminoso) | 65% |
+| `color.bg.surface` | `#F3EFE6` | **Areia Clara** — Faixas tonais, superfícies de apoio e barras sutis | 15% |
+| `color.bg.elevated` | `#FFFFFF` | **Branco Puro** — Superfícies elevadas pontuais, popovers e modais | 5% |
+| `color.text.primary` | `#1C1B19` | **Grafite Quente** — Textos principais, títulos e wordmark | 10% |
+| `color.text.secondary` | `#5C5852` | **Grafite Médio** — Subtítulos, metadados e legendas | — |
+| `color.text.inverse` | `#FAF8F4` | **Papel Claro** — Texto sobre superfícies escuras (`#1C1B19` ou `#1F6F50`) | — |
+| `color.action.primary` | `#F06A36` | **Terracota Solar (Primary Action)** — CTA principal de cada dobra e ações-chave | 5% |
+| `color.action.primaryHover` | `#D95724` | Estado hover/pressed de botões principais (e base quando exigir contraste AA extra) | — |
+| `color.action.primarySoft` | `#FDECE5` | Preenchimento suave de destaque ativo ou seleção | — |
+| `color.brand.leaf` | `#1F6F50` | **Urban Leaf Green** — Badges de status, indicadores de bairro e etapas concluídas | 5% |
+| `color.brand.leafHover` | `#17573E` | Estado hover de elementos em Verde Folha | — |
+| `color.brand.leafSoft` | `#E5F2EC` | Fundo suave para tags semânticas e disponibilidade | — |
+| `color.brand.solar` | `#F7C957` | **Amarelo Solar** — Detalhes luminosos, destaques editoriais e ilustrações | 5% |
+| `color.brand.solarSoft` | `#FFF6DC` | Fundo suave de realce editorial | — |
+| `color.border.subtle` | `rgba(28, 27, 25, 0.10)` | **Divisória Sutil** — Linhas estruturais e separadores limpos (`1px`) | — |
+| `color.border.strong` | `rgba(28, 27, 25, 0.22)` | **Contorno Ativo** — Estados de foco e bordas de controles interativos | — |
 
-### Estados Semânticos
-* **Sucesso / Disponível:** `#2E5B46` (texto/borda) sobre `#E4F0EA` (fundo suave)
-* **Atenção / Destaque:** `#8A6500` (texto) sobre `#FEF3C7` (fundo suave)
-* **Erro / Indisponível:** `#B9382E` (texto) sobre `#FDE8E6` (fundo suave)
+### Regras de Contraste & Uso de Cor
+* **Foco único de ação:** Cada tela ou dobra deve ter **no máximo um ponto focal** em Terracota (`#F06A36` / `#D95724`). Não espalhar dezenas de botões laranjas na mesma viewport.
+* **Contraste garantido:** Sobre `#F06A36` / `#D95724`, usar texto `#FFFFFF` (em botões `>= 14px` semibold/medium, preferir `#D95724` ou `#C24818` quando necessário para contraste AA confortável). Sobre `#F7C957`, usar sempre texto `#1C1B19`.
+* **Bloqueio de monotonia:** Alternar a base clara (`#FAF8F4`) com faixas tonais em Areia Clara (`#F3EFE6`) e pelo menos um bloco de alto contraste em **Grafite Quente (`#1C1B19`)** ou **Verde Folha Urbano (`#1F6F50`)** na página.
 
 ---
 
-## 3. Tipografia
+## 3. Tipografia & Hierarquia Editorial
 
-O contraste entre uma **serifa orgânica** nos títulos e uma **sans-serif geométrica amigável** nos dados garante carisma sem sacrificar a legibilidade de preços, metragens e endereços.
+O contraste entre uma **serifa orgânica e acolhedora** nos títulos e uma **sans-serif geométrica limpa** nos dados cria tensão visual contemporânea sem perder legibilidade em dispositivos móveis.
 
 * **Display & Headlines (`font.family.display`):** `'Fraunces', Georgia, serif`
-  * *Uso:* Wordmark, títulos de seção, hero banners e títulos de cards (sempre retos, sem itálico, com `text-wrap: balance` e peso `400` ou `500`).
-  * *Configuração:* Em **Fraunces** (Google Fonts), configurar `font-variation-settings: "SOFT" 100, "WONK" 1`.
-* **UI, Preços & Corpo (`font.family.sans`):** `'Plus Jakarta Sans', system-ui, -apple-system, sans-serif`
-  * *Uso:* Navegação, filtros, cards de imóveis, valores (`R$`), formulários e botões (peso `400` no corpo e `500` em ações/rótulos).
-  * *Dica:* Para preços e tabelas comparativas, ative `font-variant-numeric: tabular-nums`.
+  * *Uso:* Wordmark, títulos de hero, títulos de seção e nomes de empreendimentos (`text-wrap: balance`, peso `400` ou `500`).
+  * *Configuração:* `font-variation-settings: "SOFT" 100, "WONK" 1`.
+* **UI, Dados & Corpo (`font.family.sans`):** `'Plus Jakarta Sans', system-ui, -apple-system, sans-serif`
+  * *Uso:* Navegação, filtros interativos, metragens, valores (`R$`), prazos de entrega e botões.
+  * *Precisão numérica:* Ativar `font-variant-numeric: tabular-nums` em todos os preços, áreas (`m²`), distâncias e contadores.
 
-### Escala Tipográfica (Enxuta e Consistente)
+### Escala Tipográfica
 | Token | Tamanho | Line-Height | Peso | Uso |
 | :--- | :--- | :--- | :--- | :--- |
-| `type.display.xl` | `48px` (`3rem`) | `1.06` | `500` | Hero principal desktop (tracking `-0.03em`) |
-| `type.display.lg` | `36px` (`2.25rem`) | `1.12` | `500` | Títulos de seção (tracking `-0.025em`) |
-| `type.heading.md` | `20px–24px` | `1.20` | `500` | Títulos de cards e modais (sempre menores que títulos de seção) |
-| `type.body.md` | `16px` (`1rem`) | `1.55` | `400` | Corpo padrão fora de cards (`15px` dentro de cards) |
-| `type.ui.label` | `14px` (`0.875rem`) | `1.35` | `500` | Botões (`13px` dentro de cards), filtros e labels |
-| `type.ui.meta` | `13px` (`0.8125rem`) | `1.40` | `400` | Metadados discretos e rótulos de ficha (piso mínimo; evitar badges decorativos) |
+| `type.display.xl` | `48px–56px` | `1.04` | `500` | Hero principal desktop (tracking `-0.03em`) |
+| `type.display.lg` | `32px–40px` | `1.10` | `500` | Títulos de seção (tracking `-0.025em`) |
+| `type.heading.md` | `20px–24px` | `1.20` | `500` | Títulos de empreendimentos e blocos editoriais |
+| `type.body.md` | `16px` (`1rem`) | `1.55` | `400` | Texto corrido e descrições principais |
+| `type.ui.label` | `14px` (`0.875rem`) | `1.35` | `500` | Botões, chips de filtro e controles |
+| `type.ui.meta` | `13px` (`0.8125rem`) | `1.40` | `400` | Rótulos técnicos, bairro, entrega e metadados |
 
 ---
 
-## 4. Espaçamento, Bordas, Sombras & Material 3 Expressive
+## 4. Filosofia *Human-Centered* & Regras Anti-"AI Slop"
 
-* **Grid Base:** Múltiplos de `4px` (`4, 8, 12, 16, 24, 32, 48, 64`).
-* **Escala de Formas (`radius` — alinhada ao M3 Expressive):**
-  * `radius.xs`: `4px` (microelementos)
-  * `radius.sm`: `8px` (inputs, divisões internas de *connected button groups*)
-  * `radius.m3md`: `12px` (alvo de *shape morphing* em chips e toggles selecionados)
-  * `radius.md`: `16px` (botões secundários, cards de seleção de plantas, miniaturas)
-  * `radius.lg`: `24px` (containers de seção, modais)
-  * `radius.xl`: `28px` (cards de lançamentos e cards flutuantes expressivos)
-  * `radius.pill`: `9999px` (CTAs principais, chips em repouso, *floating toolbars*, barras de busca)
-* **Física de Movimento (*M3 Expressive Springs*):**
-  * **Spatial Spring Fast (`--ease-spring-fast`, `320ms`):** *shape morphing* em chips, botões conectados e toggle de favorito (leve *overshoot* tátil).
-  * **Spatial Spring Default (`--ease-spring-default`, `420ms`):** entrada de *floating toolbars*, popovers e cards.
-  * **Effects (`--ease-ui`, `160ms`):** mudanças de cor, borda e opacidade (sem *overshoot*, `damping: 1.0`).
-  * Sempre respeitar `@media (prefers-reduced-motion: reduce)` desligando molas e reduzindo transições a cor/opacidade.
-* **Padrões M3 Expressive adotados na Web (`apps/web-seo`):**
-  * **Expressive Filter Chips:** `rounded-pill` em repouso → *morph* para `12px` quando `[aria-pressed="true"]`.
-  * **Connected Button Groups:** `gap: 3px`, pontas externas `pill`, divisões internas `8px` → item ativo *morph* para `pill` com preenchimento tonal **Verde Musgo**.
-  * **Expressive Toggle Icon Button (Favorito):** círculo (`pill`) → *squircle* (`14px`) em **Rosa Goiaba** quando salvo.
-  * **Expressive Tonal Cards:** contêiner `28px` em **Branco Quente** (`#FFFDF9`), fotografia enquadrada internamente (`20px`) e rodapé de especificações em **Areia Suave** (`#F1E9D8`), sem bordas pesadas.
-  * **Floating Toolbar:** barra flutuante `pill` no rodapé mobile com entrada vertical em mola.
-* **Sombras Quentes (nunca cinza frio ou preto puro):**
-  * `shadow.chip`: `0 2px 8px -2px rgba(30, 29, 27, 0.08)`
-  * `shadow.card`: `0 8px 24px -6px rgba(30, 29, 27, 0.07)`
-  * `shadow.cardHover`: `0 14px 32px -10px rgba(30, 29, 27, 0.11)`
-  * `shadow.moss`: `0 10px 24px -8px rgba(46, 91, 70, 0.30)`
-  * `shadow.floating`: `0 24px 56px -14px rgba(30, 29, 27, 0.14), 0 4px 12px -2px rgba(30, 29, 27, 0.05)`
+Para atrair um público jovem adulto e evitar o visual genérico de templates automatizados, toda interface deve seguir estas diretrizes estruturais:
+
+1. **Menos *Cards*, Mais Superfície Viva:**
+   * **Não** envolva todo conteúdo em retângulos brancos arredondados com sombra (`bg-elevated`). Deixe textos, listas, fotografias e filtros pousarem diretamente sobre `#FAF8F4` ou `#F3EFE6`, organizados por tipografia, alinhamento e linhas sutis (`1px`).
+   * **Proibido *box-inside-a-box*:** Nunca coloque uma subcaixa arredondada com fundo distinto dentro de outro card (ex.: grade de especificações dentro de uma caixa cinza dentro de um card branco).
+2. **Fotografia Como Protagonista (Estilo Editorial / Airbnb):**
+   * Imagens de imóveis, varandas, interiores e ruas de Belo Horizonte devem ter respiro e proporção generosa, sem molduras pesadas ou botões `w-full` espremidos no meio do card cortando a leitura.
+3. **Interação Direta & Sem Fricção (Estilo Notion / Nubank):**
+   * Filtros e simuladores devem responder instantaneamente na interface com chips compactos e feedback claro, sem exigir formulários longos ou cadastro prévio.
+4. **Prioridade *Mobile-First* e Controle de Scroll:**
+   * **Nunca** empilhe 3 ou mais cards verticais grandes em sequência no mobile. Use trilhos horizontais com `overflow-x-auto snap-x snap-mandatory` (mostrando ~82% da largura do item para insinuar o próximo) ou layouts horizontais compactos.
+   * **Nunca** empilhe grupos de filtros em colunas únicas verticais no mobile; use `flex flex-wrap gap-2` com chips proporcionais ao conteúdo.
+   * Mantenha espaçamentos verticais enxutos no mobile (`py-12` a `py-16`) para que cada dobra entregue valor imediato.
+5. **Variação Real de Ritmo:**
+   * Evite repetir a mesma estrutura de seção (ex.: título à esquerda + caixa à direita) mais de duas vezes seguidas. Alterne vitrine fotográfica, barra de descoberta interativa, faixa editorial de alto contraste e navegação limpa.
 
 ---
 
-## 5. Direção de Arte & Ilustração
+## 5. Layout, Formas & Movimento (*M3 Expressive*)
 
-* **Estilo:** Ilustrações editoriais com traço limpo e textura leve (*risograph*), retratando a vida urbana brasileira na escala humana — prédios residenciais com **cobogós**, varandas com samambaias, ruas arborizadas com ipês, ciclistas e cafés de esquina.
-* **Regra de Cor nas Ilustrações:** Usar exclusivamente a paleta **Ipê & Grafite** (`#EEB506`, `#2E5B46`, `#ED7467`, `#F8F5EA`, `#1E1D1B`).
-* **O que evitar:** Fotos frias de banco de imagem com corretores de terno, prédios espelhados corporativos ou ícones clichês de telhado/chave.
+* **Container & Grid:** Largura máxima de `1280px` (`max-w-7xl`), padding lateral de `16px` (mobile), `24px` (tablet) e `32px` (desktop).
+* **Escala de Raios:**
+  * `radius.sm`: `8px` (inputs e divisões internas)
+  * `radius.md`: `14px` (chips selecionados, miniaturas e controles táteis)
+  * `radius.lg`: `20px` (fotografias editoriais e painéis de destaque)
+  * `radius.xl`: `28px` (containers principais pontuais)
+  * `radius.pill`: `9999px` (CTAs principais, chips em repouso e barras de busca)
+* **Sombras Quentes (uso econômico):**
+  * `shadow.chip`: `0 2px 8px rgba(28, 27, 25, 0.06)`
+  * `shadow.card`: `0 8px 24px rgba(28, 27, 25, 0.05)`
+  * `shadow.floating`: `0 16px 40px rgba(28, 27, 25, 0.08)`
+* **Movimento & Acessibilidade:**
+  * Transições rápidas e responsivas (`150ms–250ms`, `cubic-bezier(0.2, 0, 0, 1)`) com *shape morphing* sutil entre `pill` e `14px` em chips/toggles ativos.
+  * Respeitar obrigatoriamente `@media (prefers-reduced-motion: reduce)` zerando deslocamentos e molas.
 
 ---
 
-## 6. Tom de Voz & Microcopy
+## 6. Direção de Arte: Fotografia & Ilustração *Risograph*
 
-A **Terraço** fala como um amigo organizado que conhece bem a cidade: direto, transparente e acolhedor.
+* **Fotografia Principal (70% do peso visual):** Luz natural quente, varandas com plantas, interiores vividos, pessoas conversando em casa e ruas arborizadas de Belo Horizonte.
+* **Ilustração *Risograph* & Arcos Botânicos (30% de acento editorial):** Ilustrações leves de prédios com cobogós, varandas e arcos com samambaias e costela-de-adão nas cores da paleta (`#1F6F50`, `#F06A36`, `#F7C957`, `#1C1B19`), usadas pontualmente no Hero, em estados vazios ou em destaques de bairro — sem poluir a interface inteira.
 
-| Contexto | Evitar (Tradicional/Frio) | Usar (**Terraço Warm Tech**) |
+---
+
+## 7. Tom de Voz & Microcopy
+
+Claro, direto e acolhedor — como conversar com alguém que conhece bem Belo Horizonte e respeita a sua decisão:
+
+| Contexto | Evitar (Imobiliário Tradicional) | Usar (**Terraço Warm Tech**) |
 | :--- | :--- | :--- |
-| **Hero / Chamada** | *Encontre seu imóvel ideal.* | *Seu próximo canto, sem burocracia.* |
-| **Botão de Busca** | *Pesquisar Propriedades* | *Explorar imóveis* |
-| **Card de Imóvel** | *Unidade disponível para locação* | *Sem fiador · Sol da manhã* |
-| **Boas-vindas** | *Cadastro efetuado com sucesso.* | *Entra, a casa é sua.* |
-| **Agendamento** | *Solicitação de visita enviada.* | *Visita marcada! Só chegar.* |
+| **Chamada Principal** | *Encontre o imóvel dos seus sonhos.* | *Seu próximo canto em BH, sem burocracia.* |
+| **Ação Principal** | *Solicitar Atendimento* | *Explorar lançamentos* |
+| **Ficha Técnica** | *Consulte condições com nossos corretores.* | *Plantas, valores e entrega abertos na página.* |
+| **Contato** | *Preencha o formulário para receber contato.* | *Chame no WhatsApp só sobre o que interessa.* |
 
 ---
 
-## 7. Arquivos de Tokens
-* [tokens.json](./tokens.json) — Formato W3C Design Tokens (Figma / Style Dictionary).
-* [tokens.css](./tokens.css) — Variáveis CSS prontas para uso em web apps.
+## 8. Arquivos de Tokens
+* [tokens.json](./tokens.json) — Definições estruturadas do Design System.
+* [tokens.css](./tokens.css) — Variáveis CSS aplicadas na aplicação web.
+```
+
+Com o `DESIGN.md` e os tokens atualizados, a base visual já está alinhada à nova direção. Quando quiser, podemos desenhar juntos a **nova arquitetura da homepage** (seção por seção, sem o excesso de cards) antes de gerar o prompt para o agente implementar!
