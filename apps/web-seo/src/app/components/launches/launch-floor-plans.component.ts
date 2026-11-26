@@ -9,6 +9,7 @@ import {
   output,
 } from '@angular/core';
 import {
+  buildWhatsAppUrl,
   formatCurrencyBRL,
   type Lancamento,
   type LaunchFloorPlan,
@@ -56,11 +57,30 @@ import { ImageLightboxComponent } from './image-lightbox.component';
         color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
+    @keyframes m3e-plan-stage-enter {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .m3e-plan-stage {
+      animation: m3e-plan-stage-enter 220ms cubic-bezier(0.2, 0, 0, 1) both;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .m3e-chip,
       .m3e-plan-item,
       .m3e-tonal-btn {
         transition: none;
+      }
+
+      .m3e-plan-stage {
+        animation: none;
       }
     }
   `,
@@ -369,6 +389,19 @@ import { ImageLightboxComponent } from './image-lightbox.component';
                     </span>
                   </div>
                 }
+
+                <div class="pt-1">
+                  <a
+                    [href]="activePlanWhatsappHref()"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="floor-plan-whatsapp-link"
+                    class="terraco-link-underline inline-flex items-center gap-1.5 text-[13px] font-medium text-brand hover:text-brand-hover"
+                  >
+                    <span>Tirar dúvida sobre esta planta</span>
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </div>
               </div>
             </div>
           }
@@ -455,6 +488,21 @@ export class LaunchFloorPlansComponent {
       height: plan.height,
     }))
   );
+
+  readonly activePlanWhatsappHref = computed(() => {
+    const launch = this.item();
+    const plan = this.activePlan();
+    if (!plan) {
+      return buildWhatsAppUrl(launch.whatsappMensagem);
+    }
+    const unitsText = plan.unidades ? `, ${plan.unidades}` : '';
+    const priceText = plan.precoAPartirDe
+      ? ` (a partir de ${formatCurrencyBRL(plan.precoAPartirDe)})`
+      : '';
+    return buildWhatsAppUrl(
+      `Oi! Gostaria de tirar uma dúvida sobre a planta ${plan.titulo} (${plan.metragem}${unitsText}) do ${launch.nome} (${launch.bairro})${priceText}.`
+    );
+  });
 
   constructor() {
     effect(() => {

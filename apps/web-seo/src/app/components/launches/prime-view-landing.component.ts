@@ -6,7 +6,6 @@ import {
   ElementRef,
   PLATFORM_ID,
   afterNextRender,
-  afterRenderEffect,
   computed,
   effect,
   inject,
@@ -233,63 +232,42 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
       border-radius: 12px;
     }
 
-    @keyframes m3e-fab-text-spring {
-      0% {
+    @keyframes m3e-panel-enter {
+      from {
         opacity: 0;
-        transform: translateY(8px) scale(0.96);
+        transform: translateY(6px);
       }
-      100% {
+      to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
       }
     }
 
-    .m3e-cta-pill {
-      border-radius: 16px;
+    .m3e-tab-panel {
+      animation: m3e-panel-enter 220ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)) both;
+    }
+
+    .m3e-topbar-cta {
       transition:
-        border-radius 280ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        opacity 220ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        transform 280ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        box-shadow 280ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
-    }
-
-    .m3e-cta-pill[data-state='docked']:hover,
-    .m3e-cta-pill[data-state='docked']:active {
-      border-radius: 12px;
-    }
-
-    .m3e-cta-pill[data-state='floating'],
-    .m3e-cta-pill[data-state='retracted'] {
-      border-radius: 9999px;
-      box-shadow: var(--shadow-float, var(--shadow-floating));
-    }
-
-    .m3e-cta-pill[data-state='floating']:hover,
-    .m3e-cta-pill[data-state='floating']:active {
-      border-radius: 16px;
-    }
-
-    .m3e-fab-label {
-      display: inline-block;
-      animation: m3e-fab-text-spring 380ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        opacity 200ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        transform 200ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
     }
 
     @media (prefers-reduced-motion: reduce) {
       .m3e-tab-chip,
       .m3e-tonal-btn,
       .m3e-action-pill,
-      .m3e-cta-pill {
+      .m3e-topbar-cta {
         transition: none;
       }
 
-      .m3e-fab-label {
+      .m3e-tab-panel {
         animation: none;
       }
     }
   `,
   template: `
-    <div class="flex flex-1 flex-col bg-canvas">
+    <div class="flex flex-1 flex-col bg-canvas pb-20 md:pb-0">
       <!-- Primeira dobra limpa e protagonista sobre #FAF8F4 -->
       <section
         aria-labelledby="launch-heading"
@@ -334,313 +312,150 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             }
           </div>
 
-          <div
-            class="grid gap-5 sm:gap-7 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
-          >
-            <!-- Mosaico fotográfico protagonista -->
-            <div class="terraco-reveal-delay lg:col-span-7">
-              <div class="grid gap-3 lg:grid-cols-12">
-                <div
-                  [class.terraco-skeleton]="!imageLoaded()"
-                  [class]="
-                    heroSecondaryImages().length > 0
-                      ? 'group relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/10] lg:col-span-9 lg:rounded-[24px]'
-                      : 'group relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/10] lg:col-span-12 lg:rounded-[24px]'
-                  "
-                >
-                  <img
-                    #heroImg
-                    data-testid="launch-hero-image"
-                    [ngSrc]="item().imagem"
-                    [alt]="item().imagemAlt"
-                    [width]="item().imagemWidth"
-                    [height]="item().imagemHeight"
-                    priority
-                    [style.view-transition-name]="'launch-image-' + item().slug"
-                    (load)="markImageLoaded()"
-                    (error)="markImageLoaded()"
-                    class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100 lg:rounded-[24px]"
-                  />
-
-                  @if (hasGallery()) {
-                    <button
-                      type="button"
-                      (click)="openLightbox(0)"
-                      [attr.aria-label]="
-                        'Abrir galeria de imagens de ' + item().nome
-                      "
-                      class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
-                    ></button>
-
-                    <button
-                      type="button"
-                      (click)="openLightbox(0)"
-                      class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.75"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="h-3.5 w-3.5"
-                      >
-                        <rect x="3" y="3" width="18" height="18" rx="3" />
-                        <circle cx="9" cy="9" r="1.5" />
-                        <path d="m21 15-4.5-4.5L7 20" />
-                      </svg>
-                      <span class="tabular-nums">
-                        {{ galleryImages().length }} fotos
-                      </span>
-                    </button>
-                  }
-
-                  <div class="absolute top-3 right-3 z-10">
-                    <app-favorite-button
-                      [slug]="item().slug"
-                      [nome]="item().nome"
-                    />
-                  </div>
-                </div>
-
-                @if (heroSecondaryImages().length > 0) {
-                  <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:gap-3">
-                    @for (
-                      preview of heroSecondaryImages();
-                      track preview.url;
-                      let idx = $index
-                    ) {
-                      <button
-                        type="button"
-                        (click)="openLightbox(idx)"
-                        [attr.aria-label]="'Ampliar foto: ' + preview.alt"
-                        class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer"
-                      >
-                        <img
-                          [src]="preview.url"
-                          [alt]="preview.alt"
-                          [attr.width]="preview.width ?? null"
-                          [attr.height]="preview.height ?? null"
-                          decoding="async"
-                          class="h-full w-full rounded-[18px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
-                        />
-                      </button>
-                    }
-                  </div>
-                }
-              </div>
-            </div>
-
-            <!-- Painel editorial e CTA único em Terracota -->
-            <div class="flex min-w-0 flex-col gap-3.5 sm:gap-4 lg:col-span-5">
-              <div class="space-y-1.5">
-                <div class="flex flex-wrap items-center gap-2">
-                  <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
-                    @if (bairroGuideSlug(); as guideSlug) {
-                      <a
-                        [routerLink]="['/bairros', guideSlug]"
-                        class="terraco-link-underline text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
-                      >{{ item().bairro }}</a>
-                    } @else {
-                      <span>{{ item().bairro }}</span>
-                    }<span>, {{ item().cidade }} - {{ item().uf }}</span>
-                  </p>
-                  @if (item().badge) {
-                    <span
-                      class="inline-flex items-center rounded-pill bg-[#E5F2EC] px-2.5 py-0.5 text-[12px] font-medium leading-[1.3] text-[#1F6F50]"
-                    >
-                      {{ item().badge }}
-                    </span>
-                  }
-                </div>
-
-                <h1
-                  id="launch-heading"
-                  [style.view-transition-name]="'launch-title-' + item().slug"
-                  class="font-display text-[clamp(1.75rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
-                >
-                  {{ item().nome }}
-                </h1>
-
-                <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
-                  {{ item().endereco }}
-                </p>
-              </div>
-
-              <!-- Ficha técnica dinâmica (somente campos disponíveis) -->
-              <dl
-                class="grid grid-cols-2 gap-x-4 gap-y-2.5 border-y border-border-subtle py-3 sm:gap-x-5 sm:gap-y-3 sm:py-3.5"
-              >
-                @for (metric of heroMetrics(); track metric.label) {
-                  <div class="space-y-0.5">
-                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
-                      {{ metric.label }}
-                    </dt>
-                    <dd
-                      [class]="
-                        metric.highlight
-                          ? 'text-[13px] font-medium leading-[1.3] text-brand sm:text-[14px]'
-                          : 'text-[13px] font-medium leading-[1.3] text-ink sm:text-[14px]'
-                      "
-                      [class.tabular-nums]="metric.tabular"
-                    >
-                      {{ metric.value }}
-                    </dd>
-                  </div>
-                }
-              </dl>
-
-              <div class="space-y-2.5">
-                @let ctaState = ctaPillState();
-                <div #heroCtaSlot class="min-h-[52px]">
+          <!-- Cabeçalho editorial limpo -->
+          <div class="terraco-reveal mb-5 space-y-2 sm:mb-6">
+            <div class="flex flex-wrap items-center gap-2">
+              <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
+                @if (bairroGuideSlug(); as guideSlug) {
                   <a
-                    #ctaPillEl
-                    [href]="contextualWhatsappHref()"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-testid="whatsapp-cta-pill"
-                    [attr.data-state]="ctaState"
-                    [attr.aria-hidden]="ctaState === 'retracted' ? 'true' : null"
-                    [attr.tabindex]="ctaState === 'retracted' ? -1 : null"
-                    [attr.aria-label]="
-                      'Abrir WhatsApp: ' +
-                      floatingPillLabel() +
-                      ' — ' +
-                      item().nome
-                    "
-                    [class]="
-                      ctaState === 'docked'
-                        ? 'm3e-cta-pill relative flex min-h-[48px] w-full items-center justify-center gap-2.5 bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover'
-                        : ctaState === 'floating'
-                          ? 'm3e-cta-pill fixed right-4 bottom-5 z-40 inline-flex min-h-[48px] w-auto max-w-[calc(100vw-2rem)] translate-y-0 scale-100 items-center justify-center gap-2.5 bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.3] text-white opacity-100 hover:bg-action-hover md:right-7 md:bottom-7'
-                          : 'm3e-cta-pill pointer-events-none fixed right-4 bottom-5 z-40 inline-flex min-h-[48px] w-auto max-w-[calc(100vw-2rem)] translate-y-3 scale-90 items-center justify-center gap-2.5 bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.3] text-white opacity-0 md:right-7 md:bottom-7'
-                    "
+                    [routerLink]="['/bairros', guideSlug]"
+                    class="terraco-link-underline text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
+                  >{{ item().bairro }}</a>
+                } @else {
+                  <span>{{ item().bairro }}</span>
+                }<span>, {{ item().cidade }} - {{ item().uf }}</span>
+              </p>
+              @if (item().badge) {
+                <span
+                  class="inline-flex items-center rounded-pill bg-[#E5F2EC] px-2.5 py-0.5 text-[12px] font-medium leading-[1.3] text-[#1F6F50]"
+                >
+                  {{ item().badge }}
+                </span>
+              }
+            </div>
+
+            <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+              <h1
+                id="launch-heading"
+                [style.view-transition-name]="'launch-title-' + item().slug"
+                class="font-display text-[clamp(1.75rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
+              >
+                {{ item().nome }}
+              </h1>
+              <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
+                {{ item().endereco }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Mosaico fotográfico protagonista em largura total -->
+          <div class="terraco-reveal-delay grid gap-3 lg:grid-cols-12">
+            <div
+              [class.terraco-skeleton]="!imageLoaded()"
+              [class]="
+                heroSecondaryImages().length > 0
+                  ? 'group relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/9] lg:col-span-9 lg:rounded-[24px]'
+                  : 'group relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/9] lg:col-span-12 lg:rounded-[24px]'
+              "
+            >
+              <img
+                #heroImg
+                data-testid="launch-hero-image"
+                [ngSrc]="item().imagem"
+                [alt]="item().imagemAlt"
+                [width]="item().imagemWidth"
+                [height]="item().imagemHeight"
+                priority
+                [style.view-transition-name]="'launch-image-' + item().slug"
+                (load)="markImageLoaded()"
+                (error)="markImageLoaded()"
+                class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100 lg:rounded-[24px]"
+              />
+
+              @if (hasGallery()) {
+                <button
+                  type="button"
+                  (click)="openLightbox(0)"
+                  [attr.aria-label]="
+                    'Abrir galeria de imagens de ' + item().nome
+                  "
+                  class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
+                ></button>
+
+                <button
+                  type="button"
+                  (click)="openLightbox(0)"
+                  class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
+                >
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-3.5 w-3.5"
                   >
-                    @if (ctaState !== 'docked') {
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="h-[18px] w-[18px] shrink-0"
-                      >
-                        <path
-                          d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-                        />
-                      </svg>
-                    }
-                    <span class="min-w-0 overflow-hidden">
-                      @for (label of [floatingPillLabel()]; track label) {
-                        <span
-                          data-testid="whatsapp-cta-label"
-                          class="m3e-fab-label block truncate"
-                        >
-                          {{ label }}
-                        </span>
-                      }
-                    </span>
-                  </a>
-                </div>
+                    <rect x="3" y="3" width="18" height="18" rx="3" />
+                    <circle cx="9" cy="9" r="1.5" />
+                    <path d="m21 15-4.5-4.5L7 20" />
+                  </svg>
+                  <span class="tabular-nums">
+                    {{ galleryImages().length }} fotos
+                  </span>
+                </button>
+              }
 
-                <div class="hidden sm:block">
-                  @if (callbackSubmitted()) {
-                    <p
-                      role="status"
-                      data-testid="launch-callback-success"
-                      class="rounded-[14px] border border-[#1F6F50]/25 bg-[#E5F2EC] px-3.5 py-2.5 text-[13px] font-normal leading-[1.45] text-[#1F6F50]"
-                    >
-                      Recebemos seu contato. Um especialista retorna em
-                      instantes sobre {{ item().nome }}.
-                    </p>
-                  } @else if (callbackOpen()) {
-                    <form
-                      (submit)="submitCallbackLead($event)"
-                      animate.enter="terraco-chip-enter"
-                      class="space-y-2.5 rounded-[18px] border border-border-subtle bg-surface p-4"
-                    >
-                      <div class="flex items-center justify-between gap-2">
-                        <span class="text-[13px] font-medium text-ink">
-                          Receber retorno no WhatsApp
-                        </span>
-                        <button
-                          type="button"
-                          (click)="toggleCallbackForm()"
-                          class="cursor-pointer text-[13px] font-normal text-ink-muted hover:text-ink"
-                        >
-                          Fechar
-                        </button>
-                      </div>
-
-                      <input
-                        type="text"
-                        [value]="callbackName()"
-                        (input)="onCallbackNameInput($event)"
-                        placeholder="Seu nome (opcional)"
-                        aria-label="Seu nome"
-                        autocomplete="name"
-                        class="min-h-[40px] w-full rounded-[12px] border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
-                      />
-
-                      <div class="flex flex-col gap-2 sm:flex-row">
-                        <input
-                          type="tel"
-                          [value]="callbackPhone()"
-                          (input)="onCallbackPhoneInput($event)"
-                          placeholder="(31) 99999-9999"
-                          aria-label="Seu WhatsApp com DDD"
-                          autocomplete="tel"
-                          required
-                          class="min-h-[40px] flex-1 rounded-[12px] border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
-                        />
-                        <button
-                          type="submit"
-                          [disabled]="callbackSubmitting()"
-                          class="terraco-btn inline-flex min-h-[40px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-ink px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-ink/90 disabled:opacity-60"
-                        >
-                          {{ callbackSubmitting() ? 'Enviando...' : 'Solicitar' }}
-                        </button>
-                      </div>
-
-                      @if (callbackError(); as errorMsg) {
-                        <p
-                          role="alert"
-                          class="rounded-sm bg-error-bg px-3 py-2 text-[13px] font-normal text-error-fg"
-                        >
-                          {{ errorMsg }}
-                        </p>
-                      }
-                    </form>
-                  } @else {
-                    <button
-                      type="button"
-                      (click)="toggleCallbackForm()"
-                      data-testid="launch-callback-toggle"
-                      class="terraco-link-underline w-full cursor-pointer py-0.5 text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
-                    >
-                      Prefere que um especialista te chame?
-                    </button>
-                  }
-                </div>
+              <div class="absolute top-3 right-3 z-10">
+                <app-favorite-button
+                  [slug]="item().slug"
+                  [nome]="item().nome"
+                />
               </div>
             </div>
+
+            @if (heroSecondaryImages().length > 0) {
+              <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:gap-3">
+                @for (
+                  preview of heroSecondaryImages();
+                  track preview.url;
+                  let idx = $index
+                ) {
+                  <button
+                    type="button"
+                    (click)="openLightbox(idx)"
+                    [attr.aria-label]="'Ampliar foto: ' + preview.alt"
+                    class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer"
+                  >
+                    <img
+                      [src]="preview.url"
+                      [alt]="preview.alt"
+                      [attr.width]="preview.width ?? null"
+                      [attr.height]="preview.height ?? null"
+                      decoding="async"
+                      class="h-full w-full rounded-[18px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+                    />
+                  </button>
+                }
+              </div>
+            }
           </div>
         </div>
       </section>
 
-      <!-- M3E Pill Bar sticky no escopo da página -->
+      <!-- Barra de âncoras sticky + CTA condensado ao sair do card lateral -->
       <div
         class="sticky top-[72px] z-20 mx-auto w-full max-w-7xl px-4 sm:top-[76px] sm:px-6 lg:px-8"
       >
-        <nav
-          #sectionNav
-          aria-label="Seções do empreendimento"
-          class="terraco-no-scrollbar flex items-center gap-1.5 overflow-x-auto rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-chip backdrop-blur-md"
+        <div
+          class="flex items-center justify-between gap-3 rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-chip backdrop-blur-md"
         >
+          <nav
+            #sectionNav
+            aria-label="Seções do empreendimento"
+            class="terraco-no-scrollbar flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto"
+          >
           <a
             #sectionNavLink
             data-section-id="sobre"
@@ -733,90 +548,116 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               Comparar em BH
             </a>
           }
-        </nav>
+          </nav>
+
+          <!-- Resumo discreto + CTA compacto ao rolar além do card sticky lateral -->
+          <div
+            data-testid="topbar-condensed-cta"
+            [attr.data-visible]="showCondensedTopCta()"
+            [attr.aria-hidden]="!showCondensedTopCta()"
+            [class]="
+              showCondensedTopCta()
+                ? 'm3e-topbar-cta hidden shrink-0 translate-y-0 items-center gap-3 pr-1 opacity-100 md:flex'
+                : 'm3e-topbar-cta pointer-events-none hidden shrink-0 translate-y-1 items-center gap-3 pr-1 opacity-0 md:flex'
+            "
+          >
+            <span class="max-w-[200px] truncate text-[12px] font-normal text-ink-muted">
+              {{ item().nome }} · {{ item().bairro }}
+            </span>
+            <a
+              [href]="contextualWhatsappHref()"
+              [attr.tabindex]="showCondensedTopCta() ? null : -1"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="topbar-whatsapp-cta"
+              class="m3e-action-pill inline-flex min-h-[38px] items-center justify-center bg-action px-4 py-1.5 text-[13px] font-medium leading-[1.3] text-white hover:bg-action-hover"
+            >
+              Falar no WhatsApp
+            </a>
+          </div>
+        </div>
       </div>
 
-      <!-- Sobre, Pilares (Abas/Chips M3E) e Entorno sobre #FAF8F4 -->
+      <!-- Corpo editorial assimétrico (2/3 esquerda + 1/3 sticky direita) sobre #FAF8F4 -->
       <section
         aria-label="Detalhes, pilares e entorno"
         class="bg-canvas pt-10 pb-12 sm:pt-12 sm:pb-16 lg:pb-20"
       >
-        <div
-          class="mx-auto w-full max-w-7xl space-y-12 px-4 sm:px-6 sm:space-y-14 lg:px-8"
-        >
-          <!-- Sobre & Ficha Estrutural -->
-          <section
-            id="sobre"
-            aria-labelledby="about-heading"
-            class="scroll-mt-28"
-          >
-            <div class="grid gap-6 lg:grid-cols-12 lg:items-start lg:gap-12">
-              <div class="space-y-2 lg:col-span-4">
-                <h2
-                  id="about-heading"
-                  class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
-                >
-                  Sobre o empreendimento
-                </h2>
-                @if (item().tagline) {
-                  <p class="text-[14px] font-normal text-ink-muted">
-                    {{ item().tagline }}
+        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="grid gap-10 md:grid-cols-12 md:items-start lg:gap-12">
+            <!-- Coluna editorial principal (2/3) -->
+            <div class="min-w-0 space-y-12 sm:space-y-14 md:col-span-7 lg:col-span-8">
+              <!-- Sobre & Ficha Estrutural -->
+              <section
+                id="sobre"
+                aria-labelledby="about-heading"
+                class="scroll-mt-32"
+              >
+                <div class="space-y-5">
+                  <div class="space-y-1.5">
+                    <h2
+                      id="about-heading"
+                      class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                    >
+                      Sobre o empreendimento
+                    </h2>
+                    @if (item().tagline) {
+                      <p class="text-[14px] font-normal text-ink-muted">
+                        {{ item().tagline }}
+                      </p>
+                    }
+                  </div>
+
+                  <p
+                    class="max-w-[64ch] text-[15px] font-normal leading-[1.65] text-ink sm:text-base"
+                  >
+                    {{ item().resumo }}
                   </p>
-                }
-              </div>
 
-              <div class="space-y-5 lg:col-span-8">
-                <p
-                  class="max-w-[64ch] text-[15px] font-normal leading-[1.65] text-ink sm:text-base"
-                >
-                  {{ item().resumo }}
-                </p>
+                  <dl
+                    class="grid gap-4 border-t border-border-subtle pt-5 sm:grid-cols-2"
+                  >
+                    @if (item().estrutura) {
+                      <div class="space-y-1">
+                        <dt class="text-[13px] font-normal text-ink-muted">
+                          Estrutura e implantação
+                        </dt>
+                        <dd
+                          class="text-[14px] font-medium leading-[1.5] text-ink tabular-nums sm:text-[15px]"
+                        >
+                          {{ item().estrutura }}
+                        </dd>
+                      </div>
+                    }
 
-                <dl
-                  class="grid gap-4 border-t border-border-subtle pt-5 sm:grid-cols-2"
-                >
-                  @if (item().estrutura) {
-                    <div class="space-y-1">
-                      <dt class="text-[13px] font-normal text-ink-muted">
-                        Estrutura e implantação
-                      </dt>
-                      <dd
-                        class="text-[14px] font-medium leading-[1.5] text-ink tabular-nums sm:text-[15px]"
-                      >
-                        {{ item().estrutura }}
-                      </dd>
-                    </div>
-                  }
+                    @if (item().projetos) {
+                      <div class="space-y-1">
+                        <dt class="text-[13px] font-normal text-ink-muted">
+                          Projetos assinados
+                        </dt>
+                        <dd
+                          class="text-[14px] font-medium leading-[1.5] text-ink sm:text-[15px]"
+                        >
+                          {{ item().projetos }}
+                        </dd>
+                      </div>
+                    }
 
-                  @if (item().projetos) {
-                    <div class="space-y-1">
-                      <dt class="text-[13px] font-normal text-ink-muted">
-                        Projetos assinados
-                      </dt>
-                      <dd
-                        class="text-[14px] font-medium leading-[1.5] text-ink sm:text-[15px]"
-                      >
-                        {{ item().projetos }}
-                      </dd>
-                    </div>
-                  }
-
-                  @if (item().registro) {
-                    <div class="space-y-1 sm:col-span-2">
-                      <dt class="text-[13px] font-normal text-ink-muted">
-                        Incorporação e registro
-                      </dt>
-                      <dd
-                        class="text-[13px] font-normal leading-[1.5] text-ink-muted tabular-nums"
-                      >
-                        {{ item().registro }}
-                      </dd>
-                    </div>
-                  }
-                </dl>
-              </div>
-            </div>
-          </section>
+                    @if (item().registro) {
+                      <div class="space-y-1 sm:col-span-2">
+                        <dt class="text-[13px] font-normal text-ink-muted">
+                          Incorporação e registro
+                        </dt>
+                        <dd
+                          class="text-[13px] font-normal leading-[1.5] text-ink-muted tabular-nums"
+                        >
+                          {{ item().registro }}
+                        </dd>
+                      </div>
+                    }
+                  </dl>
+                </div>
+              </section>
 
           <!-- Pilares do Empreendimento por Abas/Chips M3E -->
           @if (pilaresList().length > 0) {
@@ -864,8 +705,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </div>
 
               @if (activePilar(); as pilar) {
-                <div class="mt-7 border-t border-border-subtle pt-6">
-                  @if (pilar.subgrupos?.length) {
+                @for (pilarKey of [pilar.id]; track pilarKey) {
+                  <div class="m3e-tab-panel mt-7 border-t border-border-subtle pt-6">
+                    @if (pilar.subgrupos?.length) {
                     <div class="grid gap-8 md:grid-cols-2">
                       @for (sub of pilar.subgrupos ?? []; track sub.titulo) {
                         <div class="space-y-3">
@@ -900,7 +742,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     </div>
                   } @else {
                     <ul
-                      class="grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2 lg:grid-cols-3"
+                      class="grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2"
                     >
                       @for (entry of pilar.itens; track entry) {
                         <li
@@ -923,7 +765,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       }
                     </ul>
                   }
-                </div>
+                  </div>
+                }
               }
             </section>
           }
@@ -998,7 +841,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </div>
 
               <ul
-                class="mt-6 grid grid-cols-1 gap-x-10 divide-y divide-border-subtle border-y border-border-subtle sm:grid-cols-2 lg:grid-cols-3"
+                class="mt-6 grid grid-cols-1 gap-x-8 divide-y divide-border-subtle border-y border-border-subtle sm:grid-cols-2"
               >
                 @for (place of visibleEntornoItems(); track place.local + place.tempo) {
                   <li
@@ -1015,6 +858,161 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </ul>
             </section>
           }
+            </div>
+
+            <!-- Coluna direita (1/3): Cartão de decisão calmo e sticky estilo Airbnb -->
+            <aside
+              aria-label="Resumo e atendimento direto"
+              data-testid="sticky-decision-card"
+              class="hidden rounded-[24px] border border-border-subtle bg-surface p-6 md:sticky md:top-36 md:block md:col-span-5 lg:col-span-4"
+            >
+              <div class="space-y-4">
+                <div class="space-y-1">
+                  @if (formattedPrice(); as price) {
+                    <p class="text-[13px] font-normal text-ink-muted">
+                      A partir de
+                    </p>
+                    <p
+                      class="font-display text-[1.75rem] font-medium leading-[1.1] tracking-[-0.02em] text-ink tabular-nums"
+                    >
+                      {{ price }}
+                    </p>
+                  } @else {
+                    <p class="text-[13px] font-normal text-ink-muted">
+                      Tabela e disponibilidade
+                    </p>
+                    <p
+                      class="font-display text-[1.375rem] font-medium leading-[1.2] tracking-[-0.015em] text-ink"
+                    >
+                      Valores sob consulta
+                    </p>
+                  }
+                </div>
+
+                <dl
+                  class="grid grid-cols-2 gap-x-4 gap-y-3 border-y border-border-subtle py-4"
+                >
+                  @for (metric of heroMetrics(); track metric.label) {
+                    <div class="space-y-0.5">
+                      <dt class="text-[12px] font-normal text-ink-muted">
+                        {{ metric.label }}
+                      </dt>
+                      <dd
+                        [class]="
+                          metric.highlight
+                            ? 'text-[13px] font-medium leading-[1.3] text-brand'
+                            : 'text-[13px] font-medium leading-[1.3] text-ink'
+                        "
+                        [class.tabular-nums]="metric.tabular"
+                      >
+                        {{ metric.value }}
+                      </dd>
+                    </div>
+                  }
+                </dl>
+
+                <p class="text-[12px] font-normal text-ink-muted">
+                  Assunto atual:
+                  <span class="font-medium text-ink">
+                    {{ currentContextLabel() }}
+                  </span>
+                </p>
+
+                <a
+                  [href]="contextualWhatsappHref()"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="sticky-whatsapp-cta"
+                  class="m3e-action-pill flex min-h-[48px] w-full items-center justify-center bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+                >
+                  Falar no WhatsApp
+                </a>
+
+                @if (callbackSubmitted()) {
+                  <p
+                    role="status"
+                    data-testid="launch-callback-success"
+                    class="rounded-[14px] border border-[#1F6F50]/25 bg-[#E5F2EC] px-3.5 py-2.5 text-[13px] font-normal leading-[1.45] text-[#1F6F50]"
+                  >
+                    Recebemos seu contato. Um especialista retorna em instantes
+                    sobre {{ item().nome }}.
+                  </p>
+                } @else if (callbackOpen()) {
+                  <form
+                    (submit)="submitCallbackLead($event)"
+                    animate.enter="terraco-chip-enter"
+                    class="space-y-2.5 rounded-[18px] border border-border-subtle bg-canvas p-4"
+                  >
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="text-[13px] font-medium text-ink">
+                        Receber retorno no WhatsApp
+                      </span>
+                      <button
+                        type="button"
+                        (click)="toggleCallbackForm()"
+                        class="cursor-pointer text-[13px] font-normal text-ink-muted hover:text-ink"
+                      >
+                        Fechar
+                      </button>
+                    </div>
+
+                    <input
+                      type="text"
+                      [value]="callbackName()"
+                      (input)="onCallbackNameInput($event)"
+                      placeholder="Seu nome (opcional)"
+                      aria-label="Seu nome"
+                      autocomplete="name"
+                      class="min-h-[40px] w-full rounded-[12px] border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
+                    />
+
+                    <div class="flex flex-col gap-2">
+                      <input
+                        type="tel"
+                        [value]="callbackPhone()"
+                        (input)="onCallbackPhoneInput($event)"
+                        placeholder="(31) 99999-9999"
+                        aria-label="Seu WhatsApp com DDD"
+                        autocomplete="tel"
+                        required
+                        class="min-h-[40px] w-full rounded-[12px] border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
+                      />
+                      <button
+                        type="submit"
+                        [disabled]="callbackSubmitting()"
+                        class="terraco-btn inline-flex min-h-[40px] w-full cursor-pointer items-center justify-center rounded-pill bg-ink px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-ink/90 disabled:opacity-60"
+                      >
+                        {{ callbackSubmitting() ? 'Enviando...' : 'Solicitar retorno' }}
+                      </button>
+                    </div>
+
+                    @if (callbackError(); as errorMsg) {
+                      <p
+                        role="alert"
+                        class="rounded-sm bg-error-bg px-3 py-2 text-[13px] font-normal text-error-fg"
+                      >
+                        {{ errorMsg }}
+                      </p>
+                    }
+                  </form>
+                } @else {
+                  <button
+                    type="button"
+                    (click)="toggleCallbackForm()"
+                    data-testid="launch-callback-toggle"
+                    class="terraco-link-underline w-full cursor-pointer py-0.5 text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                  >
+                    Prefere que um especialista te chame?
+                  </button>
+                }
+              </div>
+            </aside>
+          </div>
+          <div
+            #stickyCardEndSentinel
+            aria-hidden="true"
+            class="pointer-events-none h-px w-full"
+          ></div>
         </div>
       </section>
 
@@ -1099,7 +1097,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               aria-labelledby="table-invite-heading"
               class="border-t border-border-subtle pt-12 scroll-mt-28"
             >
-              <div class="max-w-2xl space-y-2">
+              <div class="max-w-2xl space-y-3">
                 <h2
                   id="table-invite-heading"
                   class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
@@ -1110,9 +1108,19 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   class="max-w-[58ch] text-[15px] font-normal leading-[1.55] text-ink-muted sm:text-base"
                 >
                   Os valores do {{ item().nome }} variam conforme tipologia,
-                  andar e posição. Use o botão de WhatsApp para receber a tabela
-                  vigente, sem cadastro nem compromisso.
+                  andar e posição. Receba a tabela vigente direto no WhatsApp,
+                  sem cadastro nem compromisso.
                 </p>
+                <a
+                  [href]="contextualWhatsappHref()"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="table-whatsapp-link"
+                  class="terraco-link-underline inline-flex items-center gap-1.5 text-[14px] font-medium text-brand hover:text-brand-hover"
+                >
+                  <span>Consultar tabela atualizada</span>
+                  <span aria-hidden="true">→</span>
+                </a>
               </div>
             </section>
           }
@@ -1320,6 +1328,41 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         variant="editorial"
         [destinations]="nextDestinations()"
       />
+
+      <!-- Mobile (< md): Barra inferior minimalista 64px estilo Airbnb -->
+      <aside
+        aria-label="Resumo e atendimento no WhatsApp"
+        data-testid="mobile-whatsapp-bar"
+        class="fixed inset-x-0 bottom-0 z-30 flex h-16 items-center justify-between gap-3 border-t border-border-subtle bg-canvas/95 px-4 backdrop-blur-md md:hidden"
+      >
+        <div class="min-w-0 flex-1">
+          @if (formattedPrice(); as price) {
+            <p class="truncate text-[14px] font-medium leading-[1.25] text-ink tabular-nums">
+              A partir de {{ price }}
+            </p>
+            <p class="truncate text-[12px] font-normal leading-[1.3] text-ink-muted">
+              {{ currentContextLabel() }}
+            </p>
+          } @else {
+            <p class="truncate text-[14px] font-medium leading-[1.25] text-ink">
+              {{ item().bairro }}
+            </p>
+            <p class="truncate text-[12px] font-normal leading-[1.3] text-ink-muted tabular-nums">
+              {{ item().metragem }} · {{ currentContextLabel() }}
+            </p>
+          }
+        </div>
+
+        <a
+          [href]="contextualWhatsappHref()"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid="mobile-whatsapp-cta"
+          class="m3e-action-pill inline-flex min-h-[44px] shrink-0 items-center justify-center bg-action px-5 py-2 text-[13px] font-medium leading-[1.3] text-white hover:bg-action-hover"
+        >
+          Falar no WhatsApp
+        </a>
+      </aside>
 
       @defer (when lightboxOpen()) {
         <app-image-lightbox
@@ -1587,10 +1630,9 @@ export class PrimeViewLandingComponent {
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
 
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
-  private readonly heroCtaSlot =
-    viewChild<ElementRef<HTMLElement>>('heroCtaSlot');
-  private readonly ctaPillEl =
-    viewChild<ElementRef<HTMLAnchorElement>>('ctaPillEl');
+  private readonly stickyCardEndSentinel = viewChild<ElementRef<HTMLElement>>(
+    'stickyCardEndSentinel'
+  );
   private readonly launchWhatsappBand =
     viewChild<ElementRef<HTMLElement>>('launchWhatsappBand');
   private readonly sectionNav =
@@ -1600,8 +1642,6 @@ export class PrimeViewLandingComponent {
 
   private ignoreScrollSpyUntil = 0;
   private pendingScrollSettleTimer: ReturnType<typeof setTimeout> | null = null;
-  private pendingFlipFromRect: DOMRect | null = null;
-  private activeFlipAnimation: Animation | null = null;
 
   readonly bairroGuideSlug = computed<string | null>(() => {
     const currentBairro = this.item().bairro;
@@ -1623,45 +1663,35 @@ export class PrimeViewLandingComponent {
     this.selectedIntentOption().buildMessage(this.item())
   );
 
-  readonly ctaPillState = computed<'docked' | 'floating' | 'retracted'>(() => {
-    if (!this.isPastFold()) {
-      return 'docked';
-    }
-    return this.closingBandVisible() ? 'retracted' : 'floating';
-  });
+  readonly showCondensedTopCta = computed(
+    () => this.isPastFold() && !this.closingBandVisible()
+  );
 
-  readonly floatingPillLabel = computed<string>(() => {
-    const launchName = this.item().nome;
-    if (!this.isPastFold()) {
-      return 'Falar no WhatsApp';
-    }
-
+  readonly currentContextLabel = computed<string>(() => {
     switch (this.activeSection()) {
-      case 'pilares':
-        return 'Dúvidas sobre o condomínio';
+      case 'pilares': {
+        const pilar = this.activePilar();
+        return pilar ? `Estrutura · ${pilar.label}` : 'Estrutura & Lazer';
+      }
       case 'entorno':
-        return 'Perguntar sobre o bairro';
+        return 'Entorno & Deslocamentos';
       case 'plantas': {
         const plan = this.activeFloorPlan();
-        return plan ? `Dúvida: ${plan.titulo}` : 'Dúvidas sobre as plantas';
+        return plan ? `Planta · ${plan.titulo}` : 'Plantas e tipologias';
       }
       case 'condicoes':
-        return 'Receber tabela e condições';
+        return this.hasPrice() ? 'Simulador e condições' : 'Tabela e condições';
       case 'galeria':
-        return 'Agendar visita';
+        return 'Galeria';
+      case 'outros-lancamentos':
+        return 'Comparando em BH';
       default:
-        return `Falar sobre o ${launchName}`;
+        return 'Visão geral';
     }
   });
 
   readonly contextualWhatsappMessage = computed<string>(() => {
     const currentItem = this.item();
-    if (!this.isPastFold()) {
-      return (
-        currentItem.whatsappMensagem ||
-        `Oi! Estou vendo o ${currentItem.nome} (${currentItem.bairro}) e gostaria de receber mais informações.`
-      );
-    }
 
     switch (this.activeSection()) {
       case 'pilares': {
@@ -1768,38 +1798,20 @@ export class PrimeViewLandingComponent {
         observer.observe(target);
       }
 
-      const ctaSlot = this.heroCtaSlot()?.nativeElement;
+      const stickyEnd = this.stickyCardEndSentinel()?.nativeElement;
       let foldObserver: IntersectionObserver | null = null;
-      if (ctaSlot) {
+      if (stickyEnd) {
         foldObserver = new IntersectionObserver(
           (entries) => {
             const entry = entries[0];
             if (!entry) return;
-            const nextPastFold =
-              !entry.isIntersecting && entry.boundingClientRect.top < 0;
-            if (nextPastFold === this.isPastFold()) {
-              return;
-            }
-            const pillEl = this.ctaPillEl()?.nativeElement;
-            const reducedMotion = Boolean(
-              this.document.defaultView?.matchMedia(
-                '(prefers-reduced-motion: reduce)'
-              ).matches
+            this.isPastFold.set(
+              !entry.isIntersecting && entry.boundingClientRect.top < 140
             );
-            if (
-              pillEl &&
-              !this.closingBandVisible() &&
-              !reducedMotion &&
-              typeof pillEl.animate === 'function'
-            ) {
-              this.activeFlipAnimation?.cancel();
-              this.pendingFlipFromRect = pillEl.getBoundingClientRect();
-            }
-            this.isPastFold.set(nextPastFold);
           },
-          { threshold: 0 }
+          { rootMargin: '-120px 0px 0px 0px', threshold: 0 }
         );
-        foldObserver.observe(ctaSlot);
+        foldObserver.observe(stickyEnd);
       }
 
       const closingBand = this.launchWhatsappBand()?.nativeElement;
@@ -1820,78 +1832,11 @@ export class PrimeViewLandingComponent {
         observer.disconnect();
         foldObserver?.disconnect();
         closingObserver?.disconnect();
-        this.activeFlipAnimation?.cancel();
         if (this.pendingScrollSettleTimer !== null) {
           clearTimeout(this.pendingScrollSettleTimer);
           this.pendingScrollSettleTimer = null;
         }
       });
-    });
-
-    afterRenderEffect(() => {
-      const pastFold = this.isPastFold();
-      if (!isPlatformBrowser(this.platformId) || !this.pendingFlipFromRect) {
-        return;
-      }
-
-      const first = this.pendingFlipFromRect;
-      this.pendingFlipFromRect = null;
-
-      const pillEl = this.ctaPillEl()?.nativeElement;
-      if (!pillEl || typeof pillEl.animate !== 'function') {
-        return;
-      }
-
-      const last = pillEl.getBoundingClientRect();
-      if (
-        first.width <= 0 ||
-        first.height <= 0 ||
-        last.width <= 0 ||
-        last.height <= 0
-      ) {
-        return;
-      }
-
-      const dx = first.left - last.left;
-      const dy = first.top - last.top;
-      const sx = first.width / last.width;
-      const sy = first.height / last.height;
-
-      if (
-        Math.abs(dx) < 1 &&
-        Math.abs(dy) < 1 &&
-        Math.abs(sx - 1) < 0.01 &&
-        Math.abs(sy - 1) < 0.01
-      ) {
-        return;
-      }
-
-      pillEl.style.transformOrigin = 'top left';
-      this.activeFlipAnimation = pillEl.animate(
-        [
-          {
-            transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`,
-            borderRadius: pastFold ? '16px' : '9999px',
-          },
-          {
-            transform: 'translate3d(0, 0, 0) scale(1, 1)',
-            borderRadius: pastFold ? '9999px' : '16px',
-          },
-        ],
-        {
-          duration: 480,
-          easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-          fill: 'none',
-        }
-      );
-      this.activeFlipAnimation.onfinish = () => {
-        pillEl.style.transformOrigin = '';
-        this.activeFlipAnimation = null;
-      };
-      this.activeFlipAnimation.oncancel = () => {
-        pillEl.style.transformOrigin = '';
-        this.activeFlipAnimation = null;
-      };
     });
 
     effect(() => {
