@@ -34,8 +34,8 @@ const HOME_NEXT_DESTINATIONS: readonly JourneyDestination[] = [
     title: 'Guias de bairros em BH',
     description:
       'Entenda mobilidade, serviços e perfil dos imóveis em Estoril, Santa Efigênia, Serrano e Buritis.',
-    actionLabel: 'Ler guia do Estoril',
-    route: ['/bairros', 'estoril'],
+    actionLabel: 'Explorar bairros',
+    route: '/bairros',
   },
 ];
 

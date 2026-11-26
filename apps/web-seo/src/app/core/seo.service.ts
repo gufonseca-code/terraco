@@ -12,6 +12,7 @@ import {
 
 const HOME_JSONLD_ID = 'terraco-home-jsonld';
 const LANCAMENTOS_JSONLD_ID = 'terraco-lancamentos-jsonld';
+const BAIRROS_JSONLD_ID = 'terraco-bairros-jsonld';
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
@@ -66,11 +67,13 @@ export class SeoService {
 
     this.setCanonical('/');
     this.removeLancamentosJsonLd();
+    this.removeBairrosJsonLd();
     this.setHomeJsonLd(description);
   }
 
   updateLancamentosMeta(lancamentos: readonly Lancamento[] = []): void {
     this.removeHomeJsonLd();
+    this.removeBairrosJsonLd();
     const pageTitle = `Lançamentos | ${SITE_NAME}`;
     const description =
       'Lançamentos imobiliários selecionados em Belo Horizonte nos bairros Estoril, Santa Efigênia e Serrano: studios, 1 e 2 quartos com suíte e lazer completo.';
@@ -112,9 +115,53 @@ export class SeoService {
     this.setLancamentosJsonLd(description, lancamentos);
   }
 
+  updateBairrosIndexMeta(bairros: readonly BairroGuide[]): void {
+    this.removeHomeJsonLd();
+    this.removeLancamentosJsonLd();
+    const pageTitle = `Bairros em Belo Horizonte | ${SITE_NAME}`;
+    const description =
+      'Guias completos de bairros em Belo Horizonte: Estoril, Santa Efigênia, Serrano e Buritis, com mobilidade, rotina e lançamentos disponíveis.';
+
+    this.title.setTitle(pageTitle);
+    this.meta.updateTag({ name: 'description', content: description });
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+
+    this.meta.updateTag({ property: 'og:type', content: 'website' });
+    this.meta.updateTag({ property: 'og:locale', content: 'pt_BR' });
+    this.meta.updateTag({ property: 'og:site_name', content: SITE_NAME });
+    this.meta.updateTag({ property: 'og:url', content: '/bairros' });
+    this.meta.updateTag({ property: 'og:title', content: pageTitle });
+    this.meta.updateTag({ property: 'og:description', content: description });
+    this.meta.updateTag({
+      property: 'og:image',
+      content: DEFAULT_LAUNCH_OG_IMAGE_URL,
+    });
+    this.meta.updateTag({ property: 'og:image:width', content: '1024' });
+    this.meta.updateTag({ property: 'og:image:height', content: '614' });
+    this.meta.updateTag({
+      property: 'og:image:alt',
+      content: `Guias de bairros em Belo Horizonte — ${SITE_NAME}`,
+    });
+
+    this.meta.updateTag({
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    });
+    this.meta.updateTag({ name: 'twitter:title', content: pageTitle });
+    this.meta.updateTag({ name: 'twitter:description', content: description });
+    this.meta.updateTag({
+      name: 'twitter:image',
+      content: DEFAULT_LAUNCH_OG_IMAGE_URL,
+    });
+
+    this.setCanonical('/bairros');
+    this.setBairrosJsonLd(description, bairros);
+  }
+
   updateBairroMeta(bairro: BairroGuide): void {
     this.removeHomeJsonLd();
     this.removeLancamentosJsonLd();
+    this.removeBairrosJsonLd();
     const canonicalPath = `/bairros/${bairro.slug}`;
     const pageTitle = bairro.tituloSeo.includes(SITE_NAME)
       ? bairro.tituloSeo
@@ -299,6 +346,57 @@ export class SeoService {
     this.upsertJsonLd(LANCAMENTOS_JSONLD_ID, jsonLd);
   }
 
+  private setBairrosJsonLd(
+    description: string,
+    bairros: readonly BairroGuide[]
+  ): void {
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'CollectionPage',
+          '@id': `${SITE_URL}/bairros#collection`,
+          url: `${SITE_URL}/bairros`,
+          name: `Bairros em Belo Horizonte | ${SITE_NAME}`,
+          description,
+          inLanguage: 'pt-BR',
+          isPartOf: {
+            '@id': `${SITE_URL}/#website`,
+          },
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: bairros.length,
+            itemListElement: bairros.map((bairro, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              url: `${SITE_URL}/bairros/${bairro.slug}`,
+              name: `${bairro.nome} (${bairro.regiao}) — ${bairro.cidade}`,
+            })),
+          },
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Início',
+              item: SITE_URL,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Bairros',
+              item: `${SITE_URL}/bairros`,
+            },
+          ],
+        },
+      ],
+    };
+
+    this.upsertJsonLd(BAIRROS_JSONLD_ID, jsonLd);
+  }
+
   private upsertJsonLd(id: string, payload: unknown): void {
     const head = this.document?.head;
     if (!head) {
@@ -322,6 +420,10 @@ export class SeoService {
 
   private removeLancamentosJsonLd(): void {
     this.document?.getElementById(LANCAMENTOS_JSONLD_ID)?.remove();
+  }
+
+  private removeBairrosJsonLd(): void {
+    this.document?.getElementById(BAIRROS_JSONLD_ID)?.remove();
   }
 
   private setCanonical(path: string): void {

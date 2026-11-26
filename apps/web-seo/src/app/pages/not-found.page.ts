@@ -32,7 +32,7 @@ const NOT_FOUND_DESTINATIONS: readonly JourneyDestination[] = [
     description:
       'Conheça mobilidade, rotina e lançamentos nos principais bairros.',
     actionLabel: 'Explorar bairros',
-    route: ['/bairros', 'estoril'],
+    route: '/bairros',
   },
 ];
 

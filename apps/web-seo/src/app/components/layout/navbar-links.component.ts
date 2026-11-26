@@ -14,7 +14,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { BAIRROS_BH, FavoritesService, buildWhatsAppUrl } from '../../core';
+import { FavoritesService, buildWhatsAppUrl } from '../../core';
 
 interface PrimaryNavItem {
   readonly label: string;
@@ -25,6 +25,7 @@ interface PrimaryNavItem {
 const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
   { label: 'Início', route: '/', matchExact: true },
   { label: 'Lançamentos', route: '/lancamentos' },
+  { label: 'Bairros', route: '/bairros' },
 ];
 
 @Component({
@@ -59,78 +60,6 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             {{ item.label }}
           </a>
         }
-
-        <div class="relative">
-          <button
-            type="button"
-            (click)="toggleBairrosMenu($event)"
-            [attr.aria-expanded]="bairrosMenuOpen()"
-            aria-haspopup="menu"
-            aria-controls="navbar-bairros-menu"
-            [attr.aria-current]="isBairrosCurrent() ? 'page' : null"
-            [class]="
-              isBairrosCurrent()
-                ? 'terraco-nav-morph inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 bg-surface px-3.5 py-1.5 text-[14px] font-semibold leading-[1.35] text-ink'
-                : bairrosMenuOpen()
-                  ? 'terraco-nav-morph inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 bg-surface px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink'
-                  : 'terraco-nav-morph inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink-muted hover:bg-surface/65 hover:text-ink'
-            "
-          >
-            <span>Bairros</span>
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              [class]="
-                bairrosMenuOpen()
-                  ? 'h-4 w-4 shrink-0 rotate-180 transition-transform duration-150 motion-reduce:transition-none'
-                  : 'h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none'
-              "
-            >
-              <path d="m5.5 7.5 4.5 4.5 4.5-4.5" />
-            </svg>
-          </button>
-
-          @if (bairrosMenuOpen()) {
-            <div
-              id="navbar-bairros-menu"
-              role="menu"
-              aria-label="Guias de bairros em Belo Horizonte"
-              animate.enter="terraco-search-panel-enter"
-              animate.leave="terraco-search-panel-leave"
-              class="absolute left-0 top-full z-40 mt-2 w-64 overflow-hidden rounded-[20px] border border-border-subtle bg-elevated p-1.5 shadow-floating"
-            >
-              <p class="px-3 pt-1.5 pb-1 text-[13px] font-normal text-ink-muted">
-                Guias de bairros em BH
-              </p>
-              <div class="space-y-0.5">
-                @for (bairro of bairros; track bairro.slug) {
-                  @let active = isBairroSlugCurrent(bairro.slug);
-                  <a
-                    role="menuitem"
-                    [routerLink]="['/bairros', bairro.slug]"
-                    [attr.aria-current]="active ? 'page' : null"
-                    (click)="closeAllMenus()"
-                    [class]="
-                      active
-                        ? 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] bg-surface px-3 py-2 text-[14px] font-semibold text-ink transition-colors duration-150'
-                        : 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] px-3 py-2 text-[14px] font-normal text-ink transition-colors duration-150 hover:bg-surface/75'
-                    "
-                  >
-                    <span>{{ bairro.nome }}</span>
-                    <span class="text-[13px] font-normal text-ink-muted">
-                      {{ bairro.regiao }}
-                    </span>
-                  </a>
-                }
-              </div>
-            </div>
-          }
-        </div>
       </div>
 
       <!-- Desktop (md+): Live saved signal (only when > 0) + Discreet WhatsApp link -->
@@ -183,7 +112,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
         </a>
       </div>
 
-      <!-- Mobile (< md): Optional live saved count + Single clean menu toggle -->
+      <!-- Mobile (< md): Optional live saved count + Tactile M3E menu trigger -->
       <div class="flex items-center gap-1.5 md:hidden">
         @if (favoritesCount() > 0) {
           <a
@@ -278,29 +207,6 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
         </div>
 
         <div class="mt-4 border-t border-border-subtle pt-4">
-          <p class="pb-2.5 text-[13px] font-normal text-ink-muted">
-            Guias de bairros
-          </p>
-          <div class="flex flex-wrap gap-2">
-            @for (bairro of bairros; track bairro.slug) {
-              @let active = isBairroSlugCurrent(bairro.slug);
-              <a
-                [href]="'/bairros/' + bairro.slug"
-                [attr.aria-current]="active ? 'page' : null"
-                (click)="navigateFromMobileSheet($event, ['/bairros', bairro.slug])"
-                [class]="
-                  active
-                    ? 'terraco-nav-morph inline-flex min-h-[40px] items-center rounded-[12px] border border-border-strong bg-surface px-3.5 py-1.5 text-[13px] font-semibold text-ink'
-                    : 'terraco-nav-morph inline-flex min-h-[40px] items-center border border-border-subtle bg-canvas px-3.5 py-1.5 text-[13px] font-medium text-ink hover:border-border-strong hover:bg-surface/65'
-                "
-              >
-                {{ bairro.nome }}
-              </a>
-            }
-          </div>
-        </div>
-
-        <div class="mt-5 border-t border-border-subtle pt-4">
           <a
             [href]="whatsappHref"
             target="_blank"
@@ -344,8 +250,6 @@ export class NavbarLinksComponent {
   private pendingNavTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly primaryItems = PRIMARY_NAV_ITEMS;
-  readonly bairros = BAIRROS_BH;
-  readonly bairrosMenuOpen = signal<boolean>(false);
   readonly mobileMenuOpen = signal<boolean>(false);
   readonly mobileOpenChange = output<boolean>();
 
@@ -355,10 +259,6 @@ export class NavbarLinksComponent {
 
   readonly whatsappHref = buildWhatsAppUrl(
     'Oi! Gostaria de conversar sobre os lançamentos da Terraço em BH.'
-  );
-
-  readonly isBairrosCurrent = computed(() =>
-    this.currentUrl().startsWith('/bairros')
   );
 
   constructor() {
@@ -391,20 +291,10 @@ export class NavbarLinksComponent {
     return cleanUrl.startsWith(item.route);
   }
 
-  isBairroSlugCurrent(slug: string): boolean {
-    return this.currentUrl().startsWith(`/bairros/${slug}`);
-  }
-
-  toggleBairrosMenu(event: Event): void {
-    event.stopPropagation();
-    this.bairrosMenuOpen.update((open) => !open);
-  }
-
   toggleMobileMenu(event: Event): void {
     event.stopPropagation();
     const next = !this.mobileMenuOpen();
     this.mobileMenuOpen.set(next);
-    this.bairrosMenuOpen.set(false);
     this.mobileOpenChange.emit(next);
   }
 
@@ -453,7 +343,6 @@ export class NavbarLinksComponent {
   }
 
   closeAllMenus(): void {
-    this.bairrosMenuOpen.set(false);
     this.closeMobileMenu(false);
   }
 
@@ -466,9 +355,6 @@ export class NavbarLinksComponent {
     const insideNav = Boolean(navEl?.contains(target));
     const insideSheet = Boolean(sheetEl?.contains(target));
 
-    if (!insideNav) {
-      this.bairrosMenuOpen.set(false);
-    }
     if (!insideNav && !insideSheet) {
       this.closeMobileMenu(false);
     }
