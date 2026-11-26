@@ -299,6 +299,35 @@ h4 {
   transform: scale(0.97);
 }
 
+/* M3 Expressive: Tactile Mobile Menu Trigger (pill -> 14px squircle) */
+.terraco-nav-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-morph-pill);
+  border: 1px solid transparent;
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  transition:
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    transform 180ms var(--ease-enter);
+}
+
+.terraco-nav-menu-trigger[aria-expanded="true"] {
+  border-radius: 14px;
+  border-color: var(--color-border-subtle);
+}
+
+.terraco-nav-menu-trigger:active {
+  border-radius: 14px;
+  transform: scale(0.94);
+}
+
 /* M3 Expressive: Adaptive Top Bar Shell (docked morph when mobile sheet opens) */
 .terraco-m3-topbar {
   border-radius: 28px;
@@ -430,11 +459,13 @@ h4 {
   transition: transform 240ms var(--ease-enter);
 }
 
-.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--top {
+.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--top,
+.terraco-nav-menu-trigger[aria-expanded="true"] .terraco-m3-burger-line--top {
   transform: translateY(4px) rotate(45deg);
 }
 
-.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--bottom {
+.terraco-m3-menu-toggle[aria-expanded="true"] .terraco-m3-burger-line--bottom,
+.terraco-nav-menu-trigger[aria-expanded="true"] .terraco-m3-burger-line--bottom {
   transform: translateY(-4px) rotate(-45deg);
 }
 
@@ -1454,6 +1485,7 @@ h4 {
   .terraco-m3-search,
   .terraco-m3-topbar,
   .terraco-nav-morph,
+  .terraco-nav-menu-trigger,
   .terraco-m3-rail-item,
   .terraco-m3-menu-toggle,
   .terraco-m3-burger-line,

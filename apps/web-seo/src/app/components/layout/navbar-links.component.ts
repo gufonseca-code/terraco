@@ -52,17 +52,11 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             (click)="closeAllMenus()"
             [class]="
               active
-                ? 'terraco-nav-morph inline-flex min-h-[38px] items-center gap-2 bg-surface px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink'
-                : 'terraco-nav-morph inline-flex min-h-[38px] items-center gap-2 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink-muted hover:bg-surface/65 hover:text-ink'
+                ? 'terraco-nav-morph inline-flex min-h-[38px] items-center bg-surface px-3.5 py-1.5 text-[14px] font-semibold leading-[1.35] text-ink'
+                : 'terraco-nav-morph inline-flex min-h-[38px] items-center px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink-muted hover:bg-surface/65 hover:text-ink'
             "
           >
-            @if (active) {
-              <span
-                aria-hidden="true"
-                class="h-1.5 w-1.5 shrink-0 rounded-full bg-highlight"
-              ></span>
-            }
-            <span>{{ item.label }}</span>
+            {{ item.label }}
           </a>
         }
 
@@ -75,17 +69,13 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             aria-controls="navbar-bairros-menu"
             [attr.aria-current]="isBairrosCurrent() ? 'page' : null"
             [class]="
-              isBairrosCurrent() || bairrosMenuOpen()
-                ? 'terraco-nav-morph inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 bg-surface px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink'
-                : 'terraco-nav-morph inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink-muted hover:bg-surface/65 hover:text-ink'
+              isBairrosCurrent()
+                ? 'terraco-nav-morph inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 bg-surface px-3.5 py-1.5 text-[14px] font-semibold leading-[1.35] text-ink'
+                : bairrosMenuOpen()
+                  ? 'terraco-nav-morph inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 bg-surface px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink'
+                  : 'terraco-nav-morph inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink-muted hover:bg-surface/65 hover:text-ink'
             "
           >
-            @if (isBairrosCurrent()) {
-              <span
-                aria-hidden="true"
-                class="h-1.5 w-1.5 shrink-0 rounded-full bg-highlight"
-              ></span>
-            }
             <span>Bairros</span>
             <svg
               aria-hidden="true"
@@ -127,19 +117,11 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
                     (click)="closeAllMenus()"
                     [class]="
                       active
-                        ? 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] bg-surface px-3 py-2 text-[14px] font-medium text-ink transition-colors duration-150'
+                        ? 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] bg-surface px-3 py-2 text-[14px] font-semibold text-ink transition-colors duration-150'
                         : 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] px-3 py-2 text-[14px] font-normal text-ink transition-colors duration-150 hover:bg-surface/75'
                     "
                   >
-                    <span class="flex items-center gap-2">
-                      @if (active) {
-                        <span
-                          aria-hidden="true"
-                          class="h-1.5 w-1.5 shrink-0 rounded-full bg-highlight"
-                        ></span>
-                      }
-                      <span>{{ bairro.nome }}</span>
-                    </span>
+                    <span>{{ bairro.nome }}</span>
                     <span class="text-[13px] font-normal text-ink-muted">
                       {{ bairro.regiao }}
                     </span>
@@ -236,11 +218,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
           [attr.aria-label]="
             mobileMenuOpen() ? 'Fechar menu de navegação' : 'Abrir menu de navegação'
           "
-          [class]="
-            mobileMenuOpen()
-              ? 'terraco-nav-morph inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center bg-surface text-ink'
-              : 'terraco-nav-morph inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center text-ink hover:bg-surface/80'
-          "
+          class="terraco-nav-menu-trigger cursor-pointer"
         >
           <svg
             aria-hidden="true"
@@ -270,7 +248,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
       </div>
     </nav>
 
-    <!-- Mobile (< md): Expressive 20px floating drawer -->
+    <!-- Mobile (< md): Expressive 24px floating drawer -->
     @if (mobileMenuOpen()) {
       <div
         #mobileSheetRef
@@ -279,7 +257,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
         aria-label="Menu de navegação"
         animate.enter="terraco-m3-sheet-enter"
         animate.leave="terraco-m3-sheet-leave"
-        class="pointer-events-auto absolute inset-x-4 top-full z-40 mt-2 rounded-[20px] border border-border-subtle bg-elevated/98 p-4 shadow-floating backdrop-blur-md sm:inset-x-6 md:hidden"
+        class="pointer-events-auto absolute inset-x-4 top-full z-40 mt-2 rounded-[24px] border border-border-subtle bg-elevated/98 p-5 shadow-floating backdrop-blur-md sm:inset-x-6 md:hidden"
       >
         <div class="space-y-1">
           @for (item of primaryItems; track item.route) {
@@ -290,26 +268,20 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
               (click)="navigateFromMobileSheet($event, [item.route])"
               [class]="
                 active
-                  ? 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] bg-surface px-3 py-2 text-[15px] font-medium text-ink transition-colors duration-150'
-                  : 'flex min-h-[44px] items-center justify-between gap-3 rounded-[12px] px-3 py-2 text-[15px] font-normal text-ink transition-colors duration-150 hover:bg-surface/75'
+                  ? 'flex min-h-11 items-center rounded-[12px] bg-surface px-3.5 py-2.5 text-[15px] font-semibold text-ink transition-colors duration-150'
+                  : 'flex min-h-11 items-center rounded-[12px] px-3.5 py-2.5 text-[15px] font-medium text-ink-muted transition-colors duration-150 hover:bg-surface/65 hover:text-ink'
               "
             >
-              <span>{{ item.label }}</span>
-              @if (active) {
-                <span
-                  aria-hidden="true"
-                  class="h-2 w-2 rounded-full bg-highlight"
-                ></span>
-              }
+              {{ item.label }}
             </a>
           }
         </div>
 
-        <div class="mt-3 border-t border-border-subtle pt-3">
-          <p class="px-3 pb-2 text-[13px] font-normal text-ink-muted">
-            Guias de bairros em BH
+        <div class="mt-4 border-t border-border-subtle pt-4">
+          <p class="pb-2.5 text-[13px] font-normal text-ink-muted">
+            Guias de bairros
           </p>
-          <div class="grid grid-cols-2 gap-1.5">
+          <div class="flex flex-wrap gap-2">
             @for (bairro of bairros; track bairro.slug) {
               @let active = isBairroSlugCurrent(bairro.slug);
               <a
@@ -318,28 +290,17 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
                 (click)="navigateFromMobileSheet($event, ['/bairros', bairro.slug])"
                 [class]="
                   active
-                    ? 'flex min-h-[48px] flex-col justify-center rounded-[12px] bg-surface px-3 py-2 transition-colors duration-150'
-                    : 'flex min-h-[48px] flex-col justify-center rounded-[12px] px-3 py-2 transition-colors duration-150 hover:bg-surface/75'
+                    ? 'terraco-nav-morph inline-flex min-h-[40px] items-center rounded-[12px] border border-border-strong bg-surface px-3.5 py-1.5 text-[13px] font-semibold text-ink'
+                    : 'terraco-nav-morph inline-flex min-h-[40px] items-center border border-border-subtle bg-canvas px-3.5 py-1.5 text-[13px] font-medium text-ink hover:border-border-strong hover:bg-surface/65'
                 "
               >
-                <span class="flex items-center gap-1.5 text-[14px] font-medium leading-[1.3] text-ink">
-                  @if (active) {
-                    <span
-                      aria-hidden="true"
-                      class="h-1.5 w-1.5 shrink-0 rounded-full bg-highlight"
-                    ></span>
-                  }
-                  <span>{{ bairro.nome }}</span>
-                </span>
-                <span class="text-[13px] font-normal leading-[1.3] text-ink-muted">
-                  {{ bairro.regiao }}
-                </span>
+                {{ bairro.nome }}
               </a>
             }
           </div>
         </div>
 
-        <div class="mt-4 border-t border-border-subtle pt-3.5">
+        <div class="mt-5 border-t border-border-subtle pt-4">
           <a
             [href]="whatsappHref"
             target="_blank"
