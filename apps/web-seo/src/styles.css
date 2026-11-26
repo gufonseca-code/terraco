@@ -1511,3 +1511,9 @@ h4 {
     opacity: 0 !important;
   }
 }
+
+@media (max-width: 767px) {
+  body:has([data-testid="mobile-whatsapp-bar"]) app-footer > footer#contato {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+}

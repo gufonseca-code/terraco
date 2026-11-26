@@ -26,6 +26,7 @@ import {
   formatCurrencyBRL,
   type Lancamento,
   type LaunchEntornoItem,
+  type LaunchFloorPlan,
   type LaunchMediaItem,
   type LaunchPilarGroup,
 } from '../../core';
@@ -37,7 +38,10 @@ import { FavoriteButtonComponent } from './favorite-button.component';
 import { ImageLightboxComponent } from './image-lightbox.component';
 import { LaunchCardComponent } from './launch-card.component';
 import { LaunchFloorPlansComponent } from './launch-floor-plans.component';
-import { LaunchSimulatorComponent } from './launch-simulator.component';
+import {
+  LaunchSimulatorComponent,
+  type LaunchSimulationSummary,
+} from './launch-simulator.component';
 import { formatBrazilianPhone } from './whatsapp-alert-form.component';
 
 export type LaunchIntentKey =
@@ -215,9 +219,36 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
+    .m3e-action-pill {
+      border-radius: 9999px;
+      transition:
+        border-radius 260ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        transform 220ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    .m3e-action-pill:hover,
+    .m3e-action-pill:active {
+      border-radius: 12px;
+    }
+
+    .m3e-floating-dock {
+      border-radius: 9999px;
+      transition:
+        opacity 240ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        transform 300ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        border-radius 300ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
+    }
+
+    .m3e-floating-dock[data-visible='true'] {
+      border-radius: 16px;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .m3e-tab-chip,
-      .m3e-tonal-btn {
+      .m3e-tonal-btn,
+      .m3e-action-pill,
+      .m3e-floating-dock {
         transition: none;
       }
     }
@@ -428,10 +459,11 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
               <div class="space-y-2.5">
                 <a
-                  [href]="primaryWhatsappHref()"
+                  [href]="contextualWhatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="terraco-btn flex min-h-[46px] w-full items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover sm:min-h-[48px]"
+                  data-testid="hero-whatsapp-cta"
+                  class="m3e-action-pill hidden min-h-[46px] w-full items-center justify-center bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover md:flex md:min-h-[48px]"
                 >
                   Falar no WhatsApp
                 </a>
@@ -519,6 +551,11 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </div>
           </div>
         </div>
+        <div
+          #heroFoldSentinel
+          aria-hidden="true"
+          class="pointer-events-none h-px w-full"
+        ></div>
       </section>
 
       <!-- M3E Pill Bar sticky no escopo da página -->
@@ -915,7 +952,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         <div
           class="mx-auto w-full max-w-7xl space-y-12 px-4 sm:px-6 sm:space-y-16 lg:px-8"
         >
-          <app-launch-floor-plans [item]="item()" />
+          <app-launch-floor-plans
+            [item]="item()"
+            (activePlanChange)="onActiveFloorPlanChange($event)"
+          />
 
           @if (hasPrice()) {
             <div
@@ -974,7 +1014,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 </section>
               }
 
-              <app-launch-simulator [item]="item()" />
+              <app-launch-simulator
+                [item]="item()"
+                (simulationChange)="onSimulationChange($event)"
+              />
             </div>
           } @else {
             <section
@@ -982,35 +1025,20 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               aria-labelledby="table-invite-heading"
               class="border-t border-border-subtle pt-12 scroll-mt-28"
             >
-              <div
-                class="grid gap-6 lg:grid-cols-12 lg:items-center lg:gap-12"
-              >
-                <div class="space-y-2 lg:col-span-7">
-                  <h2
-                    id="table-invite-heading"
-                    class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
-                  >
-                    Tabela atualizada e condições sob consulta
-                  </h2>
-                  <p
-                    class="max-w-[58ch] text-[15px] font-normal leading-[1.55] text-ink-muted sm:text-base"
-                  >
-                    Os valores do {{ item().nome }} variam conforme tipologia,
-                    andar e posição. Receba a tabela vigente direto no WhatsApp,
-                    sem cadastro nem compromisso.
-                  </p>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-4 lg:col-span-5 lg:justify-end">
-                  <a
-                    [href]="specialConditionsWhatsappHref()"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="m3e-tonal-btn inline-flex min-h-[44px] items-center justify-center border border-border-strong/40 bg-canvas px-6 py-2.5 text-[14px] font-medium text-[#1C1B19] hover:bg-elevated"
-                  >
-                    Solicitar tabela atualizada no WhatsApp
-                  </a>
-                </div>
+              <div class="max-w-2xl space-y-2">
+                <h2
+                  id="table-invite-heading"
+                  class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                >
+                  Tabela atualizada e condições sob consulta
+                </h2>
+                <p
+                  class="max-w-[58ch] text-[15px] font-normal leading-[1.55] text-ink-muted sm:text-base"
+                >
+                  Os valores do {{ item().nome }} variam conforme tipologia,
+                  andar e posição. Use o botão de WhatsApp para receber a tabela
+                  vigente, sem cadastro nem compromisso.
+                </p>
               </div>
             </section>
           }
@@ -1134,6 +1162,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
       <!-- Faixa de contraste Grafite Quente (#1C1B19) com chips em 1 toque -->
       <section
+        #launchWhatsappBand
         aria-labelledby="launch-whatsapp-band-heading"
         class="bg-ink py-12 text-ink-inverse sm:py-16 lg:py-20"
       >
@@ -1209,6 +1238,11 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </div>
           </div>
         </div>
+        <div
+          #heroFoldSentinel
+          aria-hidden="true"
+          class="pointer-events-none h-px w-full"
+        ></div>
       </section>
 
       <app-next-journey
@@ -1217,6 +1251,84 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         variant="editorial"
         [destinations]="nextDestinations()"
       />
+
+      <!-- Desktop (md+): CTA contextual flutuante estilo Airbnb + M3E -->
+      @let showDesktopDock = isPastFold() && !closingBandVisible();
+      <aside
+        aria-label="Atalho contextual para WhatsApp"
+        data-testid="floating-whatsapp-dock"
+        [attr.data-visible]="showDesktopDock"
+        [attr.aria-hidden]="!showDesktopDock"
+        [class]="
+          showDesktopDock
+            ? 'm3e-floating-dock fixed right-6 bottom-6 z-30 hidden max-w-[460px] translate-y-0 scale-100 items-center gap-4 border border-border-subtle bg-elevated/95 py-2.5 pr-2.5 pl-4 opacity-100 shadow-floating backdrop-blur-md md:flex lg:right-8 lg:bottom-8'
+            : 'm3e-floating-dock pointer-events-none fixed right-6 bottom-6 z-30 hidden max-w-[460px] translate-y-3 scale-[0.97] items-center gap-4 border border-border-subtle bg-elevated/95 py-2.5 pr-2.5 pl-4 opacity-0 shadow-floating backdrop-blur-md md:flex lg:right-8 lg:bottom-8'
+        "
+      >
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-1.5">
+            <span
+              aria-hidden="true"
+              class="h-1.5 w-1.5 shrink-0 rounded-full bg-action"
+            ></span>
+            <p
+              data-testid="floating-context-label"
+              class="truncate text-[13px] font-medium leading-[1.3] text-ink"
+            >
+              {{ currentContextLabel() }}
+            </p>
+          </div>
+          <p class="mt-0.5 truncate text-[12px] font-normal text-ink-muted">
+            {{ item().nome }} · {{ item().bairro }}
+          </p>
+        </div>
+
+        <a
+          [href]="contextualWhatsappHref()"
+          [attr.tabindex]="showDesktopDock ? null : -1"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid="floating-whatsapp-cta"
+          class="m3e-action-pill inline-flex min-h-[42px] shrink-0 items-center justify-center bg-action px-5 py-2 text-[13px] font-medium leading-[1.3] text-white hover:bg-action-hover"
+        >
+          Falar no WhatsApp
+        </a>
+      </aside>
+
+      <!-- Mobile (< md): Barra inferior fixa compacta e sempre acessível -->
+      <aside
+        aria-label="Atalho para WhatsApp"
+        data-testid="mobile-whatsapp-bar"
+        class="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-border-subtle bg-elevated/95 px-4 pt-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-12px_rgba(30,29,27,0.14)] backdrop-blur-md md:hidden"
+      >
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-[12px] font-normal text-ink-muted">
+            {{ item().nome }}
+          </p>
+          <div class="flex items-center gap-1.5">
+            <span
+              aria-hidden="true"
+              class="h-1.5 w-1.5 shrink-0 rounded-full bg-action"
+            ></span>
+            <p
+              data-testid="mobile-context-label"
+              class="truncate text-[13px] font-medium leading-[1.3] text-ink"
+            >
+              {{ currentContextLabel() }}
+            </p>
+          </div>
+        </div>
+
+        <a
+          [href]="contextualWhatsappHref()"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid="mobile-whatsapp-cta"
+          class="m3e-action-pill inline-flex min-h-[44px] shrink-0 items-center justify-center bg-action px-4 py-2 text-[13px] font-medium leading-[1.3] text-white hover:bg-action-hover"
+        >
+          Falar no WhatsApp
+        </a>
+      </aside>
 
       @defer (when lightboxOpen()) {
         <app-image-lightbox
@@ -1242,6 +1354,29 @@ export class PrimeViewLandingComponent {
   readonly activeSection = linkedSignal<string, string>({
     source: this.itemSlug,
     computation: () => 'sobre',
+  });
+
+  readonly isPastFold = linkedSignal<string, boolean>({
+    source: this.itemSlug,
+    computation: () => false,
+  });
+
+  readonly closingBandVisible = linkedSignal<string, boolean>({
+    source: this.itemSlug,
+    computation: () => false,
+  });
+
+  readonly activeFloorPlan = linkedSignal<string, LaunchFloorPlan | null>({
+    source: this.itemSlug,
+    computation: () => null,
+  });
+
+  readonly simulationSummary = linkedSignal<
+    string,
+    LaunchSimulationSummary | null
+  >({
+    source: this.itemSlug,
+    computation: () => null,
   });
 
   readonly selectedPilarId = linkedSignal<string, string>({
@@ -1461,6 +1596,10 @@ export class PrimeViewLandingComponent {
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
 
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
+  private readonly heroFoldSentinel =
+    viewChild<ElementRef<HTMLElement>>('heroFoldSentinel');
+  private readonly launchWhatsappBand =
+    viewChild<ElementRef<HTMLElement>>('launchWhatsappBand');
   private readonly sectionNav =
     viewChild<ElementRef<HTMLElement>>('sectionNav');
   private readonly sectionNavLinks =
@@ -1489,24 +1628,92 @@ export class PrimeViewLandingComponent {
     this.selectedIntentOption().buildMessage(this.item())
   );
 
-  readonly primaryWhatsappHref = computed(() => {
-    const currentItem = this.item();
-    return buildWhatsAppUrl(
-      currentItem.whatsappMensagem ||
-        `Oi! Gostaria de receber mais informações sobre o ${currentItem.nome} (${currentItem.bairro}).`
-    );
+  readonly currentContextLabel = computed<string>(() => {
+    if (!this.isPastFold()) {
+      return 'Visão geral';
+    }
+
+    switch (this.activeSection()) {
+      case 'pilares': {
+        const pilar = this.activePilar();
+        return pilar ? `Estrutura · ${pilar.label}` : 'Estrutura & Lazer';
+      }
+      case 'entorno':
+        return 'Entorno & Deslocamentos';
+      case 'plantas': {
+        const plan = this.activeFloorPlan();
+        return plan ? `Planta · ${plan.titulo}` : 'Plantas e tipologias';
+      }
+      case 'condicoes':
+        return this.hasPrice()
+          ? 'Condições e simulação'
+          : 'Tabela e condições';
+      case 'galeria':
+        return 'Galeria do empreendimento';
+      case 'outros-lancamentos':
+        return 'Comparando em BH';
+      default:
+        return 'Sobre o empreendimento';
+    }
   });
+
+  readonly contextualWhatsappMessage = computed<string>(() => {
+    const currentItem = this.item();
+    if (!this.isPastFold()) {
+      return (
+        currentItem.whatsappMensagem ||
+        `Oi! Estou vendo o ${currentItem.nome} (${currentItem.bairro}) e gostaria de receber mais informações.`
+      );
+    }
+
+    switch (this.activeSection()) {
+      case 'pilares': {
+        const pilar = this.activePilar();
+        const topic = pilar ? pilar.label.toLowerCase() : 'estrutura e lazer';
+        return `Oi! Estava vendo os diferenciais de ${topic} do ${currentItem.nome} (${currentItem.bairro}) e gostaria de saber mais detalhes.`;
+      }
+      case 'entorno':
+        return `Oi! Estava vendo a localização e o entorno do ${currentItem.nome} (${currentItem.bairro}) e gostaria de tirar uma dúvida sobre a região.`;
+      case 'plantas': {
+        const plan = this.activeFloorPlan();
+        if (plan) {
+          const unitsText = plan.unidades ? `, ${plan.unidades}` : '';
+          const priceText = plan.precoAPartirDe
+            ? ` (a partir de ${formatCurrencyBRL(plan.precoAPartirDe)})`
+            : '';
+          return `Oi! Estava vendo a planta ${plan.titulo} (${plan.metragem}${unitsText}) do ${currentItem.nome} (${currentItem.bairro})${priceText} e gostaria de conferir a disponibilidade.`;
+        }
+        return `Oi! Estava vendo as plantas do ${currentItem.nome} (${currentItem.bairro}) e gostaria de conferir a disponibilidade.`;
+      }
+      case 'condicoes': {
+        const sim = this.simulationSummary();
+        if (this.hasPrice() && sim) {
+          const entryDetails = sim.hasFgts
+            ? `${sim.downPaymentFormatted} (incluindo ${sim.fgtsFormatted} de FGTS)`
+            : sim.downPaymentFormatted;
+          return `Oi! Estava vendo as condições do ${currentItem.nome} (${currentItem.bairro}) — simulação de imóvel em ${sim.propertyValueFormatted}, entrada de ${entryDetails} e parcela estimada de ${sim.monthlyPaymentFormatted}/mês. Gostaria de conferir a tabela atualizada.`;
+        }
+        return `Oi! Gostaria de receber a tabela atualizada e as condições de pagamento do ${currentItem.nome} (${currentItem.bairro}).`;
+      }
+      case 'galeria':
+        return `Oi! Estava vendo as fotos do ${currentItem.nome} (${currentItem.bairro}) e gostaria de agendar uma visita ou saber mais.`;
+      case 'outros-lancamentos':
+        return `Oi! Estou comparando o ${currentItem.nome} (${currentItem.bairro}) com outros lançamentos em BH e gostaria de conversar sobre as opções.`;
+      default:
+        return (
+          currentItem.whatsappMensagem ||
+          `Oi! Estou vendo o ${currentItem.nome} (${currentItem.bairro}) e gostaria de receber mais informações.`
+        );
+    }
+  });
+
+  readonly contextualWhatsappHref = computed(() =>
+    buildWhatsAppUrl(this.contextualWhatsappMessage())
+  );
 
   readonly whatsappHref = computed(() =>
     buildWhatsAppUrl(this.selectedIntentMessage())
   );
-
-  readonly specialConditionsWhatsappHref = computed(() => {
-    const currentItem = this.item();
-    return buildWhatsAppUrl(
-      `Oi! Quero receber a tabela atualizada e condições de pagamento do ${currentItem.nome} (${currentItem.bairro}).`
-    );
-  });
 
   constructor() {
     afterNextRender(() => {
@@ -1564,8 +1771,40 @@ export class PrimeViewLandingComponent {
         observer.observe(target);
       }
 
+      const foldSentinel = this.heroFoldSentinel()?.nativeElement;
+      let foldObserver: IntersectionObserver | null = null;
+      if (foldSentinel) {
+        foldObserver = new IntersectionObserver(
+          (entries) => {
+            const entry = entries[0];
+            if (!entry) return;
+            this.isPastFold.set(
+              !entry.isIntersecting && entry.boundingClientRect.top < 0
+            );
+          },
+          { threshold: 0 }
+        );
+        foldObserver.observe(foldSentinel);
+      }
+
+      const closingBand = this.launchWhatsappBand()?.nativeElement;
+      let closingObserver: IntersectionObserver | null = null;
+      if (closingBand) {
+        closingObserver = new IntersectionObserver(
+          (entries) => {
+            const entry = entries[0];
+            if (!entry) return;
+            this.closingBandVisible.set(entry.isIntersecting);
+          },
+          { threshold: 0.1 }
+        );
+        closingObserver.observe(closingBand);
+      }
+
       this.destroyRef.onDestroy(() => {
         observer.disconnect();
+        foldObserver?.disconnect();
+        closingObserver?.disconnect();
         if (this.pendingScrollSettleTimer !== null) {
           clearTimeout(this.pendingScrollSettleTimer);
           this.pendingScrollSettleTimer = null;
@@ -1634,6 +1873,14 @@ export class PrimeViewLandingComponent {
 
   selectIntent(intent: LaunchIntentKey): void {
     this.selectedIntent.set(intent);
+  }
+
+  onActiveFloorPlanChange(plan: LaunchFloorPlan | null): void {
+    this.activeFloorPlan.set(plan);
+  }
+
+  onSimulationChange(summary: LaunchSimulationSummary): void {
+    this.simulationSummary.set(summary);
   }
 
   openLightbox(index: number): void {

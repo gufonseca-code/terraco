@@ -2,18 +2,28 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   input,
   linkedSignal,
+  output,
 } from '@angular/core';
 import {
   ENABLE_FLUTTER_APP_LINKS,
   FavoritesService,
   LancamentosService,
-  buildWhatsAppUrl,
   formatCurrencyBRL,
   type Lancamento,
 } from '../../core';
+
+export interface LaunchSimulationSummary {
+  readonly propertyValueFormatted: string;
+  readonly downPaymentFormatted: string;
+  readonly fgtsFormatted: string;
+  readonly hasFgts: boolean;
+  readonly monthlyPaymentFormatted: string;
+  readonly termYears: number;
+}
 
 const MIN_PROPERTY_VALUE = 300_000;
 const MAX_PROPERTY_VALUE = 2_000_000;
@@ -314,29 +324,19 @@ function resolveInitialPropertyValue(item: Lancamento): number {
             </dl>
           </div>
 
-          <div class="space-y-2.5">
-            <a
-              [href]="whatsappSimulationHref()"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid="simulator-whatsapp-cta"
-              class="sim-tonal-btn flex min-h-[46px] w-full items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-[#1C1B19] hover:bg-[#EAE3D5]"
-            >
-              Enviar simulação no WhatsApp
-            </a>
-
             @if (showFlutterAppCta) {
-              <a
-                [href]="flutterDeepLink()"
-                target="_blank"
-                rel="noopener noreferrer"
-                data-testid="simulator-flutter-cta"
-                class="terraco-btn flex min-h-[42px] w-full items-center justify-center rounded-pill border border-border-subtle bg-elevated px-5 py-2 text-center text-[13px] font-normal leading-[1.35] text-ink hover:border-ink/30 hover:bg-surface/60"
-              >
-                Salvar simulação e ver plantas interativas
-              </a>
+              <div class="space-y-2.5">
+                <a
+                  [href]="flutterDeepLink()"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="simulator-flutter-cta"
+                  class="terraco-btn flex min-h-[42px] w-full items-center justify-center rounded-pill border border-border-subtle bg-elevated px-5 py-2 text-center text-[13px] font-normal leading-[1.35] text-ink hover:border-ink/30 hover:bg-surface/60"
+                >
+                  Salvar simulação e ver plantas interativas
+                </a>
+              </div>
             }
-          </div>
         </div>
       </div>
 
@@ -351,6 +351,7 @@ export class LaunchSimulatorComponent {
   private readonly favoritesService = inject(FavoritesService);
 
   readonly item = input.required<Lancamento>();
+  readonly simulationChange = output<LaunchSimulationSummary>();
 
   readonly showFlutterAppCta = ENABLE_FLUTTER_APP_LINKS;
   readonly minPropertyValue = MIN_PROPERTY_VALUE;
@@ -461,20 +462,18 @@ export class LaunchSimulatorComponent {
     );
   });
 
-  readonly whatsappSimulationHref = computed(() => {
-    const currentItem = this.item();
-    const fgts = this.clampedFgts();
-    const entryDetails =
-      fgts > 0
-        ? `${this.formattedDownPaymentTotal()} (incluindo ${this.formattedFgts()} de FGTS)`
-        : this.formattedDownPaymentTotal();
-    const message =
-      `Oi! Fiz uma simulação para o ${currentItem.nome} (${currentItem.bairro}): ` +
-      `imóvel de ${this.formattedPropertyValue()}, entrada de ${entryDetails}, ` +
-      `prazo de ${this.termYears()} anos e parcela estimada de ${this.formattedMonthlyPayment()}/mês. ` +
-      `Gostaria de conferir a tabela atualizada e as condições de financiamento.`;
-    return buildWhatsAppUrl(message);
-  });
+  constructor() {
+    effect(() => {
+      this.simulationChange.emit({
+        propertyValueFormatted: this.formattedPropertyValue(),
+        downPaymentFormatted: this.formattedDownPaymentTotal(),
+        fgtsFormatted: this.formattedFgts(),
+        hasFgts: this.clampedFgts() > 0,
+        monthlyPaymentFormatted: this.formattedMonthlyPayment(),
+        termYears: this.termYears(),
+      });
+    });
+  }
 
   onPropertyValueInput(event: Event): void {
     const inputEl = event.target as HTMLInputElement | null;

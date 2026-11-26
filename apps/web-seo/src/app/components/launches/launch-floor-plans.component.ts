@@ -3,43 +3,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   input,
   linkedSignal,
+  output,
 } from '@angular/core';
 import {
-  buildWhatsAppUrl,
   formatCurrencyBRL,
   type Lancamento,
   type LaunchFloorPlan,
   type LaunchMediaItem,
 } from '../../core';
 import { ImageLightboxComponent } from './image-lightbox.component';
-
-type PlanIntentKey = 'tabela_planta' | 'simular_entrada' | 'agendar_visita';
-
-interface PlanIntentOption {
-  readonly key: PlanIntentKey;
-  readonly label: string;
-  readonly ctaLabel: string;
-}
-
-const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
-  {
-    key: 'tabela_planta',
-    label: 'Tabela e disponibilidade',
-    ctaLabel: 'Perguntar sobre esta planta no WhatsApp',
-  },
-  {
-    key: 'simular_entrada',
-    label: 'Simular entrada',
-    ctaLabel: 'Simular entrada desta planta no WhatsApp',
-  },
-  {
-    key: 'agendar_visita',
-    label: 'Agendar visita',
-    ctaLabel: 'Agendar visita para esta planta',
-  },
-];
 
 @Component({
   selector: 'app-launch-floor-plans',
@@ -394,40 +369,6 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     </span>
                   </div>
                 }
-
-                <!-- Progressive intent + contextual WhatsApp CTA -->
-                <div class="space-y-3 border-t border-border-subtle pt-4">
-                  <div class="flex flex-wrap items-center gap-2">
-                    <span class="text-[13px] font-normal text-ink-muted">
-                      O que você precisa agora:
-                    </span>
-                    @for (intent of intentOptions; track intent.key) {
-                      <button
-                        type="button"
-                        (click)="selectIntent(intent.key)"
-                        [attr.aria-pressed]="selectedIntent() === intent.key"
-                        [class]="
-                          selectedIntent() === intent.key
-                            ? 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-3.5 py-1.5 text-[13px] font-medium text-[#FAF8F4]'
-                            : 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-3.5 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
-                        "
-                      >
-                        {{ intent.label }}
-                      </button>
-                    }
-                  </div>
-
-                  <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center">
-                    <a
-                      [href]="activePlanWhatsappHref()"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="m3e-tonal-btn inline-flex min-h-[44px] flex-1 items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-[13px] font-medium text-[#1C1B19] hover:bg-[#EAE3D5]"
-                    >
-                      {{ activeIntentOption().ctaLabel }}
-                    </a>
-                  </div>
-                </div>
               </div>
             </div>
           }
@@ -447,8 +388,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 })
 export class LaunchFloorPlansComponent {
   readonly item = input.required<Lancamento>();
+  readonly activePlanChange = output<LaunchFloorPlan | null>();
   private readonly itemSlug = computed(() => this.item().slug);
-  readonly intentOptions = PLAN_INTENT_OPTIONS;
 
   readonly selectedCategory = linkedSignal({
     source: this.itemSlug,
@@ -457,10 +398,6 @@ export class LaunchFloorPlansComponent {
   readonly selectedPlanId = linkedSignal<string, string | null>({
     source: this.itemSlug,
     computation: () => null,
-  });
-  readonly selectedIntent = linkedSignal<string, PlanIntentKey>({
-    source: this.itemSlug,
-    computation: () => 'tabela_planta',
   });
   readonly lightboxOpen = linkedSignal({
     source: this.itemSlug,
@@ -519,41 +456,11 @@ export class LaunchFloorPlansComponent {
     }))
   );
 
-  readonly activeIntentOption = computed(
-    () =>
-      PLAN_INTENT_OPTIONS.find((opt) => opt.key === this.selectedIntent()) ??
-      PLAN_INTENT_OPTIONS[0]
-  );
-
-  readonly activePlanWhatsappHref = computed(() => {
-    const launch = this.item();
-    const plan = this.activePlan();
-    if (!plan) {
-      return buildWhatsAppUrl(launch.whatsappMensagem);
-    }
-
-    const priceText = plan.precoAPartirDe
-      ? ` (a partir de ${formatCurrencyBRL(plan.precoAPartirDe)})`
-      : '';
-    const unitsText = plan.unidades ? `, ${plan.unidades}` : '';
-    const intent = this.selectedIntent();
-
-    if (intent === 'simular_entrada') {
-      return buildWhatsAppUrl(
-        `Oi! Quero simular entrada e fluxo de pagamento para a planta ${plan.titulo} (${plan.metragem}${unitsText}) do ${launch.nome} (${launch.bairro})${priceText}.`
-      );
-    }
-
-    if (intent === 'agendar_visita') {
-      return buildWhatsAppUrl(
-        `Oi! Gostaria de agendar uma visita para conhecer a planta ${plan.titulo} (${plan.metragem}${unitsText}) do ${launch.nome} (${launch.bairro}).`
-      );
-    }
-
-    return buildWhatsAppUrl(
-      `Oi! Quero receber a tabela completa e disponibilidade da planta ${plan.titulo} (${plan.metragem}${unitsText}) do ${launch.nome} (${launch.bairro})${priceText}.`
-    );
-  });
+  constructor() {
+    effect(() => {
+      this.activePlanChange.emit(this.activePlan());
+    });
+  }
 
   formatPrice(value: number): string {
     return formatCurrencyBRL(value);
@@ -574,10 +481,6 @@ export class LaunchFloorPlansComponent {
 
   selectPlan(planId: string): void {
     this.selectedPlanId.set(planId);
-  }
-
-  selectIntent(intent: PlanIntentKey): void {
-    this.selectedIntent.set(intent);
   }
 
   openActivePlanLightbox(): void {
