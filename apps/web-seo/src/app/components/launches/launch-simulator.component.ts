@@ -95,13 +95,32 @@ function resolveInitialPropertyValue(item: Lancamento): number {
       background-color: var(--color-brand-primary-hover);
       transform: scale(1.06);
     }
+
+    .sim-m3e-chip {
+      border-radius: 9999px;
+      transition:
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .sim-m3e-chip[aria-pressed='true'] {
+      border-radius: 14px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sim-m3e-chip {
+        transition: none;
+      }
+    }
   `,
   template: `
     <section
       id="simulador"
       aria-labelledby="simulator-heading"
       data-testid="launch-simulator"
-      class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8 scroll-mt-24"
+      class="border-t border-border-subtle pt-10 scroll-mt-24"
     >
       <div class="space-y-1.5">
         <h2
@@ -163,7 +182,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
             <div
               role="group"
               aria-label="Percentual de entrada"
-              class="terraco-m3-group"
+              class="flex flex-wrap gap-2"
             >
               @for (percent of downPaymentPresets; track percent) {
                 <button
@@ -172,8 +191,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="downPaymentPercent() === percent"
                   [class]="
                     downPaymentPercent() === percent
-                      ? 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
-                      : 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
+                      ? 'sim-m3e-chip flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'sim-m3e-chip flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong'
                   "
                 >
                   {{ percent }}%
@@ -192,7 +211,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
             <div
               role="group"
               aria-label="Valor estimado de FGTS"
-              class="terraco-m3-group-grid grid-cols-2 sm:grid-cols-4"
+              class="grid grid-cols-2 gap-2 sm:grid-cols-4"
             >
               @for (preset of fgtsPresets; track preset.value) {
                 <button
@@ -201,8 +220,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="clampedFgts() === preset.value"
                   [class]="
                     clampedFgts() === preset.value
-                      ? 'terraco-m3-group-item flex min-h-[42px] cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
-                      : 'terraco-m3-group-item flex min-h-[42px] cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
+                      ? 'sim-m3e-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'sim-m3e-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong'
                   "
                 >
                   {{ preset.label }}
@@ -216,7 +235,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
             <div
               role="group"
               aria-label="Prazo de financiamento em anos"
-              class="terraco-m3-group"
+              class="flex flex-wrap gap-2"
             >
               @for (years of termYearPresets; track years) {
                 <button
@@ -225,8 +244,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="termYears() === years"
                   [class]="
                     termYears() === years
-                      ? 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
-                      : 'terraco-m3-group-item flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong hover:bg-surface'
+                      ? 'sim-m3e-chip flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
+                      : 'sim-m3e-chip flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong'
                   "
                 >
                   {{ years }} anos
@@ -236,9 +255,9 @@ function resolveInitialPropertyValue(item: Lancamento): number {
           </div>
         </div>
 
-        <!-- Resumo da simulação + ponte para o App Flutter -->
+        <!-- Resumo da simulação -->
         <div
-          class="terraco-cobogo-band flex flex-col justify-between gap-5 rounded-md border border-border-subtle bg-canvas p-5 lg:col-span-5"
+          class="flex flex-col justify-between gap-5 rounded-[20px] border border-border-subtle bg-canvas p-5 sm:p-6 lg:col-span-5"
         >
           <div class="space-y-4">
             <div class="space-y-1">
@@ -290,7 +309,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="simulator-whatsapp-cta"
-              class="terraco-btn terraco-btn-moss flex min-h-[46px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover"
+              class="terraco-btn flex min-h-[46px] w-full items-center justify-center rounded-pill bg-ink px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-ink/90"
             >
               Enviar simulação no WhatsApp
             </a>

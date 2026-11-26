@@ -46,12 +46,32 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
   selector: 'app-launch-floor-plans',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgOptimizedImage, Listbox, Option, ImageLightboxComponent],
+  styles: `
+    .m3e-chip {
+      border-radius: 9999px;
+      transition:
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .m3e-chip[aria-pressed='true'] {
+      border-radius: 14px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .m3e-chip {
+        transition: none;
+      }
+    }
+  `,
   template: `
     @if (hasPlans()) {
       <section
         id="plantas"
         aria-labelledby="floor-plans-heading"
-        class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+        class="border-t border-border-subtle pt-10 scroll-mt-24"
       >
         <div
           class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
@@ -79,25 +99,26 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
           <div
             role="group"
             aria-label="Filtrar plantas por tipologia"
-            class="terraco-m3-group mt-5 w-fit max-w-full overflow-x-auto pb-1"
+            class="mt-5 flex flex-wrap items-center gap-2"
           >
             @for (category of categories(); track category.name) {
+              @let active = selectedCategory() === category.name;
               <button
                 type="button"
                 (click)="selectCategory(category.name)"
-                [attr.aria-pressed]="selectedCategory() === category.name"
+                [attr.aria-pressed]="active"
                 [class]="
-                  selectedCategory() === category.name
-                    ? 'terraco-m3-group-item inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-1.5 border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse shadow-chip'
-                    : 'terraco-m3-group-item inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-1.5 border border-border-subtle bg-surface px-4 py-1.5 text-[13px] font-medium text-ink hover:border-border-strong'
+                  active
+                    ? 'm3e-chip inline-flex min-h-[38px] shrink-0 cursor-pointer items-center gap-1.5 border border-ink bg-ink px-4 py-1.5 text-[13px] font-medium text-ink-inverse shadow-chip'
+                    : 'm3e-chip inline-flex min-h-[38px] shrink-0 cursor-pointer items-center gap-1.5 border border-border-subtle bg-canvas px-4 py-1.5 text-[13px] font-medium text-ink hover:border-border-strong'
                 "
               >
                 <span>{{ category.name }}</span>
                 <span
                   [class]="
-                    selectedCategory() === category.name
-                      ? 'text-[13px] text-ink-inverse/80 tabular-nums'
-                      : 'text-[13px] text-ink-muted tabular-nums'
+                    active
+                      ? 'text-[12px] text-ink-inverse/75 tabular-nums'
+                      : 'text-[12px] text-ink-muted tabular-nums'
                   "
                 >
                   {{ category.count }}
@@ -314,8 +335,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                         [attr.aria-pressed]="selectedIntent() === intent.key"
                         [class]="
                           selectedIntent() === intent.key
-                            ? 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-brand bg-brand/10 px-3.5 py-1.5 text-[13px] font-medium text-brand'
-                            : 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-border-subtle bg-elevated px-3.5 py-1.5 text-[13px] font-normal text-ink-muted hover:border-ink/30 hover:text-ink'
+                            ? 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-[#1F6F50]/35 bg-[#E5F2EC] px-3.5 py-1.5 text-[13px] font-medium text-[#1F6F50]'
+                            : 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-border-subtle bg-elevated px-3.5 py-1.5 text-[13px] font-normal text-ink-muted hover:border-border-strong hover:text-ink'
                         "
                       >
                         {{ intent.label }}
@@ -328,7 +349,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                       [href]="activePlanWhatsappHref()"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] flex-1 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover"
+                      class="terraco-btn inline-flex min-h-[44px] flex-1 items-center justify-center rounded-pill bg-ink px-5 py-2.5 text-[13px] font-medium text-ink-inverse hover:bg-ink/90"
                     >
                       {{ activeIntentOption().ctaLabel }}
                     </a>

@@ -18,6 +18,7 @@ import { RouterLink } from '@angular/router';
 import {
   BAIRROS_BH,
   LancamentosService,
+  type LeadIntent,
   LeadsService,
   SITE_NAME,
   SITE_URL,
@@ -39,41 +40,53 @@ import { LaunchSimulatorComponent } from './launch-simulator.component';
 import { formatBrazilianPhone } from './whatsapp-alert-form.component';
 
 export type LaunchIntentKey =
-  | 'plantas_valores'
-  | 'simular_entrada'
+  | 'tabela_valores'
   | 'agendar_visita'
-  | 'tirar_duvida';
+  | 'simular_financiamento'
+  | 'duvida_bairro';
 
 interface LaunchIntentOption {
   readonly key: LaunchIntentKey;
+  readonly leadIntent: LeadIntent;
   readonly label: string;
   readonly buildMessage: (item: Lancamento) => string;
 }
 
+interface HeroMetricItem {
+  readonly label: string;
+  readonly value: string;
+  readonly highlight?: boolean;
+  readonly tabular?: boolean;
+}
+
 const LAUNCH_INTENT_OPTIONS: readonly LaunchIntentOption[] = [
   {
-    key: 'plantas_valores',
-    label: 'Plantas e valores',
+    key: 'tabela_valores',
+    leadIntent: 'plantas_valores',
+    label: 'Tabela e valores',
     buildMessage: (item) =>
       `Oi! Quero receber as plantas e a tabela de valores do ${item.nome} (${item.bairro}).`,
   },
   {
-    key: 'simular_entrada',
-    label: 'Simular entrada',
-    buildMessage: (item) =>
-      `Oi! Gostaria de simular entrada, parcelas e uso de FGTS no ${item.nome} (${item.bairro}).`,
-  },
-  {
     key: 'agendar_visita',
+    leadIntent: 'agendar_visita',
     label: 'Agendar visita',
     buildMessage: (item) =>
       `Oi! Quero agendar uma visita para conhecer o ${item.nome} (${item.bairro}).`,
   },
   {
-    key: 'tirar_duvida',
-    label: 'Tirar dúvida',
+    key: 'simular_financiamento',
+    leadIntent: 'simular_entrada',
+    label: 'Simular financiamento',
     buildMessage: (item) =>
-      `Oi! Tenho uma dúvida sobre o ${item.nome} (${item.bairro}).`,
+      `Oi! Gostaria de simular entrada, parcelas e uso de FGTS no ${item.nome} (${item.bairro}).`,
+  },
+  {
+    key: 'duvida_bairro',
+    leadIntent: 'tirar_duvida',
+    label: 'Dúvida sobre o bairro',
+    buildMessage: (item) =>
+      `Oi! Tenho uma dúvida sobre a localização e o dia a dia perto do ${item.nome} (${item.bairro}).`,
   },
 ];
 
@@ -178,47 +191,57 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section
-      aria-labelledby="launch-heading"
-      class="flex flex-1 flex-col justify-start bg-canvas pt-2 pb-10 sm:py-8 lg:py-10"
-    >
-      <div class="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div class="terraco-reveal mb-2 flex items-center justify-between gap-3 sm:mb-4">
-          <a
-            routerLink="/lancamentos"
-            class="terraco-link-underline inline-flex min-h-[34px] items-center gap-1.5 text-[14px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink sm:min-h-[40px]"
+    <div class="flex flex-1 flex-col bg-canvas">
+      <section
+        aria-labelledby="launch-heading"
+        class="bg-canvas pt-6 pb-8 sm:pt-8 sm:pb-10 lg:pt-10 lg:pb-12"
+      >
+        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div
+            class="terraco-reveal mb-5 flex flex-wrap items-center justify-between gap-3"
           >
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-4 w-4 shrink-0"
-            >
-              <path d="M12.5 5 7.5 10l5 5" />
-            </svg>
-            <span>Voltar para lançamentos</span>
-          </a>
+            <nav aria-label="Navegação estrutural">
+              <ol
+                class="flex flex-wrap items-center gap-2 text-[13px] font-normal text-ink-muted"
+              >
+                <li>
+                  <a
+                    routerLink="/"
+                    class="transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                  >
+                    Início
+                  </a>
+                </li>
+                <li aria-hidden="true" class="text-ink-muted/60">/</li>
+                <li>
+                  <a
+                    routerLink="/lancamentos"
+                    class="transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                  >
+                    Lançamentos
+                  </a>
+                </li>
+                <li aria-hidden="true" class="text-ink-muted/60">/</li>
+                <li aria-current="page" class="text-ink">
+                  {{ item().nome }}
+                </li>
+              </ol>
+            </nav>
 
-          @if (item().construtora) {
-            <p class="hidden text-[13px] font-normal text-ink-muted sm:block">
-              {{ item().construtora }}
-            </p>
-          }
-        </div>
+            @if (item().construtora) {
+              <p class="hidden text-[13px] font-normal text-ink-muted sm:block">
+                {{ item().construtora }}
+              </p>
+            }
+          </div>
 
-        <!-- M3 Expressive Compact Hero Card (28px outer shell / 20px concentric media inset) -->
-        <article
-          class="terraco-reveal-delay terraco-floating-card overflow-hidden rounded-[28px] bg-elevated p-2 sm:p-2.5"
-        >
-          <div class="grid gap-3 sm:gap-4 lg:grid-cols-12 lg:gap-5">
-            <!-- Mídia principal com cantos concêntricos e altura contida -->
+          <!-- Primeira dobra editorial sobre #FAF8F4 (sem card fechado) -->
+          <div
+            class="terraco-reveal-delay grid gap-6 sm:gap-8 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
+          >
             <div
               [class.terraco-skeleton]="!imageLoaded()"
-              class="group relative aspect-[21/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/9] lg:col-span-7 lg:aspect-auto lg:min-h-[390px] lg:max-h-[430px] lg:rounded-[22px]"
+              class="group relative aspect-[16/10] w-full min-w-0 overflow-hidden rounded-[24px] bg-surface lg:col-span-7"
             >
               <img
                 #heroImg
@@ -231,21 +254,23 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 [style.view-transition-name]="'launch-image-' + item().slug"
                 (load)="markImageLoaded()"
                 (error)="markImageLoaded()"
-                class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center lg:absolute lg:inset-0 lg:rounded-[22px]"
+                class="relative z-[1] h-full w-full rounded-[24px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
               />
 
               @if (hasGallery()) {
                 <button
                   type="button"
                   (click)="openLightbox(0)"
-                  [attr.aria-label]="'Abrir galeria de imagens de ' + item().nome"
+                  [attr.aria-label]="
+                    'Abrir galeria de imagens de ' + item().nome
+                  "
                   class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
                 ></button>
 
                 <button
                   type="button"
                   (click)="openLightbox(0)"
-                  class="terraco-btn absolute right-2.5 bottom-2.5 z-10 inline-flex min-h-[34px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-brand/40 sm:right-3 sm:bottom-3 sm:min-h-[38px] sm:px-3.5"
+                  class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1.5 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong"
                 >
                   <svg
                     aria-hidden="true"
@@ -265,7 +290,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 </button>
               }
 
-              <div class="absolute top-2.5 right-2.5 z-10 sm:top-3 sm:right-3">
+              <div class="absolute top-3 right-3 z-10">
                 <app-favorite-button
                   [slug]="item().slug"
                   [nome]="item().nome"
@@ -273,134 +298,88 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </div>
             </div>
 
-            <!-- Painel compacto de decisão e conversão -->
-            <div
-              class="flex min-w-0 flex-col justify-between gap-2.5 px-2 pt-0.5 pb-1.5 sm:gap-3.5 sm:px-3 sm:py-2 lg:col-span-5 lg:py-3 lg:pr-3.5 lg:pl-0"
-            >
-              <div class="min-w-0 space-y-0.5">
-                <p class="text-[13px] font-normal leading-[1.35] text-ink-muted">
-                  @if (bairroGuideSlug(); as guideSlug) {
-                    <a
-                      [routerLink]="['/bairros', guideSlug]"
-                      class="terraco-link-underline text-ink transition-colors duration-150 hover:text-brand"
-                    >{{ item().bairro }}</a>
-                  } @else {
-                    <span>{{ item().bairro }}</span>
-                  }<span>, {{ item().cidade }}, {{ item().uf }}</span>
-                </p>
+            <div class="flex min-w-0 flex-col gap-5 lg:col-span-5">
+              <div class="space-y-2">
+                <div class="flex flex-wrap items-center gap-2.5">
+                  <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
+                    @if (bairroGuideSlug(); as guideSlug) {
+                      <a
+                        [routerLink]="['/bairros', guideSlug]"
+                        class="terraco-link-underline text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
+                      >{{ item().bairro }}</a>
+                    } @else {
+                      <span>{{ item().bairro }}</span>
+                    }<span>, {{ item().cidade }}, {{ item().uf }}</span>
+                  </p>
+                  @if (item().badge) {
+                    <span
+                      class="inline-flex items-center rounded-pill bg-[#E5F2EC] px-2.5 py-0.5 text-[12px] font-medium leading-[1.3] text-[#1F6F50]"
+                    >
+                      {{ item().badge }}
+                    </span>
+                  }
+                </div>
 
                 <h1
                   id="launch-heading"
                   [style.view-transition-name]="'launch-title-' + item().slug"
-                  class="font-display text-[clamp(1.625rem,3vw,2.125rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
+                  class="font-display text-[clamp(1.875rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
                 >
                   {{ item().nome }}
                 </h1>
+
+                @if (item().tagline) {
+                  <p class="text-[15px] font-normal leading-[1.5] text-ink-muted">
+                    {{ item().tagline }}
+                  </p>
+                }
               </div>
 
-              <!-- Ficha técnica enxuta em container tonal Areia Suave -->
+              <!-- Grade dinâmica de métricas (apenas campos disponíveis) -->
               <dl
-                class="grid grid-cols-2 gap-x-3 gap-y-2 rounded-[18px] bg-surface/80 px-3.5 py-2.5 sm:gap-x-4 sm:gap-y-2.5 sm:px-4 sm:py-3"
+                class="grid grid-cols-2 gap-x-5 gap-y-3.5 border-y border-border-subtle py-4"
               >
-                <div class="space-y-0.5">
-                  <dt class="text-[13px] font-normal text-ink-muted">
-                    Dormitórios
-                  </dt>
-                  <dd
-                    class="text-[13px] font-medium leading-[1.3] text-ink tabular-nums sm:text-[14px]"
-                  >
-                    {{ item().quartos }}
-                  </dd>
-                </div>
-
-                <div class="space-y-0.5">
-                  <dt class="text-[13px] font-normal text-ink-muted">
-                    Metragem
-                  </dt>
-                  <dd
-                    class="text-[13px] font-medium leading-[1.3] text-ink tabular-nums sm:text-[14px]"
-                  >
-                    {{ item().metragem }}
-                  </dd>
-                </div>
-
-                @if (formattedPrice(); as price) {
-                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
+                @for (metric of heroMetrics(); track metric.label) {
+                  <div class="space-y-0.5">
                     <dt class="text-[13px] font-normal text-ink-muted">
-                      A partir de
+                      {{ metric.label }}
                     </dt>
                     <dd
-                      class="text-[13px] font-medium leading-[1.3] text-brand tabular-nums sm:text-[14px]"
+                      [class]="
+                        metric.highlight
+                          ? 'text-[14px] font-medium leading-[1.35] text-brand sm:text-[15px]'
+                          : 'text-[14px] font-medium leading-[1.35] text-ink sm:text-[15px]'
+                      "
+                      [class.tabular-nums]="metric.tabular"
                     >
-                      {{ price }}
-                    </dd>
-                  </div>
-                } @else if (item().vagas) {
-                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
-                    <dt class="text-[13px] font-normal text-ink-muted">
-                      Vagas
-                    </dt>
-                    <dd
-                      class="text-[13px] font-normal leading-[1.3] text-ink tabular-nums sm:text-[14px]"
-                    >
-                      {{ item().vagas }}
-                    </dd>
-                  </div>
-                }
-
-                @if (item().entrega) {
-                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
-                    <dt class="text-[13px] font-normal text-ink-muted">
-                      Entrega
-                    </dt>
-                    <dd
-                      class="text-[13px] font-normal leading-[1.3] text-ink tabular-nums sm:text-[14px]"
-                    >
-                      {{ item().entrega }}
-                    </dd>
-                  </div>
-                } @else {
-                  <div class="space-y-0.5 border-t border-border-subtle/80 pt-1.5">
-                    <dt class="text-[13px] font-normal text-ink-muted">
-                      Tipologias
-                    </dt>
-                    <dd class="line-clamp-1 text-[13px] font-normal leading-[1.3] text-ink sm:text-[14px]">
-                      {{ item().tipologias }}
+                      {{ metric.value }}
                     </dd>
                   </div>
                 }
               </dl>
 
-              <!-- Chips de intenção M3 Expressive em grid 2x2 + CTA principal -->
-              <div class="min-w-0 space-y-2 sm:space-y-2.5">
-                <div
-                  role="group"
-                  aria-label="Assunto para conversa no WhatsApp"
-                  class="grid w-full min-w-0 grid-cols-2 gap-2"
-                >
-                  @for (option of intentOptions; track option.key) {
-                    <button
-                      type="button"
-                      (click)="selectIntent(option.key)"
-                      [attr.aria-pressed]="selectedIntent() === option.key"
-                      [class]="
-                        selectedIntent() === option.key
-                          ? 'terraco-m3-chip flex min-h-[40px] w-full cursor-pointer items-center justify-center border border-brand bg-brand px-3 py-1.5 text-center text-[13px] font-medium leading-[1.25] text-ink-inverse shadow-chip'
-                          : 'terraco-m3-chip flex min-h-[40px] w-full cursor-pointer items-center justify-center border border-border-subtle bg-surface/75 px-3 py-1.5 text-center text-[13px] font-normal leading-[1.25] text-ink hover:border-border-strong hover:bg-surface'
-                      "
-                    >
-                      {{ option.label }}
-                    </button>
-                  }
-                </div>
+              @if (!formattedPrice()) {
+                <p class="text-[13px] font-normal text-ink-muted">
+                  Valores conforme unidade e andar.
+                  <a
+                    [href]="primaryWhatsappHref()"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="terraco-link-underline ml-1 font-medium text-brand hover:text-brand-hover"
+                  >
+                    Consultar tabela atualizada
+                  </a>
+                </p>
+              }
 
+              <div class="space-y-3">
                 <a
-                  [href]="whatsappHref()"
+                  [href]="primaryWhatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="terraco-btn terraco-btn-moss flex min-h-[44px] w-full items-center justify-center rounded-pill bg-brand px-5 py-2 text-[14px] font-medium leading-[1.35] text-ink-inverse hover:bg-brand-hover sm:min-h-[48px] sm:py-2.5"
+                  class="terraco-btn flex min-h-[46px] w-full items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover sm:min-h-[48px]"
                 >
-                  Falar no WhatsApp
+                  Falar no WhatsApp sobre {{ item().nome }}
                 </a>
 
                 <div>
@@ -408,15 +387,16 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     <p
                       role="status"
                       data-testid="launch-callback-success"
-                      class="rounded-[14px] border border-brand/25 bg-surface/60 px-3.5 py-2 text-[13px] font-normal leading-[1.45] text-ink"
+                      class="rounded-[14px] border border-[#1F6F50]/25 bg-[#E5F2EC] px-3.5 py-2.5 text-[13px] font-normal leading-[1.45] text-[#1F6F50]"
                     >
-                      Recebemos seu contato. Um especialista retorna em instantes sobre {{ selectedIntentLabel() }}.
+                      Recebemos seu contato. Um especialista retorna em
+                      instantes sobre {{ item().nome }}.
                     </p>
                   } @else if (callbackOpen()) {
                     <form
                       (submit)="submitCallbackLead($event)"
                       animate.enter="terraco-chip-enter"
-                      class="space-y-2.5 rounded-[18px] border border-border-subtle bg-surface/60 p-3.5"
+                      class="space-y-2.5 rounded-[18px] border border-border-subtle bg-surface p-4"
                     >
                       <div class="flex items-center justify-between gap-2">
                         <span class="text-[13px] font-medium text-ink">
@@ -438,7 +418,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         placeholder="Seu nome (opcional)"
                         aria-label="Seu nome"
                         autocomplete="name"
-                        class="min-h-[40px] w-full rounded-[12px] border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
+                        class="min-h-[40px] w-full rounded-[12px] border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
                       />
 
                       <div class="flex flex-col gap-2 sm:flex-row">
@@ -450,12 +430,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                           aria-label="Seu WhatsApp com DDD"
                           autocomplete="tel"
                           required
-                          class="min-h-[40px] flex-1 rounded-[12px] border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
+                          class="min-h-[40px] flex-1 rounded-[12px] border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
                         />
                         <button
                           type="submit"
                           [disabled]="callbackSubmitting()"
-                          class="terraco-btn inline-flex min-h-[40px] shrink-0 cursor-pointer items-center justify-center rounded-pill border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover disabled:opacity-60"
+                          class="terraco-btn inline-flex min-h-[40px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-ink px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-ink/90 disabled:opacity-60"
                         >
                           {{ callbackSubmitting() ? 'Enviando...' : 'Solicitar' }}
                         </button>
@@ -475,7 +455,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       type="button"
                       (click)="toggleCallbackForm()"
                       data-testid="launch-callback-toggle"
-                      class="terraco-link-underline w-full cursor-pointer py-0.5 text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+                      class="terraco-link-underline w-full cursor-pointer py-0.5 text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
                     >
                       Prefere que um especialista te chame?
                     </button>
@@ -484,13 +464,18 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </div>
             </div>
           </div>
-        </article>
 
-        <!-- Trilha fixa M3 Expressive com scroll-spy (visível já na dobra mobile) -->
+          <!-- Trilha sticky M3 Expressive com shape morphing (rounded-full -> rounded-[12px] bg-[#F3EFE6]) -->
+        </div>
+      </section>
+
+      <div
+        class="sticky top-[72px] z-20 mx-auto w-full max-w-7xl px-4 sm:top-[76px] sm:px-6 lg:px-8"
+      >
         <nav
           #sectionNav
           aria-label="Seções do empreendimento"
-          class="terraco-no-scrollbar sticky top-3 z-20 mt-3.5 flex items-center gap-1.5 overflow-x-auto rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-card backdrop-blur-md sm:mt-5"
+          class="terraco-no-scrollbar flex items-center gap-1.5 overflow-x-auto rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-chip backdrop-blur-md"
         >
           @if (item().condicoesEspeciais?.length) {
             <a
@@ -498,7 +483,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               data-section-id="condicoes"
               href="#condicoes"
               (click)="scrollToSection($event, 'condicoes')"
-              [attr.aria-current]="activeSection() === 'condicoes' ? 'true' : null"
+              [attr.aria-current]="
+                activeSection() === 'condicoes' ? 'true' : null
+              "
               [class]="sectionNavPillClass('condicoes')"
             >
               Condições
@@ -520,10 +507,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               data-section-id="diferenciais"
               href="#diferenciais"
               (click)="scrollToSection($event, 'diferenciais')"
-              [attr.aria-current]="activeSection() === 'diferenciais' ? 'true' : null"
+              [attr.aria-current]="
+                activeSection() === 'diferenciais' ? 'true' : null
+              "
               [class]="sectionNavPillClass('diferenciais')"
             >
-              Diferenciais
+              Lazer
             </a>
           }
           @if (item().plantas?.length) {
@@ -532,7 +521,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               data-section-id="plantas"
               href="#plantas"
               (click)="scrollToSection($event, 'plantas')"
-              [attr.aria-current]="activeSection() === 'plantas' ? 'true' : null"
+              [attr.aria-current]="
+                activeSection() === 'plantas' ? 'true' : null
+              "
               [class]="sectionNavPillClass('plantas')"
             >
               Plantas
@@ -543,10 +534,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             data-section-id="simulador"
             href="#simulador"
             (click)="scrollToSection($event, 'simulador')"
-            [attr.aria-current]="activeSection() === 'simulador' ? 'true' : null"
+            [attr.aria-current]="
+              activeSection() === 'simulador' ? 'true' : null
+            "
             [class]="sectionNavPillClass('simulador')"
           >
-            Simular entrada
+            Simulador
           </a>
           @if (hasGallery()) {
             <a
@@ -566,161 +559,182 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               data-section-id="outros-lancamentos"
               href="#outros-lancamentos"
               (click)="scrollToSection($event, 'outros-lancamentos')"
-              [attr.aria-current]="activeSection() === 'outros-lancamentos' ? 'true' : null"
+              [attr.aria-current]="
+                activeSection() === 'outros-lancamentos' ? 'true' : null
+              "
               [class]="sectionNavPillClass('outros-lancamentos')"
             >
-              Outros em BH
+              Comparar em BH
             </a>
           }
         </nav>
+      </div>
 
-        <div class="mt-8 space-y-12 sm:mt-10 sm:space-y-14">
+      <section
+        aria-label="Sobre e diferenciais"
+        class="bg-canvas pt-10 pb-12 sm:pt-12 sm:pb-16"
+      >
+        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <!-- Sobre e Lazer sobre #FAF8F4 -->
+          <div class="space-y-12 sm:space-y-14">
+            <section
+              id="sobre"
+              aria-labelledby="about-heading"
+              class="scroll-mt-24"
+            >
+              <div
+                class="grid gap-6 lg:grid-cols-12 lg:items-start lg:gap-12"
+              >
+                <div class="lg:col-span-4">
+                  <h2
+                    id="about-heading"
+                    class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                  >
+                    Sobre o empreendimento
+                  </h2>
+                </div>
+
+                <div class="space-y-5 lg:col-span-8">
+                  <p
+                    class="max-w-[62ch] text-[15px] font-normal leading-[1.65] text-ink sm:text-base"
+                  >
+                    {{ item().resumo }}
+                  </p>
+
+                  @if (item().endereco) {
+                    <dl class="border-t border-border-subtle pt-4">
+                      <dt class="text-[13px] font-normal text-ink-muted">
+                        Endereço
+                      </dt>
+                      <dd
+                        class="mt-0.5 text-[14px] font-normal leading-[1.5] text-ink sm:text-[15px]"
+                      >
+                        {{ item().endereco }}
+                      </dd>
+                    </dl>
+                  }
+
+                  @if (item().diferenciais.length > 0) {
+                    <app-section-handoff
+                      prompt="Quer ver o que o condomínio oferece?"
+                      label="Explorar diferenciais e lazer"
+                      targetId="diferenciais"
+                    />
+                  }
+                </div>
+              </div>
+            </section>
+
+            @if (item().diferenciais.length > 0) {
+              <section
+                id="diferenciais"
+                aria-labelledby="features-heading"
+                class="border-t border-border-subtle pt-10 scroll-mt-24"
+              >
+                <h2
+                  id="features-heading"
+                  class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                >
+                  Diferenciais &amp; Lazer
+                </h2>
+
+                <ul
+                  class="mt-6 grid grid-cols-1 gap-x-10 gap-y-3.5 sm:grid-cols-2"
+                >
+                  @for (diferencial of item().diferenciais; track diferencial) {
+                    <li
+                      class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.55] text-ink"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="mt-1 h-4 w-4 shrink-0 text-brand"
+                      >
+                        <path d="M4.5 10.5 8 14l7.5-8" />
+                      </svg>
+                      <span>{{ diferencial }}</span>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- Faixa tonal Areia Clara (#F3EFE6): Condições, Plantas e Simulador -->
+      <section
+        aria-label="Condições, plantas e simulador"
+        class="border-y border-border-subtle bg-surface py-12 sm:py-16 lg:py-20"
+      >
+        <div
+          class="mx-auto w-full max-w-7xl space-y-12 px-4 sm:px-6 lg:space-y-16 lg:px-8"
+        >
           @if (item().condicoesEspeciais?.length) {
             <section
               id="condicoes"
               aria-labelledby="special-conditions-heading"
-              class="terraco-cobogo-band rounded-lg border border-brand/25 bg-surface/55 p-5 sm:p-8 scroll-mt-24"
+              class="scroll-mt-24"
             >
-              <h2
-                id="special-conditions-heading"
-                class="font-display text-[clamp(1.25rem,2vw,1.5rem)] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
+              <div
+                class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12"
               >
-                Condições especiais de pagamento
-              </h2>
-
-              <p
-                class="mt-2 max-w-3xl text-[15px] font-normal leading-[1.5] text-ink-muted"
-              >
-                Facilidades vigentes para entrada e financiamento. Consulte a
-                disponibilidade da unidade.
-              </p>
-
-              <ul class="mt-5 space-y-3">
-                @for (
-                  condicao of item().condicoesEspeciais ?? [];
-                  track condicao
-                ) {
-                  <li
-                    class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.5] text-ink"
+                <div class="space-y-2 lg:col-span-4">
+                  <h2
+                    id="special-conditions-heading"
+                    class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
                   >
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="mt-0.5 h-4 w-4 shrink-0 text-brand"
-                    >
-                      <path d="M4.5 10.5 8 14l7.5-8" />
-                    </svg>
-                    <span>{{ condicao }}</span>
-                  </li>
-                }
-              </ul>
-
-              <div class="mt-5 border-t border-border-subtle pt-4">
-                <a
-                  [href]="specialConditionsWhatsappHref()"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="terraco-link-underline inline-flex items-center text-[14px] font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
-                >
-                  Simular essas condições no WhatsApp
-                </a>
-              </div>
-            </section>
-          }
-
-          <section
-            id="sobre"
-            aria-labelledby="about-heading"
-            class="scroll-mt-24"
-          >
-            <h2
-              id="about-heading"
-              class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
-            >
-              Sobre o empreendimento
-            </h2>
-
-            <p
-              class="mt-3 max-w-3xl text-base font-normal leading-[1.65] text-ink"
-            >
-              {{ item().resumo }}
-            </p>
-
-            @if (item().endereco) {
-              <dl
-                class="mt-6 grid grid-cols-1 gap-4 border-t border-border-subtle pt-5"
-              >
-                <div class="space-y-1">
-                  <dt class="text-[13px] font-normal text-ink-muted">Endereço</dt>
-                  <dd class="text-[15px] font-normal leading-[1.45] text-ink">
-                    {{ item().endereco }}
-                  </dd>
-                </div>
-              </dl>
-            }
-
-            @if (item().diferenciais.length > 0) {
-              <div class="mt-5">
-                <app-section-handoff
-                  prompt="Quer ver o que o condomínio oferece?"
-                  label="Explorar diferenciais e lazer"
-                  targetId="diferenciais"
-                />
-              </div>
-            }
-          </section>
-
-          @if (item().diferenciais.length > 0) {
-            <section
-              id="diferenciais"
-              aria-labelledby="features-heading"
-              class="border-t border-border-subtle pt-10 scroll-mt-24"
-            >
-              <h2
-                id="features-heading"
-                class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
-              >
-                Diferenciais &amp; Lazer
-              </h2>
-
-              <ul
-                class="mt-6 grid grid-cols-1 gap-x-10 gap-y-3.5 sm:grid-cols-2"
-              >
-                @for (diferencial of item().diferenciais; track diferencial) {
-                  <li
-                    class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.55] text-ink"
+                    Condições especiais de pagamento
+                  </h2>
+                  <p
+                    class="text-[14px] font-normal leading-[1.55] text-ink-muted sm:text-[15px]"
                   >
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="mt-1 h-4 w-4 shrink-0 text-brand"
-                    >
-                      <path d="M4.5 10.5 8 14l7.5-8" />
-                    </svg>
-                    <span>{{ diferencial }}</span>
-                  </li>
-                }
-              </ul>
-
-              @if (item().plantas?.length) {
-                <div class="mt-6">
-                  <app-section-handoff
-                    prompt="Próximo passo:"
-                    label="Ver plantas e metragens"
-                    targetId="plantas"
-                  />
+                    Facilidades vigentes para entrada e financiamento. Consulte
+                    a disponibilidade da unidade.
+                  </p>
                 </div>
-              }
+
+                <div class="space-y-5 lg:col-span-8">
+                  <ul class="divide-y divide-border-subtle border-y border-border-subtle">
+                    @for (
+                      condicao of item().condicoesEspeciais ?? [];
+                      track condicao
+                    ) {
+                      <li
+                        class="flex items-start gap-3 py-4 text-[15px] font-normal leading-[1.55] text-ink"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="mt-1 h-4 w-4 shrink-0 text-brand"
+                        >
+                          <path d="M4.5 10.5 8 14l7.5-8" />
+                        </svg>
+                        <span>{{ condicao }}</span>
+                      </li>
+                    }
+                  </ul>
+
+                  <a
+                    [href]="specialConditionsWhatsappHref()"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-medium text-brand transition-colors duration-150 motion-reduce:transition-none hover:text-brand-hover"
+                  >
+                    Simular essas condições no WhatsApp
+                  </a>
+                </div>
+              </div>
             </section>
           }
 
@@ -730,7 +744,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <div
               id="plantas"
               aria-hidden="true"
-              class="min-h-[480px] rounded-lg border border-border-subtle bg-elevated scroll-mt-24"
+              class="min-h-[480px] border-t border-border-subtle pt-10 scroll-mt-24"
             ></div>
           }
 
@@ -740,96 +754,199 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             <div
               id="simulador"
               aria-hidden="true"
-              class="min-h-[440px] rounded-lg border border-border-subtle bg-elevated scroll-mt-24"
+              class="min-h-[440px] border-t border-border-subtle pt-10 scroll-mt-24"
             ></div>
           }
+        </div>
+      </section>
 
-          @if (hasGallery()) {
-            <section
-              id="galeria"
-              aria-labelledby="gallery-heading"
-              class="border-t border-border-subtle pt-10 scroll-mt-24"
-            >
-              <h2
-                id="gallery-heading"
-                class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
+      <!-- Galeria e Comparação sobre #FAF8F4 -->
+      @if (hasGallery() || otherLaunches().length > 0) {
+        <section
+          aria-label="Galeria e outros lançamentos"
+          class="bg-canvas py-12 sm:py-16 lg:py-20"
+        >
+          <div
+            class="mx-auto w-full max-w-7xl space-y-14 px-4 sm:px-6 lg:space-y-16 lg:px-8"
+          >
+            @if (hasGallery()) {
+              <section
+                id="galeria"
+                aria-labelledby="gallery-heading"
+                class="scroll-mt-24"
               >
-                Galeria do empreendimento
-              </h2>
-
-              <div
-                class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3"
-              >
-                @for (media of galleryImages(); track media.url; let i = $index) {
-                  <button
-                    type="button"
-                    (click)="openLightbox(i)"
-                    [attr.aria-label]="
-                      'Ampliar imagem ' + (i + 1) + ': ' + media.alt
-                    "
-                    class="group relative aspect-[4/3] overflow-hidden rounded-md border border-border-subtle bg-surface text-left transition-colors duration-150 hover:border-brand/40 cursor-pointer"
-                  >
-                    <img
-                      [src]="media.url"
-                      [alt]="media.alt"
-                      [attr.width]="media.width ?? null"
-                      [attr.height]="media.height ?? null"
-                      loading="lazy"
-                      decoding="async"
-                      class="h-full w-full object-cover object-center"
-                    />
-                  </button>
-                }
-              </div>
-            </section>
-          }
-
-          @if (otherLaunches().length > 0) {
-            <section
-              id="outros-lancamentos"
-              aria-labelledby="other-launches-heading"
-              class="border-t border-border-subtle pt-10 scroll-mt-24"
-            >
-              <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                <div class="space-y-1">
+                <div class="flex flex-wrap items-baseline justify-between gap-3">
                   <h2
-                    id="other-launches-heading"
-                    class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] font-medium not-italic leading-[1.18] tracking-[-0.02em] text-ink text-balance"
+                    id="gallery-heading"
+                    class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
                   >
-                    Outros lançamentos em BH para comparar
+                    Galeria do empreendimento
                   </h2>
-                  <p class="text-[14px] font-normal text-ink-muted">
-                    Compare plantas, bairros e condições antes de decidir.
+                  <p class="text-[13px] font-normal text-ink-muted tabular-nums">
+                    {{ galleryImages().length }} imagens
                   </p>
                 </div>
 
-                <a
-                  routerLink="/lancamentos"
-                  class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-medium text-brand transition-colors duration-150 hover:text-brand-hover"
+                <div
+                  class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3"
                 >
-                  Ver catálogo completo
-                </a>
-              </div>
+                  @for (
+                    media of galleryImages();
+                    track media.url;
+                    let i = $index
+                  ) {
+                    <button
+                      type="button"
+                      (click)="openLightbox(i)"
+                      [attr.aria-label]="
+                        'Ampliar imagem ' + (i + 1) + ': ' + media.alt
+                      "
+                      class="group relative aspect-[4/3] overflow-hidden rounded-[20px] bg-surface text-left cursor-pointer"
+                    >
+                      <img
+                        [src]="media.url"
+                        [alt]="media.alt"
+                        [attr.width]="media.width ?? null"
+                        [attr.height]="media.height ?? null"
+                        loading="lazy"
+                        decoding="async"
+                        class="h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
+                      />
+                    </button>
+                  }
+                </div>
+              </section>
+            }
 
-              <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-                @for (other of otherLaunches(); track other.slug) {
-                  <app-launch-card
-                    [launch]="other"
-                    headingLevel="h3"
-                  />
+            @if (otherLaunches().length > 0) {
+              <section
+                id="outros-lancamentos"
+                aria-labelledby="other-launches-heading"
+                [class]="
+                  hasGallery()
+                    ? 'border-t border-border-subtle pt-12 scroll-mt-24'
+                    : 'scroll-mt-24'
+                "
+              >
+                <div
+                  class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"
+                >
+                  <div class="space-y-1">
+                    <h2
+                      id="other-launches-heading"
+                      class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                    >
+                      Outros lançamentos em BH para comparar
+                    </h2>
+                    <p class="text-[14px] font-normal text-ink-muted">
+                      Compare plantas, bairros e condições antes de decidir.
+                    </p>
+                  </div>
+
+                  <a
+                    routerLink="/lancamentos"
+                    class="terraco-link-underline inline-flex min-h-[40px] w-fit items-center text-[14px] font-medium text-brand transition-colors duration-150 motion-reduce:transition-none hover:text-brand-hover"
+                  >
+                    Ver catálogo completo
+                  </a>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
+                  @for (other of otherLaunches(); track other.slug) {
+                    <app-launch-card [launch]="other" headingLevel="h3" />
+                  }
+                </div>
+              </section>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Faixa de contraste Grafite Quente (#1C1B19) com chips em 1 toque e CTA Terracota -->
+      <section
+        aria-labelledby="launch-whatsapp-band-heading"
+        class="bg-ink py-12 text-ink-inverse sm:py-16 lg:py-20"
+      >
+        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div
+            class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12 xl:gap-16"
+          >
+            <div class="space-y-3 lg:col-span-5">
+              <h2
+                id="launch-whatsapp-band-heading"
+                class="max-w-md font-display text-[clamp(1.625rem,3vw,2.25rem)] font-medium not-italic leading-[1.1] tracking-[-0.025em] text-ink-inverse text-balance"
+              >
+                Converse direto sobre o {{ item().nome }}
+              </h2>
+              <p
+                class="max-w-[46ch] text-[15px] font-normal leading-[1.55] text-ink-inverse/80 sm:text-base"
+              >
+                Escolha o assunto abaixo para abrir o WhatsApp com a mensagem
+                pronta, sem formulário nem ligações.
+              </p>
+            </div>
+
+            <div
+              class="border-t border-ink-inverse/15 pt-7 lg:col-span-7 lg:border-t-0 lg:border-l lg:border-ink-inverse/15 lg:pt-0 lg:pl-12 xl:pl-16"
+            >
+              <div
+                role="group"
+                aria-label="Assunto para conversa no WhatsApp"
+                class="flex flex-wrap gap-2.5"
+              >
+                @for (option of intentOptions; track option.key) {
+                  @let active = selectedIntent() === option.key;
+                  <button
+                    type="button"
+                    (click)="selectIntent(option.key)"
+                    [attr.aria-pressed]="active"
+                    [class]="
+                      active
+                        ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/75 bg-ink-inverse/16 px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:text-[14px]'
+                        : 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:text-[14px]'
+                    "
+                  >
+                    @if (active) {
+                      <span
+                        aria-hidden="true"
+                        class="h-2 w-2 shrink-0 rounded-full bg-accent"
+                      ></span>
+                    }
+                    <span>{{ option.label }}</span>
+                  </button>
                 }
               </div>
-            </section>
-          }
-        </div>
-      </div>
 
-      <div class="mt-12 sm:mt-14">
-        <app-next-journey
-          heading="Continue sua pesquisa"
-          [destinations]="nextDestinations()"
-        />
-      </div>
+              <div
+                class="mt-6 border-t border-ink-inverse/15 pt-5 sm:mt-7 sm:pt-6"
+              >
+                <p
+                  data-testid="launch-whatsapp-preview"
+                  class="max-w-[54ch] border-l-2 border-accent pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
+                >
+                  “{{ selectedIntentMessage() }}”
+                </p>
+
+                <a
+                  [href]="whatsappHref()"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="terraco-btn mt-5 inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+                >
+                  Abrir WhatsApp com esta mensagem
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <app-next-journey
+        heading="Continue sua pesquisa"
+        subtitle="Explore o guia do bairro, compare outros empreendimentos ou filtre pelo seu momento."
+        variant="editorial"
+        [destinations]="nextDestinations()"
+      />
 
       @defer (when lightboxOpen()) {
         <app-image-lightbox
@@ -839,7 +956,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           (closed)="closeLightbox()"
         />
       }
-    </section>
+    </div>
   `,
 })
 export class PrimeViewLandingComponent {
@@ -854,8 +971,7 @@ export class PrimeViewLandingComponent {
 
   readonly activeSection = linkedSignal<string, string>({
     source: this.itemSlug,
-    computation: () =>
-      this.item().condicoesEspeciais?.length ? 'condicoes' : 'sobre',
+    computation: () => 'sobre',
   });
 
   readonly otherLaunches = computed<readonly Lancamento[]>(() =>
@@ -863,6 +979,45 @@ export class PrimeViewLandingComponent {
       .lancamentos()
       .filter((launch) => launch.slug !== this.item().slug)
   );
+
+  readonly heroMetrics = computed<readonly HeroMetricItem[]>(() => {
+    const current = this.item();
+    const metrics: HeroMetricItem[] = [];
+
+    if (current.quartos.trim()) {
+      metrics.push({ label: 'Dormitórios', value: current.quartos });
+    }
+    if (current.metragem.trim()) {
+      metrics.push({
+        label: 'Metragem',
+        value: current.metragem,
+        tabular: true,
+      });
+    }
+    const price = this.formattedPrice();
+    if (price) {
+      metrics.push({
+        label: 'A partir de',
+        value: price,
+        highlight: true,
+        tabular: true,
+      });
+    }
+    if (current.vagas.trim()) {
+      metrics.push({ label: 'Vagas', value: current.vagas, tabular: true });
+    }
+    if (current.entrega?.trim()) {
+      metrics.push({
+        label: 'Entrega',
+        value: current.entrega,
+        tabular: true,
+      });
+    } else if (current.tipologias.trim() && metrics.length < 4) {
+      metrics.push({ label: 'Tipologias', value: current.tipologias });
+    }
+
+    return metrics;
+  });
 
   readonly nextDestinations = computed<readonly JourneyDestination[]>(() => {
     const current = this.item();
@@ -908,7 +1063,7 @@ export class PrimeViewLandingComponent {
   });
   readonly selectedIntent = linkedSignal<string, LaunchIntentKey>({
     source: this.itemSlug,
-    computation: () => 'plantas_valores',
+    computation: () => 'tabela_valores',
   });
   readonly lightboxOpen = linkedSignal({
     source: this.itemSlug,
@@ -968,8 +1123,8 @@ export class PrimeViewLandingComponent {
     );
   });
 
-  readonly selectedIntentLabel = computed(() =>
-    this.selectedIntentOption().label.toLowerCase()
+  readonly selectedIntentMessage = computed(() =>
+    this.selectedIntentOption().buildMessage(this.item())
   );
 
   readonly galleryImages = computed<readonly LaunchMediaItem[]>(
@@ -985,12 +1140,17 @@ export class PrimeViewLandingComponent {
       : null;
   });
 
-  readonly whatsappHref = computed(() => {
+  readonly primaryWhatsappHref = computed(() => {
     const currentItem = this.item();
     return buildWhatsAppUrl(
-      this.selectedIntentOption().buildMessage(currentItem)
+      currentItem.whatsappMensagem ||
+        `Oi! Gostaria de receber mais informações sobre o ${currentItem.nome} (${currentItem.bairro}).`
     );
   });
+
+  readonly whatsappHref = computed(() =>
+    buildWhatsAppUrl(this.selectedIntentMessage())
+  );
 
   readonly specialConditionsWhatsappHref = computed(() => {
     const currentItem = this.item();
@@ -1014,9 +1174,9 @@ export class PrimeViewLandingComponent {
       }
 
       const sectionIds = [
-        'condicoes',
         'sobre',
         'diferenciais',
+        'condicoes',
         'plantas',
         'simulador',
         'galeria',
@@ -1143,9 +1303,9 @@ export class PrimeViewLandingComponent {
     const base =
       'terraco-m3-chip inline-flex min-h-[36px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap';
     if (this.activeSection() === sectionId) {
-      return `${base} terraco-m3-chip--active bg-brand font-medium text-ink-inverse shadow-chip`;
+      return `${base} terraco-m3-chip--active bg-surface font-medium text-ink shadow-chip`;
     }
-    return `${base} bg-elevated font-normal text-ink-muted hover:bg-surface hover:text-ink`;
+    return `${base} bg-transparent font-normal text-ink-muted hover:bg-surface/60 hover:text-ink`;
   }
 
   scrollToSection(event: MouseEvent, sectionId: string): void {
@@ -1170,7 +1330,7 @@ export class PrimeViewLandingComponent {
     );
     const navHeight =
       this.sectionNav()?.nativeElement.getBoundingClientRect().height ?? 50;
-    const stickyOffset = navHeight + 24;
+    const stickyOffset = navHeight + 92;
 
     const scrollToTarget = (smooth: boolean) => {
       const freshTarget = this.document.getElementById(sectionId);
@@ -1236,16 +1396,20 @@ export class PrimeViewLandingComponent {
         phone: rawPhone,
         launchSlug: currentItem.slug,
         source: 'launch-detail',
-        intent: option.key,
+        intent: option.leadIntent,
         message: option.buildMessage(currentItem),
       });
       this.callbackSubmitted.set(true);
       this.callbackOpen.set(false);
     } catch (err) {
+      const rawMessage = err instanceof Error ? err.message : '';
+      const isRawSystemError =
+        !rawMessage ||
+        /permission|insufficient|firebase|firestore|network/i.test(rawMessage);
       this.callbackError.set(
-        err instanceof Error
-          ? err.message
-          : 'Não foi possível enviar seu contato. Tente novamente.'
+        isRawSystemError
+          ? 'Não foi possível enviar seu contato agora. Tente novamente em instantes.'
+          : rawMessage
       );
     }
   }
