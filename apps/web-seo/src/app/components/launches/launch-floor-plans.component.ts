@@ -56,12 +56,36 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
         color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .m3e-chip[aria-pressed='true'] {
-      border-radius: 14px;
+    .m3e-chip[aria-pressed='true'],
+    .m3e-tonal-btn:hover,
+    .m3e-tonal-btn:active {
+      border-radius: 12px;
+    }
+
+    .m3e-plan-item {
+      border-radius: 20px;
+      transition:
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .m3e-plan-item[aria-selected='true'] {
+      border-radius: 12px;
+    }
+
+    .m3e-tonal-btn {
+      border-radius: 9999px;
+      transition:
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .m3e-chip {
+      .m3e-chip,
+      .m3e-plan-item,
+      .m3e-tonal-btn {
         transition: none;
       }
     }
@@ -109,8 +133,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 [attr.aria-pressed]="active"
                 [class]="
                   active
-                    ? 'm3e-chip inline-flex min-h-[38px] shrink-0 cursor-pointer items-center gap-1.5 border border-ink bg-ink px-4 py-1.5 text-[13px] font-medium text-ink-inverse shadow-chip'
-                    : 'm3e-chip inline-flex min-h-[38px] shrink-0 cursor-pointer items-center gap-1.5 border border-border-subtle bg-canvas px-4 py-1.5 text-[13px] font-medium text-ink hover:border-border-strong'
+                    ? 'm3e-chip inline-flex min-h-[38px] shrink-0 cursor-pointer items-center gap-1.5 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
+                    : 'm3e-chip inline-flex min-h-[38px] shrink-0 cursor-pointer items-center gap-1.5 border border-transparent bg-canvas px-4 py-1.5 text-[13px] font-medium text-[#1C1B19] hover:bg-elevated'
                 "
               >
                 <span>{{ category.name }}</span>
@@ -128,8 +152,40 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
           </div>
         }
 
-        <div class="mt-6 grid gap-6 lg:grid-cols-12 lg:items-start">
-          <!-- Selector list: horizontal scroll on mobile, vertical list on desktop -->
+        <div class="mt-6 grid gap-5 lg:grid-cols-12 lg:items-start lg:gap-6">
+          <!-- Mobile (< md): Seletor horizontal tátil compacto com scroll suave -->
+          <div
+            role="group"
+            aria-label="Selecionar planta"
+            class="terraco-no-scrollbar -mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 md:hidden"
+          >
+            @for (plan of filteredPlans(); track plan.id) {
+              @let isSelected = activePlan()?.id === plan.id;
+              <button
+                type="button"
+                (click)="selectPlan(plan.id)"
+                [attr.aria-pressed]="isSelected"
+                [class]="
+                  isSelected
+                    ? 'm3e-chip inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-2 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
+                    : 'm3e-chip inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-2 border border-transparent bg-canvas px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-elevated'
+                "
+              >
+                <span>{{ plan.titulo }}</span>
+                <span
+                  [class]="
+                    isSelected
+                      ? 'text-[12px] text-[#FAF8F4]/75 tabular-nums'
+                      : 'text-[12px] text-ink-muted tabular-nums'
+                  "
+                >
+                  {{ plan.metragem }}
+                </span>
+              </button>
+            }
+          </div>
+
+          <!-- Desktop/Tablet (>= md): Lista vertical ou grade tátil sem bordas coloridas -->
           <div
             ngListbox
             [value]="activePlanSelection()"
@@ -137,7 +193,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
             orientation="vertical"
             [multi]="false"
             selectionMode="follow"
-            class="flex gap-2.5 overflow-x-auto pb-2 lg:col-span-5 lg:block lg:max-h-[560px] lg:space-y-2.5 lg:overflow-y-auto lg:pb-0 lg:pr-1"
+            class="hidden md:grid md:grid-cols-2 md:gap-2.5 lg:col-span-5 lg:block lg:max-h-[560px] lg:space-y-2.5 lg:overflow-y-auto lg:pr-1"
             aria-label="Lista de plantas"
           >
             @for (plan of filteredPlans(); track plan.id) {
@@ -149,42 +205,78 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 (click)="selectPlan(plan.id)"
                 [class]="
                   isSelected
-                    ? 'terraco-m3-select-card group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 border border-brand bg-brand/[0.08] p-3.5 text-left shadow-chip lg:w-full'
-                    : 'terraco-m3-select-card group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 border border-border-subtle bg-surface/65 p-3.5 text-left hover:border-border-strong hover:bg-surface lg:w-full'
+                    ? 'm3e-plan-item group flex w-full cursor-pointer flex-col justify-between gap-2 border border-transparent bg-[#1C1B19] p-3.5 text-left text-[#FAF8F4] shadow-chip'
+                    : 'm3e-plan-item group flex w-full cursor-pointer flex-col justify-between gap-2 border border-transparent bg-canvas/75 p-3.5 text-left text-[#1C1B19] hover:bg-canvas'
                 "
               >
                 <div class="flex items-start justify-between gap-3">
                   <div class="min-w-0">
                     <p
-                      class="truncate text-[14px] font-medium leading-snug text-ink"
+                      [class]="
+                        isSelected
+                          ? 'truncate text-[14px] font-semibold leading-snug text-[#FAF8F4]'
+                          : 'truncate text-[14px] font-medium leading-snug text-[#1C1B19]'
+                      "
                     >
                       {{ plan.titulo }}
                     </p>
-                    <p class="mt-0.5 text-[13px] font-normal text-ink-muted">
+                    <p
+                      [class]="
+                        isSelected
+                          ? 'mt-0.5 text-[13px] font-normal text-[#FAF8F4]/75'
+                          : 'mt-0.5 text-[13px] font-normal text-ink-muted'
+                      "
+                    >
                       {{ plan.quartos }} · {{ plan.banhos }}
                     </p>
                   </div>
                   <span
-                    class="shrink-0 text-[13px] font-medium text-ink tabular-nums"
+                    [class]="
+                      isSelected
+                        ? 'shrink-0 text-[13px] font-medium text-[#FAF8F4] tabular-nums'
+                        : 'shrink-0 text-[13px] font-medium text-[#1C1B19] tabular-nums'
+                    "
                   >
                     {{ plan.metragem }}
                   </span>
                 </div>
 
                 <div
-                  class="flex items-center justify-between gap-2 border-t border-border-subtle/70 pt-2 text-[13px]"
+                  [class]="
+                    isSelected
+                      ? 'flex items-center justify-between gap-2 border-t border-[#FAF8F4]/15 pt-2 text-[13px]'
+                      : 'flex items-center justify-between gap-2 border-t border-border-subtle/70 pt-2 text-[13px]'
+                  "
                 >
                   @if (plan.precoAPartirDe) {
-                    <span class="font-medium text-brand tabular-nums">
+                    <span
+                      [class]="
+                        isSelected
+                          ? 'font-medium text-[#F7C957] tabular-nums'
+                          : 'font-medium text-[#1C1B19] tabular-nums'
+                      "
+                    >
                       A partir de {{ formatPrice(plan.precoAPartirDe) }}
                     </span>
                   } @else {
-                    <span class="font-normal text-ink-muted">
+                    <span
+                      [class]="
+                        isSelected
+                          ? 'font-normal text-[#FAF8F4]/75'
+                          : 'font-normal text-ink-muted'
+                      "
+                    >
                       Valor sob consulta
                     </span>
                   }
                   @if (plan.unidades) {
-                    <span class="truncate text-ink-muted">
+                    <span
+                      [class]="
+                        isSelected
+                          ? 'truncate text-[#FAF8F4]/75'
+                          : 'truncate text-ink-muted'
+                      "
+                    >
                       {{ plan.unidades }}
                     </span>
                   }
@@ -335,8 +427,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                         [attr.aria-pressed]="selectedIntent() === intent.key"
                         [class]="
                           selectedIntent() === intent.key
-                            ? 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-[#1F6F50]/35 bg-[#E5F2EC] px-3.5 py-1.5 text-[13px] font-medium text-[#1F6F50]'
-                            : 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-border-subtle bg-elevated px-3.5 py-1.5 text-[13px] font-normal text-ink-muted hover:border-border-strong hover:text-ink'
+                            ? 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-3.5 py-1.5 text-[13px] font-medium text-[#FAF8F4]'
+                            : 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-3.5 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
                         "
                       >
                         {{ intent.label }}
@@ -349,7 +441,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                       [href]="activePlanWhatsappHref()"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="terraco-btn inline-flex min-h-[44px] flex-1 items-center justify-center rounded-pill bg-ink px-5 py-2.5 text-[13px] font-medium text-ink-inverse hover:bg-ink/90"
+                      class="m3e-tonal-btn inline-flex min-h-[44px] flex-1 items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-[13px] font-medium text-[#1C1B19] hover:bg-[#EAE3D5]"
                     >
                       {{ activeIntentOption().ctaLabel }}
                     </a>

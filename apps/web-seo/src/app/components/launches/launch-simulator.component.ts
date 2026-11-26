@@ -105,12 +105,23 @@ function resolveInitialPropertyValue(item: Lancamento): number {
         color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .sim-m3e-chip[aria-pressed='true'] {
-      border-radius: 14px;
+    .sim-m3e-chip[aria-pressed='true'],
+    .sim-tonal-btn:hover,
+    .sim-tonal-btn:active {
+      border-radius: 12px;
+    }
+
+    .sim-tonal-btn {
+      border-radius: 9999px;
+      transition:
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .sim-m3e-chip {
+      .sim-m3e-chip,
+      .sim-tonal-btn {
         transition: none;
       }
     }
@@ -309,7 +320,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="simulator-whatsapp-cta"
-              class="terraco-btn flex min-h-[46px] w-full items-center justify-center rounded-pill bg-ink px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-ink-inverse hover:bg-ink/90"
+              class="sim-tonal-btn flex min-h-[46px] w-full items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-[#1C1B19] hover:bg-[#EAE3D5]"
             >
               Enviar simulação no WhatsApp
             </a>

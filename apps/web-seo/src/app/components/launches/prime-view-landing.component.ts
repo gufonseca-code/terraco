@@ -200,12 +200,24 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .m3e-tab-chip[aria-pressed='true'] {
-      border-radius: 14px;
+    .m3e-tab-chip[aria-pressed='true'],
+    .m3e-tonal-btn:hover,
+    .m3e-tonal-btn:active {
+      border-radius: 12px;
+    }
+
+    .m3e-tonal-btn {
+      border-radius: 9999px;
+      transition:
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .m3e-tab-chip {
+      .m3e-tab-chip,
+      .m3e-tonal-btn {
         transition: none;
       }
     }
@@ -730,8 +742,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.aria-pressed]="active"
                       [class]="
                         active
-                          ? 'm3e-tab-chip inline-flex min-h-[40px] cursor-pointer items-center gap-2 border border-ink bg-ink px-4 py-1.5 text-[13px] font-medium text-ink-inverse shadow-chip sm:text-[14px]'
-                          : 'm3e-tab-chip inline-flex min-h-[40px] cursor-pointer items-center gap-2 border border-border-subtle bg-surface/85 px-4 py-1.5 text-[13px] font-normal text-ink hover:border-border-strong hover:bg-surface sm:text-[14px]'
+                          ? 'm3e-tab-chip inline-flex min-h-[40px] cursor-pointer items-center gap-2 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:text-[14px]'
+                          : 'm3e-tab-chip inline-flex min-h-[40px] cursor-pointer items-center gap-2 border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5] sm:text-[14px]'
                       "
                     >
                       <span>{{ pilar.label }}</span>
@@ -841,8 +853,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         [attr.aria-pressed]="entornoMode() === 'a-pe'"
                         [class]="
                           entornoMode() === 'a-pe'
-                            ? 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-[#1F6F50]/35 bg-[#E5F2EC] px-4 py-1.5 text-[13px] font-medium text-[#1F6F50]'
-                            : 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-border-subtle bg-surface/85 px-4 py-1.5 text-[13px] font-normal text-ink hover:border-border-strong'
+                            ? 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
+                            : 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
                         "
                       >
                         A pé
@@ -853,8 +865,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         [attr.aria-pressed]="entornoMode() === 'carro'"
                         [class]="
                           entornoMode() === 'carro'
-                            ? 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-[#1F6F50]/35 bg-[#E5F2EC] px-4 py-1.5 text-[13px] font-medium text-[#1F6F50]'
-                            : 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-border-subtle bg-surface/85 px-4 py-1.5 text-[13px] font-normal text-ink hover:border-border-strong'
+                            ? 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
+                            : 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
                         "
                       >
                         De carro
@@ -994,7 +1006,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [href]="specialConditionsWhatsappHref()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="terraco-btn inline-flex min-h-[44px] items-center justify-center rounded-pill bg-ink px-6 py-2.5 text-[14px] font-medium text-ink-inverse hover:bg-ink/90"
+                    class="m3e-tonal-btn inline-flex min-h-[44px] items-center justify-center border border-border-strong/40 bg-canvas px-6 py-2.5 text-[14px] font-medium text-[#1C1B19] hover:bg-elevated"
                   >
                     Solicitar tabela atualizada no WhatsApp
                   </a>
