@@ -1,5 +1,4 @@
 import { Listbox, Option } from '@angular/aria/listbox';
-import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -45,7 +44,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 @Component({
   selector: 'app-launch-floor-plans',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgOptimizedImage, Listbox, Option, ImageLightboxComponent],
+  imports: [Listbox, Option, ImageLightboxComponent],
   styles: `
     .m3e-chip {
       border-radius: 9999px;
@@ -269,13 +268,17 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
               <div
                 class="relative flex items-center justify-center overflow-hidden rounded-md bg-elevated p-3 sm:p-5"
               >
-                <img
-                  [ngSrc]="plan.imagem"
-                  [alt]="plan.alt"
-                  [width]="plan.width"
-                  [height]="plan.height"
-                  class="max-h-[340px] w-auto object-contain sm:max-h-[400px]"
-                />
+                @for (currentPlan of [plan]; track currentPlan.id) {
+                  <img
+                    data-testid="active-floor-plan-image"
+                    [src]="currentPlan.imagem"
+                    [alt]="currentPlan.alt"
+                    [attr.width]="currentPlan.width"
+                    [attr.height]="currentPlan.height"
+                    decoding="async"
+                    class="max-h-[340px] w-auto object-contain sm:max-h-[400px]"
+                  />
+                }
 
                 <button
                   type="button"
