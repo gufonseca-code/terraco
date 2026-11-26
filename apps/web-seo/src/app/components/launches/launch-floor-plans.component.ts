@@ -28,7 +28,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
   {
     key: 'tabela_planta',
     label: 'Tabela e disponibilidade',
-    ctaLabel: 'Receber tabela desta planta no WhatsApp',
+    ctaLabel: 'Perguntar sobre esta planta no WhatsApp',
   },
   {
     key: 'simular_entrada',
@@ -71,7 +71,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
       <section
         id="plantas"
         aria-labelledby="floor-plans-heading"
-        class="border-t border-border-subtle pt-10 scroll-mt-24"
+        class="scroll-mt-24"
       >
         <div
           class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"

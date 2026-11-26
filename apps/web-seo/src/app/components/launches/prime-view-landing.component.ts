@@ -25,13 +25,14 @@ import {
   buildWhatsAppUrl,
   formatCurrencyBRL,
   type Lancamento,
+  type LaunchEntornoItem,
   type LaunchMediaItem,
+  type LaunchPilarGroup,
 } from '../../core';
 import {
   type JourneyDestination,
   NextJourneyComponent,
 } from '../shared/next-journey.component';
-import { SectionHandoffComponent } from '../shared/section-handoff.component';
 import { FavoriteButtonComponent } from './favorite-button.component';
 import { ImageLightboxComponent } from './image-lightbox.component';
 import { LaunchCardComponent } from './launch-card.component';
@@ -40,10 +41,10 @@ import { LaunchSimulatorComponent } from './launch-simulator.component';
 import { formatBrazilianPhone } from './whatsapp-alert-form.component';
 
 export type LaunchIntentKey =
-  | 'tabela_valores'
+  | 'tabela_condicoes'
   | 'agendar_visita'
-  | 'simular_financiamento'
-  | 'duvida_bairro';
+  | 'duvida_plantas'
+  | 'conhecer_bairro';
 
 interface LaunchIntentOption {
   readonly key: LaunchIntentKey;
@@ -61,11 +62,11 @@ interface HeroMetricItem {
 
 const LAUNCH_INTENT_OPTIONS: readonly LaunchIntentOption[] = [
   {
-    key: 'tabela_valores',
+    key: 'tabela_condicoes',
     leadIntent: 'plantas_valores',
-    label: 'Tabela e valores',
+    label: 'Receber tabela e condições',
     buildMessage: (item) =>
-      `Oi! Quero receber as plantas e a tabela de valores do ${item.nome} (${item.bairro}).`,
+      `Oi! Quero receber a tabela atualizada e as condições do ${item.nome} (${item.bairro}).`,
   },
   {
     key: 'agendar_visita',
@@ -75,18 +76,18 @@ const LAUNCH_INTENT_OPTIONS: readonly LaunchIntentOption[] = [
       `Oi! Quero agendar uma visita para conhecer o ${item.nome} (${item.bairro}).`,
   },
   {
-    key: 'simular_financiamento',
+    key: 'duvida_plantas',
     leadIntent: 'simular_entrada',
-    label: 'Simular financiamento',
+    label: 'Dúvida sobre plantas',
     buildMessage: (item) =>
-      `Oi! Gostaria de simular entrada, parcelas e uso de FGTS no ${item.nome} (${item.bairro}).`,
+      `Oi! Tenho uma dúvida sobre as plantas e disponibilidades do ${item.nome} (${item.bairro}).`,
   },
   {
-    key: 'duvida_bairro',
+    key: 'conhecer_bairro',
     leadIntent: 'tirar_duvida',
-    label: 'Dúvida sobre o bairro',
+    label: 'Conhecer o bairro',
     buildMessage: (item) =>
-      `Oi! Tenho uma dúvida sobre a localização e o dia a dia perto do ${item.nome} (${item.bairro}).`,
+      `Oi! Gostaria de saber mais sobre a localização e o entorno do ${item.nome} no bairro ${item.bairro}.`,
   },
 ];
 
@@ -187,18 +188,38 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
     LaunchFloorPlansComponent,
     LaunchSimulatorComponent,
     NextJourneyComponent,
-    SectionHandoffComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: `
+    .m3e-tab-chip {
+      border-radius: 9999px;
+      transition:
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .m3e-tab-chip[aria-pressed='true'] {
+      border-radius: 14px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .m3e-tab-chip {
+        transition: none;
+      }
+    }
+  `,
   template: `
     <div class="flex flex-1 flex-col bg-canvas">
+      <!-- Primeira dobra limpa e protagonista sobre #FAF8F4 -->
       <section
         aria-labelledby="launch-heading"
-        class="bg-canvas pt-6 pb-8 sm:pt-8 sm:pb-10 lg:pt-10 lg:pb-12"
+        class="bg-canvas pt-4 pb-6 sm:pt-7 sm:pb-10 lg:pt-10 lg:pb-12"
       >
         <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div
-            class="terraco-reveal mb-5 flex flex-wrap items-center justify-between gap-3"
+            class="terraco-reveal mb-3 flex flex-wrap items-center justify-between gap-3 sm:mb-5"
           >
             <nav aria-label="Navegação estrutural">
               <ol
@@ -235,72 +256,109 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             }
           </div>
 
-          <!-- Primeira dobra editorial sobre #FAF8F4 (sem card fechado) -->
           <div
-            class="terraco-reveal-delay grid gap-6 sm:gap-8 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
+            class="terraco-reveal-delay grid gap-5 sm:gap-7 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
           >
-            <div
-              [class.terraco-skeleton]="!imageLoaded()"
-              class="group relative aspect-[16/10] w-full min-w-0 overflow-hidden rounded-[24px] bg-surface lg:col-span-7"
-            >
-              <img
-                #heroImg
-                data-testid="launch-hero-image"
-                [ngSrc]="item().imagem"
-                [alt]="item().imagemAlt"
-                [width]="item().imagemWidth"
-                [height]="item().imagemHeight"
-                priority
-                [style.view-transition-name]="'launch-image-' + item().slug"
-                (load)="markImageLoaded()"
-                (error)="markImageLoaded()"
-                class="relative z-[1] h-full w-full rounded-[24px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
-              />
-
-              @if (hasGallery()) {
-                <button
-                  type="button"
-                  (click)="openLightbox(0)"
-                  [attr.aria-label]="
-                    'Abrir galeria de imagens de ' + item().nome
+            <!-- Mosaico fotográfico protagonista -->
+            <div class="lg:col-span-7">
+              <div class="grid gap-3 lg:grid-cols-12">
+                <div
+                  [class.terraco-skeleton]="!imageLoaded()"
+                  [class]="
+                    heroSecondaryImages().length > 0
+                      ? 'group relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/10] lg:col-span-9 lg:rounded-[24px]'
+                      : 'group relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/10] lg:col-span-12 lg:rounded-[24px]'
                   "
-                  class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
-                ></button>
-
-                <button
-                  type="button"
-                  (click)="openLightbox(0)"
-                  class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1.5 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong"
                 >
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.75"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-3.5 w-3.5"
-                  >
-                    <rect x="3" y="3" width="18" height="18" rx="3" />
-                    <circle cx="9" cy="9" r="1.5" />
-                    <path d="m21 15-4.5-4.5L7 20" />
-                  </svg>
-                  <span class="tabular-nums">{{ galleryImages().length }} fotos</span>
-                </button>
-              }
+                  <img
+                    #heroImg
+                    data-testid="launch-hero-image"
+                    [ngSrc]="item().imagem"
+                    [alt]="item().imagemAlt"
+                    [width]="item().imagemWidth"
+                    [height]="item().imagemHeight"
+                    priority
+                    [style.view-transition-name]="'launch-image-' + item().slug"
+                    (load)="markImageLoaded()"
+                    (error)="markImageLoaded()"
+                    class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100 lg:rounded-[24px]"
+                  />
 
-              <div class="absolute top-3 right-3 z-10">
-                <app-favorite-button
-                  [slug]="item().slug"
-                  [nome]="item().nome"
-                />
+                  @if (hasGallery()) {
+                    <button
+                      type="button"
+                      (click)="openLightbox(0)"
+                      [attr.aria-label]="
+                        'Abrir galeria de imagens de ' + item().nome
+                      "
+                      class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
+                    ></button>
+
+                    <button
+                      type="button"
+                      (click)="openLightbox(0)"
+                      class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-3.5 w-3.5"
+                      >
+                        <rect x="3" y="3" width="18" height="18" rx="3" />
+                        <circle cx="9" cy="9" r="1.5" />
+                        <path d="m21 15-4.5-4.5L7 20" />
+                      </svg>
+                      <span class="tabular-nums">
+                        {{ galleryImages().length }} fotos
+                      </span>
+                    </button>
+                  }
+
+                  <div class="absolute top-3 right-3 z-10">
+                    <app-favorite-button
+                      [slug]="item().slug"
+                      [nome]="item().nome"
+                    />
+                  </div>
+                </div>
+
+                @if (heroSecondaryImages().length > 0) {
+                  <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:gap-3">
+                    @for (
+                      preview of heroSecondaryImages();
+                      track preview.url;
+                      let idx = $index
+                    ) {
+                      <button
+                        type="button"
+                        (click)="openLightbox(idx)"
+                        [attr.aria-label]="'Ampliar foto: ' + preview.alt"
+                        class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer"
+                      >
+                        <img
+                          [src]="preview.url"
+                          [alt]="preview.alt"
+                          [attr.width]="preview.width ?? null"
+                          [attr.height]="preview.height ?? null"
+                          decoding="async"
+                          class="h-full w-full rounded-[18px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+                        />
+                      </button>
+                    }
+                  </div>
+                }
               </div>
             </div>
 
-            <div class="flex min-w-0 flex-col gap-5 lg:col-span-5">
-              <div class="space-y-2">
-                <div class="flex flex-wrap items-center gap-2.5">
+            <!-- Painel editorial e CTA único em Terracota -->
+            <div class="flex min-w-0 flex-col gap-3.5 sm:gap-4 lg:col-span-5">
+              <div class="space-y-1.5">
+                <div class="flex flex-wrap items-center gap-2">
                   <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
                     @if (bairroGuideSlug(); as guideSlug) {
                       <a
@@ -309,7 +367,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       >{{ item().bairro }}</a>
                     } @else {
                       <span>{{ item().bairro }}</span>
-                    }<span>, {{ item().cidade }}, {{ item().uf }}</span>
+                    }<span>, {{ item().cidade }} - {{ item().uf }}</span>
                   </p>
                   @if (item().badge) {
                     <span
@@ -323,32 +381,30 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 <h1
                   id="launch-heading"
                   [style.view-transition-name]="'launch-title-' + item().slug"
-                  class="font-display text-[clamp(1.875rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
+                  class="font-display text-[clamp(1.75rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
                 >
                   {{ item().nome }}
                 </h1>
 
-                @if (item().tagline) {
-                  <p class="text-[15px] font-normal leading-[1.5] text-ink-muted">
-                    {{ item().tagline }}
-                  </p>
-                }
+                <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
+                  {{ item().endereco }}
+                </p>
               </div>
 
-              <!-- Grade dinâmica de métricas (apenas campos disponíveis) -->
+              <!-- Ficha técnica dinâmica (somente campos disponíveis) -->
               <dl
-                class="grid grid-cols-2 gap-x-5 gap-y-3.5 border-y border-border-subtle py-4"
+                class="grid grid-cols-2 gap-x-4 gap-y-2.5 border-y border-border-subtle py-3 sm:gap-x-5 sm:gap-y-3 sm:py-3.5"
               >
                 @for (metric of heroMetrics(); track metric.label) {
                   <div class="space-y-0.5">
-                    <dt class="text-[13px] font-normal text-ink-muted">
+                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
                       {{ metric.label }}
                     </dt>
                     <dd
                       [class]="
                         metric.highlight
-                          ? 'text-[14px] font-medium leading-[1.35] text-brand sm:text-[15px]'
-                          : 'text-[14px] font-medium leading-[1.35] text-ink sm:text-[15px]'
+                          ? 'text-[13px] font-medium leading-[1.3] text-brand sm:text-[14px]'
+                          : 'text-[13px] font-medium leading-[1.3] text-ink sm:text-[14px]'
                       "
                       [class.tabular-nums]="metric.tabular"
                     >
@@ -358,31 +414,17 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 }
               </dl>
 
-              @if (!formattedPrice()) {
-                <p class="text-[13px] font-normal text-ink-muted">
-                  Valores conforme unidade e andar.
-                  <a
-                    [href]="primaryWhatsappHref()"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="terraco-link-underline ml-1 font-medium text-brand hover:text-brand-hover"
-                  >
-                    Consultar tabela atualizada
-                  </a>
-                </p>
-              }
-
-              <div class="space-y-3">
+              <div class="space-y-2.5">
                 <a
                   [href]="primaryWhatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="terraco-btn flex min-h-[46px] w-full items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover sm:min-h-[48px]"
                 >
-                  Falar no WhatsApp sobre {{ item().nome }}
+                  Falar no WhatsApp
                 </a>
 
-                <div>
+                <div class="hidden sm:block">
                   @if (callbackSubmitted()) {
                     <p
                       role="status"
@@ -464,11 +506,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </div>
             </div>
           </div>
-
-          <!-- Trilha sticky M3 Expressive com shape morphing (rounded-full -> rounded-[12px] bg-[#F3EFE6]) -->
         </div>
       </section>
 
+      <!-- M3E Pill Bar sticky no escopo da página -->
       <div
         class="sticky top-[72px] z-20 mx-auto w-full max-w-7xl px-4 sm:top-[76px] sm:px-6 lg:px-8"
       >
@@ -477,20 +518,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           aria-label="Seções do empreendimento"
           class="terraco-no-scrollbar flex items-center gap-1.5 overflow-x-auto rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-chip backdrop-blur-md"
         >
-          @if (item().condicoesEspeciais?.length) {
-            <a
-              #sectionNavLink
-              data-section-id="condicoes"
-              href="#condicoes"
-              (click)="scrollToSection($event, 'condicoes')"
-              [attr.aria-current]="
-                activeSection() === 'condicoes' ? 'true' : null
-              "
-              [class]="sectionNavPillClass('condicoes')"
-            >
-              Condições
-            </a>
-          }
           <a
             #sectionNavLink
             data-section-id="sobre"
@@ -501,18 +528,32 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           >
             Sobre
           </a>
-          @if (item().diferenciais.length > 0) {
+          @if (pilaresList().length > 0) {
             <a
               #sectionNavLink
-              data-section-id="diferenciais"
-              href="#diferenciais"
-              (click)="scrollToSection($event, 'diferenciais')"
+              data-section-id="pilares"
+              href="#pilares"
+              (click)="scrollToSection($event, 'pilares')"
               [attr.aria-current]="
-                activeSection() === 'diferenciais' ? 'true' : null
+                activeSection() === 'pilares' ? 'true' : null
               "
-              [class]="sectionNavPillClass('diferenciais')"
+              [class]="sectionNavPillClass('pilares')"
             >
-              Lazer
+              Estrutura &amp; Lazer
+            </a>
+          }
+          @if (entornoItems().length > 0) {
+            <a
+              #sectionNavLink
+              data-section-id="entorno"
+              href="#entorno"
+              (click)="scrollToSection($event, 'entorno')"
+              [attr.aria-current]="
+                activeSection() === 'entorno' ? 'true' : null
+              "
+              [class]="sectionNavPillClass('entorno')"
+            >
+              Entorno
             </a>
           }
           @if (item().plantas?.length) {
@@ -531,15 +572,15 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           }
           <a
             #sectionNavLink
-            data-section-id="simulador"
-            href="#simulador"
-            (click)="scrollToSection($event, 'simulador')"
+            data-section-id="condicoes"
+            href="#condicoes"
+            (click)="scrollToSection($event, 'condicoes')"
             [attr.aria-current]="
-              activeSection() === 'simulador' ? 'true' : null
+              activeSection() === 'condicoes' ? 'true' : null
             "
-            [class]="sectionNavPillClass('simulador')"
+            [class]="sectionNavPillClass('condicoes')"
           >
-            Simulador
+            {{ hasPrice() ? 'Simulador' : 'Tabela' }}
           </a>
           @if (hasGallery()) {
             <a
@@ -547,7 +588,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               data-section-id="galeria"
               href="#galeria"
               (click)="scrollToSection($event, 'galeria')"
-              [attr.aria-current]="activeSection() === 'galeria' ? 'true' : null"
+              [attr.aria-current]="
+                activeSection() === 'galeria' ? 'true' : null
+              "
               [class]="sectionNavPillClass('galeria')"
             >
               Galeria
@@ -570,197 +613,399 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         </nav>
       </div>
 
+      <!-- Sobre, Pilares (Abas/Chips M3E) e Entorno sobre #FAF8F4 -->
       <section
-        aria-label="Sobre e diferenciais"
-        class="bg-canvas pt-10 pb-12 sm:pt-12 sm:pb-16"
+        aria-label="Detalhes, pilares e entorno"
+        class="bg-canvas pt-10 pb-12 sm:pt-12 sm:pb-16 lg:pb-20"
       >
-        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <!-- Sobre e Lazer sobre #FAF8F4 -->
-          <div class="space-y-12 sm:space-y-14">
-            <section
-              id="sobre"
-              aria-labelledby="about-heading"
-              class="scroll-mt-24"
-            >
-              <div
-                class="grid gap-6 lg:grid-cols-12 lg:items-start lg:gap-12"
-              >
-                <div class="lg:col-span-4">
-                  <h2
-                    id="about-heading"
-                    class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
-                  >
-                    Sobre o empreendimento
-                  </h2>
-                </div>
-
-                <div class="space-y-5 lg:col-span-8">
-                  <p
-                    class="max-w-[62ch] text-[15px] font-normal leading-[1.65] text-ink sm:text-base"
-                  >
-                    {{ item().resumo }}
+        <div
+          class="mx-auto w-full max-w-7xl space-y-12 px-4 sm:px-6 sm:space-y-14 lg:px-8"
+        >
+          <!-- Sobre & Ficha Estrutural -->
+          <section
+            id="sobre"
+            aria-labelledby="about-heading"
+            class="scroll-mt-28"
+          >
+            <div class="grid gap-6 lg:grid-cols-12 lg:items-start lg:gap-12">
+              <div class="space-y-2 lg:col-span-4">
+                <h2
+                  id="about-heading"
+                  class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                >
+                  Sobre o empreendimento
+                </h2>
+                @if (item().tagline) {
+                  <p class="text-[14px] font-normal text-ink-muted">
+                    {{ item().tagline }}
                   </p>
+                }
+              </div>
 
-                  @if (item().endereco) {
-                    <dl class="border-t border-border-subtle pt-4">
+              <div class="space-y-5 lg:col-span-8">
+                <p
+                  class="max-w-[64ch] text-[15px] font-normal leading-[1.65] text-ink sm:text-base"
+                >
+                  {{ item().resumo }}
+                </p>
+
+                <dl
+                  class="grid gap-4 border-t border-border-subtle pt-5 sm:grid-cols-2"
+                >
+                  @if (item().estrutura) {
+                    <div class="space-y-1">
                       <dt class="text-[13px] font-normal text-ink-muted">
-                        Endereço
+                        Estrutura e implantação
                       </dt>
                       <dd
-                        class="mt-0.5 text-[14px] font-normal leading-[1.5] text-ink sm:text-[15px]"
+                        class="text-[14px] font-medium leading-[1.5] text-ink tabular-nums sm:text-[15px]"
                       >
-                        {{ item().endereco }}
+                        {{ item().estrutura }}
                       </dd>
-                    </dl>
+                    </div>
                   }
 
-                  @if (item().diferenciais.length > 0) {
-                    <app-section-handoff
-                      prompt="Quer ver o que o condomínio oferece?"
-                      label="Explorar diferenciais e lazer"
-                      targetId="diferenciais"
-                    />
+                  @if (item().projetos) {
+                    <div class="space-y-1">
+                      <dt class="text-[13px] font-normal text-ink-muted">
+                        Projetos assinados
+                      </dt>
+                      <dd
+                        class="text-[14px] font-medium leading-[1.5] text-ink sm:text-[15px]"
+                      >
+                        {{ item().projetos }}
+                      </dd>
+                    </div>
+                  }
+
+                  @if (item().registro) {
+                    <div class="space-y-1 sm:col-span-2">
+                      <dt class="text-[13px] font-normal text-ink-muted">
+                        Incorporação e registro
+                      </dt>
+                      <dd
+                        class="text-[13px] font-normal leading-[1.5] text-ink-muted tabular-nums"
+                      >
+                        {{ item().registro }}
+                      </dd>
+                    </div>
+                  }
+                </dl>
+              </div>
+            </div>
+          </section>
+
+          <!-- Pilares do Empreendimento por Abas/Chips M3E -->
+          @if (pilaresList().length > 0) {
+            <section
+              id="pilares"
+              aria-labelledby="pilares-heading"
+              class="border-t border-border-subtle pt-12 scroll-mt-28"
+            >
+              <div
+                class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
+              >
+                <div class="max-w-xl space-y-1.5">
+                  <h2
+                    id="pilares-heading"
+                    class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                  >
+                    O que o condomínio e o apartamento oferecem
+                  </h2>
+                  <p class="text-[14px] font-normal text-ink-muted sm:text-[15px]">
+                    Explore por dimensão para ver os itens completos sem poluir a tela.
+                  </p>
+                </div>
+
+                <div
+                  role="group"
+                  aria-label="Dimensões do empreendimento"
+                  class="flex flex-wrap items-center gap-2"
+                >
+                  @for (pilar of pilaresList(); track pilar.id) {
+                    @let active = activePilar()?.id === pilar.id;
+                    <button
+                      type="button"
+                      (click)="selectPilar(pilar.id)"
+                      [attr.aria-pressed]="active"
+                      [class]="
+                        active
+                          ? 'm3e-tab-chip inline-flex min-h-[40px] cursor-pointer items-center gap-2 border border-ink bg-ink px-4 py-1.5 text-[13px] font-medium text-ink-inverse shadow-chip sm:text-[14px]'
+                          : 'm3e-tab-chip inline-flex min-h-[40px] cursor-pointer items-center gap-2 border border-border-subtle bg-surface/85 px-4 py-1.5 text-[13px] font-normal text-ink hover:border-border-strong hover:bg-surface sm:text-[14px]'
+                      "
+                    >
+                      <span>{{ pilar.label }}</span>
+                    </button>
                   }
                 </div>
               </div>
-            </section>
 
-            @if (item().diferenciais.length > 0) {
-              <section
-                id="diferenciais"
-                aria-labelledby="features-heading"
-                class="border-t border-border-subtle pt-10 scroll-mt-24"
-              >
-                <h2
-                  id="features-heading"
-                  class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
-                >
-                  Diferenciais &amp; Lazer
-                </h2>
-
-                <ul
-                  class="mt-6 grid grid-cols-1 gap-x-10 gap-y-3.5 sm:grid-cols-2"
-                >
-                  @for (diferencial of item().diferenciais; track diferencial) {
-                    <li
-                      class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.55] text-ink"
+              @if (activePilar(); as pilar) {
+                <div class="mt-7 border-t border-border-subtle pt-6">
+                  @if (pilar.subgrupos?.length) {
+                    <div class="grid gap-8 md:grid-cols-2">
+                      @for (sub of pilar.subgrupos ?? []; track sub.titulo) {
+                        <div class="space-y-3">
+                          <h3
+                            class="font-display text-[1.125rem] font-medium not-italic leading-[1.25] tracking-[-0.015em] text-ink"
+                          >
+                            {{ sub.titulo }}
+                          </h3>
+                          <ul class="space-y-2.5">
+                            @for (entry of sub.itens; track entry) {
+                              <li
+                                class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.5] text-ink"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  class="mt-1 h-4 w-4 shrink-0 text-brand"
+                                >
+                                  <path d="M4.5 10.5 8 14l7.5-8" />
+                                </svg>
+                                <span>{{ entry }}</span>
+                              </li>
+                            }
+                          </ul>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <ul
+                      class="grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2 lg:grid-cols-3"
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="mt-1 h-4 w-4 shrink-0 text-brand"
-                      >
-                        <path d="M4.5 10.5 8 14l7.5-8" />
-                      </svg>
-                      <span>{{ diferencial }}</span>
-                    </li>
+                      @for (entry of pilar.itens; track entry) {
+                        <li
+                          class="flex items-start gap-2.5 text-[15px] font-normal leading-[1.5] text-ink"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="mt-1 h-4 w-4 shrink-0 text-brand"
+                          >
+                            <path d="M4.5 10.5 8 14l7.5-8" />
+                          </svg>
+                          <span>{{ entry }}</span>
+                        </li>
+                      }
+                    </ul>
                   }
-                </ul>
-              </section>
-            }
-          </div>
-        </div>
-      </section>
+                </div>
+              }
+            </section>
+          }
 
-      <!-- Faixa tonal Areia Clara (#F3EFE6): Condições, Plantas e Simulador -->
-      <section
-        aria-label="Condições, plantas e simulador"
-        class="border-y border-border-subtle bg-surface py-12 sm:py-16 lg:py-20"
-      >
-        <div
-          class="mx-auto w-full max-w-7xl space-y-12 px-4 sm:px-6 lg:space-y-16 lg:px-8"
-        >
-          @if (item().condicoesEspeciais?.length) {
+          <!-- Entorno & Deslocamentos (sem iframe) -->
+          @if (entornoItems().length > 0) {
             <section
-              id="condicoes"
-              aria-labelledby="special-conditions-heading"
-              class="scroll-mt-24"
+              id="entorno"
+              aria-labelledby="entorno-heading"
+              class="border-t border-border-subtle pt-12 scroll-mt-28"
             >
               <div
-                class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12"
+                class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"
               >
-                <div class="space-y-2 lg:col-span-4">
+                <div class="space-y-2">
                   <h2
-                    id="special-conditions-heading"
+                    id="entorno-heading"
                     class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
                   >
-                    Condições especiais de pagamento
+                    Entorno &amp; Deslocamentos
                   </h2>
-                  <p
-                    class="text-[14px] font-normal leading-[1.55] text-ink-muted sm:text-[15px]"
-                  >
-                    Facilidades vigentes para entrada e financiamento. Consulte
-                    a disponibilidade da unidade.
+                  <p class="text-[14px] font-normal text-ink-muted sm:text-[15px]">
+                    {{ item().endereco }} · {{ item().bairro }},
+                    {{ item().cidade }} - {{ item().uf }}
                   </p>
                 </div>
 
-                <div class="space-y-5 lg:col-span-8">
-                  <ul class="divide-y divide-border-subtle border-y border-border-subtle">
-                    @for (
-                      condicao of item().condicoesEspeciais ?? [];
-                      track condicao
-                    ) {
-                      <li
-                        class="flex items-start gap-3 py-4 text-[15px] font-normal leading-[1.55] text-ink"
+                <div class="flex flex-wrap items-center gap-3">
+                  @if (hasEntornoModes()) {
+                    <div
+                      role="group"
+                      aria-label="Modo de deslocamento"
+                      class="flex items-center gap-2"
+                    >
+                      <button
+                        type="button"
+                        (click)="setEntornoMode('a-pe')"
+                        [attr.aria-pressed]="entornoMode() === 'a-pe'"
+                        [class]="
+                          entornoMode() === 'a-pe'
+                            ? 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-[#1F6F50]/35 bg-[#E5F2EC] px-4 py-1.5 text-[13px] font-medium text-[#1F6F50]'
+                            : 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-border-subtle bg-surface/85 px-4 py-1.5 text-[13px] font-normal text-ink hover:border-border-strong'
+                        "
                       >
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="mt-1 h-4 w-4 shrink-0 text-brand"
-                        >
-                          <path d="M4.5 10.5 8 14l7.5-8" />
-                        </svg>
-                        <span>{{ condicao }}</span>
-                      </li>
-                    }
-                  </ul>
+                        A pé
+                      </button>
+                      <button
+                        type="button"
+                        (click)="setEntornoMode('carro')"
+                        [attr.aria-pressed]="entornoMode() === 'carro'"
+                        [class]="
+                          entornoMode() === 'carro'
+                            ? 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-[#1F6F50]/35 bg-[#E5F2EC] px-4 py-1.5 text-[13px] font-medium text-[#1F6F50]'
+                            : 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-border-subtle bg-surface/85 px-4 py-1.5 text-[13px] font-normal text-ink hover:border-border-strong'
+                        "
+                      >
+                        De carro
+                      </button>
+                    </div>
+                  }
 
+                  <a
+                    [href]="googleMapsHref()"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="terraco-link-underline inline-flex min-h-[38px] items-center gap-1 text-[14px] font-medium text-brand hover:text-brand-hover"
+                  >
+                    <span>Abrir rotas no Google Maps</span>
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+
+              <ul
+                class="mt-6 grid grid-cols-1 gap-x-10 divide-y divide-border-subtle border-y border-border-subtle sm:grid-cols-2 lg:grid-cols-3"
+              >
+                @for (place of visibleEntornoItems(); track place.local + place.tempo) {
+                  <li
+                    class="flex items-baseline justify-between gap-4 py-3.5 text-[14px] sm:text-[15px]"
+                  >
+                    <span class="font-normal text-ink">{{ place.local }}</span>
+                    <span
+                      class="shrink-0 font-medium text-[#1F6F50] tabular-nums"
+                    >
+                      {{ place.tempo }}
+                    </span>
+                  </li>
+                }
+              </ul>
+            </section>
+          }
+        </div>
+      </section>
+
+      <!-- Faixa tonal Areia Clara (#F3EFE6): Plantas e Condições / Simulador -->
+      <section
+        aria-label="Plantas e simulação financeira"
+        class="border-y border-border-subtle bg-surface py-12 sm:py-16 lg:py-20"
+      >
+        <div
+          class="mx-auto w-full max-w-7xl space-y-12 px-4 sm:px-6 sm:space-y-16 lg:px-8"
+        >
+          <app-launch-floor-plans [item]="item()" />
+
+          @if (hasPrice()) {
+            <div
+              id="condicoes"
+              class="space-y-10 border-t border-border-subtle pt-12 scroll-mt-28"
+            >
+              @if (item().condicoesEspeciais?.length) {
+                <section aria-labelledby="special-conditions-heading">
+                  <div
+                    class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12"
+                  >
+                    <div class="space-y-2 lg:col-span-4">
+                      <h2
+                        id="special-conditions-heading"
+                        class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                      >
+                        Condições de pagamento
+                      </h2>
+                      <p
+                        class="text-[14px] font-normal leading-[1.55] text-ink-muted sm:text-[15px]"
+                      >
+                        Referência de valores e fluxo durante a obra. Consulte a
+                        disponibilidade da unidade.
+                      </p>
+                    </div>
+
+                    <div class="space-y-5 lg:col-span-8">
+                      <ul
+                        class="divide-y divide-border-subtle border-y border-border-subtle"
+                      >
+                        @for (
+                          condicao of item().condicoesEspeciais ?? [];
+                          track condicao
+                        ) {
+                          <li
+                            class="flex items-start gap-3 py-4 text-[15px] font-normal leading-[1.55] text-ink"
+                          >
+                            <svg
+                              aria-hidden="true"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="mt-1 h-4 w-4 shrink-0 text-brand"
+                            >
+                              <path d="M4.5 10.5 8 14l7.5-8" />
+                            </svg>
+                            <span>{{ condicao }}</span>
+                          </li>
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+              }
+
+              <app-launch-simulator [item]="item()" />
+            </div>
+          } @else {
+            <section
+              id="condicoes"
+              aria-labelledby="table-invite-heading"
+              class="border-t border-border-subtle pt-12 scroll-mt-28"
+            >
+              <div
+                class="grid gap-6 lg:grid-cols-12 lg:items-center lg:gap-12"
+              >
+                <div class="space-y-2 lg:col-span-7">
+                  <h2
+                    id="table-invite-heading"
+                    class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                  >
+                    Tabela atualizada e condições sob consulta
+                  </h2>
+                  <p
+                    class="max-w-[58ch] text-[15px] font-normal leading-[1.55] text-ink-muted sm:text-base"
+                  >
+                    Os valores do {{ item().nome }} variam conforme tipologia,
+                    andar e posição. Receba a tabela vigente direto no WhatsApp,
+                    sem cadastro nem compromisso.
+                  </p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-4 lg:col-span-5 lg:justify-end">
                   <a
                     [href]="specialConditionsWhatsappHref()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-medium text-brand transition-colors duration-150 motion-reduce:transition-none hover:text-brand-hover"
+                    class="terraco-btn inline-flex min-h-[44px] items-center justify-center rounded-pill bg-ink px-6 py-2.5 text-[14px] font-medium text-ink-inverse hover:bg-ink/90"
                   >
-                    Simular essas condições no WhatsApp
+                    Solicitar tabela atualizada no WhatsApp
                   </a>
                 </div>
               </div>
             </section>
           }
-
-          @defer (on viewport; hydrate on interaction) {
-            <app-launch-floor-plans [item]="item()" />
-          } @placeholder {
-            <div
-              id="plantas"
-              aria-hidden="true"
-              class="min-h-[480px] border-t border-border-subtle pt-10 scroll-mt-24"
-            ></div>
-          }
-
-          @defer (on viewport; hydrate on interaction) {
-            <app-launch-simulator [item]="item()" />
-          } @placeholder {
-            <div
-              id="simulador"
-              aria-hidden="true"
-              class="min-h-[440px] border-t border-border-subtle pt-10 scroll-mt-24"
-            ></div>
-          }
         </div>
       </section>
 
-      <!-- Galeria e Comparação sobre #FAF8F4 -->
+      <!-- Galeria Curada e Comparação sobre #FAF8F4 -->
       @if (hasGallery() || otherLaunches().length > 0) {
         <section
           aria-label="Galeria e outros lançamentos"
@@ -773,25 +1018,38 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               <section
                 id="galeria"
                 aria-labelledby="gallery-heading"
-                class="scroll-mt-24"
+                class="scroll-mt-28"
               >
-                <div class="flex flex-wrap items-baseline justify-between gap-3">
-                  <h2
-                    id="gallery-heading"
-                    class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                <div
+                  class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
+                >
+                  <div class="space-y-1">
+                    <h2
+                      id="gallery-heading"
+                      class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                    >
+                      Galeria do empreendimento
+                    </h2>
+                    <p class="text-[14px] font-normal text-ink-muted">
+                      Destaques das áreas comuns, apartamentos e implantação.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    (click)="openLightbox(0)"
+                    class="terraco-btn inline-flex min-h-[40px] w-fit shrink-0 cursor-pointer items-center gap-2 rounded-pill border border-border-strong/70 bg-surface/80 px-4 py-1.5 text-[13px] font-medium text-ink hover:bg-surface tabular-nums"
                   >
-                    Galeria do empreendimento
-                  </h2>
-                  <p class="text-[13px] font-normal text-ink-muted tabular-nums">
-                    {{ galleryImages().length }} imagens
-                  </p>
+                    Ver todas as {{ galleryImages().length }} fotos
+                  </button>
                 </div>
 
+                <!-- Carrossel horizontal fluido no mobile; grade curada de 6 fotos no desktop -->
                 <div
-                  class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3"
+                  class="terraco-no-scrollbar -mx-4 mt-6 flex snap-x snap-mandatory scroll-px-4 gap-3.5 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:pb-0"
                 >
                   @for (
-                    media of galleryImages();
+                    media of featuredGalleryImages();
                     track media.url;
                     let i = $index
                   ) {
@@ -801,7 +1059,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.aria-label]="
                         'Ampliar imagem ' + (i + 1) + ': ' + media.alt
                       "
-                      class="group relative aspect-[4/3] overflow-hidden rounded-[20px] bg-surface text-left cursor-pointer"
+                      class="group relative aspect-[4/3] w-[82vw] max-w-[320px] shrink-0 snap-start overflow-hidden rounded-[20px] bg-surface text-left cursor-pointer md:w-auto md:max-w-none"
                     >
                       <img
                         [src]="media.url"
@@ -824,8 +1082,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 aria-labelledby="other-launches-heading"
                 [class]="
                   hasGallery()
-                    ? 'border-t border-border-subtle pt-12 scroll-mt-24'
-                    : 'scroll-mt-24'
+                    ? 'border-t border-border-subtle pt-12 scroll-mt-28'
+                    : 'scroll-mt-28'
                 "
               >
                 <div
@@ -862,7 +1120,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         </section>
       }
 
-      <!-- Faixa de contraste Grafite Quente (#1C1B19) com chips em 1 toque e CTA Terracota -->
+      <!-- Faixa de contraste Grafite Quente (#1C1B19) com chips em 1 toque -->
       <section
         aria-labelledby="launch-whatsapp-band-heading"
         class="bg-ink py-12 text-ink-inverse sm:py-16 lg:py-20"
@@ -881,8 +1139,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               <p
                 class="max-w-[46ch] text-[15px] font-normal leading-[1.55] text-ink-inverse/80 sm:text-base"
               >
-                Escolha o assunto abaixo para abrir o WhatsApp com a mensagem
-                pronta, sem formulário nem ligações.
+                Escolha o assunto em 1 toque para abrir o WhatsApp com a
+                mensagem pronta, sem formulário nem ligações.
               </p>
             </div>
 
@@ -974,11 +1232,33 @@ export class PrimeViewLandingComponent {
     computation: () => 'sobre',
   });
 
+  readonly selectedPilarId = linkedSignal<string, string>({
+    source: this.itemSlug,
+    computation: () => 'lazer',
+  });
+
+  readonly entornoMode = linkedSignal<string, 'a-pe' | 'carro'>({
+    source: this.itemSlug,
+    computation: () => 'a-pe',
+  });
+
   readonly otherLaunches = computed<readonly Lancamento[]>(() =>
     this.lancamentosService
       .lancamentos()
       .filter((launch) => launch.slug !== this.item().slug)
   );
+
+  readonly hasPrice = computed(() => {
+    const price = this.item().precoAPartirDe;
+    return typeof price === 'number' && price > 0;
+  });
+
+  readonly formattedPrice = computed<string | null>(() => {
+    const price = this.item().precoAPartirDe;
+    return typeof price === 'number' && price > 0
+      ? formatCurrencyBRL(price)
+      : null;
+  });
 
   readonly heroMetrics = computed<readonly HeroMetricItem[]>(() => {
     const current = this.item();
@@ -1003,8 +1283,12 @@ export class PrimeViewLandingComponent {
         tabular: true,
       });
     }
-    if (current.vagas.trim()) {
-      metrics.push({ label: 'Vagas', value: current.vagas, tabular: true });
+    if (typeof current.entradaMinima === 'number' && current.entradaMinima > 0) {
+      metrics.push({
+        label: 'Entrada inicial',
+        value: formatCurrencyBRL(current.entradaMinima),
+        tabular: true,
+      });
     }
     if (current.entrega?.trim()) {
       metrics.push({
@@ -1012,12 +1296,78 @@ export class PrimeViewLandingComponent {
         value: current.entrega,
         tabular: true,
       });
-    } else if (current.tipologias.trim() && metrics.length < 4) {
+    }
+    if (current.vagas.trim()) {
+      metrics.push({ label: 'Vagas', value: current.vagas, tabular: true });
+    }
+    if (!price && current.tipologias.trim() && metrics.length < 4) {
       metrics.push({ label: 'Tipologias', value: current.tipologias });
     }
 
     return metrics;
   });
+
+  readonly pilaresList = computed<readonly LaunchPilarGroup[]>(() => {
+    const current = this.item();
+    if (current.pilares?.length) {
+      return current.pilares;
+    }
+    if (current.diferenciais.length > 0) {
+      return [
+        {
+          id: 'lazer',
+          label: 'Diferenciais',
+          itens: current.diferenciais,
+        },
+      ];
+    }
+    return [];
+  });
+
+  readonly activePilar = computed<LaunchPilarGroup | null>(() => {
+    const list = this.pilaresList();
+    if (list.length === 0) return null;
+    const id = this.selectedPilarId();
+    return list.find((p) => p.id === id) ?? list[0];
+  });
+
+  readonly entornoItems = computed<readonly LaunchEntornoItem[]>(
+    () => this.item().entorno ?? []
+  );
+
+  readonly hasEntornoModes = computed(() =>
+    this.entornoItems().some((item) => item.modo === 'a-pe') &&
+    this.entornoItems().some((item) => item.modo === 'carro')
+  );
+
+  readonly visibleEntornoItems = computed<readonly LaunchEntornoItem[]>(() => {
+    const items = this.entornoItems();
+    if (!this.hasEntornoModes()) {
+      return items;
+    }
+    const mode = this.entornoMode();
+    return items.filter((item) => item.modo === mode);
+  });
+
+  readonly googleMapsHref = computed(() => {
+    const current = this.item();
+    const q = `${current.endereco}, ${current.bairro}, ${current.cidade} - ${current.uf}`;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+  });
+
+  readonly galleryImages = computed<readonly LaunchMediaItem[]>(
+    () => this.item().galeria ?? []
+  );
+
+  readonly featuredGalleryImages = computed<readonly LaunchMediaItem[]>(() =>
+    this.galleryImages().slice(0, 6)
+  );
+
+  readonly heroSecondaryImages = computed<readonly LaunchMediaItem[]>(() =>
+    this.galleryImages().slice(0, 2)
+  );
+
+  readonly hasGallery = computed(() => this.galleryImages().length > 0);
 
   readonly nextDestinations = computed<readonly JourneyDestination[]>(() => {
     const current = this.item();
@@ -1063,7 +1413,7 @@ export class PrimeViewLandingComponent {
   });
   readonly selectedIntent = linkedSignal<string, LaunchIntentKey>({
     source: this.itemSlug,
-    computation: () => 'tabela_valores',
+    computation: () => 'tabela_condicoes',
   });
   readonly lightboxOpen = linkedSignal({
     source: this.itemSlug,
@@ -1127,19 +1477,6 @@ export class PrimeViewLandingComponent {
     this.selectedIntentOption().buildMessage(this.item())
   );
 
-  readonly galleryImages = computed<readonly LaunchMediaItem[]>(
-    () => this.item().galeria ?? []
-  );
-
-  readonly hasGallery = computed(() => this.galleryImages().length > 0);
-
-  readonly formattedPrice = computed<string | null>(() => {
-    const price = this.item().precoAPartirDe;
-    return typeof price === 'number' && price > 0
-      ? formatCurrencyBRL(price)
-      : null;
-  });
-
   readonly primaryWhatsappHref = computed(() => {
     const currentItem = this.item();
     return buildWhatsAppUrl(
@@ -1155,7 +1492,7 @@ export class PrimeViewLandingComponent {
   readonly specialConditionsWhatsappHref = computed(() => {
     const currentItem = this.item();
     return buildWhatsAppUrl(
-      `Oi! Quero simular as condições especiais de pagamento do ${currentItem.nome} (${currentItem.bairro}).`
+      `Oi! Quero receber a tabela atualizada e condições de pagamento do ${currentItem.nome} (${currentItem.bairro}).`
     );
   });
 
@@ -1175,10 +1512,10 @@ export class PrimeViewLandingComponent {
 
       const sectionIds = [
         'sobre',
-        'diferenciais',
-        'condicoes',
+        'pilares',
+        'entorno',
         'plantas',
-        'simulador',
+        'condicoes',
         'galeria',
         'outros-lancamentos',
       ];
@@ -1275,6 +1612,14 @@ export class PrimeViewLandingComponent {
     this.imageLoaded.set(true);
   }
 
+  selectPilar(id: string): void {
+    this.selectedPilarId.set(id);
+  }
+
+  setEntornoMode(mode: 'a-pe' | 'carro'): void {
+    this.entornoMode.set(mode);
+  }
+
   selectIntent(intent: LaunchIntentKey): void {
     this.selectedIntent.set(intent);
   }
@@ -1348,7 +1693,6 @@ export class PrimeViewLandingComponent {
     if (this.pendingScrollSettleTimer !== null) {
       clearTimeout(this.pendingScrollSettleTimer);
     }
-    // Re-align once after @defer hydration or smooth scroll if layout shifted.
     this.pendingScrollSettleTimer = setTimeout(() => {
       this.pendingScrollSettleTimer = null;
       const freshTarget = this.document.getElementById(sectionId);
@@ -1357,7 +1701,7 @@ export class PrimeViewLandingComponent {
       if (Math.abs(currentTop - stickyOffset) > 28) {
         scrollToTarget(false);
       }
-    }, 520);
+    }, 300);
   }
 
   onCallbackPhoneInput(event: Event): void {
