@@ -42,8 +42,8 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
       aria-label="Navegação principal"
       class="flex w-full items-center justify-end gap-3 md:justify-between md:pl-8"
     >
-      <!-- Desktop (md+): Clean flat links without box-inside-a-box -->
-      <div class="hidden items-center gap-6 md:flex">
+      <!-- Desktop (md+): Clean flat links with M3 Expressive shape morphing -->
+      <div class="hidden items-center gap-2 md:flex">
         @for (item of primaryItems; track item.route) {
           @let active = isRouteActive(item);
           <a
@@ -52,17 +52,17 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             (click)="closeAllMenus()"
             [class]="
               active
-                ? 'relative inline-flex min-h-[44px] items-center px-1 text-[14px] font-medium leading-[1.35] text-ink transition-colors duration-150'
-                : 'relative inline-flex min-h-[44px] items-center px-1 text-[14px] font-medium leading-[1.35] text-ink-muted transition-colors duration-150 hover:text-ink'
+                ? 'terraco-nav-morph inline-flex min-h-[38px] items-center gap-2 bg-surface px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink'
+                : 'terraco-nav-morph inline-flex min-h-[38px] items-center gap-2 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink-muted hover:bg-surface/65 hover:text-ink'
             "
           >
-            <span>{{ item.label }}</span>
             @if (active) {
               <span
                 aria-hidden="true"
-                class="absolute inset-x-1 bottom-1.5 h-[2px] rounded-full bg-highlight"
+                class="h-1.5 w-1.5 shrink-0 rounded-full bg-highlight"
               ></span>
             }
+            <span>{{ item.label }}</span>
           </a>
         }
 
@@ -76,10 +76,16 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             [attr.aria-current]="isBairrosCurrent() ? 'page' : null"
             [class]="
               isBairrosCurrent() || bairrosMenuOpen()
-                ? 'relative inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 px-1 text-[14px] font-medium leading-[1.35] text-ink transition-colors duration-150'
-                : 'relative inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 px-1 text-[14px] font-medium leading-[1.35] text-ink-muted transition-colors duration-150 hover:text-ink'
+                ? 'terraco-nav-morph inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 bg-surface px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink'
+                : 'terraco-nav-morph inline-flex min-h-[38px] cursor-pointer items-center gap-1.5 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink-muted hover:bg-surface/65 hover:text-ink'
             "
           >
+            @if (isBairrosCurrent()) {
+              <span
+                aria-hidden="true"
+                class="h-1.5 w-1.5 shrink-0 rounded-full bg-highlight"
+              ></span>
+            }
             <span>Bairros</span>
             <svg
               aria-hidden="true"
@@ -97,12 +103,6 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             >
               <path d="m5.5 7.5 4.5 4.5 4.5-4.5" />
             </svg>
-            @if (isBairrosCurrent()) {
-              <span
-                aria-hidden="true"
-                class="absolute inset-x-1 bottom-1.5 h-[2px] rounded-full bg-highlight"
-              ></span>
-            }
           </button>
 
           @if (bairrosMenuOpen()) {
@@ -112,7 +112,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
               aria-label="Guias de bairros em Belo Horizonte"
               animate.enter="terraco-search-panel-enter"
               animate.leave="terraco-search-panel-leave"
-              class="absolute left-0 top-full z-40 mt-2 w-64 overflow-hidden rounded-[18px] border border-border-subtle bg-elevated p-1.5 shadow-floating"
+              class="absolute left-0 top-full z-40 mt-2 w-64 overflow-hidden rounded-[20px] border border-border-subtle bg-elevated p-1.5 shadow-floating"
             >
               <p class="px-3 pt-1.5 pb-1 text-[13px] font-normal text-ink-muted">
                 Guias de bairros em BH
@@ -181,7 +181,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
           [href]="whatsappHref"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-border-strong/75 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink transition-colors duration-150 hover:border-ink hover:bg-surface/65"
+          class="terraco-nav-morph inline-flex min-h-[38px] items-center gap-1.5 border border-border-strong/75 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink hover:border-ink hover:bg-surface/65"
         >
           <svg
             aria-hidden="true"
@@ -238,8 +238,8 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
           "
           [class]="
             mobileMenuOpen()
-              ? 'inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-[12px] bg-surface text-ink transition-colors duration-150'
-              : 'inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-[12px] text-ink transition-colors duration-150 hover:bg-surface/80'
+              ? 'terraco-nav-morph inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center bg-surface text-ink'
+              : 'terraco-nav-morph inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center text-ink hover:bg-surface/80'
           "
         >
           <svg
@@ -270,7 +270,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
       </div>
     </nav>
 
-    <!-- Mobile (< md): Clean full-width dropdown drawer -->
+    <!-- Mobile (< md): Expressive 20px floating drawer -->
     @if (mobileMenuOpen()) {
       <div
         #mobileSheetRef
@@ -279,7 +279,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
         aria-label="Menu de navegação"
         animate.enter="terraco-m3-sheet-enter"
         animate.leave="terraco-m3-sheet-leave"
-        class="pointer-events-auto absolute inset-x-0 top-full z-40 border-b border-border-subtle bg-canvas/98 px-4 py-4 shadow-floating backdrop-blur-md sm:px-6 md:hidden"
+        class="pointer-events-auto absolute inset-x-4 top-full z-40 mt-2 rounded-[20px] border border-border-subtle bg-elevated/98 p-4 shadow-floating backdrop-blur-md sm:inset-x-6 md:hidden"
       >
         <div class="space-y-1">
           @for (item of primaryItems; track item.route) {

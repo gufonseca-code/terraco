@@ -272,6 +272,33 @@ h4 {
   box-shadow: none;
 }
 
+/* M3 Expressive: Tactile Shape-Morphing Controls in Integrated Navbar */
+.terraco-nav-morph {
+  border-radius: var(--radius-morph-pill);
+  transition:
+    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
+    transform 180ms var(--ease-enter);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-nav-morph:hover {
+    border-radius: var(--radius-m3-md);
+  }
+}
+
+.terraco-nav-morph:active,
+.terraco-nav-morph[aria-current="page"],
+.terraco-nav-morph[aria-expanded="true"] {
+  border-radius: var(--radius-m3-md);
+}
+
+.terraco-nav-morph:active {
+  transform: scale(0.97);
+}
+
 /* M3 Expressive: Adaptive Top Bar Shell (docked morph when mobile sheet opens) */
 .terraco-m3-topbar {
   border-radius: 28px;
@@ -1426,6 +1453,7 @@ h4 {
   .terraco-m3-select-card,
   .terraco-m3-search,
   .terraco-m3-topbar,
+  .terraco-nav-morph,
   .terraco-m3-rail-item,
   .terraco-m3-menu-toggle,
   .terraco-m3-burger-line,
