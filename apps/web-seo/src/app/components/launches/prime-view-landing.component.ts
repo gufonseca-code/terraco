@@ -232,24 +232,56 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
       border-radius: 12px;
     }
 
-    .m3e-floating-dock {
-      border-radius: 9999px;
-      transition:
-        opacity 240ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        transform 300ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        border-radius 300ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
+    @keyframes m3e-fab-text-spring {
+      0% {
+        opacity: 0;
+        transform: translateY(8px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
-    .m3e-floating-dock[data-visible='true'] {
+    .m3e-floating-fab {
       border-radius: 16px;
+      transform: translateY(16px) scale(0.86);
+      opacity: 0;
+      box-shadow: var(--shadow-float, var(--shadow-floating));
+      transition:
+        opacity 220ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        transform 460ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        border-radius 420ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
+        max-width 360ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .m3e-floating-fab[data-visible='true'] {
+      border-radius: 9999px;
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .m3e-floating-fab[data-visible='true']:hover,
+    .m3e-floating-fab[data-visible='true']:active {
+      border-radius: 16px;
+    }
+
+    .m3e-fab-label {
+      display: inline-block;
+      animation: m3e-fab-text-spring 380ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
     }
 
     @media (prefers-reduced-motion: reduce) {
       .m3e-tab-chip,
       .m3e-tonal-btn,
       .m3e-action-pill,
-      .m3e-floating-dock {
+      .m3e-floating-fab {
         transition: none;
+      }
+
+      .m3e-fab-label {
+        animation: none;
       }
     }
   `,
@@ -459,11 +491,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
               <div class="space-y-2.5">
                 <a
+                  #heroCtaEl
                   [href]="contextualWhatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
                   data-testid="hero-whatsapp-cta"
-                  class="m3e-action-pill hidden min-h-[46px] w-full items-center justify-center bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover md:flex md:min-h-[48px]"
+                  class="m3e-action-pill flex min-h-[48px] w-full items-center justify-center bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
                 >
                   Falar no WhatsApp
                 </a>
@@ -551,11 +584,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </div>
           </div>
         </div>
-        <div
-          #heroFoldSentinel
-          aria-hidden="true"
-          class="pointer-events-none h-px w-full"
-        ></div>
       </section>
 
       <!-- M3E Pill Bar sticky no escopo da página -->
@@ -1238,11 +1266,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             </div>
           </div>
         </div>
-        <div
-          #heroFoldSentinel
-          aria-hidden="true"
-          class="pointer-events-none h-px w-full"
-        ></div>
       </section>
 
       <app-next-journey
@@ -1252,83 +1275,50 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         [destinations]="nextDestinations()"
       />
 
-      <!-- Desktop (md+): CTA contextual flutuante estilo Airbnb + M3E -->
-      @let showDesktopDock = isPastFold() && !closingBandVisible();
-      <aside
-        aria-label="Atalho contextual para WhatsApp"
-        data-testid="floating-whatsapp-dock"
-        [attr.data-visible]="showDesktopDock"
-        [attr.aria-hidden]="!showDesktopDock"
+      <!-- M3E Extended FAB flutuante dinâmico (Mobile e Desktop) -->
+      @let showFloatingFab = isPastFold() && !closingBandVisible();
+      <a
+        [href]="contextualWhatsappHref()"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-testid="floating-whatsapp-fab"
+        [attr.data-visible]="showFloatingFab"
+        [attr.aria-hidden]="!showFloatingFab"
+        [attr.tabindex]="showFloatingFab ? null : -1"
+        [attr.aria-label]="
+          'Abrir WhatsApp: ' + floatingPillLabel() + ' — ' + item().nome
+        "
         [class]="
-          showDesktopDock
-            ? 'm3e-floating-dock fixed right-6 bottom-6 z-30 hidden max-w-[460px] translate-y-0 scale-100 items-center gap-4 border border-border-subtle bg-elevated/95 py-2.5 pr-2.5 pl-4 opacity-100 shadow-floating backdrop-blur-md md:flex lg:right-8 lg:bottom-8'
-            : 'm3e-floating-dock pointer-events-none fixed right-6 bottom-6 z-30 hidden max-w-[460px] translate-y-3 scale-[0.97] items-center gap-4 border border-border-subtle bg-elevated/95 py-2.5 pr-2.5 pl-4 opacity-0 shadow-floating backdrop-blur-md md:flex lg:right-8 lg:bottom-8'
+          showFloatingFab
+            ? 'm3e-floating-fab fixed right-4 bottom-5 z-40 inline-flex min-h-[48px] max-w-[calc(100vw-2rem)] items-center gap-2.5 bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.3] text-white hover:bg-action-hover md:right-7 md:bottom-7'
+            : 'm3e-floating-fab pointer-events-none fixed right-4 bottom-5 z-40 inline-flex min-h-[48px] max-w-[calc(100vw-2rem)] items-center gap-2.5 bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.3] text-white md:right-7 md:bottom-7'
         "
       >
-        <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-1.5">
-            <span
-              aria-hidden="true"
-              class="h-1.5 w-1.5 shrink-0 rounded-full bg-action"
-            ></span>
-            <p
-              data-testid="floating-context-label"
-              class="truncate text-[13px] font-medium leading-[1.3] text-ink"
-            >
-              {{ currentContextLabel() }}
-            </p>
-          </div>
-          <p class="mt-0.5 truncate text-[12px] font-normal text-ink-muted">
-            {{ item().nome }} · {{ item().bairro }}
-          </p>
-        </div>
-
-        <a
-          [href]="contextualWhatsappHref()"
-          [attr.tabindex]="showDesktopDock ? null : -1"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-testid="floating-whatsapp-cta"
-          class="m3e-action-pill inline-flex min-h-[42px] shrink-0 items-center justify-center bg-action px-5 py-2 text-[13px] font-medium leading-[1.3] text-white hover:bg-action-hover"
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="h-[18px] w-[18px] shrink-0"
         >
-          Falar no WhatsApp
-        </a>
-      </aside>
-
-      <!-- Mobile (< md): Barra inferior fixa compacta e sempre acessível -->
-      <aside
-        aria-label="Atalho para WhatsApp"
-        data-testid="mobile-whatsapp-bar"
-        class="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-border-subtle bg-elevated/95 px-4 pt-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-12px_rgba(30,29,27,0.14)] backdrop-blur-md md:hidden"
-      >
-        <div class="min-w-0 flex-1">
-          <p class="truncate text-[12px] font-normal text-ink-muted">
-            {{ item().nome }}
-          </p>
-          <div class="flex items-center gap-1.5">
+          <path
+            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+          />
+        </svg>
+        <span class="min-w-0 overflow-hidden">
+          @for (label of [floatingPillLabel()]; track label) {
             <span
-              aria-hidden="true"
-              class="h-1.5 w-1.5 shrink-0 rounded-full bg-action"
-            ></span>
-            <p
-              data-testid="mobile-context-label"
-              class="truncate text-[13px] font-medium leading-[1.3] text-ink"
+              data-testid="floating-fab-label"
+              class="m3e-fab-label block truncate"
             >
-              {{ currentContextLabel() }}
-            </p>
-          </div>
-        </div>
-
-        <a
-          [href]="contextualWhatsappHref()"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-testid="mobile-whatsapp-cta"
-          class="m3e-action-pill inline-flex min-h-[44px] shrink-0 items-center justify-center bg-action px-4 py-2 text-[13px] font-medium leading-[1.3] text-white hover:bg-action-hover"
-        >
-          Falar no WhatsApp
-        </a>
-      </aside>
+              {{ label }}
+            </span>
+          }
+        </span>
+      </a>
 
       @defer (when lightboxOpen()) {
         <app-image-lightbox
@@ -1596,8 +1586,8 @@ export class PrimeViewLandingComponent {
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
 
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
-  private readonly heroFoldSentinel =
-    viewChild<ElementRef<HTMLElement>>('heroFoldSentinel');
+  private readonly heroCtaEl =
+    viewChild<ElementRef<HTMLAnchorElement>>('heroCtaEl');
   private readonly launchWhatsappBand =
     viewChild<ElementRef<HTMLElement>>('launchWhatsappBand');
   private readonly sectionNav =
@@ -1628,32 +1618,27 @@ export class PrimeViewLandingComponent {
     this.selectedIntentOption().buildMessage(this.item())
   );
 
-  readonly currentContextLabel = computed<string>(() => {
+  readonly floatingPillLabel = computed<string>(() => {
+    const launchName = this.item().nome;
     if (!this.isPastFold()) {
-      return 'Visão geral';
+      return `Falar sobre o ${launchName}`;
     }
 
     switch (this.activeSection()) {
-      case 'pilares': {
-        const pilar = this.activePilar();
-        return pilar ? `Estrutura · ${pilar.label}` : 'Estrutura & Lazer';
-      }
+      case 'pilares':
+        return 'Dúvidas sobre o condomínio';
       case 'entorno':
-        return 'Entorno & Deslocamentos';
+        return 'Perguntar sobre o bairro';
       case 'plantas': {
         const plan = this.activeFloorPlan();
-        return plan ? `Planta · ${plan.titulo}` : 'Plantas e tipologias';
+        return plan ? `Dúvida: ${plan.titulo}` : 'Dúvidas sobre as plantas';
       }
       case 'condicoes':
-        return this.hasPrice()
-          ? 'Condições e simulação'
-          : 'Tabela e condições';
+        return 'Receber tabela e condições';
       case 'galeria':
-        return 'Galeria do empreendimento';
-      case 'outros-lancamentos':
-        return 'Comparando em BH';
+        return 'Agendar visita';
       default:
-        return 'Sobre o empreendimento';
+        return `Falar sobre o ${launchName}`;
     }
   });
 
@@ -1771,9 +1756,9 @@ export class PrimeViewLandingComponent {
         observer.observe(target);
       }
 
-      const foldSentinel = this.heroFoldSentinel()?.nativeElement;
+      const heroCta = this.heroCtaEl()?.nativeElement;
       let foldObserver: IntersectionObserver | null = null;
-      if (foldSentinel) {
+      if (heroCta) {
         foldObserver = new IntersectionObserver(
           (entries) => {
             const entry = entries[0];
@@ -1784,7 +1769,7 @@ export class PrimeViewLandingComponent {
           },
           { threshold: 0 }
         );
-        foldObserver.observe(foldSentinel);
+        foldObserver.observe(heroCta);
       }
 
       const closingBand = this.launchWhatsappBand()?.nativeElement;
