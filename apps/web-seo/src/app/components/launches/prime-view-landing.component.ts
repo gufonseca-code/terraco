@@ -267,7 +267,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
     }
   `,
   template: `
-    <div class="flex flex-1 flex-col bg-canvas pb-20 md:pb-0">
+    <div class="flex flex-1 flex-col overflow-x-clip bg-canvas pb-20 md:pb-0">
       <!-- Primeira dobra limpa e protagonista sobre #FAF8F4 -->
       <section
         aria-labelledby="launch-heading"
@@ -359,141 +359,17 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         </div>
       </section>
 
-      <!-- Barra superior fixa condensada ao rolar além da coluna sticky para seções largas -->
+      <!-- Única barra sticky de seções (z-30) com CTA integrado ao fim do cartão sticky -->
       <div
-        data-testid="topbar-condensed-cta"
-        [attr.data-visible]="showCondensedTopCta()"
-        [attr.aria-hidden]="!showCondensedTopCta()"
-        [class]="
-          showCondensedTopCta()
-            ? 'm3e-topbar-cta fixed inset-x-0 top-[72px] z-30 mx-auto w-full max-w-7xl translate-y-0 px-4 opacity-100 sm:top-[76px] sm:px-6 lg:px-8'
-            : 'm3e-topbar-cta pointer-events-none fixed inset-x-0 top-[72px] z-30 mx-auto w-full max-w-7xl -translate-y-1.5 px-4 opacity-0 sm:top-[76px] sm:px-6 lg:px-8'
-        "
+        data-testid="section-nav-bar"
+        class="sticky top-[59px] z-30 border-b border-border-subtle bg-canvas/95 py-2.5 backdrop-blur-md"
       >
-        <div
-          class="hidden items-center justify-between gap-3 rounded-pill border border-border-subtle bg-elevated/95 p-1.5 pl-4 shadow-chip backdrop-blur-md md:flex"
-        >
-          <div class="flex min-w-0 items-center gap-2 text-[13px]">
-            <span class="truncate font-medium text-ink">{{ item().nome }}</span>
-            <span aria-hidden="true" class="text-ink-muted/60">·</span>
-            <span class="truncate font-normal text-ink-muted">{{ item().bairro }}</span>
-          </div>
-
-          <a
-            [href]="contextualWhatsappHref()"
-            [attr.tabindex]="showCondensedTopCta() ? null : -1"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="topbar-whatsapp-cta"
-            class="m3e-action-pill inline-flex min-h-[38px] shrink-0 items-center justify-center bg-action px-4 py-1.5 text-[13px] font-medium leading-[1.3] text-white hover:bg-action-hover"
+        <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+          <nav
+            #sectionNav
+            aria-label="Seções do empreendimento"
+            class="terraco-no-scrollbar flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto"
           >
-            Falar no WhatsApp
-          </a>
-        </div>
-      </div>
-
-      <!-- Grid assimétrico 2/3 esquerda (galeria + barra sticky + seções) + 1/3 direita (card sticky) -->
-      <section
-        aria-label="Galeria, detalhes e atendimento"
-        class="bg-canvas pb-12 sm:pb-16 lg:pb-20"
-      >
-        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div class="grid gap-8 md:grid-cols-12 md:items-start lg:gap-10">
-            <!-- Coluna esquerda (2/3) -->
-            <div class="min-w-0 space-y-10 sm:space-y-12 md:col-span-7 lg:col-span-8">
-              <!-- Mosaico fotográfico em proporção equilibrada (2/3) -->
-              <div class="terraco-reveal-delay grid gap-3 lg:grid-cols-12">
-                <div
-                  [class.terraco-skeleton]="!imageLoaded()"
-                  [class]="
-                    heroSecondaryImages().length > 0
-                      ? 'group relative aspect-[16/10] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface lg:col-span-9 lg:rounded-[24px]'
-                      : 'group relative aspect-[16/10] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface lg:col-span-12 lg:rounded-[24px]'
-                  "
-                >
-                  <img
-                    #heroImg
-                    data-testid="launch-hero-image"
-                    [ngSrc]="item().imagem"
-                    [alt]="item().imagemAlt"
-                    [width]="item().imagemWidth"
-                    [height]="item().imagemHeight"
-                    priority
-                    [style.view-transition-name]="'launch-image-' + item().slug"
-                    (load)="markImageLoaded()"
-                    (error)="markImageLoaded()"
-                    class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100 lg:rounded-[24px]"
-                  />
-
-                  @if (hasGallery()) {
-                    <button
-                      type="button"
-                      (click)="openLightbox(0)"
-                      [attr.aria-label]="
-                        'Abrir galeria de imagens de ' + item().nome
-                      "
-                      class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
-                    ></button>
-
-                    <button
-                      type="button"
-                      (click)="openLightbox(0)"
-                      class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.75"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="h-3.5 w-3.5"
-                      >
-                        <rect x="3" y="3" width="18" height="18" rx="3" />
-                        <circle cx="9" cy="9" r="1.5" />
-                        <path d="m21 15-4.5-4.5L7 20" />
-                      </svg>
-                      <span class="tabular-nums">
-                        {{ galleryImages().length }} fotos
-                      </span>
-                    </button>
-                  }
-                </div>
-
-                @if (heroSecondaryImages().length > 0) {
-                  <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:gap-3">
-                    @for (
-                      preview of heroSecondaryImages();
-                      track preview.url;
-                      let idx = $index
-                    ) {
-                      <button
-                        type="button"
-                        (click)="openLightbox(idx)"
-                        [attr.aria-label]="'Ampliar foto: ' + preview.alt"
-                        class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer"
-                      >
-                        <img
-                          [src]="preview.url"
-                          [alt]="preview.alt"
-                          [attr.width]="preview.width ?? null"
-                          [attr.height]="preview.height ?? null"
-                          decoding="async"
-                          class="h-full w-full rounded-[18px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
-                        />
-                      </button>
-                    }
-                  </div>
-                }
-              </div>
-
-              <!-- Barra sticky de navegação entre seções (z-30) -->
-              <nav
-                #sectionNav
-                aria-label="Seções do empreendimento"
-                class="terraco-no-scrollbar sticky top-[72px] z-30 flex items-center gap-1.5 overflow-x-auto rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-chip backdrop-blur-md sm:top-[76px]"
-              >
           <a
             #sectionNavLink
             data-section-id="sobre"
@@ -586,7 +462,122 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               Comparar em BH
             </a>
           }
-              </nav>
+          </nav>
+
+          <a
+            [href]="contextualWhatsappHref()"
+            [attr.tabindex]="showBarCta() ? null : -1"
+            [attr.aria-hidden]="!showBarCta()"
+            [attr.data-visible]="showBarCta()"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="topbar-whatsapp-cta"
+            [class]="
+              showBarCta()
+                ? 'm3e-topbar-cta m3e-action-pill hidden min-h-[38px] shrink-0 translate-y-0 items-center justify-center bg-action px-4 py-1.5 text-[13px] font-medium leading-[1.3] text-white opacity-100 hover:bg-action-hover md:inline-flex'
+                : 'm3e-topbar-cta m3e-action-pill pointer-events-none hidden min-h-[38px] shrink-0 translate-y-1 items-center justify-center bg-action px-4 py-1.5 text-[13px] font-medium leading-[1.3] text-white opacity-0 md:inline-flex'
+            "
+          >
+            Falar no WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- Bloco assimétrico 2/3 esquerda (galeria + sobre/pilares/entorno) + 1/3 direita (card sticky z-20) -->
+      <section
+        aria-label="Galeria, detalhes e atendimento"
+        class="bg-canvas pt-6 pb-12 sm:pt-8 sm:pb-16 lg:pb-20"
+      >
+        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="grid gap-8 md:grid-cols-12 md:items-start lg:gap-10">
+            <!-- Coluna esquerda (2/3): Galeria + Sobre + Pilares + Entorno -->
+            <div class="min-w-0 space-y-12 sm:space-y-14 md:col-span-7 lg:col-span-8">
+              <!-- Mosaico fotográfico em proporção equilibrada (2/3) -->
+              <div class="terraco-reveal-delay grid gap-3 lg:grid-cols-12">
+                <div
+                  [class.terraco-skeleton]="!imageLoaded()"
+                  [class]="
+                    heroSecondaryImages().length > 0
+                      ? 'group relative aspect-[16/10] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface lg:col-span-9 lg:rounded-[24px]'
+                      : 'group relative aspect-[16/10] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface lg:col-span-12 lg:rounded-[24px]'
+                  "
+                >
+                  <img
+                    #heroImg
+                    data-testid="launch-hero-image"
+                    [ngSrc]="item().imagem"
+                    [alt]="item().imagemAlt"
+                    [width]="item().imagemWidth"
+                    [height]="item().imagemHeight"
+                    priority
+                    [style.view-transition-name]="'launch-image-' + item().slug"
+                    (load)="markImageLoaded()"
+                    (error)="markImageLoaded()"
+                    class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100 lg:rounded-[24px]"
+                  />
+
+                  @if (hasGallery()) {
+                    <button
+                      type="button"
+                      (click)="openLightbox(0)"
+                      [attr.aria-label]="
+                        'Abrir galeria de imagens de ' + item().nome
+                      "
+                      class="absolute inset-0 z-[2] cursor-zoom-in focus-visible:outline-offset-[-2px]"
+                    ></button>
+
+                    <button
+                      type="button"
+                      (click)="openLightbox(0)"
+                      class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-3.5 w-3.5"
+                      >
+                        <rect x="3" y="3" width="18" height="18" rx="3" />
+                        <circle cx="9" cy="9" r="1.5" />
+                        <path d="m21 15-4.5-4.5L7 20" />
+                      </svg>
+                      <span class="tabular-nums">
+                        {{ galleryImages().length }} fotos
+                      </span>
+                    </button>
+                  }
+                </div>
+
+                @if (heroSecondaryImages().length > 0) {
+                  <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:gap-3">
+                    @for (
+                      preview of heroSecondaryImages();
+                      track preview.url;
+                      let idx = $index
+                    ) {
+                      <button
+                        type="button"
+                        (click)="openLightbox(idx)"
+                        [attr.aria-label]="'Ampliar foto: ' + preview.alt"
+                        class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer"
+                      >
+                        <img
+                          [src]="preview.url"
+                          [alt]="preview.alt"
+                          [attr.width]="preview.width ?? null"
+                          [attr.height]="preview.height ?? null"
+                          decoding="async"
+                          class="h-full w-full rounded-[18px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+                        />
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
 
               <!-- Sobre & Ficha Estrutural -->
               <section
@@ -859,8 +850,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           }
             </div>
 
-            <!-- Coluna direita (1/3): Cartão de decisão calmo e sticky desde a primeira dobra -->
+            <!-- Coluna direita (1/3): Cartão de decisão calmo e sticky (z-20, passa por baixo da barra z-30) -->
             <aside
+              #stickyCardEl
               aria-label="Resumo e atendimento direto"
               data-testid="sticky-decision-card"
               class="hidden rounded-[24px] border border-border-subtle bg-surface p-6 md:sticky md:top-24 md:z-20 md:block md:col-span-5 lg:col-span-4"
@@ -1007,15 +999,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </div>
             </aside>
           </div>
-          <div
-            #stickyCardEndSentinel
-            aria-hidden="true"
-            class="pointer-events-none h-px w-full"
-          ></div>
         </div>
       </section>
 
-      <!-- Faixa tonal Areia Clara (#F3EFE6): Plantas e Condições / Simulador -->
+      <!-- Faixa tonal Areia Clara (#F3EFE6) em largura total para Plantas e Condições / Simulador -->
       <section
         aria-label="Plantas e simulação financeira"
         class="border-y border-border-subtle bg-surface py-12 sm:py-16 lg:py-20"
@@ -1023,7 +1010,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         <div
           class="mx-auto w-full max-w-7xl space-y-12 px-4 sm:px-6 sm:space-y-16 lg:px-8"
         >
-          <app-launch-floor-plans
+                <app-launch-floor-plans
             [item]="item()"
             (activePlanChange)="onActiveFloorPlanChange($event)"
           />
@@ -1137,7 +1124,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           <div
             class="mx-auto w-full max-w-7xl space-y-14 px-4 sm:px-6 lg:space-y-16 lg:px-8"
           >
-            @if (hasGallery()) {
+                @if (hasGallery()) {
               <section
                 id="galeria"
                 aria-labelledby="gallery-heading"
@@ -1622,9 +1609,8 @@ export class PrimeViewLandingComponent {
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
 
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
-  private readonly stickyCardEndSentinel = viewChild<ElementRef<HTMLElement>>(
-    'stickyCardEndSentinel'
-  );
+  private readonly stickyCardEl =
+    viewChild<ElementRef<HTMLElement>>('stickyCardEl');
   private readonly launchWhatsappBand =
     viewChild<ElementRef<HTMLElement>>('launchWhatsappBand');
   private readonly sectionNav =
@@ -1655,7 +1641,7 @@ export class PrimeViewLandingComponent {
     this.selectedIntentOption().buildMessage(this.item())
   );
 
-  readonly showCondensedTopCta = computed(
+  readonly showBarCta = computed(
     () => this.isPastFold() && !this.closingBandVisible()
   );
 
@@ -1814,9 +1800,9 @@ export class PrimeViewLandingComponent {
         observer.observe(target);
       }
 
-      const stickyEnd = this.stickyCardEndSentinel()?.nativeElement;
+      const stickyCard = this.stickyCardEl()?.nativeElement;
       let foldObserver: IntersectionObserver | null = null;
-      if (stickyEnd) {
+      if (stickyCard) {
         foldObserver = new IntersectionObserver(
           (entries) => {
             const entry = entries[0];
@@ -1827,7 +1813,7 @@ export class PrimeViewLandingComponent {
           },
           { rootMargin: '-120px 0px 0px 0px', threshold: 0 }
         );
-        foldObserver.observe(stickyEnd);
+        foldObserver.observe(stickyCard);
       }
 
       const closingBand = this.launchWhatsappBand()?.nativeElement;
