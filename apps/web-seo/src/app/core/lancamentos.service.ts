@@ -122,7 +122,9 @@ function normalizeLancamento(
   return {
     slug: resolvedSlug,
     nome: String(raw['nome'] ?? ''),
-    construtora: String(raw['construtora'] ?? ''),
+    ...(typeof raw['construtora'] === 'string' && raw['construtora'].trim()
+      ? { construtora: raw['construtora'].trim() }
+      : {}),
     tagline: String(raw['tagline'] ?? ''),
     bairro: String(raw['bairro'] ?? ''),
     cidade: String(raw['cidade'] ?? ''),

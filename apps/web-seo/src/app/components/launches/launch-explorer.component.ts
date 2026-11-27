@@ -27,6 +27,7 @@ import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
 
 const TIPOLOGIA_FILTERS = [
   'Todas',
+  'Studio',
   '1 quarto',
   '2 quartos',
   'Garden',

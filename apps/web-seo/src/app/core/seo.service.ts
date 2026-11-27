@@ -76,7 +76,7 @@ export class SeoService {
     this.removeBairrosJsonLd();
     const pageTitle = `Lançamentos | ${SITE_NAME}`;
     const description =
-      'Lançamentos imobiliários selecionados em Belo Horizonte nos bairros Estoril, Santa Efigênia e Serrano: studios, 1 e 2 quartos com suíte e lazer completo.';
+      'Lançamentos imobiliários selecionados em Belo Horizonte nos bairros Estoril, Prado, Santa Efigênia e Serrano: studios, 1 e 2 quartos com suíte e áreas de convivência.';
 
     this.title.setTitle(pageTitle);
     this.meta.updateTag({ name: 'description', content: description });
@@ -97,7 +97,7 @@ export class SeoService {
     this.meta.updateTag({
       property: 'og:image:alt',
       content:
-        'Lançamentos imobiliários em Belo Horizonte nos bairros Estoril, Santa Efigênia e Serrano',
+        'Lançamentos imobiliários em Belo Horizonte nos bairros Estoril, Prado, Santa Efigênia e Serrano',
     });
 
     this.meta.updateTag({
@@ -209,7 +209,10 @@ export class SeoService {
     const canonicalPath = `/lancamentos/${item.slug}`;
     const pageTitle = `${item.nome}, ${item.bairro}, ${item.cidade} | ${SITE_NAME}`;
     const socialTitle = `${item.nome}, ${item.bairro} | ${SITE_NAME}`;
-    const description = `${item.nome} no ${item.bairro}, ${item.cidade}: ${item.quartos}, ${item.metragem} e lazer completo. Receba plantas e condições no WhatsApp.`;
+    const summaryPart = item.tagline?.trim()
+      ? item.tagline.trim().replace(/\.$/, '')
+      : `${item.quartos}, ${item.metragem}`;
+    const description = `${item.nome} no ${item.bairro}, ${item.cidade}: ${summaryPart} (${item.quartos}, ${item.metragem}). Receba plantas e condições no WhatsApp.`;
 
     this.title.setTitle(pageTitle);
     this.meta.updateTag({ name: 'description', content: description });
