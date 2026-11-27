@@ -102,7 +102,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
 
             <a
               routerLink="/lancamentos"
-              class="terraco-link-underline group inline-flex min-h-[40px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-ink transition-colors duration-150 hover:text-action-hover focus-visible:text-action-hover"
+              class="terraco-link-editorial inline-flex min-h-[40px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-ink hover:text-action-hover focus-visible:text-action-hover"
             >
               <span>Ver catálogo completo</span>
               <svg
@@ -113,7 +113,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                 stroke-width="1.8"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+                class="terraco-link-arrow h-4 w-4 shrink-0"
               >
                 <path d="M4.5 10h11" />
                 <path d="m11 5.5 4.5 4.5-4.5 4.5" />

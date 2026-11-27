@@ -416,7 +416,7 @@ const TIPOLOGIA_FILTERS = [
           @for (guide of bairrosGuides; track guide.slug) {
             <a
               [routerLink]="['/bairros', guide.slug]"
-              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink focus-visible:text-ink"
+              class="terraco-link-nav inline-flex min-h-[44px] items-center px-3 font-normal text-ink-muted hover:text-ink focus-visible:text-ink sm:min-h-[40px]"
             >
               {{ guide.nome }}
             </a>

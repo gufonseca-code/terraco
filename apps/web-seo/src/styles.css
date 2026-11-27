@@ -346,7 +346,7 @@ h4 {
 }
 
 .terraco-nav-morph:active {
-  transform: scale(var(--scale-press-chip));
+  transform: scale(0.97);
   transition-duration: 130ms;
   transition-timing-function: var(--ease-expressive-return);
 }
@@ -701,10 +701,77 @@ h4 {
   box-shadow: none;
 }
 
-/* Sublinhado animado contido para links de texto (min-h 44px) */
+/* Sublinhado fino na cor do próprio link (nunca amarelo) + variantes M3E para links */
+.terraco-link-nav {
+  border-radius: var(--radius-morph-pill);
+  transition:
+    border-radius var(--duration-spring-fast) var(--ease-expressive),
+    transform var(--duration-spring-fast) var(--ease-expressive),
+    background-color var(--duration-ui) var(--ease-expressive-return),
+    color var(--duration-ui) var(--ease-expressive-return);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-link-nav:hover {
+    border-radius: var(--radius-m3-md);
+    background-color: var(--color-bg-surface);
+  }
+
+  .bg-surface .terraco-link-nav:hover {
+    background-color: color-mix(in srgb, var(--color-bg-elevated) 85%, transparent);
+  }
+
+  .bg-ink .terraco-link-nav:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.terraco-link-nav:focus-visible {
+  border-radius: var(--radius-m3-md);
+}
+
+.terraco-link-nav:active {
+  border-radius: var(--radius-m3-md);
+  transform: scale(0.97);
+  transition-duration: 130ms;
+  transition-timing-function: var(--ease-expressive-return);
+}
+
+.terraco-link-editorial {
+  transition:
+    color var(--duration-ui) var(--ease-expressive-return),
+    transform 180ms var(--ease-expressive);
+}
+
+.terraco-link-editorial:active {
+  transform: scale(0.97);
+  transition-duration: 130ms;
+  transition-timing-function: var(--ease-expressive-return);
+}
+
+.terraco-link-editorial svg,
+.terraco-link-arrow {
+  transition: transform 260ms var(--ease-expressive);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-link-editorial:hover svg,
+  .terraco-link-editorial:hover .terraco-link-arrow {
+    transform: translateX(4px);
+  }
+}
+
+.terraco-link-editorial:focus-visible svg,
+.terraco-link-editorial:focus-visible .terraco-link-arrow {
+  transform: translateX(4px);
+}
+
 .terraco-link-underline {
   position: relative;
   text-decoration: none;
+  transition:
+    color var(--duration-ui) var(--ease-expressive-return),
+    transform 180ms var(--ease-expressive);
 }
 
 .terraco-link-underline::after {
@@ -712,12 +779,16 @@ h4 {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 8px;
-  height: 2px;
-  background-color: var(--color-brand-accent);
+  bottom: 6px;
+  height: 1.5px;
+  background-color: currentColor;
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 180ms var(--ease-ui);
+  transition: transform 240ms var(--ease-expressive);
+}
+
+.terraco-link-underline:active {
+  transform: scale(0.985);
 }
 
 .terraco-link-underline:focus-visible::after {
@@ -1595,6 +1666,11 @@ h4 {
   .terraco-m3-accordion-chevron,
   .terraco-m3-accordion-panel,
   .terraco-nav-link,
+  .terraco-link-nav,
+  .terraco-link-editorial,
+  .terraco-link-editorial svg,
+  .terraco-link-arrow,
+  .terraco-link-underline,
   .terraco-link-underline::after,
   .terraco-stairs-step,
   .terraco-logo-step {

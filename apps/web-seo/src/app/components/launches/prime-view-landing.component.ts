@@ -873,10 +873,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [href]="googleMapsHref()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="terraco-link-underline inline-flex min-h-[38px] items-center gap-1 text-[14px] font-medium text-brand hover:text-brand-hover"
+                    class="terraco-link-editorial inline-flex min-h-[44px] items-center gap-1 text-[14px] font-medium text-brand hover:text-brand-hover sm:min-h-[38px]"
                   >
                     <span>Abrir rotas no Google Maps</span>
-                    <span aria-hidden="true">↗</span>
+                    <span aria-hidden="true" class="terraco-link-arrow">↗</span>
                   </a>
                 </div>
               </div>

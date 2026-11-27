@@ -183,7 +183,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
         <div class="mt-auto pt-1">
           <a
             [routerLink]="['/lancamentos', item.slug]"
-            class="terraco-link-underline inline-flex min-h-[40px] w-fit items-center gap-1.5 text-[13px] font-medium leading-[1.35] text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
+            class="terraco-link-editorial inline-flex min-h-[40px] w-fit items-center gap-1.5 text-[13px] font-medium leading-[1.35] text-brand hover:text-brand-hover focus-visible:text-brand-hover"
           >
             <span>Conhecer lançamento</span>
             <svg
@@ -194,7 +194,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
               stroke-width="1.8"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+              class="terraco-link-arrow h-4 w-4 shrink-0 group-hover:translate-x-1 motion-reduce:group-hover:translate-x-0"
             >
               <path d="M4.5 10h11" />
               <path d="m11 5.5 4.5 4.5-4.5 4.5" />
