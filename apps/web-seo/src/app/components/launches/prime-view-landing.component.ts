@@ -512,9 +512,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             #sectionNavLink
             data-section-id="sobre"
             href="#sobre"
+            appM3Chip
+            tone="nav"
+            [active]="activeSection() === 'sobre'"
             (click)="scrollToSection($event, 'sobre')"
             [attr.aria-current]="activeSection() === 'sobre' ? 'true' : null"
-            [class]="sectionNavPillClass('sobre')"
+            class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
           >
             Sobre
           </a>
@@ -523,11 +526,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               #sectionNavLink
               data-section-id="pilares"
               href="#pilares"
+              appM3Chip
+              tone="nav"
+              [active]="activeSection() === 'pilares'"
               (click)="scrollToSection($event, 'pilares')"
               [attr.aria-current]="
                 activeSection() === 'pilares' ? 'true' : null
               "
-              [class]="sectionNavPillClass('pilares')"
+              class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
             >
               Estrutura &amp; Lazer
             </a>
@@ -537,11 +543,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               #sectionNavLink
               data-section-id="entorno"
               href="#entorno"
+              appM3Chip
+              tone="nav"
+              [active]="activeSection() === 'entorno'"
               (click)="scrollToSection($event, 'entorno')"
               [attr.aria-current]="
                 activeSection() === 'entorno' ? 'true' : null
               "
-              [class]="sectionNavPillClass('entorno')"
+              class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
             >
               Entorno
             </a>
@@ -551,11 +560,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               #sectionNavLink
               data-section-id="plantas"
               href="#plantas"
+              appM3Chip
+              tone="nav"
+              [active]="activeSection() === 'plantas'"
               (click)="scrollToSection($event, 'plantas')"
               [attr.aria-current]="
                 activeSection() === 'plantas' ? 'true' : null
               "
-              [class]="sectionNavPillClass('plantas')"
+              class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
             >
               Plantas
             </a>
@@ -564,11 +576,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             #sectionNavLink
             data-section-id="condicoes"
             href="#condicoes"
+            appM3Chip
+            tone="nav"
+            [active]="activeSection() === 'condicoes'"
             (click)="scrollToSection($event, 'condicoes')"
             [attr.aria-current]="
               activeSection() === 'condicoes' ? 'true' : null
             "
-            [class]="sectionNavPillClass('condicoes')"
+            class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
           >
             {{ hasPrice() ? 'Simulador' : 'Tabela' }}
           </a>
@@ -577,11 +592,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               #sectionNavLink
               data-section-id="galeria"
               href="#galeria"
+              appM3Chip
+              tone="nav"
+              [active]="activeSection() === 'galeria'"
               (click)="scrollToSection($event, 'galeria')"
               [attr.aria-current]="
                 activeSection() === 'galeria' ? 'true' : null
               "
-              [class]="sectionNavPillClass('galeria')"
+              class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
             >
               Galeria
             </a>
@@ -591,11 +609,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               #sectionNavLink
               data-section-id="outros-lancamentos"
               href="#outros-lancamentos"
+              appM3Chip
+              tone="nav"
+              [active]="activeSection() === 'outros-lancamentos'"
               (click)="scrollToSection($event, 'outros-lancamentos')"
               [attr.aria-current]="
                 activeSection() === 'outros-lancamentos' ? 'true' : null
               "
-              [class]="sectionNavPillClass('outros-lancamentos')"
+              class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
             >
               Comparar em BH
             </a>
@@ -1634,15 +1655,6 @@ export class PrimeViewLandingComponent {
   onCallbackNameInput(event: Event): void {
     const inputEl = event.target as HTMLInputElement | null;
     this.callbackName.set(inputEl?.value ?? '');
-  }
-
-  sectionNavPillClass(sectionId: string): string {
-    const base =
-      'terraco-m3-chip inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]';
-    if (this.activeSection() === sectionId) {
-      return `${base} terraco-m3-chip--active bg-surface font-medium text-ink shadow-chip`;
-    }
-    return `${base} bg-transparent font-normal text-ink-muted hover:bg-surface/60 hover:text-ink`;
   }
 
   scrollToSection(event: MouseEvent, sectionId: string): void {

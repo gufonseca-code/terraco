@@ -15,6 +15,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { FavoritesService, buildWhatsAppUrl } from '../../core';
+import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../shared/m3-tactile.directives';
 
 interface PrimaryNavItem {
   readonly label: string;
@@ -30,7 +34,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
 
 @Component({
   selector: 'app-navbar-links',
-  imports: [RouterLink],
+  imports: [RouterLink, M3ButtonDirective, M3ChipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:click)': 'onDocumentClick($event)',
@@ -92,7 +96,9 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
           [href]="whatsappHref"
           target="_blank"
           rel="noopener noreferrer"
-          class="terraco-nav-morph inline-flex min-h-[38px] items-center gap-1.5 border border-border-strong/75 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink hover:border-ink hover:bg-surface/65"
+          appM3Button
+          variant="outline"
+          class="inline-flex min-h-[38px] items-center gap-1.5 bg-transparent px-3.5 py-1.5 text-[14px] leading-[1.35] hover:border-ink hover:bg-surface/65"
         >
           <svg
             aria-hidden="true"
@@ -193,13 +199,12 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             @let active = isRouteActive(item);
             <a
               [href]="item.route"
+              appM3Chip
+              tone="nav"
+              [active]="active"
               [attr.aria-current]="active ? 'page' : null"
               (click)="navigateFromMobileSheet($event, [item.route])"
-              [class]="
-                active
-                  ? 'terraco-m3-chip terraco-m3-chip--active flex min-h-11 items-center bg-surface px-3.5 py-2.5 text-[15px] font-semibold text-ink'
-                  : 'terraco-m3-chip flex min-h-11 items-center px-3.5 py-2.5 text-[15px] font-medium text-ink-muted hover:bg-surface/65 hover:text-ink'
-              "
+              class="flex min-h-11 items-center px-3.5 py-2.5 text-[15px]"
             >
               {{ item.label }}
             </a>
@@ -211,8 +216,10 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             [href]="whatsappHref"
             target="_blank"
             rel="noopener noreferrer"
+            appM3Button
+            variant="primary"
             (click)="closeAllMenus()"
-            class="terraco-btn flex min-h-[46px] w-full items-center justify-center gap-2 rounded-pill bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+            class="flex min-h-[46px] w-full items-center justify-center gap-2 px-5 py-2.5 text-[14px] leading-[1.35]"
           >
             <svg
               aria-hidden="true"

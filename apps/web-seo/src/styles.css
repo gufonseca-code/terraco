@@ -321,15 +321,16 @@ h4 {
   box-shadow: none;
 }
 
-/* M3 Expressive: Tactile Shape-Morphing Controls in Integrated Navbar */
+/* M3 Expressive: Tactile Shape-Morphing Controls in Integrated Navbar (zero layout shift) */
 .terraco-nav-morph {
   border-radius: var(--radius-morph-pill);
   transition:
-    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
-    background-color var(--duration-ui) var(--ease-ui),
-    border-color var(--duration-ui) var(--ease-ui),
-    color var(--duration-ui) var(--ease-ui),
-    transform 180ms var(--ease-enter);
+    border-radius var(--duration-spring-fast) var(--ease-expressive),
+    transform var(--duration-spring-fast) var(--ease-expressive),
+    background-color var(--duration-ui) var(--ease-expressive-return),
+    border-color var(--duration-ui) var(--ease-expressive-return),
+    color var(--duration-ui) var(--ease-expressive-return),
+    box-shadow var(--duration-ui) var(--ease-expressive-return);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -345,10 +346,12 @@ h4 {
 }
 
 .terraco-nav-morph:active {
-  transform: scale(0.97);
+  transform: scale(var(--scale-press-chip));
+  transition-duration: 130ms;
+  transition-timing-function: var(--ease-expressive-return);
 }
 
-/* M3 Expressive: Tactile Mobile Menu Trigger (pill -> 14px squircle) */
+/* M3 Expressive: Tactile Mobile Menu Trigger (pill -> 12px squircle) */
 .terraco-nav-menu-trigger {
   display: inline-flex;
   align-items: center;
@@ -361,20 +364,28 @@ h4 {
   background-color: var(--color-bg-surface);
   color: var(--color-text-primary);
   transition:
-    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
-    background-color var(--duration-ui) var(--ease-ui),
-    border-color var(--duration-ui) var(--ease-ui),
-    transform 180ms var(--ease-enter);
+    border-radius var(--duration-spring-fast) var(--ease-expressive),
+    transform var(--duration-spring-fast) var(--ease-expressive),
+    background-color var(--duration-ui) var(--ease-expressive-return),
+    border-color var(--duration-ui) var(--ease-expressive-return);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-nav-menu-trigger:hover {
+    border-radius: var(--radius-morph-active);
+  }
 }
 
 .terraco-nav-menu-trigger[aria-expanded="true"] {
-  border-radius: 14px;
+  border-radius: var(--radius-m3-md);
   border-color: var(--color-border-subtle);
 }
 
 .terraco-nav-menu-trigger:active {
-  border-radius: 14px;
-  transform: scale(0.94);
+  border-radius: var(--radius-m3-md);
+  transform: scale(var(--scale-press-icon));
+  transition-duration: 130ms;
+  transition-timing-function: var(--ease-expressive-return);
 }
 
 /* M3 Expressive: Adaptive Top Bar Shell (docked morph when mobile sheet opens) */
