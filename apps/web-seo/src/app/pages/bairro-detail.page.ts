@@ -390,7 +390,7 @@ function buildBairroJsonLd(
                       [href]="bairroWhatsappHref()"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="group inline-flex min-h-[40px] items-center gap-1.5 text-[14px] font-medium text-brand transition-colors duration-150 motion-reduce:transition-none hover:text-brand-hover"
+                      class="terraco-link-editorial group inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-medium text-brand hover:text-brand-hover focus-visible:text-brand-hover sm:min-h-[40px]"
                     >
                       <span>Receber aviso no WhatsApp sobre {{ current.nome }}</span>
                       <svg
@@ -401,7 +401,7 @@ function buildBairroJsonLd(
                         stroke-width="1.8"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+                        class="terraco-link-arrow h-4 w-4 shrink-0"
                       >
                         <path d="M4.5 10h11" />
                         <path d="m11 5.5 4.5 4.5-4.5 4.5" />

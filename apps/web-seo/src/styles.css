@@ -749,19 +749,16 @@ h4 {
   transition-timing-function: var(--ease-expressive-return);
 }
 
-.terraco-link-editorial svg,
-.terraco-link-arrow {
+.terraco-link-editorial .terraco-link-arrow {
   transition: transform 260ms var(--ease-expressive);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .terraco-link-editorial:hover svg,
   .terraco-link-editorial:hover .terraco-link-arrow {
     transform: translateX(4px);
   }
 }
 
-.terraco-link-editorial:focus-visible svg,
 .terraco-link-editorial:focus-visible .terraco-link-arrow {
   transform: translateX(4px);
 }
