@@ -69,9 +69,8 @@ test.describe("Instant navigation", () => {
             .getByTestId("site-navbar")
             .getByRole("link", { name: "Lançamentos", exact: true })
         ).toBeVisible();
-        await expect(page.getByTestId("hero-backdrop")).toBeVisible();
         await expect(
-          page.getByTestId("hero-backdrop").locator("svg")
+          page.locator("app-botanical-arch-motif svg")
         ).toBeVisible();
         await expect(
           page.getByRole("heading", {
@@ -109,6 +108,9 @@ test.describe("Instant navigation", () => {
         ).toHaveAttribute("aria-current", "page");
         await expect(
           page.getByTestId("lancamentos-cover-image")
+        ).toHaveCount(3);
+        await expect(
+          page.getByTestId("lancamentos-cover-image").first()
         ).toBeVisible();
         await expect(
           page.getByRole("heading", { level: 1, name: "Lançamentos" })
@@ -117,7 +119,7 @@ test.describe("Instant navigation", () => {
           page.getByRole("heading", { level: 2, name: "Prime View" })
         ).toBeVisible();
         await expect(
-          page.getByRole("link", { name: "Conhecer lançamento" })
+          page.getByRole("link", { name: "Conhecer lançamento" }).first()
         ).toBeVisible();
       },
       { baseURL }
@@ -149,10 +151,12 @@ test.describe("Instant navigation", () => {
           page.getByRole("heading", { level: 1, name: "Prime View" })
         ).toBeVisible();
         await expect(
-          page.getByText("Estoril, Belo Horizonte, MG")
+          page.getByText("Estoril, Belo Horizonte - MG", { exact: true })
         ).toBeVisible();
         await expect(
-          page.getByRole("link", { name: "Voltar para lançamentos" })
+          page
+            .getByLabel("Navegação estrutural")
+            .getByRole("link", { name: "Lançamentos" })
         ).toBeVisible();
       },
       { baseURL }
@@ -195,10 +199,12 @@ test.describe("Instant navigation", () => {
     page,
   }) => {
     await page.goto("/lancamentos", { waitUntil: "networkidle" });
-    const link = page.getByRole("link", {
-      name: "Conhecer lançamento",
-      exact: true,
-    });
+    const link = page
+      .getByRole("link", {
+        name: "Conhecer lançamento",
+        exact: true,
+      })
+      .first();
     await expect(link).toBeVisible();
 
     await instant(page, async () => {
@@ -284,7 +290,8 @@ test.describe("Instant navigation", () => {
 
     await instant(page, async () => {
       await page
-        .getByRole("link", { name: "Voltar para lançamentos" })
+        .getByLabel("Navegação estrutural")
+        .getByRole("link", { name: "Lançamentos" })
         .click();
       await page.waitForURL((url) => url.pathname === "/lancamentos");
       await expect(
@@ -315,7 +322,8 @@ test.describe("Instant navigation", () => {
     const detailHtml = await detailRes.text();
     expect(detailHtml).toMatch(/<title>.*Prime View.*<\/title>/);
     expect(detailHtml).toContain('property="og:title"');
-    expect(detailHtml).toContain("Estoril, Belo Horizonte, MG");
+    expect(detailHtml).toContain("Estoril");
+    expect(detailHtml).toContain("Belo Horizonte - MG");
     expect(detailHtml).toContain("application/ld+json");
 
     const robotsRes = await request.get("/robots.txt");
@@ -332,46 +340,28 @@ test.describe("Instant navigation", () => {
     expect(sitemapXml).toContain("/lancamentos/prime-view");
   });
 
-  test("renders 4-layer SVG hero in SVG namespace, submits hero search, and persists favorites toggle", async ({
+  test("renders botanical motif SVG in SVG namespace, submits hero search, and persists favorites toggle", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
 
-    // Verify all 4 architectural SVG layers render in the http://www.w3.org/2000/svg namespace with non-zero geometry
+    // Verify the botanical motif SVG renders in the http://www.w3.org/2000/svg namespace with non-zero geometry
     const svgCheck = await page.evaluate(() => {
-      const svg = document.querySelector('[data-testid="hero-backdrop"] svg');
+      const svg = document.querySelector("app-botanical-arch-motif svg");
       if (!svg) return null;
-      const layers = [
-        "g[appFacadeBackdrop]",
-        "g[appBalconyFoliage]",
-        "g[appFacadeForegroundStructure]",
-        "g[appForegroundFoliage]",
-      ];
       return {
         svgNamespace: svg.namespaceURI,
         rectWidth: svg.getBoundingClientRect().width,
         rectHeight: svg.getBoundingClientRect().height,
-        layerChecks: layers.map((sel) => {
-          const el = svg.querySelector(sel);
-          return {
-            selector: sel,
-            exists: Boolean(el),
-            namespace: el?.namespaceURI ?? null,
-            childCount: el?.children.length ?? 0,
-          };
-        }),
+        childCount: svg.children.length,
       };
     });
 
     expect(svgCheck).not.toBeNull();
     expect(svgCheck?.svgNamespace).toBe("http://www.w3.org/2000/svg");
-    expect(svgCheck?.rectWidth).toBeGreaterThan(200);
-    expect(svgCheck?.rectHeight).toBeGreaterThan(200);
-    for (const layer of svgCheck?.layerChecks ?? []) {
-      expect(layer.exists).toBe(true);
-      expect(layer.namespace).toBe("http://www.w3.org/2000/svg");
-      expect(layer.childCount).toBeGreaterThan(0);
-    }
+    expect(svgCheck?.rectWidth).toBeGreaterThan(50);
+    expect(svgCheck?.rectHeight).toBeGreaterThan(50);
+    expect(svgCheck?.childCount).toBeGreaterThan(0);
 
     // Verify hero search input, clear button, and submission to /lancamentos?q=Estoril
     const searchInput = page.getByRole("combobox", {
