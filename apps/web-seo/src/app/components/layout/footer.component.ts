@@ -74,6 +74,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
 export class FooterComponent {
   readonly neighborhoodGuides = [
     { label: 'Estoril', route: '/bairros/estoril' },
+    { label: 'Prado', route: '/bairros/prado' },
     { label: 'Santa Efigênia', route: '/bairros/santa-efigenia' },
     { label: 'Serrano', route: '/bairros/serrano' },
     { label: 'Buritis', route: '/bairros/buritis' },

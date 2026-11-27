@@ -448,8 +448,21 @@ export class LancamentosService {
           .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
       }
 
+      const mergedBySlug = new Map<string, Lancamento>();
+      for (const fallbackItem of this.initialData) {
+        if (fallbackItem.published !== false) {
+          mergedBySlug.set(fallbackItem.slug, fallbackItem);
+        }
+      }
+      for (const remoteItem of items) {
+        mergedBySlug.set(remoteItem.slug, remoteItem);
+      }
+      const merged = Array.from(mergedBySlug.values()).sort(
+        (a, b) => (a.order ?? 999) - (b.order ?? 999)
+      );
+
       return this.commitListResult(
-        items.length > 0 ? items : this.initialData
+        merged.length > 0 ? merged : this.initialData
       );
     } catch {
       return this.commitListResult(this.initialData);

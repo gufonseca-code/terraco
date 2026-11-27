@@ -120,7 +120,7 @@ export class SeoService {
     this.removeLancamentosJsonLd();
     const pageTitle = `Bairros em Belo Horizonte | ${SITE_NAME}`;
     const description =
-      'Guias completos de bairros em Belo Horizonte: Estoril, Santa Efigênia, Serrano e Buritis, com mobilidade, rotina e lançamentos disponíveis.';
+      'Guias completos de bairros em Belo Horizonte: Estoril, Prado, Santa Efigênia, Serrano e Buritis, com mobilidade, rotina e lançamentos disponíveis.';
 
     this.title.setTitle(pageTitle);
     this.meta.updateTag({ name: 'description', content: description });

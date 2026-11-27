@@ -63,6 +63,47 @@ export const BAIRROS_BH: readonly BairroGuide[] = [
     ],
   },
   {
+    slug: 'prado',
+    nome: 'Prado',
+    regiao: 'Região Oeste',
+    cidade: 'Belo Horizonte',
+    uf: 'MG',
+    tituloSeo: 'Lançamentos no Prado, Belo Horizonte | Terraço',
+    descricaoSeo:
+      'Guia do bairro Prado em Belo Horizonte: acesso facilitado ao Centro (3,9 km da Praça Sete), Av. Francisco Sá, Av. do Contorno, Av. Amazonas, hospitais e studios compactos.',
+    resumo:
+      'Bairro tradicional em localização estratégica na Região Oeste de Belo Horizonte, a cerca de 3,9 km da Praça Sete, com acesso facilitado ao Centro e forte presença de serviços de saúde, educação e comércio.',
+    mobilidade:
+      'Posição estratégica com ligação direta à Av. Francisco Sá, Av. do Contorno e Av. Amazonas, garantindo deslocamento rápido ao Centro de Belo Horizonte (3,9 km da Praça Sete) e aos principais corredores da cidade.',
+    servicos:
+      'Entorno completo com proximidade ao Hospital Mater Dei, Hospital Felício Rocho, Colégio Pio XII e supermercado VerdeMar, além de oferta consolidada de serviços urbanos e comércio de bairro.',
+    perfilImoveis:
+      'Forte aderência à vida urbana e à moradia prática, com alta demanda por locação de imóveis compactos em regiões centrais — destaque para studios em torno de 29 m² com layouts inteligentes e condomínio econômico.',
+    matchBairros: ['Prado'],
+    faqs: [
+      {
+        pergunta: 'Como é a localização e o acesso do bairro Prado em BH?',
+        resposta:
+          'O Prado fica em posição estratégica a apenas 3,9 km da Praça Sete, com acesso facilitado ao Centro de Belo Horizonte pelas avenidas Francisco Sá, do Contorno e Amazonas.',
+      },
+      {
+        pergunta: 'Quais serviços e referências ficam próximos ao Prado?',
+        resposta:
+          'A região conta com acesso próximo a importantes polos de serviços e saúde, como o Hospital Mater Dei, o Hospital Felício Rocho, o Colégio Pio XII e o supermercado VerdeMar.',
+      },
+      {
+        pergunta: 'Por que o Prado tem boa demanda para locação de studios compactos?',
+        resposta:
+          'Imóveis compactos bem localizados concentram procura em áreas com forte oferta de serviços, mobilidade e proximidade a polos de trabalho e saúde — perfil atendido diretamente pelo Prado.',
+      },
+      {
+        pergunta: 'Qual é o perfil do lançamento disponível no Prado?',
+        resposta:
+          'O Brumadinho 165 (na Rua Brumadinho, 165, esquina com Rua Chapecó) reúne 31 unidades de studios compactos em torno de 29 m² com 5 variações ilustrativas de layout, elevador, rooftop de convivência e condomínio econômico.',
+      },
+    ],
+  },
+  {
     slug: 'santa-efigenia',
     nome: 'Santa Efigênia',
     regiao: 'Região Centro-Sul / Leste',

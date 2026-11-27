@@ -74,6 +74,13 @@ const CURATED_BAIRRO_MEDIA: Record<string, BairroMedia> = {
     height: 614,
     caption: 'Prime View · Estoril',
   },
+  prado: {
+    url: '/images/lancamentos/brumadinho-165/localizacao-prado.webp',
+    alt: 'Vista aérea da localização estratégica do Brumadinho 165 no Prado, próximo ao Hospital Mater Dei, Hospital Felício Rocho, Colégio Pio XII, VerdeMar e Av. Amazonas',
+    width: 1600,
+    height: 1139,
+    caption: 'Brumadinho 165 · Prado',
+  },
   'santa-efigenia': {
     url: '/images/lancamentos/upside-square/piscina-vista-ampla.webp',
     alt: 'Área da piscina climatizada com vista panorâmica do Upside Square em Santa Efigênia',
@@ -108,11 +115,11 @@ const DECISION_PROFILES: readonly DecisionProfileOption[] = [
   },
   {
     id: 'pe-metro',
-    label: 'Fazer tudo a pé e metrô',
+    label: 'Fazer tudo a pé e região central',
     summary:
-      'Santa Efigênia reúne metrô, hospitais, comércio consolidado e mobilidade direta para o Centro e Savassi.',
+      'Prado e Santa Efigênia oferecem acesso rápido ao Centro, polos hospitalares, serviços e alta demanda por studios e apartamentos compactos.',
     whatsappMessage:
-      'Olá! Tenho interesse em morar ou investir perto de metrô e serviços a pé em BH, como em Santa Efigênia. Quais opções você recomenda?',
+      'Olá! Tenho interesse em morar ou investir perto da região central e polos de serviços em BH, como no Prado ou Santa Efigênia. Quais opções você recomenda?',
   },
   {
     id: 'vida-bairro',

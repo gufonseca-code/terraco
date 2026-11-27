@@ -504,7 +504,7 @@ export class LaunchExplorerComponent {
     {
       title: 'Guias de bairros em BH',
       description:
-        'Compare mobilidade, serviços de rotina e perfil dos lançamentos em Estoril, Santa Efigênia, Serrano e Buritis.',
+        'Compare mobilidade, serviços de rotina e perfil dos lançamentos em Estoril, Prado, Santa Efigênia, Serrano e Buritis.',
       actionLabel: 'Explorar bairros',
       route: '/bairros',
     },
