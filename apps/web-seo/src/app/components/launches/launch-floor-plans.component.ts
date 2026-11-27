@@ -1,5 +1,4 @@
 import { Listbox, Option } from '@angular/aria/listbox';
-import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,7 +27,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
   {
     key: 'tabela_planta',
     label: 'Tabela e disponibilidade',
-    ctaLabel: 'Receber tabela desta planta no WhatsApp',
+    ctaLabel: 'Perguntar sobre esta planta no WhatsApp',
   },
   {
     key: 'simular_entrada',
@@ -45,13 +44,57 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 @Component({
   selector: 'app-launch-floor-plans',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgOptimizedImage, Listbox, Option, ImageLightboxComponent],
+  imports: [Listbox, Option, ImageLightboxComponent],
+  styles: `
+    .m3e-chip {
+      border-radius: 9999px;
+      transition:
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .m3e-chip[aria-pressed='true'],
+    .m3e-tonal-btn:hover,
+    .m3e-tonal-btn:active {
+      border-radius: 12px;
+    }
+
+    .m3e-plan-item {
+      border-radius: 20px;
+      transition:
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .m3e-plan-item[aria-selected='true'] {
+      border-radius: 12px;
+    }
+
+    .m3e-tonal-btn {
+      border-radius: 9999px;
+      transition:
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .m3e-chip,
+      .m3e-plan-item,
+      .m3e-tonal-btn {
+        transition: none;
+      }
+    }
+  `,
   template: `
     @if (hasPlans()) {
       <section
         id="plantas"
         aria-labelledby="floor-plans-heading"
-        class="rounded-lg border border-border-subtle bg-elevated p-5 sm:p-8"
+        class="scroll-mt-24"
       >
         <div
           class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
@@ -79,25 +122,26 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
           <div
             role="group"
             aria-label="Filtrar plantas por tipologia"
-            class="terraco-m3-group mt-5 w-fit max-w-full overflow-x-auto pb-1"
+            class="mt-5 flex flex-wrap items-center gap-2"
           >
             @for (category of categories(); track category.name) {
+              @let active = selectedCategory() === category.name;
               <button
                 type="button"
                 (click)="selectCategory(category.name)"
-                [attr.aria-pressed]="selectedCategory() === category.name"
+                [attr.aria-pressed]="active"
                 [class]="
-                  selectedCategory() === category.name
-                    ? 'terraco-m3-group-item inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-1.5 border border-brand bg-brand px-4 py-1.5 text-[13px] font-medium text-ink-inverse shadow-chip'
-                    : 'terraco-m3-group-item inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-1.5 border border-border-subtle bg-surface px-4 py-1.5 text-[13px] font-medium text-ink hover:border-border-strong'
+                  active
+                    ? 'm3e-chip inline-flex min-h-[38px] shrink-0 cursor-pointer items-center gap-1.5 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
+                    : 'm3e-chip inline-flex min-h-[38px] shrink-0 cursor-pointer items-center gap-1.5 border border-transparent bg-canvas px-4 py-1.5 text-[13px] font-medium text-[#1C1B19] hover:bg-elevated'
                 "
               >
                 <span>{{ category.name }}</span>
                 <span
                   [class]="
-                    selectedCategory() === category.name
-                      ? 'text-[13px] text-ink-inverse/80 tabular-nums'
-                      : 'text-[13px] text-ink-muted tabular-nums'
+                    active
+                      ? 'text-[12px] text-ink-inverse/75 tabular-nums'
+                      : 'text-[12px] text-ink-muted tabular-nums'
                   "
                 >
                   {{ category.count }}
@@ -107,8 +151,40 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
           </div>
         }
 
-        <div class="mt-6 grid gap-6 lg:grid-cols-12 lg:items-start">
-          <!-- Selector list: horizontal scroll on mobile, vertical list on desktop -->
+        <div class="mt-6 grid gap-5 lg:grid-cols-12 lg:items-start lg:gap-6">
+          <!-- Mobile (< md): Seletor horizontal tátil compacto com scroll suave -->
+          <div
+            role="group"
+            aria-label="Selecionar planta"
+            class="terraco-no-scrollbar -mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 md:hidden"
+          >
+            @for (plan of filteredPlans(); track plan.id) {
+              @let isSelected = activePlan()?.id === plan.id;
+              <button
+                type="button"
+                (click)="selectPlan(plan.id)"
+                [attr.aria-pressed]="isSelected"
+                [class]="
+                  isSelected
+                    ? 'm3e-chip inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-2 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
+                    : 'm3e-chip inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-2 border border-transparent bg-canvas px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-elevated'
+                "
+              >
+                <span>{{ plan.titulo }}</span>
+                <span
+                  [class]="
+                    isSelected
+                      ? 'text-[12px] text-[#FAF8F4]/75 tabular-nums'
+                      : 'text-[12px] text-ink-muted tabular-nums'
+                  "
+                >
+                  {{ plan.metragem }}
+                </span>
+              </button>
+            }
+          </div>
+
+          <!-- Desktop/Tablet (>= md): Lista editorial leve com item ativo em tonal #F3EFE6 -->
           <div
             ngListbox
             [value]="activePlanSelection()"
@@ -116,7 +192,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
             orientation="vertical"
             [multi]="false"
             selectionMode="follow"
-            class="flex gap-2.5 overflow-x-auto pb-2 lg:col-span-5 lg:block lg:max-h-[560px] lg:space-y-2.5 lg:overflow-y-auto lg:pb-0 lg:pr-1"
+            class="hidden rounded-[20px] bg-canvas p-2 md:grid md:grid-cols-2 md:gap-1.5 lg:col-span-5 lg:block lg:max-h-[560px] lg:space-y-1.5 lg:overflow-y-auto"
             aria-label="Lista de plantas"
           >
             @for (plan of filteredPlans(); track plan.id) {
@@ -128,14 +204,18 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                 (click)="selectPlan(plan.id)"
                 [class]="
                   isSelected
-                    ? 'terraco-m3-select-card group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 border border-brand bg-brand/[0.08] p-3.5 text-left shadow-chip lg:w-full'
-                    : 'terraco-m3-select-card group flex w-[230px] shrink-0 cursor-pointer flex-col justify-between gap-2 border border-border-subtle bg-surface/65 p-3.5 text-left hover:border-border-strong hover:bg-surface lg:w-full'
+                    ? 'm3e-plan-item group flex w-full cursor-pointer flex-col justify-between gap-2 border border-transparent bg-[#F3EFE6] p-3.5 text-left text-[#1C1B19]'
+                    : 'm3e-plan-item group flex w-full cursor-pointer flex-col justify-between gap-2 border border-transparent bg-transparent p-3.5 text-left text-[#1C1B19] hover:bg-[#F3EFE6]/55'
                 "
               >
                 <div class="flex items-start justify-between gap-3">
                   <div class="min-w-0">
                     <p
-                      class="truncate text-[14px] font-medium leading-snug text-ink"
+                      [class]="
+                        isSelected
+                          ? 'truncate text-[14px] font-semibold leading-snug text-[#1C1B19]'
+                          : 'truncate text-[14px] font-medium leading-snug text-[#1C1B19]'
+                      "
                     >
                       {{ plan.titulo }}
                     </p>
@@ -144,7 +224,11 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     </p>
                   </div>
                   <span
-                    class="shrink-0 text-[13px] font-medium text-ink tabular-nums"
+                    [class]="
+                      isSelected
+                        ? 'shrink-0 text-[13px] font-semibold text-[#1C1B19] tabular-nums'
+                        : 'shrink-0 text-[13px] font-medium text-[#1C1B19] tabular-nums'
+                    "
                   >
                     {{ plan.metragem }}
                   </span>
@@ -154,7 +238,13 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                   class="flex items-center justify-between gap-2 border-t border-border-subtle/70 pt-2 text-[13px]"
                 >
                   @if (plan.precoAPartirDe) {
-                    <span class="font-medium text-brand tabular-nums">
+                    <span
+                      [class]="
+                        isSelected
+                          ? 'font-semibold text-[#1C1B19] tabular-nums'
+                          : 'font-medium text-[#1C1B19] tabular-nums'
+                      "
+                    >
                       A partir de {{ formatPrice(plan.precoAPartirDe) }}
                     </span>
                   } @else {
@@ -178,13 +268,17 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
               <div
                 class="relative flex items-center justify-center overflow-hidden rounded-md bg-elevated p-3 sm:p-5"
               >
-                <img
-                  [ngSrc]="plan.imagem"
-                  [alt]="plan.alt"
-                  [width]="plan.width"
-                  [height]="plan.height"
-                  class="max-h-[340px] w-auto object-contain sm:max-h-[400px]"
-                />
+                @for (currentPlan of [plan]; track currentPlan.id) {
+                  <img
+                    data-testid="active-floor-plan-image"
+                    [src]="currentPlan.imagem"
+                    [alt]="currentPlan.alt"
+                    [attr.width]="currentPlan.width"
+                    [attr.height]="currentPlan.height"
+                    decoding="async"
+                    class="max-h-[340px] w-auto object-contain sm:max-h-[400px]"
+                  />
+                }
 
                 <button
                   type="button"
@@ -314,8 +408,8 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                         [attr.aria-pressed]="selectedIntent() === intent.key"
                         [class]="
                           selectedIntent() === intent.key
-                            ? 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-brand bg-brand/10 px-3.5 py-1.5 text-[13px] font-medium text-brand'
-                            : 'terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center border border-border-subtle bg-elevated px-3.5 py-1.5 text-[13px] font-normal text-ink-muted hover:border-ink/30 hover:text-ink'
+                            ? 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-3.5 py-1.5 text-[13px] font-medium text-[#FAF8F4]'
+                            : 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-3.5 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
                         "
                       >
                         {{ intent.label }}
@@ -328,7 +422,7 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                       [href]="activePlanWhatsappHref()"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="terraco-btn terraco-btn-moss inline-flex min-h-[44px] flex-1 items-center justify-center rounded-pill bg-brand px-5 py-2.5 text-[13px] font-medium text-ink-inverse hover:bg-brand-hover"
+                      class="m3e-tonal-btn inline-flex min-h-[44px] flex-1 items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-[13px] font-medium text-[#1C1B19] hover:bg-[#EAE3D5]"
                     >
                       {{ activeIntentOption().ctaLabel }}
                     </a>

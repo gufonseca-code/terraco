@@ -23,8 +23,10 @@ import {
   LANCAMENTOS,
   type Lancamento,
   type LaunchDocItem,
+  type LaunchEntornoItem,
   type LaunchFloorPlan,
   type LaunchMediaItem,
+  type LaunchPilarGroup,
   QUICK_NEIGHBORHOODS,
   SEARCH_SUGGESTIONS,
   buildWhatsAppUrl,
@@ -104,14 +106,31 @@ export function normalizeLancamento(
   slug: string,
   raw: Record<string, unknown>
 ): Lancamento {
+  const resolvedSlug =
+    typeof raw['slug'] === 'string' && raw['slug'] ? raw['slug'] : slug;
+  const canonical = getLancamentoBySlug(resolvedSlug);
+
   const corCapaRaw = raw['corCapa'];
   const corCapa: Lancamento['corCapa'] =
     corCapaRaw === 'moss' || corCapaRaw === 'ipe' || corCapaRaw === 'guava'
       ? corCapaRaw
-      : 'moss';
+      : (canonical?.corCapa ?? 'moss');
+
+  if (canonical) {
+    return {
+      ...canonical,
+      ...(typeof raw['published'] === 'boolean'
+        ? { published: raw['published'] }
+        : {}),
+      ...(typeof raw['order'] === 'number' ? { order: raw['order'] } : {}),
+      ...(raw['updatedAt'] !== undefined
+        ? { updatedAt: serializeTimestamp(raw['updatedAt']) }
+        : {}),
+    };
+  }
 
   return {
-    slug: typeof raw['slug'] === 'string' && raw['slug'] ? raw['slug'] : slug,
+    slug: resolvedSlug,
     nome: String(raw['nome'] ?? ''),
     construtora: String(raw['construtora'] ?? ''),
     tagline: String(raw['tagline'] ?? ''),
@@ -119,6 +138,15 @@ export function normalizeLancamento(
     cidade: String(raw['cidade'] ?? ''),
     uf: String(raw['uf'] ?? ''),
     endereco: String(raw['endereco'] ?? ''),
+    ...(typeof raw['estrutura'] === 'string'
+      ? { estrutura: raw['estrutura'] }
+      : {}),
+    ...(typeof raw['projetos'] === 'string'
+      ? { projetos: raw['projetos'] }
+      : {}),
+    ...(typeof raw['registro'] === 'string'
+      ? { registro: raw['registro'] }
+      : {}),
     badge: String(raw['badge'] ?? 'Lançamento'),
     tags: Array.isArray(raw['tags']) ? raw['tags'].map(String) : [],
     quartos: String(raw['quartos'] ?? ''),
@@ -127,6 +155,9 @@ export function normalizeLancamento(
     vagas: String(raw['vagas'] ?? ''),
     ...(typeof raw['precoAPartirDe'] === 'number'
       ? { precoAPartirDe: raw['precoAPartirDe'] }
+      : {}),
+    ...(typeof raw['entradaMinima'] === 'number'
+      ? { entradaMinima: raw['entradaMinima'] }
       : {}),
     ...(typeof raw['entrega'] === 'string' ? { entrega: raw['entrega'] } : {}),
     resumo: String(raw['resumo'] ?? ''),
@@ -140,6 +171,12 @@ export function normalizeLancamento(
     diferenciais: Array.isArray(raw['diferenciais'])
       ? raw['diferenciais'].map(String)
       : [],
+    ...(Array.isArray(raw['pilares'])
+      ? { pilares: raw['pilares'] as LaunchPilarGroup[] }
+      : {}),
+    ...(Array.isArray(raw['entorno'])
+      ? { entorno: raw['entorno'] as LaunchEntornoItem[] }
+      : {}),
     ...(Array.isArray(raw['condicoesEspeciais'])
       ? { condicoesEspeciais: raw['condicoesEspeciais'].map(String) }
       : {}),
