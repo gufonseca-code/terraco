@@ -120,10 +120,10 @@ export class TerracoLogoComponent {
 
   readonly stepClasses = computed(
     () =>
-      `h-7 w-7 transition-colors duration-200 motion-reduce:transition-none ${
+      `h-7 w-7 transition-colors duration-200 ease-[var(--ease-expressive-return)] ${
         this.inverted()
           ? 'text-highlight'
-          : 'text-ink group-hover:text-brand group-focus-visible:text-brand'
+          : 'text-ink group-hover:text-highlight group-focus-visible:text-highlight'
       }`
   );
 
