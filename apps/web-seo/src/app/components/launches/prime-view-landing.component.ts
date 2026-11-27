@@ -26,7 +26,6 @@ import {
   formatCurrencyBRL,
   type Lancamento,
   type LaunchEntornoItem,
-  type LaunchFloorPlan,
   type LaunchMediaItem,
   type LaunchPilarGroup,
 } from '../../core';
@@ -38,10 +37,7 @@ import { FavoriteButtonComponent } from './favorite-button.component';
 import { ImageLightboxComponent } from './image-lightbox.component';
 import { LaunchCardComponent } from './launch-card.component';
 import { LaunchFloorPlansComponent } from './launch-floor-plans.component';
-import {
-  LaunchSimulatorComponent,
-  type LaunchSimulationSummary,
-} from './launch-simulator.component';
+import { LaunchSimulatorComponent } from './launch-simulator.component';
 import { formatBrazilianPhone } from './whatsapp-alert-form.component';
 
 export type LaunchIntentKey =
@@ -198,25 +194,16 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
     .m3e-tab-chip {
       border-radius: 9999px;
       transition:
-        border-radius 240ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        border-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        transform 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .m3e-tab-chip[aria-pressed='true'] {
-      border-radius: 14px;
-    }
-
-    .m3e-tab-chip:active,
-    .m3e-action-pill:active {
-      transform: scale(0.97);
-    }
-
+    .m3e-tab-chip[aria-pressed='true'],
     .m3e-tonal-btn:hover,
     .m3e-tonal-btn:active {
-      border-radius: 14px;
+      border-radius: 12px;
     }
 
     .m3e-tonal-btn {
@@ -228,60 +215,15 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .m3e-action-pill {
-      border-radius: 9999px;
-      transition:
-        border-radius 260ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        transform 220ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
-    }
-
-    .m3e-action-pill:hover,
-    .m3e-action-pill:active {
-      border-radius: 12px;
-    }
-
-    @keyframes m3e-panel-enter {
-      from {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .m3e-tab-panel {
-      animation: m3e-panel-enter 220ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)) both;
-    }
-
-    .m3e-topbar-cta {
-      transition:
-        opacity 200ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        transform 200ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
-    }
-
     @media (prefers-reduced-motion: reduce) {
       .m3e-tab-chip,
-      .m3e-tonal-btn,
-      .m3e-action-pill,
-      .m3e-topbar-cta {
+      .m3e-tonal-btn {
         transition: none;
-      }
-
-      .m3e-tab-chip:active,
-      .m3e-action-pill:active {
-        transform: none;
-      }
-
-      .m3e-tab-panel {
-        animation: none;
       }
     }
   `,
   template: `
-    <div class="flex flex-1 flex-col overflow-x-clip bg-canvas pb-20 md:pb-0">
+    <div class="flex flex-1 flex-col bg-canvas">
       <!-- Primeira dobra limpa e protagonista sobre #FAF8F4 -->
       <section
         aria-labelledby="launch-heading"
@@ -326,180 +268,18 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             }
           </div>
 
-          <!-- Cabeçalho editorial limpo no topo acima do grid assimétrico -->
-          <div class="terraco-reveal space-y-2">
-            <div class="flex flex-wrap items-center gap-2">
-              <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
-                @if (bairroGuideSlug(); as guideSlug) {
-                  <a
-                    [routerLink]="['/bairros', guideSlug]"
-                    class="terraco-link-underline text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
-                  >{{ item().bairro }}</a>
-                } @else {
-                  <span>{{ item().bairro }}</span>
-                }<span>, {{ item().cidade }} - {{ item().uf }}</span>
-              </p>
-              @if (item().badge) {
-                <span
-                  class="inline-flex items-center rounded-pill bg-[#E5F2EC] px-2.5 py-0.5 text-[12px] font-medium leading-[1.3] text-[#1F6F50]"
-                >
-                  {{ item().badge }}
-                </span>
-              }
-            </div>
-
-            <div class="flex items-start justify-between gap-4">
-              <div class="space-y-1">
-                <h1
-                  id="launch-heading"
-                  [style.view-transition-name]="'launch-title-' + item().slug"
-                  class="font-display text-[clamp(1.75rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
-                >
-                  {{ item().nome }}
-                </h1>
-                <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
-                  {{ item().endereco }}
-                </p>
-              </div>
-
-              <div class="shrink-0 pt-0.5">
-                <app-favorite-button
-                  [slug]="item().slug"
-                  [nome]="item().nome"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Única barra sticky de seções (z-30) com CTA integrado ao fim do cartão sticky -->
-      <div
-        data-testid="section-nav-bar"
-        class="sticky top-[59px] z-30 border-b border-border-subtle bg-canvas/95 py-2.5 backdrop-blur-md"
-      >
-        <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-          <nav
-            #sectionNav
-            aria-label="Seções do empreendimento"
-            class="terraco-no-scrollbar flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto"
+          <div
+            class="terraco-reveal-delay grid gap-5 sm:gap-7 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
           >
-          <a
-            #sectionNavLink
-            data-section-id="sobre"
-            href="#sobre"
-            (click)="scrollToSection($event, 'sobre')"
-            [attr.aria-current]="activeSection() === 'sobre' ? 'true' : null"
-            [class]="sectionNavPillClass('sobre')"
-          >
-            Visão geral
-          </a>
-          @if (pilaresList().length > 0) {
-            <a
-              #sectionNavLink
-              data-section-id="pilares"
-              href="#pilares"
-              (click)="scrollToSection($event, 'pilares')"
-              [attr.aria-current]="
-                activeSection() === 'pilares' ? 'true' : null
-              "
-              [class]="sectionNavPillClass('pilares')"
-            >
-              Condomínio
-            </a>
-          }
-          @if (entornoItems().length > 0) {
-            <a
-              #sectionNavLink
-              data-section-id="entorno"
-              href="#entorno"
-              (click)="scrollToSection($event, 'entorno')"
-              [attr.aria-current]="
-                activeSection() === 'entorno' ? 'true' : null
-              "
-              [class]="sectionNavPillClass('entorno')"
-            >
-              Localização
-            </a>
-          }
-          @if (item().plantas?.length) {
-            <a
-              #sectionNavLink
-              data-section-id="plantas"
-              href="#plantas"
-              (click)="scrollToSection($event, 'plantas')"
-              [attr.aria-current]="
-                activeSection() === 'plantas' ? 'true' : null
-              "
-              [class]="sectionNavPillClass('plantas')"
-            >
-              Plantas
-            </a>
-          }
-          <a
-            #sectionNavLink
-            data-section-id="condicoes"
-            href="#condicoes"
-            (click)="scrollToSection($event, 'condicoes')"
-            [attr.aria-current]="
-              activeSection() === 'condicoes' ? 'true' : null
-            "
-            [class]="sectionNavPillClass('condicoes')"
-          >
-            {{ hasPrice() ? 'Simulador' : 'Tabela' }}
-          </a>
-          @if (hasGallery()) {
-            <a
-              #sectionNavLink
-              data-section-id="galeria"
-              href="#galeria"
-              (click)="scrollToSection($event, 'galeria')"
-              [attr.aria-current]="
-                activeSection() === 'galeria' ? 'true' : null
-              "
-              [class]="sectionNavPillClass('galeria')"
-            >
-              Galeria
-            </a>
-          }
-          </nav>
-
-          <a
-            [href]="contextualWhatsappHref()"
-            [attr.tabindex]="showBarCta() ? null : -1"
-            [attr.aria-hidden]="!showBarCta()"
-            [attr.data-visible]="showBarCta()"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="topbar-whatsapp-cta"
-            [class]="
-              showBarCta()
-                ? 'm3e-topbar-cta m3e-action-pill hidden min-h-[38px] shrink-0 translate-y-0 items-center justify-center bg-action px-4 py-1.5 text-[13px] font-medium leading-[1.3] text-white opacity-100 hover:bg-action-hover md:inline-flex'
-                : 'm3e-topbar-cta m3e-action-pill pointer-events-none hidden min-h-[38px] shrink-0 translate-y-1 items-center justify-center bg-action px-4 py-1.5 text-[13px] font-medium leading-[1.3] text-white opacity-0 md:inline-flex'
-            "
-          >
-            Falar no WhatsApp
-          </a>
-        </div>
-      </div>
-
-      <!-- Bloco assimétrico 2/3 esquerda (galeria + sobre/pilares/entorno) + 1/3 direita (card sticky z-20) -->
-      <section
-        aria-label="Galeria, detalhes e atendimento"
-        class="bg-canvas pt-6 pb-12 sm:pt-8 sm:pb-16 lg:pb-20"
-      >
-        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div class="grid gap-8 md:grid-cols-12 md:items-start lg:gap-10">
-            <!-- Coluna esquerda (2/3): Galeria + Sobre + Pilares + Entorno -->
-            <div class="min-w-0 space-y-12 sm:space-y-14 md:col-span-7 lg:col-span-8">
-              <!-- Mosaico fotográfico em proporção equilibrada (2/3) -->
-              <div class="terraco-reveal-delay grid gap-3 lg:grid-cols-12">
+            <!-- Mosaico fotográfico protagonista -->
+            <div class="lg:col-span-7">
+              <div class="grid gap-3 lg:grid-cols-12">
                 <div
                   [class.terraco-skeleton]="!imageLoaded()"
                   [class]="
                     heroSecondaryImages().length > 0
-                      ? 'group relative aspect-[16/10] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface lg:col-span-9 lg:rounded-[24px]'
-                      : 'group relative aspect-[16/10] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface lg:col-span-12 lg:rounded-[24px]'
+                      ? 'group relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/10] lg:col-span-9 lg:rounded-[24px]'
+                      : 'group relative aspect-[16/9] w-full min-w-0 overflow-hidden rounded-[20px] bg-surface sm:aspect-[16/10] lg:col-span-12 lg:rounded-[24px]'
                   "
                 >
                   <img
@@ -550,6 +330,13 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       </span>
                     </button>
                   }
+
+                  <div class="absolute top-3 right-3 z-10">
+                    <app-favorite-button
+                      [slug]="item().slug"
+                      [nome]="item().nome"
+                    />
+                  </div>
                 </div>
 
                 @if (heroSecondaryImages().length > 0) {
@@ -578,78 +365,347 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   </div>
                 }
               </div>
+            </div>
 
-              <!-- Sobre & Ficha Estrutural -->
-              <section
-                id="sobre"
-                aria-labelledby="about-heading"
-                class="scroll-mt-32"
-              >
-                <div class="space-y-5">
-                  <div class="space-y-1.5">
-                    <h2
-                      id="about-heading"
-                      class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
-                    >
-                      Sobre o empreendimento
-                    </h2>
-                    @if (item().tagline) {
-                      <p class="text-[14px] font-normal text-ink-muted">
-                        {{ item().tagline }}
-                      </p>
-                    }
-                  </div>
-
-                  <p
-                    class="max-w-[64ch] text-[15px] font-normal leading-[1.65] text-ink sm:text-base"
-                  >
-                    {{ item().resumo }}
+            <!-- Painel editorial e CTA único em Terracota -->
+            <div class="flex min-w-0 flex-col gap-3.5 sm:gap-4 lg:col-span-5">
+              <div class="space-y-1.5">
+                <div class="flex flex-wrap items-center gap-2">
+                  <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
+                    @if (bairroGuideSlug(); as guideSlug) {
+                      <a
+                        [routerLink]="['/bairros', guideSlug]"
+                        class="terraco-link-underline text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
+                      >{{ item().bairro }}</a>
+                    } @else {
+                      <span>{{ item().bairro }}</span>
+                    }<span>, {{ item().cidade }} - {{ item().uf }}</span>
                   </p>
-
-                  <dl
-                    class="grid gap-4 border-t border-border-subtle pt-5 sm:grid-cols-2"
-                  >
-                    @if (item().estrutura) {
-                      <div class="space-y-1">
-                        <dt class="text-[13px] font-normal text-ink-muted">
-                          Estrutura e implantação
-                        </dt>
-                        <dd
-                          class="text-[14px] font-medium leading-[1.5] text-ink tabular-nums sm:text-[15px]"
-                        >
-                          {{ item().estrutura }}
-                        </dd>
-                      </div>
-                    }
-
-                    @if (item().projetos) {
-                      <div class="space-y-1">
-                        <dt class="text-[13px] font-normal text-ink-muted">
-                          Projetos assinados
-                        </dt>
-                        <dd
-                          class="text-[14px] font-medium leading-[1.5] text-ink sm:text-[15px]"
-                        >
-                          {{ item().projetos }}
-                        </dd>
-                      </div>
-                    }
-
-                    @if (item().registro) {
-                      <div class="space-y-1 sm:col-span-2">
-                        <dt class="text-[13px] font-normal text-ink-muted">
-                          Incorporação e registro
-                        </dt>
-                        <dd
-                          class="text-[13px] font-normal leading-[1.5] text-ink-muted tabular-nums"
-                        >
-                          {{ item().registro }}
-                        </dd>
-                      </div>
-                    }
-                  </dl>
+                  @if (item().badge) {
+                    <span
+                      class="inline-flex items-center rounded-pill bg-[#E5F2EC] px-2.5 py-0.5 text-[12px] font-medium leading-[1.3] text-[#1F6F50]"
+                    >
+                      {{ item().badge }}
+                    </span>
+                  }
                 </div>
-              </section>
+
+                <h1
+                  id="launch-heading"
+                  [style.view-transition-name]="'launch-title-' + item().slug"
+                  class="font-display text-[clamp(1.75rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
+                >
+                  {{ item().nome }}
+                </h1>
+
+                <p class="text-[13px] font-normal text-ink-muted sm:text-[14px]">
+                  {{ item().endereco }}
+                </p>
+              </div>
+
+              <!-- Ficha técnica dinâmica (somente campos disponíveis) -->
+              <dl
+                class="grid grid-cols-2 gap-x-4 gap-y-2.5 border-y border-border-subtle py-3 sm:gap-x-5 sm:gap-y-3 sm:py-3.5"
+              >
+                @for (metric of heroMetrics(); track metric.label) {
+                  <div class="space-y-0.5">
+                    <dt class="text-[12px] font-normal text-ink-muted sm:text-[13px]">
+                      {{ metric.label }}
+                    </dt>
+                    <dd
+                      [class]="
+                        metric.highlight
+                          ? 'text-[13px] font-medium leading-[1.3] text-brand sm:text-[14px]'
+                          : 'text-[13px] font-medium leading-[1.3] text-ink sm:text-[14px]'
+                      "
+                      [class.tabular-nums]="metric.tabular"
+                    >
+                      {{ metric.value }}
+                    </dd>
+                  </div>
+                }
+              </dl>
+
+              <div class="space-y-2.5">
+                <a
+                  [href]="primaryWhatsappHref()"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="terraco-btn flex min-h-[46px] w-full items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover sm:min-h-[48px]"
+                >
+                  Falar no WhatsApp
+                </a>
+
+                <div class="hidden sm:block">
+                  @if (callbackSubmitted()) {
+                    <p
+                      role="status"
+                      data-testid="launch-callback-success"
+                      class="rounded-[14px] border border-[#1F6F50]/25 bg-[#E5F2EC] px-3.5 py-2.5 text-[13px] font-normal leading-[1.45] text-[#1F6F50]"
+                    >
+                      Recebemos seu contato. Um especialista retorna em
+                      instantes sobre {{ item().nome }}.
+                    </p>
+                  } @else if (callbackOpen()) {
+                    <form
+                      (submit)="submitCallbackLead($event)"
+                      animate.enter="terraco-chip-enter"
+                      class="space-y-2.5 rounded-[18px] border border-border-subtle bg-surface p-4"
+                    >
+                      <div class="flex items-center justify-between gap-2">
+                        <span class="text-[13px] font-medium text-ink">
+                          Receber retorno no WhatsApp
+                        </span>
+                        <button
+                          type="button"
+                          (click)="toggleCallbackForm()"
+                          class="cursor-pointer text-[13px] font-normal text-ink-muted hover:text-ink"
+                        >
+                          Fechar
+                        </button>
+                      </div>
+
+                      <input
+                        type="text"
+                        [value]="callbackName()"
+                        (input)="onCallbackNameInput($event)"
+                        placeholder="Seu nome (opcional)"
+                        aria-label="Seu nome"
+                        autocomplete="name"
+                        class="min-h-[40px] w-full rounded-[12px] border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
+                      />
+
+                      <div class="flex flex-col gap-2 sm:flex-row">
+                        <input
+                          type="tel"
+                          [value]="callbackPhone()"
+                          (input)="onCallbackPhoneInput($event)"
+                          placeholder="(31) 99999-9999"
+                          aria-label="Seu WhatsApp com DDD"
+                          autocomplete="tel"
+                          required
+                          class="min-h-[40px] flex-1 rounded-[12px] border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
+                        />
+                        <button
+                          type="submit"
+                          [disabled]="callbackSubmitting()"
+                          class="terraco-btn inline-flex min-h-[40px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-ink px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-ink/90 disabled:opacity-60"
+                        >
+                          {{ callbackSubmitting() ? 'Enviando...' : 'Solicitar' }}
+                        </button>
+                      </div>
+
+                      @if (callbackError(); as errorMsg) {
+                        <p
+                          role="alert"
+                          class="rounded-sm bg-error-bg px-3 py-2 text-[13px] font-normal text-error-fg"
+                        >
+                          {{ errorMsg }}
+                        </p>
+                      }
+                    </form>
+                  } @else {
+                    <button
+                      type="button"
+                      (click)="toggleCallbackForm()"
+                      data-testid="launch-callback-toggle"
+                      class="terraco-link-underline w-full cursor-pointer py-0.5 text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                    >
+                      Prefere que um especialista te chame?
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- M3E Pill Bar sticky no escopo da página -->
+      <div
+        class="sticky top-[72px] z-20 mx-auto w-full max-w-7xl px-4 sm:top-[76px] sm:px-6 lg:px-8"
+      >
+        <nav
+          #sectionNav
+          aria-label="Seções do empreendimento"
+          class="terraco-no-scrollbar flex items-center gap-1.5 overflow-x-auto rounded-pill border border-border-subtle bg-elevated/95 p-1.5 shadow-chip backdrop-blur-md"
+        >
+          <a
+            #sectionNavLink
+            data-section-id="sobre"
+            href="#sobre"
+            (click)="scrollToSection($event, 'sobre')"
+            [attr.aria-current]="activeSection() === 'sobre' ? 'true' : null"
+            [class]="sectionNavPillClass('sobre')"
+          >
+            Sobre
+          </a>
+          @if (pilaresList().length > 0) {
+            <a
+              #sectionNavLink
+              data-section-id="pilares"
+              href="#pilares"
+              (click)="scrollToSection($event, 'pilares')"
+              [attr.aria-current]="
+                activeSection() === 'pilares' ? 'true' : null
+              "
+              [class]="sectionNavPillClass('pilares')"
+            >
+              Estrutura &amp; Lazer
+            </a>
+          }
+          @if (entornoItems().length > 0) {
+            <a
+              #sectionNavLink
+              data-section-id="entorno"
+              href="#entorno"
+              (click)="scrollToSection($event, 'entorno')"
+              [attr.aria-current]="
+                activeSection() === 'entorno' ? 'true' : null
+              "
+              [class]="sectionNavPillClass('entorno')"
+            >
+              Entorno
+            </a>
+          }
+          @if (item().plantas?.length) {
+            <a
+              #sectionNavLink
+              data-section-id="plantas"
+              href="#plantas"
+              (click)="scrollToSection($event, 'plantas')"
+              [attr.aria-current]="
+                activeSection() === 'plantas' ? 'true' : null
+              "
+              [class]="sectionNavPillClass('plantas')"
+            >
+              Plantas
+            </a>
+          }
+          <a
+            #sectionNavLink
+            data-section-id="condicoes"
+            href="#condicoes"
+            (click)="scrollToSection($event, 'condicoes')"
+            [attr.aria-current]="
+              activeSection() === 'condicoes' ? 'true' : null
+            "
+            [class]="sectionNavPillClass('condicoes')"
+          >
+            {{ hasPrice() ? 'Simulador' : 'Tabela' }}
+          </a>
+          @if (hasGallery()) {
+            <a
+              #sectionNavLink
+              data-section-id="galeria"
+              href="#galeria"
+              (click)="scrollToSection($event, 'galeria')"
+              [attr.aria-current]="
+                activeSection() === 'galeria' ? 'true' : null
+              "
+              [class]="sectionNavPillClass('galeria')"
+            >
+              Galeria
+            </a>
+          }
+          @if (otherLaunches().length > 0) {
+            <a
+              #sectionNavLink
+              data-section-id="outros-lancamentos"
+              href="#outros-lancamentos"
+              (click)="scrollToSection($event, 'outros-lancamentos')"
+              [attr.aria-current]="
+                activeSection() === 'outros-lancamentos' ? 'true' : null
+              "
+              [class]="sectionNavPillClass('outros-lancamentos')"
+            >
+              Comparar em BH
+            </a>
+          }
+        </nav>
+      </div>
+
+      <!-- Sobre, Pilares (Abas/Chips M3E) e Entorno sobre #FAF8F4 -->
+      <section
+        aria-label="Detalhes, pilares e entorno"
+        class="bg-canvas pt-10 pb-12 sm:pt-12 sm:pb-16 lg:pb-20"
+      >
+        <div
+          class="mx-auto w-full max-w-7xl space-y-12 px-4 sm:px-6 sm:space-y-14 lg:px-8"
+        >
+          <!-- Sobre & Ficha Estrutural -->
+          <section
+            id="sobre"
+            aria-labelledby="about-heading"
+            class="scroll-mt-28"
+          >
+            <div class="grid gap-6 lg:grid-cols-12 lg:items-start lg:gap-12">
+              <div class="space-y-2 lg:col-span-4">
+                <h2
+                  id="about-heading"
+                  class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                >
+                  Sobre o empreendimento
+                </h2>
+                @if (item().tagline) {
+                  <p class="text-[14px] font-normal text-ink-muted">
+                    {{ item().tagline }}
+                  </p>
+                }
+              </div>
+
+              <div class="space-y-5 lg:col-span-8">
+                <p
+                  class="max-w-[64ch] text-[15px] font-normal leading-[1.65] text-ink sm:text-base"
+                >
+                  {{ item().resumo }}
+                </p>
+
+                <dl
+                  class="grid gap-4 border-t border-border-subtle pt-5 sm:grid-cols-2"
+                >
+                  @if (item().estrutura) {
+                    <div class="space-y-1">
+                      <dt class="text-[13px] font-normal text-ink-muted">
+                        Estrutura e implantação
+                      </dt>
+                      <dd
+                        class="text-[14px] font-medium leading-[1.5] text-ink tabular-nums sm:text-[15px]"
+                      >
+                        {{ item().estrutura }}
+                      </dd>
+                    </div>
+                  }
+
+                  @if (item().projetos) {
+                    <div class="space-y-1">
+                      <dt class="text-[13px] font-normal text-ink-muted">
+                        Projetos assinados
+                      </dt>
+                      <dd
+                        class="text-[14px] font-medium leading-[1.5] text-ink sm:text-[15px]"
+                      >
+                        {{ item().projetos }}
+                      </dd>
+                    </div>
+                  }
+
+                  @if (item().registro) {
+                    <div class="space-y-1 sm:col-span-2">
+                      <dt class="text-[13px] font-normal text-ink-muted">
+                        Incorporação e registro
+                      </dt>
+                      <dd
+                        class="text-[13px] font-normal leading-[1.5] text-ink-muted tabular-nums"
+                      >
+                        {{ item().registro }}
+                      </dd>
+                    </div>
+                  }
+                </dl>
+              </div>
+            </div>
+          </section>
 
           <!-- Pilares do Empreendimento por Abas/Chips M3E -->
           @if (pilaresList().length > 0) {
@@ -658,7 +714,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               aria-labelledby="pilares-heading"
               class="border-t border-border-subtle pt-12 scroll-mt-28"
             >
-              <div class="flex flex-col gap-4">
+              <div
+                class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
+              >
                 <div class="max-w-xl space-y-1.5">
                   <h2
                     id="pilares-heading"
@@ -674,7 +732,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 <div
                   role="group"
                   aria-label="Dimensões do empreendimento"
-                  class="flex flex-wrap items-center gap-2 lg:flex-nowrap"
+                  class="flex flex-wrap items-center gap-2"
                 >
                   @for (pilar of pilaresList(); track pilar.id) {
                     @let active = activePilar()?.id === pilar.id;
@@ -695,9 +753,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </div>
 
               @if (activePilar(); as pilar) {
-                @for (pilarKey of [pilar.id]; track pilarKey) {
-                  <div class="m3e-tab-panel mt-7 border-t border-border-subtle pt-6">
-                    @if (pilar.subgrupos?.length) {
+                <div class="mt-7 border-t border-border-subtle pt-6">
+                  @if (pilar.subgrupos?.length) {
                     <div class="grid gap-8 md:grid-cols-2">
                       @for (sub of pilar.subgrupos ?? []; track sub.titulo) {
                         <div class="space-y-3">
@@ -732,7 +789,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     </div>
                   } @else {
                     <ul
-                      class="grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2"
+                      class="grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2 lg:grid-cols-3"
                     >
                       @for (entry of pilar.itens; track entry) {
                         <li
@@ -755,8 +812,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       }
                     </ul>
                   }
-                  </div>
-                }
+                </div>
               }
             </section>
           }
@@ -831,7 +887,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </div>
 
               <ul
-                class="mt-6 grid grid-cols-1 gap-x-8 divide-y divide-border-subtle border-y border-border-subtle sm:grid-cols-2"
+                class="mt-6 grid grid-cols-1 gap-x-10 divide-y divide-border-subtle border-y border-border-subtle sm:grid-cols-2 lg:grid-cols-3"
               >
                 @for (place of visibleEntornoItems(); track place.local + place.tempo) {
                   <li
@@ -848,161 +904,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               </ul>
             </section>
           }
-            </div>
-
-            <!-- Coluna direita (1/3): Cartão de decisão calmo e sticky (z-20, passa por baixo da barra z-30) -->
-            <aside
-              #stickyCardEl
-              aria-label="Resumo e atendimento direto"
-              data-testid="sticky-decision-card"
-              class="hidden rounded-[24px] border border-border-subtle bg-surface p-6 md:sticky md:top-24 md:z-20 md:block md:col-span-5 lg:col-span-4"
-            >
-              <div class="space-y-4">
-                <div class="space-y-1">
-                  @if (formattedPrice(); as price) {
-                    <p class="text-[13px] font-normal text-ink-muted">
-                      A partir de
-                    </p>
-                    <p
-                      class="font-display text-[1.75rem] font-medium leading-[1.1] tracking-[-0.02em] text-ink tabular-nums"
-                    >
-                      {{ price }}
-                    </p>
-                  } @else {
-                    <p class="text-[13px] font-normal text-ink-muted">
-                      Tabela e disponibilidade
-                    </p>
-                    <p
-                      class="font-display text-[1.375rem] font-medium leading-[1.2] tracking-[-0.015em] text-ink"
-                    >
-                      Valores sob consulta
-                    </p>
-                  }
-                </div>
-
-                <dl
-                  class="grid grid-cols-2 gap-x-4 gap-y-3 border-y border-border-subtle py-4"
-                >
-                  @for (metric of heroMetrics(); track metric.label) {
-                    <div class="space-y-0.5">
-                      <dt class="text-[12px] font-normal text-ink-muted">
-                        {{ metric.label }}
-                      </dt>
-                      <dd
-                        [class]="
-                          metric.highlight
-                            ? 'text-[13px] font-medium leading-[1.3] text-brand'
-                            : 'text-[13px] font-medium leading-[1.3] text-ink'
-                        "
-                        [class.tabular-nums]="metric.tabular"
-                      >
-                        {{ metric.value }}
-                      </dd>
-                    </div>
-                  }
-                </dl>
-
-                <p class="text-[12px] font-normal text-ink-muted">
-                  Foco atual:
-                  <span class="font-medium text-ink">
-                    {{ currentContextLabel() }}
-                  </span>
-                </p>
-
-                <a
-                  [href]="contextualWhatsappHref()"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-testid="sticky-whatsapp-cta"
-                  class="m3e-action-pill flex min-h-[48px] w-full items-center justify-center bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
-                >
-                  Falar no WhatsApp
-                </a>
-
-                @if (callbackSubmitted()) {
-                  <p
-                    role="status"
-                    data-testid="launch-callback-success"
-                    class="rounded-[14px] border border-[#1F6F50]/25 bg-[#E5F2EC] px-3.5 py-2.5 text-[13px] font-normal leading-[1.45] text-[#1F6F50]"
-                  >
-                    Recebemos seu contato. Um especialista retorna em instantes
-                    sobre {{ item().nome }}.
-                  </p>
-                } @else if (callbackOpen()) {
-                  <form
-                    (submit)="submitCallbackLead($event)"
-                    animate.enter="terraco-chip-enter"
-                    class="space-y-2.5 rounded-[18px] border border-border-subtle bg-canvas p-4"
-                  >
-                    <div class="flex items-center justify-between gap-2">
-                      <span class="text-[13px] font-medium text-ink">
-                        Receber retorno no WhatsApp
-                      </span>
-                      <button
-                        type="button"
-                        (click)="toggleCallbackForm()"
-                        class="cursor-pointer text-[13px] font-normal text-ink-muted hover:text-ink"
-                      >
-                        Fechar
-                      </button>
-                    </div>
-
-                    <input
-                      type="text"
-                      [value]="callbackName()"
-                      (input)="onCallbackNameInput($event)"
-                      placeholder="Seu nome (opcional)"
-                      aria-label="Seu nome"
-                      autocomplete="name"
-                      class="min-h-[40px] w-full rounded-[12px] border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none"
-                    />
-
-                    <div class="flex flex-col gap-2">
-                      <input
-                        type="tel"
-                        [value]="callbackPhone()"
-                        (input)="onCallbackPhoneInput($event)"
-                        placeholder="(31) 99999-9999"
-                        aria-label="Seu WhatsApp com DDD"
-                        autocomplete="tel"
-                        required
-                        class="min-h-[40px] w-full rounded-[12px] border border-border-subtle bg-elevated px-3 py-1.5 text-[13px] text-ink placeholder:text-ink-muted/70 focus:border-brand focus:outline-none tabular-nums"
-                      />
-                      <button
-                        type="submit"
-                        [disabled]="callbackSubmitting()"
-                        class="terraco-btn inline-flex min-h-[40px] w-full cursor-pointer items-center justify-center rounded-pill bg-ink px-4 py-1.5 text-[13px] font-medium text-ink-inverse hover:bg-ink/90 disabled:opacity-60"
-                      >
-                        {{ callbackSubmitting() ? 'Enviando...' : 'Solicitar retorno' }}
-                      </button>
-                    </div>
-
-                    @if (callbackError(); as errorMsg) {
-                      <p
-                        role="alert"
-                        class="rounded-sm bg-error-bg px-3 py-2 text-[13px] font-normal text-error-fg"
-                      >
-                        {{ errorMsg }}
-                      </p>
-                    }
-                  </form>
-                } @else {
-                  <button
-                    type="button"
-                    (click)="toggleCallbackForm()"
-                    data-testid="launch-callback-toggle"
-                    class="terraco-link-underline w-full cursor-pointer py-0.5 text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
-                  >
-                    Prefere que um especialista te chame?
-                  </button>
-                }
-              </div>
-            </aside>
-          </div>
         </div>
       </section>
 
-      <!-- Faixa tonal Areia Clara (#F3EFE6) em largura total para Plantas e Condições / Simulador -->
+      <!-- Faixa tonal Areia Clara (#F3EFE6): Plantas e Condições / Simulador -->
       <section
         aria-label="Plantas e simulação financeira"
         class="border-y border-border-subtle bg-surface py-12 sm:py-16 lg:py-20"
@@ -1010,10 +915,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         <div
           class="mx-auto w-full max-w-7xl space-y-12 px-4 sm:px-6 sm:space-y-16 lg:px-8"
         >
-                <app-launch-floor-plans
-            [item]="item()"
-            (activePlanChange)="onActiveFloorPlanChange($event)"
-          />
+          <app-launch-floor-plans [item]="item()" />
 
           @if (hasPrice()) {
             <div
@@ -1072,10 +974,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                 </section>
               }
 
-              <app-launch-simulator
-                [item]="item()"
-                (simulationChange)="onSimulationChange($event)"
-              />
+              <app-launch-simulator [item]="item()" />
             </div>
           } @else {
             <section
@@ -1083,14 +982,16 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               aria-labelledby="table-invite-heading"
               class="border-t border-border-subtle pt-12 scroll-mt-28"
             >
-              <div class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12">
-                <h2
-                  id="table-invite-heading"
-                  class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance lg:col-span-4"
-                >
-                  Tabela atualizada e condições sob consulta
-                </h2>
-                <div class="space-y-4 lg:col-span-8">
+              <div
+                class="grid gap-6 lg:grid-cols-12 lg:items-center lg:gap-12"
+              >
+                <div class="space-y-2 lg:col-span-7">
+                  <h2
+                    id="table-invite-heading"
+                    class="font-display text-[clamp(1.5rem,2.6vw,2rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
+                  >
+                    Tabela atualizada e condições sob consulta
+                  </h2>
                   <p
                     class="max-w-[58ch] text-[15px] font-normal leading-[1.55] text-ink-muted sm:text-base"
                   >
@@ -1098,15 +999,16 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     andar e posição. Receba a tabela vigente direto no WhatsApp,
                     sem cadastro nem compromisso.
                   </p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-4 lg:col-span-5 lg:justify-end">
                   <a
-                    [href]="contextualWhatsappHref()"
+                    [href]="specialConditionsWhatsappHref()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    data-testid="table-whatsapp-link"
-                    class="terraco-link-underline inline-flex items-center gap-1.5 text-[14px] font-medium text-brand hover:text-brand-hover"
+                    class="m3e-tonal-btn inline-flex min-h-[44px] items-center justify-center border border-border-strong/40 bg-canvas px-6 py-2.5 text-[14px] font-medium text-[#1C1B19] hover:bg-elevated"
                   >
-                    <span>Consultar tabela atualizada</span>
-                    <span aria-hidden="true">→</span>
+                    Solicitar tabela atualizada no WhatsApp
                   </a>
                 </div>
               </div>
@@ -1124,7 +1026,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
           <div
             class="mx-auto w-full max-w-7xl space-y-14 px-4 sm:px-6 lg:space-y-16 lg:px-8"
           >
-                @if (hasGallery()) {
+            @if (hasGallery()) {
               <section
                 id="galeria"
                 aria-labelledby="gallery-heading"
@@ -1232,7 +1134,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
       <!-- Faixa de contraste Grafite Quente (#1C1B19) com chips em 1 toque -->
       <section
-        #launchWhatsappBand
         aria-labelledby="launch-whatsapp-band-heading"
         class="bg-ink py-12 text-ink-inverse sm:py-16 lg:py-20"
       >
@@ -1317,32 +1218,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
         [destinations]="nextDestinations()"
       />
 
-      <!-- Mobile (< md): Barra inferior minimalista com CTA centralizado estilo Airbnb -->
-      <aside
-        aria-label="Atendimento no WhatsApp"
-        data-testid="mobile-whatsapp-bar"
-        [attr.data-visible]="!closingBandVisible()"
-        [attr.aria-hidden]="closingBandVisible() ? 'true' : null"
-        [class]="
-          closingBandVisible()
-            ? 'm3e-topbar-cta pointer-events-none fixed inset-x-0 bottom-0 z-40 flex translate-y-3 items-center justify-center border-t border-border-subtle bg-canvas/92 px-4 py-3 opacity-0 backdrop-blur-md md:hidden'
-            : 'm3e-topbar-cta fixed inset-x-0 bottom-0 z-40 flex translate-y-0 items-center justify-center border-t border-border-subtle bg-canvas/92 px-4 py-3 opacity-100 backdrop-blur-md md:hidden'
-        "
-      >
-        <a
-          [href]="contextualWhatsappHref()"
-          [attr.tabindex]="closingBandVisible() ? -1 : null"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-testid="mobile-whatsapp-cta"
-          class="m3e-action-pill inline-flex min-h-[48px] w-full max-w-sm items-center justify-center bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.3] text-white hover:bg-action-hover"
-        >
-          @for (label of [mobileCtaLabel()]; track label) {
-            <span class="m3e-tab-panel truncate">{{ label }}</span>
-          }
-        </a>
-      </aside>
-
       @defer (when lightboxOpen()) {
         <app-image-lightbox
           [images]="galleryImages()"
@@ -1367,29 +1242,6 @@ export class PrimeViewLandingComponent {
   readonly activeSection = linkedSignal<string, string>({
     source: this.itemSlug,
     computation: () => 'sobre',
-  });
-
-  readonly isPastFold = linkedSignal<string, boolean>({
-    source: this.itemSlug,
-    computation: () => false,
-  });
-
-  readonly closingBandVisible = linkedSignal<string, boolean>({
-    source: this.itemSlug,
-    computation: () => false,
-  });
-
-  readonly activeFloorPlan = linkedSignal<string, LaunchFloorPlan | null>({
-    source: this.itemSlug,
-    computation: () => null,
-  });
-
-  readonly simulationSummary = linkedSignal<
-    string,
-    LaunchSimulationSummary | null
-  >({
-    source: this.itemSlug,
-    computation: () => null,
   });
 
   readonly selectedPilarId = linkedSignal<string, string>({
@@ -1609,10 +1461,6 @@ export class PrimeViewLandingComponent {
   readonly intentOptions = LAUNCH_INTENT_OPTIONS;
 
   private readonly heroImg = viewChild<ElementRef<HTMLImageElement>>('heroImg');
-  private readonly stickyCardEl =
-    viewChild<ElementRef<HTMLElement>>('stickyCardEl');
-  private readonly launchWhatsappBand =
-    viewChild<ElementRef<HTMLElement>>('launchWhatsappBand');
   private readonly sectionNav =
     viewChild<ElementRef<HTMLElement>>('sectionNav');
   private readonly sectionNavLinks =
@@ -1641,108 +1489,24 @@ export class PrimeViewLandingComponent {
     this.selectedIntentOption().buildMessage(this.item())
   );
 
-  readonly showBarCta = computed(
-    () => this.isPastFold() && !this.closingBandVisible()
-  );
-
-  readonly currentContextLabel = computed<string>(() => {
-    switch (this.activeSection()) {
-      case 'pilares': {
-        const pilar = this.activePilar();
-        return pilar ? `Estrutura · ${pilar.label}` : 'Estrutura & lazer';
-      }
-      case 'entorno':
-        return 'Bairro e acessos';
-      case 'plantas': {
-        const plan = this.activeFloorPlan();
-        return plan ? `Planta ${plan.titulo}` : 'Plantas e tipologias';
-      }
-      case 'condicoes':
-        return this.hasPrice() ? 'Simulação e condições' : 'Tabela e condições';
-      case 'galeria':
-        return 'Galeria de fotos';
-      case 'outros-lancamentos':
-        return 'Comparativo em BH';
-      default:
-        return 'Visão geral';
-    }
-  });
-
-  readonly mobileCtaLabel = computed<string>(() => {
-    const launchName = this.item().nome;
-    switch (this.activeSection()) {
-      case 'pilares':
-        return 'Dúvidas sobre o condomínio';
-      case 'entorno':
-        return 'Perguntar sobre o bairro';
-      case 'plantas': {
-        const plan = this.activeFloorPlan();
-        return plan ? `Dúvida: ${plan.titulo}` : 'Dúvidas sobre as plantas';
-      }
-      case 'condicoes':
-        return this.hasPrice()
-          ? 'Simular e receber tabela'
-          : 'Receber tabela e condições';
-      case 'galeria':
-        return 'Agendar visita';
-      case 'outros-lancamentos':
-        return 'Comparar lançamentos';
-      default:
-        return `Falar sobre o ${launchName}`;
-    }
-  });
-
-  readonly contextualWhatsappMessage = computed<string>(() => {
+  readonly primaryWhatsappHref = computed(() => {
     const currentItem = this.item();
-
-    switch (this.activeSection()) {
-      case 'pilares': {
-        const pilar = this.activePilar();
-        const topic = pilar ? pilar.label.toLowerCase() : 'estrutura e lazer';
-        return `Oi! Estava vendo os diferenciais de ${topic} do ${currentItem.nome} (${currentItem.bairro}) e gostaria de saber mais detalhes.`;
-      }
-      case 'entorno':
-        return `Oi! Estava vendo a localização e o entorno do ${currentItem.nome} (${currentItem.bairro}) e gostaria de tirar uma dúvida sobre a região.`;
-      case 'plantas': {
-        const plan = this.activeFloorPlan();
-        if (plan) {
-          const unitsText = plan.unidades ? `, ${plan.unidades}` : '';
-          const priceText = plan.precoAPartirDe
-            ? ` (a partir de ${formatCurrencyBRL(plan.precoAPartirDe)})`
-            : '';
-          return `Oi! Estava vendo a planta ${plan.titulo} (${plan.metragem}${unitsText}) do ${currentItem.nome} (${currentItem.bairro})${priceText} e gostaria de conferir a disponibilidade.`;
-        }
-        return `Oi! Estava vendo as plantas do ${currentItem.nome} (${currentItem.bairro}) e gostaria de conferir a disponibilidade.`;
-      }
-      case 'condicoes': {
-        const sim = this.simulationSummary();
-        if (this.hasPrice() && sim) {
-          const entryDetails = sim.hasFgts
-            ? `${sim.downPaymentFormatted} (incluindo ${sim.fgtsFormatted} de FGTS)`
-            : sim.downPaymentFormatted;
-          return `Oi! Estava vendo as condições do ${currentItem.nome} (${currentItem.bairro}) — simulação de imóvel em ${sim.propertyValueFormatted}, entrada de ${entryDetails} e parcela estimada de ${sim.monthlyPaymentFormatted}/mês. Gostaria de conferir a tabela atualizada.`;
-        }
-        return `Oi! Gostaria de receber a tabela atualizada e as condições de pagamento do ${currentItem.nome} (${currentItem.bairro}).`;
-      }
-      case 'galeria':
-        return `Oi! Estava vendo as fotos do ${currentItem.nome} (${currentItem.bairro}) e gostaria de agendar uma visita ou saber mais.`;
-      case 'outros-lancamentos':
-        return `Oi! Estou comparando o ${currentItem.nome} (${currentItem.bairro}) com outros lançamentos em BH e gostaria de conversar sobre as opções.`;
-      default:
-        return (
-          currentItem.whatsappMensagem ||
-          `Oi! Estou vendo o ${currentItem.nome} (${currentItem.bairro}) e gostaria de receber mais informações.`
-        );
-    }
+    return buildWhatsAppUrl(
+      currentItem.whatsappMensagem ||
+        `Oi! Gostaria de receber mais informações sobre o ${currentItem.nome} (${currentItem.bairro}).`
+    );
   });
-
-  readonly contextualWhatsappHref = computed(() =>
-    buildWhatsAppUrl(this.contextualWhatsappMessage())
-  );
 
   readonly whatsappHref = computed(() =>
     buildWhatsAppUrl(this.selectedIntentMessage())
   );
+
+  readonly specialConditionsWhatsappHref = computed(() => {
+    const currentItem = this.item();
+    return buildWhatsAppUrl(
+      `Oi! Quero receber a tabela atualizada e condições de pagamento do ${currentItem.nome} (${currentItem.bairro}).`
+    );
+  });
 
   constructor() {
     afterNextRender(() => {
@@ -1800,40 +1564,8 @@ export class PrimeViewLandingComponent {
         observer.observe(target);
       }
 
-      const stickyCard = this.stickyCardEl()?.nativeElement;
-      let foldObserver: IntersectionObserver | null = null;
-      if (stickyCard) {
-        foldObserver = new IntersectionObserver(
-          (entries) => {
-            const entry = entries[0];
-            if (!entry) return;
-            this.isPastFold.set(
-              !entry.isIntersecting && entry.boundingClientRect.top < 140
-            );
-          },
-          { rootMargin: '-120px 0px 0px 0px', threshold: 0 }
-        );
-        foldObserver.observe(stickyCard);
-      }
-
-      const closingBand = this.launchWhatsappBand()?.nativeElement;
-      let closingObserver: IntersectionObserver | null = null;
-      if (closingBand) {
-        closingObserver = new IntersectionObserver(
-          (entries) => {
-            const entry = entries[0];
-            if (!entry) return;
-            this.closingBandVisible.set(entry.isIntersecting);
-          },
-          { threshold: 0.1 }
-        );
-        closingObserver.observe(closingBand);
-      }
-
       this.destroyRef.onDestroy(() => {
         observer.disconnect();
-        foldObserver?.disconnect();
-        closingObserver?.disconnect();
         if (this.pendingScrollSettleTimer !== null) {
           clearTimeout(this.pendingScrollSettleTimer);
           this.pendingScrollSettleTimer = null;
@@ -1904,14 +1636,6 @@ export class PrimeViewLandingComponent {
     this.selectedIntent.set(intent);
   }
 
-  onActiveFloorPlanChange(plan: LaunchFloorPlan | null): void {
-    this.activeFloorPlan.set(plan);
-  }
-
-  onSimulationChange(summary: LaunchSimulationSummary): void {
-    this.simulationSummary.set(summary);
-  }
-
   openLightbox(index: number): void {
     if (!this.hasGallery()) return;
     this.lightboxIndex.set(index);
@@ -1963,7 +1687,7 @@ export class PrimeViewLandingComponent {
     );
     const navHeight =
       this.sectionNav()?.nativeElement.getBoundingClientRect().height ?? 50;
-    const stickyOffset = Math.max(152, navHeight + 96);
+    const stickyOffset = navHeight + 92;
 
     const scrollToTarget = (smooth: boolean) => {
       const freshTarget = this.document.getElementById(sectionId);

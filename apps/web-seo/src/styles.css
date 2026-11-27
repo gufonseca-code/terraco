@@ -149,7 +149,7 @@
 }
 
 html {
-  scroll-padding-top: 9.5rem;
+  scroll-padding-top: 5.5rem;
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-strong) var(--color-bg-canvas);
 }
@@ -1509,11 +1509,5 @@ h4 {
 
   .terraco-stairs-step--4 {
     opacity: 0 !important;
-  }
-}
-
-@media (max-width: 767px) {
-  body:has([data-testid="mobile-whatsapp-bar"]) app-footer > footer#contato {
-    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
   }
 }

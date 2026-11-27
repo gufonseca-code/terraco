@@ -3,10 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   input,
   linkedSignal,
-  output,
 } from '@angular/core';
 import {
   buildWhatsAppUrl,
@@ -17,6 +15,32 @@ import {
 } from '../../core';
 import { ImageLightboxComponent } from './image-lightbox.component';
 
+type PlanIntentKey = 'tabela_planta' | 'simular_entrada' | 'agendar_visita';
+
+interface PlanIntentOption {
+  readonly key: PlanIntentKey;
+  readonly label: string;
+  readonly ctaLabel: string;
+}
+
+const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
+  {
+    key: 'tabela_planta',
+    label: 'Tabela e disponibilidade',
+    ctaLabel: 'Perguntar sobre esta planta no WhatsApp',
+  },
+  {
+    key: 'simular_entrada',
+    label: 'Simular entrada',
+    ctaLabel: 'Simular entrada desta planta no WhatsApp',
+  },
+  {
+    key: 'agendar_visita',
+    label: 'Agendar visita',
+    ctaLabel: 'Agendar visita para esta planta',
+  },
+];
+
 @Component({
   selector: 'app-launch-floor-plans',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,38 +49,28 @@ import { ImageLightboxComponent } from './image-lightbox.component';
     .m3e-chip {
       border-radius: 9999px;
       transition:
-        border-radius 240ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        border-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        transform 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
     .m3e-chip[aria-pressed='true'],
     .m3e-tonal-btn:hover,
     .m3e-tonal-btn:active {
-      border-radius: 14px;
-    }
-
-    .m3e-chip:active {
-      transform: scale(0.97);
+      border-radius: 12px;
     }
 
     .m3e-plan-item {
       border-radius: 20px;
       transition:
-        border-radius 240ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        background-color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        color 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1)),
-        transform 160ms var(--ease-expressive, cubic-bezier(0.2, 0, 0, 1));
+        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
+        color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
     .m3e-plan-item[aria-selected='true'] {
-      border-radius: 14px;
-    }
-
-    .m3e-plan-item:active {
-      transform: scale(0.985);
+      border-radius: 12px;
     }
 
     .m3e-tonal-btn {
@@ -67,35 +81,11 @@ import { ImageLightboxComponent } from './image-lightbox.component';
         color 160ms cubic-bezier(0.2, 0, 0, 1);
     }
 
-    @keyframes m3e-plan-stage-enter {
-      from {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .m3e-plan-stage {
-      animation: m3e-plan-stage-enter 220ms cubic-bezier(0.2, 0, 0, 1) both;
-    }
-
     @media (prefers-reduced-motion: reduce) {
       .m3e-chip,
       .m3e-plan-item,
       .m3e-tonal-btn {
         transition: none;
-      }
-
-      .m3e-chip:active,
-      .m3e-plan-item:active {
-        transform: none;
-      }
-
-      .m3e-plan-stage {
-        animation: none;
       }
     }
   `,
@@ -104,7 +94,7 @@ import { ImageLightboxComponent } from './image-lightbox.component';
       <section
         id="plantas"
         aria-labelledby="floor-plans-heading"
-        class="scroll-mt-36"
+        class="scroll-mt-24"
       >
         <div
           class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
@@ -405,17 +395,38 @@ import { ImageLightboxComponent } from './image-lightbox.component';
                   </div>
                 }
 
-                <div class="pt-1">
-                  <a
-                    [href]="activePlanWhatsappHref()"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-testid="floor-plan-whatsapp-link"
-                    class="terraco-link-underline inline-flex items-center gap-1.5 text-[13px] font-medium text-brand hover:text-brand-hover"
-                  >
-                    <span>Tirar dúvida sobre esta planta</span>
-                    <span aria-hidden="true">→</span>
-                  </a>
+                <!-- Progressive intent + contextual WhatsApp CTA -->
+                <div class="space-y-3 border-t border-border-subtle pt-4">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-[13px] font-normal text-ink-muted">
+                      O que você precisa agora:
+                    </span>
+                    @for (intent of intentOptions; track intent.key) {
+                      <button
+                        type="button"
+                        (click)="selectIntent(intent.key)"
+                        [attr.aria-pressed]="selectedIntent() === intent.key"
+                        [class]="
+                          selectedIntent() === intent.key
+                            ? 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-3.5 py-1.5 text-[13px] font-medium text-[#FAF8F4]'
+                            : 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-3.5 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
+                        "
+                      >
+                        {{ intent.label }}
+                      </button>
+                    }
+                  </div>
+
+                  <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+                    <a
+                      [href]="activePlanWhatsappHref()"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="m3e-tonal-btn inline-flex min-h-[44px] flex-1 items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-[13px] font-medium text-[#1C1B19] hover:bg-[#EAE3D5]"
+                    >
+                      {{ activeIntentOption().ctaLabel }}
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -436,8 +447,8 @@ import { ImageLightboxComponent } from './image-lightbox.component';
 })
 export class LaunchFloorPlansComponent {
   readonly item = input.required<Lancamento>();
-  readonly activePlanChange = output<LaunchFloorPlan | null>();
   private readonly itemSlug = computed(() => this.item().slug);
+  readonly intentOptions = PLAN_INTENT_OPTIONS;
 
   readonly selectedCategory = linkedSignal({
     source: this.itemSlug,
@@ -446,6 +457,10 @@ export class LaunchFloorPlansComponent {
   readonly selectedPlanId = linkedSignal<string, string | null>({
     source: this.itemSlug,
     computation: () => null,
+  });
+  readonly selectedIntent = linkedSignal<string, PlanIntentKey>({
+    source: this.itemSlug,
+    computation: () => 'tabela_planta',
   });
   readonly lightboxOpen = linkedSignal({
     source: this.itemSlug,
@@ -504,26 +519,41 @@ export class LaunchFloorPlansComponent {
     }))
   );
 
+  readonly activeIntentOption = computed(
+    () =>
+      PLAN_INTENT_OPTIONS.find((opt) => opt.key === this.selectedIntent()) ??
+      PLAN_INTENT_OPTIONS[0]
+  );
+
   readonly activePlanWhatsappHref = computed(() => {
     const launch = this.item();
     const plan = this.activePlan();
     if (!plan) {
       return buildWhatsAppUrl(launch.whatsappMensagem);
     }
-    const unitsText = plan.unidades ? `, ${plan.unidades}` : '';
+
     const priceText = plan.precoAPartirDe
       ? ` (a partir de ${formatCurrencyBRL(plan.precoAPartirDe)})`
       : '';
+    const unitsText = plan.unidades ? `, ${plan.unidades}` : '';
+    const intent = this.selectedIntent();
+
+    if (intent === 'simular_entrada') {
+      return buildWhatsAppUrl(
+        `Oi! Quero simular entrada e fluxo de pagamento para a planta ${plan.titulo} (${plan.metragem}${unitsText}) do ${launch.nome} (${launch.bairro})${priceText}.`
+      );
+    }
+
+    if (intent === 'agendar_visita') {
+      return buildWhatsAppUrl(
+        `Oi! Gostaria de agendar uma visita para conhecer a planta ${plan.titulo} (${plan.metragem}${unitsText}) do ${launch.nome} (${launch.bairro}).`
+      );
+    }
+
     return buildWhatsAppUrl(
-      `Oi! Gostaria de tirar uma dúvida sobre a planta ${plan.titulo} (${plan.metragem}${unitsText}) do ${launch.nome} (${launch.bairro})${priceText}.`
+      `Oi! Quero receber a tabela completa e disponibilidade da planta ${plan.titulo} (${plan.metragem}${unitsText}) do ${launch.nome} (${launch.bairro})${priceText}.`
     );
   });
-
-  constructor() {
-    effect(() => {
-      this.activePlanChange.emit(this.activePlan());
-    });
-  }
 
   formatPrice(value: number): string {
     return formatCurrencyBRL(value);
@@ -544,6 +574,10 @@ export class LaunchFloorPlansComponent {
 
   selectPlan(planId: string): void {
     this.selectedPlanId.set(planId);
+  }
+
+  selectIntent(intent: PlanIntentKey): void {
+    this.selectedIntent.set(intent);
   }
 
   openActivePlanLightbox(): void {
