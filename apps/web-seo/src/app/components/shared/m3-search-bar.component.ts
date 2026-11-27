@@ -137,7 +137,7 @@ function splitHighlight(
             aria-label="Limpar busca"
             animate.enter="terraco-chip-enter"
             animate.leave="terraco-chip-leave"
-            class="terraco-m3-icon-btn inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center text-ink-muted hover:bg-surface hover:text-ink"
+            class="terraco-m3-icon-btn inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center text-ink-muted hover:bg-surface hover:text-ink sm:h-9 sm:w-9"
           >
             <svg
               aria-hidden="true"
@@ -353,7 +353,7 @@ export class M3SearchBarComponent {
     const isHero = this.size() === 'hero';
     return isHero
       ? 'terraco-btn inline-flex min-h-[44px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover sm:px-6'
-      : 'terraco-btn inline-flex min-h-[40px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-action px-5 py-2 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover';
+      : 'terraco-btn inline-flex min-h-[44px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-action px-5 py-2 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover sm:min-h-[40px]';
   });
 
   optionId(index: number): string {

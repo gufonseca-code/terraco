@@ -190,38 +190,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
     NextJourneyComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    .m3e-tab-chip {
-      border-radius: 9999px;
-      transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    .m3e-tab-chip[aria-pressed='true'],
-    .m3e-tonal-btn:hover,
-    .m3e-tonal-btn:active {
-      border-radius: 12px;
-    }
-
-    .m3e-tonal-btn {
-      border-radius: 9999px;
-      transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .m3e-tab-chip,
-      .m3e-tonal-btn {
-        transition: none;
-      }
-    }
-  `,
   template: `
     <div class="flex flex-1 flex-col bg-canvas">
       <!-- Primeira dobra limpa e protagonista sobre #FAF8F4 -->
@@ -309,7 +277,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     <button
                       type="button"
                       (click)="openLightbox(0)"
-                      class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
+                      class="terraco-m3-tonal-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
                     >
                       <svg
                         aria-hidden="true"
@@ -350,7 +318,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         type="button"
                         (click)="openLightbox(idx)"
                         [attr.aria-label]="'Ampliar foto: ' + preview.alt"
-                        class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer"
+                        class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer transition-transform duration-200 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
                       >
                         <img
                           [src]="preview.url"
@@ -459,7 +427,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         <button
                           type="button"
                           (click)="toggleCallbackForm()"
-                          class="cursor-pointer text-[13px] font-normal text-ink-muted hover:text-ink"
+                          class="terraco-m3-chip inline-flex min-h-[36px] cursor-pointer items-center px-2.5 text-[13px] font-normal text-ink-muted hover:bg-canvas hover:text-ink"
                         >
                           Fechar
                         </button>
@@ -742,8 +710,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.aria-pressed]="active"
                       [class]="
                         active
-                          ? 'm3e-tab-chip inline-flex min-h-[40px] cursor-pointer items-center gap-2 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:text-[14px]'
-                          : 'm3e-tab-chip inline-flex min-h-[40px] cursor-pointer items-center gap-2 border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5] sm:text-[14px]'
+                          ? 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center gap-2 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:min-h-[40px] sm:text-[14px]'
+                          : 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center gap-2 border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5] sm:min-h-[40px] sm:text-[14px]'
                       "
                     >
                       <span>{{ pilar.label }}</span>
@@ -853,8 +821,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         [attr.aria-pressed]="entornoMode() === 'a-pe'"
                         [class]="
                           entornoMode() === 'a-pe'
-                            ? 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
-                            : 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
+                            ? 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:min-h-[38px]'
+                            : 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5] sm:min-h-[38px]'
                         "
                       >
                         A pé
@@ -865,8 +833,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         [attr.aria-pressed]="entornoMode() === 'carro'"
                         [class]="
                           entornoMode() === 'carro'
-                            ? 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
-                            : 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
+                            ? 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:min-h-[38px]'
+                            : 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5] sm:min-h-[38px]'
                         "
                       >
                         De carro
@@ -1006,7 +974,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [href]="specialConditionsWhatsappHref()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="m3e-tonal-btn inline-flex min-h-[44px] items-center justify-center border border-border-strong/40 bg-canvas px-6 py-2.5 text-[14px] font-medium text-[#1C1B19] hover:bg-elevated"
+                    class="terraco-m3-tonal-btn inline-flex min-h-[44px] items-center justify-center border border-border-strong/40 bg-canvas px-6 py-2.5 text-[14px] font-medium text-[#1C1B19] hover:bg-elevated"
                   >
                     Solicitar tabela atualizada no WhatsApp
                   </a>
@@ -1050,7 +1018,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   <button
                     type="button"
                     (click)="openLightbox(0)"
-                    class="terraco-btn inline-flex min-h-[40px] w-fit shrink-0 cursor-pointer items-center gap-2 rounded-pill border border-border-strong/70 bg-surface/80 px-4 py-1.5 text-[13px] font-medium text-ink hover:bg-surface tabular-nums"
+                    class="terraco-m3-tonal-btn inline-flex min-h-[44px] w-fit shrink-0 cursor-pointer items-center gap-2 border border-border-strong/70 bg-surface/80 px-4 py-1.5 text-[13px] font-medium text-ink hover:bg-surface tabular-nums sm:min-h-[40px]"
                   >
                     Ver todas as {{ galleryImages().length }} fotos
                   </button>
@@ -1071,7 +1039,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.aria-label]="
                         'Ampliar imagem ' + (i + 1) + ': ' + media.alt
                       "
-                      class="group relative aspect-[4/3] w-[82vw] max-w-[320px] shrink-0 snap-start overflow-hidden rounded-[20px] bg-surface text-left cursor-pointer md:w-auto md:max-w-none"
+                      class="group relative aspect-[4/3] w-[82vw] max-w-[320px] shrink-0 snap-start overflow-hidden rounded-[20px] bg-surface text-left cursor-pointer transition-transform duration-200 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 md:w-auto md:max-w-none"
                     >
                       <img
                         [src]="media.url"
@@ -1172,8 +1140,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [attr.aria-pressed]="active"
                     [class]="
                       active
-                        ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/75 bg-ink-inverse/16 px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:text-[14px]'
-                        : 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:text-[14px]'
+                        ? 'terraco-m3-chip inline-flex min-h-[44px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/75 bg-ink-inverse/16 px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:min-h-[42px] sm:text-[14px]'
+                        : 'terraco-m3-chip inline-flex min-h-[44px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:min-h-[42px] sm:text-[14px]'
                     "
                   >
                     @if (active) {
@@ -1658,7 +1626,7 @@ export class PrimeViewLandingComponent {
 
   sectionNavPillClass(sectionId: string): string {
     const base =
-      'terraco-m3-chip inline-flex min-h-[36px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap';
+      'terraco-m3-chip inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]';
     if (this.activeSection() === sectionId) {
       return `${base} terraco-m3-chip--active bg-surface font-medium text-ink shadow-chip`;
     }

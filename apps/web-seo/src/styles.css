@@ -82,17 +82,24 @@
 
   /* Durações & Curvas de Microinteração (M3 Expressive Spatial & Effects) */
   --duration-ui: 160ms;
-  --duration-spring-fast: 320ms;
+  --duration-spring-fast: 280ms;
   --duration-spring-default: 420ms;
+  --scale-press: 0.97;
+  --scale-press-icon: 0.94;
 
   --ease-ui: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expressive: cubic-bezier(0.2, 0, 0, 1);
   --ease-spring-fast: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring-default: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @supports (animation-timing-function: linear(0, 1)) {
   :root {
+    --ease-expressive: linear(
+      0, 0.008, 0.032 2.2%, 0.132 4.8%, 0.68 13.5%, 0.91 18.8%,
+      0.992 22.8%, 1.022 27.2%, 1.024 33%, 1.006 45%, 0.999 58%, 1
+    );
     --ease-spring-fast: linear(
       0, 0.009, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938 17.6%, 1.017 20.6%,
       1.049 23.8%, 1.057 27.6%, 1.044 33.4%, 1.008 45.2%, 0.996 56.1%, 1
@@ -243,18 +250,50 @@ h4 {
   box-shadow: var(--shadow-card);
 }
 
-/* Botões CTA com resposta tátil contida (sem hover float genérico) */
+/* M3 Expressive: Botões CTA primários e de superfície com shape morphing + micro-compressão */
 .terraco-btn {
+  border-radius: 24px;
   transition:
-    background-color 150ms var(--ease-ui),
-    border-color 150ms var(--ease-ui),
-    color 150ms var(--ease-ui),
+    border-radius var(--duration-spring-fast) var(--ease-expressive),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
-    transform 90ms var(--ease-ui);
+    transform 180ms var(--ease-expressive);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-btn:hover {
+    border-radius: var(--radius-md);
+  }
 }
 
 .terraco-btn:active {
-  transform: scale(0.985);
+  border-radius: var(--radius-m3-md);
+  transform: scale(var(--scale-press));
+}
+
+/* M3 Expressive: Botão Tonal (#F3EFE6) com shape morphing pill -> 14px (hover) -> 12px (active) */
+.terraco-m3-tonal-btn {
+  border-radius: 24px;
+  transition:
+    border-radius var(--duration-spring-fast) var(--ease-expressive),
+    background-color var(--duration-ui) var(--ease-ui),
+    border-color var(--duration-ui) var(--ease-ui),
+    color var(--duration-ui) var(--ease-ui),
+    box-shadow 180ms var(--ease-ui),
+    transform 180ms var(--ease-expressive);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-tonal-btn:hover {
+    border-radius: 14px;
+  }
+}
+
+.terraco-m3-tonal-btn:active {
+  border-radius: var(--radius-m3-md);
+  transform: scale(var(--scale-press));
 }
 
 /* Sombra Moss sutil para CTAs primários em Verde Musgo */
@@ -570,21 +609,27 @@ h4 {
   box-shadow: none;
 }
 
-/* M3 Expressive: Icon Action Button (circle -> squircle on press/hover) */
+/* M3 Expressive: Icon Action Button (circle -> 14px/12px squircle on hover/press) */
 .terraco-m3-icon-btn {
-  border-radius: 22px;
+  border-radius: var(--radius-morph-pill);
   transition:
-    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    border-radius var(--duration-spring-fast) var(--ease-expressive),
     background-color var(--duration-ui) var(--ease-ui),
     border-color var(--duration-ui) var(--ease-ui),
     color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
-    transform 180ms var(--ease-enter);
+    transform 180ms var(--ease-expressive);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-icon-btn:hover {
+    border-radius: 14px;
+  }
 }
 
 .terraco-m3-icon-btn:active {
   border-radius: var(--radius-m3-md);
-  transform: scale(0.94);
+  transform: scale(var(--scale-press-icon));
 }
 
 /* Botão pill de navegação na navbar (legado/compatibilidade) */
@@ -722,17 +767,23 @@ h4 {
 
 /* M3 Expressive: Filter / Intent Chip com Shape Morphing (22px -> 12px)
    Nota: usa --radius-morph-pill (22px) em vez de 9999px porque interpolar 9999px -> 12px
-   com spring overshoot (1.057) gera valores negativos (0px = quadrado) e comprime a
+   com spring overshoot gera valores negativos (0px = quadrado) e comprime a
    transição visual nos últimos frames. Em chips de 36–44px, 22px já é pill perfeito. */
 .terraco-m3-chip {
   border-radius: var(--radius-morph-pill);
   transition:
-    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    border-radius var(--duration-spring-fast) var(--ease-expressive),
     background-color var(--duration-ui) var(--ease-ui),
     border-color var(--duration-ui) var(--ease-ui),
     color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
-    transform 220ms var(--ease-enter);
+    transform 180ms var(--ease-expressive);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-chip:hover {
+    border-radius: 16px;
+  }
 }
 
 .terraco-m3-chip[aria-pressed="true"],
@@ -742,7 +793,8 @@ h4 {
 }
 
 .terraco-m3-chip:active {
-  transform: scale(0.97);
+  border-radius: var(--radius-m3-md);
+  transform: scale(var(--scale-press));
 }
 
 /* M3 Expressive: Connected Button Group (gap 3px, pontas 22px, internas 8px) */
@@ -806,12 +858,18 @@ h4 {
 .terraco-m3-icon-toggle {
   border-radius: var(--radius-morph-pill);
   transition:
-    border-radius var(--duration-spring-fast) var(--ease-spring-fast),
+    border-radius var(--duration-spring-fast) var(--ease-expressive),
     background-color var(--duration-ui) var(--ease-ui),
     border-color var(--duration-ui) var(--ease-ui),
     color var(--duration-ui) var(--ease-ui),
     box-shadow 180ms var(--ease-ui),
-    transform 220ms var(--ease-enter);
+    transform 180ms var(--ease-expressive);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .terraco-m3-icon-toggle:hover {
+    border-radius: 16px;
+  }
 }
 
 .terraco-m3-icon-toggle[aria-pressed="true"] {
@@ -819,7 +877,8 @@ h4 {
 }
 
 .terraco-m3-icon-toggle:active {
-  transform: scale(0.93);
+  border-radius: var(--radius-m3-md);
+  transform: scale(var(--scale-press-icon));
 }
 
 /* M3 Expressive: Card de seleção de planta com shape morphing suave (16px -> 22px) */
@@ -1475,6 +1534,7 @@ h4 {
 
   .terraco-btn,
   .terraco-btn-moss,
+  .terraco-m3-tonal-btn,
   .terraco-card,
   .terraco-plate,
   .terraco-journey-card,

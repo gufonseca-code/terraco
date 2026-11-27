@@ -96,33 +96,11 @@ function resolveInitialPropertyValue(item: Lancamento): number {
       transform: scale(1.06);
     }
 
-    .sim-m3e-chip {
-      border-radius: 9999px;
-      transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    .sim-m3e-chip[aria-pressed='true'],
-    .sim-tonal-btn:hover,
-    .sim-tonal-btn:active {
-      border-radius: 12px;
-    }
-
-    .sim-tonal-btn {
-      border-radius: 9999px;
-      transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
     @media (prefers-reduced-motion: reduce) {
-      .sim-m3e-chip,
-      .sim-tonal-btn {
+      .simulator-range::-webkit-slider-thumb,
+      .simulator-range::-moz-range-thumb {
         transition: none;
+        transform: none;
       }
     }
   `,
@@ -202,8 +180,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="downPaymentPercent() === percent"
                   [class]="
                     downPaymentPercent() === percent
-                      ? 'sim-m3e-chip flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
-                      : 'sim-m3e-chip flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong'
+                      ? 'terraco-m3-chip flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip sm:min-h-[42px]'
+                      : 'terraco-m3-chip flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong sm:min-h-[42px]'
                   "
                 >
                   {{ percent }}%
@@ -231,8 +209,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="clampedFgts() === preset.value"
                   [class]="
                     clampedFgts() === preset.value
-                      ? 'sim-m3e-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
-                      : 'sim-m3e-chip flex min-h-[42px] cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong'
+                      ? 'terraco-m3-chip flex min-h-[44px] cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip sm:min-h-[42px]'
+                      : 'terraco-m3-chip flex min-h-[44px] cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong sm:min-h-[42px]'
                   "
                 >
                   {{ preset.label }}
@@ -255,8 +233,8 @@ function resolveInitialPropertyValue(item: Lancamento): number {
                   [attr.aria-pressed]="termYears() === years"
                   [class]="
                     termYears() === years
-                      ? 'sim-m3e-chip flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip'
-                      : 'sim-m3e-chip flex min-h-[42px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong'
+                      ? 'terraco-m3-chip flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip sm:min-h-[42px]'
+                      : 'terraco-m3-chip flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong sm:min-h-[42px]'
                   "
                 >
                   {{ years }} anos
@@ -320,7 +298,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="simulator-whatsapp-cta"
-              class="sim-tonal-btn flex min-h-[46px] w-full items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-[#1C1B19] hover:bg-[#EAE3D5]"
+              class="terraco-m3-tonal-btn flex min-h-[46px] w-full items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-[#1C1B19] hover:bg-[#EAE3D5]"
             >
               Enviar simulação no WhatsApp
             </a>

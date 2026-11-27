@@ -45,7 +45,7 @@ import type { LaunchMediaItem } from '../../core';
             type="button"
             (click)="close()"
             aria-label="Fechar galeria"
-            class="terraco-btn inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-ink-inverse/20 bg-ink/60 px-3 text-[13px] font-medium text-ink-inverse hover:border-ink-inverse/40 hover:bg-ink"
+            class="terraco-m3-icon-btn inline-flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center border border-ink-inverse/20 bg-ink/60 px-3 text-[13px] font-medium text-ink-inverse hover:border-ink-inverse/40 hover:bg-ink"
           >
             <svg
               aria-hidden="true"
@@ -72,7 +72,7 @@ import type { LaunchMediaItem } from '../../core';
               type="button"
               (click)="previous()"
               aria-label="Imagem anterior"
-              class="terraco-btn absolute left-0 z-10 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-ink-inverse/20 bg-ink/70 text-ink-inverse hover:border-ink-inverse/45 hover:bg-ink sm:left-2"
+              class="terraco-m3-icon-btn absolute left-0 z-10 inline-flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center border border-ink-inverse/20 bg-ink/70 text-ink-inverse hover:border-ink-inverse/45 hover:bg-ink sm:left-2"
             >
               <svg
                 aria-hidden="true"
@@ -107,7 +107,7 @@ import type { LaunchMediaItem } from '../../core';
               type="button"
               (click)="next()"
               aria-label="Próxima imagem"
-              class="terraco-btn absolute right-0 z-10 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-pill border border-ink-inverse/20 bg-ink/70 text-ink-inverse hover:border-ink-inverse/45 hover:bg-ink sm:right-2"
+              class="terraco-m3-icon-btn absolute right-0 z-10 inline-flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center border border-ink-inverse/20 bg-ink/70 text-ink-inverse hover:border-ink-inverse/45 hover:bg-ink sm:right-2"
             >
               <svg
                 aria-hidden="true"

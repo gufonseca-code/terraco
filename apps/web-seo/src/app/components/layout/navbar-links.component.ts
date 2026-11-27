@@ -72,7 +72,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
                 ? '1 lançamento salvo'
                 : favoritesCount() + ' lançamentos salvos'
             "
-            class="inline-flex min-h-[38px] items-center gap-1.5 rounded-pill px-3 py-1.5 text-[13px] font-medium leading-[1.35] text-ink-muted tabular-nums transition-colors duration-150 hover:bg-surface hover:text-ink"
+            class="terraco-nav-morph inline-flex min-h-[38px] items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium leading-[1.35] text-ink-muted tabular-nums hover:bg-surface hover:text-ink"
           >
             <svg
               aria-hidden="true"
@@ -122,7 +122,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
                 ? '1 lançamento salvo'
                 : favoritesCount() + ' lançamentos salvos'
             "
-            class="inline-flex h-10 items-center gap-1 rounded-[12px] px-2.5 text-[13px] font-medium text-ink tabular-nums transition-colors duration-150 hover:bg-surface/80"
+            class="terraco-nav-morph inline-flex h-11 items-center gap-1 px-3 text-[13px] font-medium text-ink tabular-nums hover:bg-surface/80"
           >
             <svg
               aria-hidden="true"
@@ -147,7 +147,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
           [attr.aria-label]="
             mobileMenuOpen() ? 'Fechar menu de navegação' : 'Abrir menu de navegação'
           "
-          class="terraco-nav-menu-trigger cursor-pointer"
+          class="terraco-nav-menu-trigger !h-11 !w-11 cursor-pointer"
         >
           <svg
             aria-hidden="true"
@@ -197,8 +197,8 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
               (click)="navigateFromMobileSheet($event, [item.route])"
               [class]="
                 active
-                  ? 'flex min-h-11 items-center rounded-[12px] bg-surface px-3.5 py-2.5 text-[15px] font-semibold text-ink transition-colors duration-150'
-                  : 'flex min-h-11 items-center rounded-[12px] px-3.5 py-2.5 text-[15px] font-medium text-ink-muted transition-colors duration-150 hover:bg-surface/65 hover:text-ink'
+                  ? 'terraco-m3-chip terraco-m3-chip--active flex min-h-11 items-center bg-surface px-3.5 py-2.5 text-[15px] font-semibold text-ink'
+                  : 'terraco-m3-chip flex min-h-11 items-center px-3.5 py-2.5 text-[15px] font-medium text-ink-muted hover:bg-surface/65 hover:text-ink'
               "
             >
               {{ item.label }}

@@ -265,7 +265,7 @@ const TIPOLOGIA_FILTERS = [
                       [attr.aria-label]="
                         'Remover filtro de objetivo ' + objetivo
                       "
-                      class="terraco-m3-chip terraco-m3-chip--active inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 border border-brand/35 bg-[#E5F2EC] px-4 py-1.5 text-[13px] font-medium text-[#1F6F50]"
+                      class="terraco-m3-chip terraco-m3-chip--active inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 border border-brand/35 bg-[#E5F2EC] px-4 py-1.5 text-[13px] font-medium text-[#1F6F50] sm:min-h-[40px]"
                     >
                       <span>Objetivo: {{ objetivo }}</span>
                       <span aria-hidden="true">×</span>
@@ -276,7 +276,7 @@ const TIPOLOGIA_FILTERS = [
                     <button
                       type="button"
                       (click)="clearFilters()"
-                      class="terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 border border-border-subtle bg-surface px-3.5 py-1.5 text-[13px] font-medium text-ink-muted hover:border-border-strong hover:text-ink"
+                      class="terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 border border-border-subtle bg-surface px-3.5 py-1.5 text-[13px] font-medium text-ink-muted hover:border-border-strong hover:text-ink sm:min-h-[40px]"
                     >
                       <span>Limpar filtros</span>
                       <span aria-hidden="true">×</span>
@@ -365,7 +365,7 @@ const TIPOLOGIA_FILTERS = [
                 <button
                   type="button"
                   (click)="clearFilters()"
-                  class="terraco-m3-chip inline-flex min-h-[42px] cursor-pointer items-center justify-center border border-ink bg-ink px-5 py-2 text-[13px] font-medium text-ink-inverse hover:bg-ink/90"
+                  class="terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center justify-center border border-ink bg-ink px-5 py-2 text-[13px] font-medium text-ink-inverse hover:bg-ink/90"
                 >
                   Ver todos os lançamentos
                 </button>
@@ -602,7 +602,7 @@ export class LaunchExplorerComponent {
 
   dropdownTriggerClass(active: boolean, open: boolean): string {
     const base =
-      'terraco-m3-chip inline-flex min-h-[42px] items-center gap-2 border px-4 py-1.5 text-[13px] cursor-pointer';
+      'terraco-m3-chip inline-flex min-h-[44px] items-center gap-2 border px-4 py-1.5 text-[13px] cursor-pointer sm:min-h-[42px]';
     if (open) {
       return `${base} terraco-m3-chip--active border-brand bg-elevated font-medium text-brand shadow-card`;
     }
@@ -614,8 +614,8 @@ export class LaunchExplorerComponent {
 
   dropdownOptionClass(selected: boolean): string {
     return selected
-      ? 'flex w-full items-center justify-between gap-3 rounded-[14px] bg-[#E5F2EC] px-3 py-2 text-left text-[13px] font-medium text-[#1F6F50] transition-colors duration-150 cursor-pointer'
-      : 'flex w-full items-center justify-between gap-3 rounded-[14px] px-3 py-2 text-left text-[13px] font-normal text-ink transition-colors duration-150 hover:bg-surface/70 cursor-pointer';
+      ? 'flex min-h-[44px] w-full items-center justify-between gap-3 rounded-[14px] bg-[#E5F2EC] px-3 py-2 text-left text-[13px] font-medium text-[#1F6F50] transition-[background-color,color,transform] duration-150 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 cursor-pointer sm:min-h-[38px]'
+      : 'flex min-h-[44px] w-full items-center justify-between gap-3 rounded-[14px] px-3 py-2 text-left text-[13px] font-normal text-ink transition-[background-color,color,transform] duration-150 hover:bg-surface/70 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 cursor-pointer sm:min-h-[38px]';
   }
 
   chevronClass(open: boolean): string {
