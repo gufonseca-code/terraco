@@ -8,6 +8,57 @@ export const FLUTTER_APP_URL = 'https://app.terraco.com.br';
 
 export const ENABLE_FLUTTER_APP_LINKS = false;
 
+export interface ContactChannelsConfig {
+  readonly whatsapp: {
+    readonly enabled: boolean;
+    readonly label: string;
+    readonly description: string;
+    readonly defaultMessage: string;
+  };
+  readonly email: {
+    readonly enabled: boolean;
+    readonly address: string;
+    readonly label: string;
+    readonly description: string;
+    readonly defaultSubject: string;
+  };
+}
+
+export const SITE_CONTACT_CHANNELS: ContactChannelsConfig = {
+  whatsapp: {
+    enabled: true,
+    label: 'WhatsApp',
+    description: 'Atendimento direto e sem burocracia',
+    defaultMessage:
+      'Oi! Gostaria de conversar sobre os lançamentos da Terraço em BH.',
+  },
+  email: {
+    enabled: false,
+    address: '',
+    label: 'E-mail',
+    description: 'Envie sua mensagem por e-mail',
+    defaultSubject: 'Contato via Terraço',
+  },
+};
+
+export function isEmailContactActive(
+  config: ContactChannelsConfig = SITE_CONTACT_CHANNELS
+): boolean {
+  return config.email.enabled && config.email.address.trim().length > 0;
+}
+
+export function buildContactMailtoUrl(
+  address: string,
+  subject?: string
+): string {
+  const cleanAddress = address.trim();
+  if (!cleanAddress) return '';
+  if (!subject?.trim()) {
+    return `mailto:${cleanAddress}`;
+  }
+  return `mailto:${cleanAddress}?subject=${encodeURIComponent(subject.trim())}`;
+}
+
 export const SITE_HERO_IMAGE_URL =
   'https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/site%2Fimages%2Fhero-terraco.webp?alt=media';
 
