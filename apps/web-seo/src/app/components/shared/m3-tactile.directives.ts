@@ -21,9 +21,9 @@ const CHIP_TONE_CLASSES: Record<
   },
   dark: {
     active:
-      'border border-ink-inverse/75 bg-ink-inverse/16 text-ink-inverse font-medium shadow-chip',
+      'border border-transparent bg-[#F3EFE6] text-[#1C1B19] font-semibold shadow-chip',
     inactive:
-      'border border-ink-inverse/20 bg-transparent text-ink-inverse/90 font-normal hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse',
+      'border border-transparent bg-white/[0.08] text-[#FAF8F4]/85 font-normal hover:bg-white/[0.14] hover:text-[#FAF8F4]',
   },
   brand: {
     active:
