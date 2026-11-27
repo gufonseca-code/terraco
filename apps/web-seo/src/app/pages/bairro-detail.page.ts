@@ -250,9 +250,22 @@ function buildBairroJsonLd(
                     <a
                       routerLink="/lancamentos"
                       [queryParams]="{ q: current.nome }"
-                      class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                      class="terraco-link-editorial inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-normal text-ink-muted hover:text-ink focus-visible:text-ink sm:min-h-[40px]"
                     >
-                      Abrir no catálogo completo
+                      <span>Abrir no catálogo completo</span>
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="terraco-link-arrow h-4 w-4 shrink-0"
+                      >
+                        <path d="M4.5 10h11" />
+                        <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                      </svg>
                     </a>
                   </div>
                 </div>
@@ -342,9 +355,22 @@ function buildBairroJsonLd(
                   <a
                     routerLink="/lancamentos"
                     [queryParams]="{ q: current.nome }"
-                    class="terraco-link-underline inline-flex min-h-[40px] w-fit shrink-0 items-center text-[14px] font-medium text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
+                    class="terraco-link-editorial inline-flex min-h-[44px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium text-ink hover:text-brand focus-visible:text-brand sm:min-h-[40px]"
                   >
-                    Ver no catálogo
+                    <span>Ver no catálogo</span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="terraco-link-arrow h-4 w-4 shrink-0"
+                    >
+                      <path d="M4.5 10h11" />
+                      <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                    </svg>
                   </a>
                 }
               </div>
@@ -409,9 +435,22 @@ function buildBairroJsonLd(
                     </a>
                     <a
                       routerLink="/lancamentos"
-                      class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                      class="terraco-link-editorial inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-normal text-ink-muted hover:text-ink focus-visible:text-ink sm:min-h-[40px]"
                     >
-                      Explorar todos os lançamentos em BH
+                      <span>Explorar todos os lançamentos em BH</span>
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="terraco-link-arrow h-4 w-4 shrink-0"
+                      >
+                        <path d="M4.5 10h11" />
+                        <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                      </svg>
                     </a>
                   </div>
                 </div>
@@ -560,9 +599,22 @@ function buildBairroJsonLd(
                   </h2>
                   <a
                     routerLink="/bairros"
-                    class="terraco-link-underline inline-flex min-h-[40px] w-fit items-center text-[14px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                    class="terraco-link-editorial inline-flex min-h-[44px] w-fit items-center gap-1.5 text-[14px] font-normal text-ink-muted hover:text-ink focus-visible:text-ink sm:min-h-[40px]"
                   >
-                    Ver índice de bairros
+                    <span>Ver índice de bairros</span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="terraco-link-arrow h-4 w-4 shrink-0"
+                    >
+                      <path d="M4.5 10h11" />
+                      <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                    </svg>
                   </a>
                 </div>
 

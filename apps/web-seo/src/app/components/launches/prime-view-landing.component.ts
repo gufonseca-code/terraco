@@ -350,7 +350,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     @if (bairroGuideSlug(); as guideSlug) {
                       <a
                         [routerLink]="['/bairros', guideSlug]"
-                        class="terraco-link-underline text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
+                        class="text-ink transition-colors duration-200 ease-[var(--ease-expressive-return)] hover:text-brand focus-visible:text-brand motion-reduce:transition-none"
                       >{{ item().bairro }}</a>
                     } @else {
                       <span>{{ item().bairro }}</span>
@@ -486,7 +486,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       type="button"
                       (click)="toggleCallbackForm()"
                       data-testid="launch-callback-toggle"
-                      class="terraco-link-underline w-full cursor-pointer py-0.5 text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                      class="terraco-link-nav w-full cursor-pointer py-1.5 text-center text-[13px] font-normal text-ink-muted hover:text-ink focus-visible:text-ink"
                     >
                       Prefere que um especialista te chame?
                     </button>

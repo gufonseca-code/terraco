@@ -319,9 +319,22 @@ const TIPOLOGIA_FILTERS = [
                     Quer entender mobilidade, serviços e perfil do bairro?
                     <a
                       [routerLink]="['/bairros', bairroGuide.slug]"
-                      class="terraco-link-underline ml-1 font-medium text-brand hover:text-brand-hover"
+                      class="terraco-link-editorial ml-1 inline-flex items-center gap-1 font-medium text-brand hover:text-brand-hover focus-visible:text-brand-hover"
                     >
-                      Ver guia completo do {{ bairroGuide.nome }}
+                      <span>Ver guia completo do {{ bairroGuide.nome }}</span>
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="terraco-link-arrow h-3.5 w-3.5 shrink-0"
+                      >
+                        <path d="M4.5 10h11" />
+                        <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                      </svg>
                     </a>
                   </p>
                 }

@@ -86,9 +86,22 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
                 <a
                   href="#lancamentos-selecionados"
                   (click)="scrollToFeatured($event)"
-                  class="terraco-link-underline hidden min-h-[36px] items-center px-1.5 text-[13px] font-medium text-ink transition-colors duration-150 hover:text-action-hover focus-visible:text-action-hover sm:inline-flex"
+                  class="terraco-link-editorial hidden min-h-[36px] items-center gap-1 px-1.5 text-[13px] font-medium text-ink hover:text-action-hover focus-visible:text-action-hover sm:inline-flex"
                 >
-                  Ver lançamentos
+                  <span>Ver lançamentos</span>
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="terraco-link-arrow h-3.5 w-3.5 shrink-0"
+                  >
+                    <path d="M4.5 10h11" />
+                    <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                  </svg>
                 </a>
               </nav>
             </div>

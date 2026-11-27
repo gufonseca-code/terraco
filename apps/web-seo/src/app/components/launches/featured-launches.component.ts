@@ -294,9 +294,22 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
             <a
               href="#descoberta-guiada"
               (click)="scrollToGuidedDiscovery($event)"
-              class="terraco-link-underline inline-flex min-h-[44px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
+              class="terraco-link-editorial inline-flex min-h-[44px] items-center gap-1.5 font-medium text-brand hover:text-brand-hover focus-visible:text-brand-hover"
             >
-              Descubra pelo seu momento
+              <span>Descubra pelo seu momento</span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="terraco-link-arrow h-4 w-4 shrink-0"
+              >
+                <path d="M4.5 10h11" />
+                <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+              </svg>
             </a>
           </div>
         </div>

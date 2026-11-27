@@ -763,41 +763,6 @@ h4 {
   transform: translateX(4px);
 }
 
-.terraco-link-underline {
-  position: relative;
-  text-decoration: none;
-  transition:
-    color var(--duration-ui) var(--ease-expressive-return),
-    transform 180ms var(--ease-expressive);
-}
-
-.terraco-link-underline::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 6px;
-  height: 1.5px;
-  background-color: currentColor;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 240ms var(--ease-expressive);
-}
-
-.terraco-link-underline:active {
-  transform: scale(0.985);
-}
-
-.terraco-link-underline:focus-visible::after {
-  transform: scaleX(1);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .terraco-link-underline:hover::after {
-    transform: scaleX(1);
-  }
-}
-
 /* Superfície de card quieta (mudança sutil de borda, sem salto ou zoom) */
 .terraco-card {
   transition: border-color 180ms var(--ease-ui);
@@ -1665,10 +1630,7 @@ h4 {
   .terraco-nav-link,
   .terraco-link-nav,
   .terraco-link-editorial,
-  .terraco-link-editorial svg,
-  .terraco-link-arrow,
-  .terraco-link-underline,
-  .terraco-link-underline::after,
+  .terraco-link-editorial .terraco-link-arrow,
   .terraco-stairs-step,
   .terraco-logo-step {
     animation: none !important;

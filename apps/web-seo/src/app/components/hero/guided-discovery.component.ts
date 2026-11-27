@@ -240,7 +240,7 @@ function normalizeText(value: string): string {
               <button
                 type="button"
                 (click)="clearSelections()"
-                class="terraco-link-underline inline-flex min-h-[44px] items-center px-1 text-[14px] font-normal text-ink-muted transition-colors duration-150 hover:text-ink"
+                class="terraco-link-nav inline-flex min-h-[44px] cursor-pointer items-center px-3.5 text-[14px] font-normal text-ink-muted hover:text-ink focus-visible:text-ink"
               >
                 Limpar
               </button>
@@ -259,7 +259,7 @@ function normalizeText(value: string): string {
             @for (guide of neighborhoodGuides; track guide.route) {
               <a
                 [routerLink]="guide.route"
-                class="terraco-link-underline inline-flex min-h-[44px] items-center font-normal text-ink-muted transition-colors duration-150 hover:text-ink focus-visible:text-ink"
+                class="terraco-link-nav inline-flex min-h-[44px] items-center px-3 font-normal text-ink-muted hover:text-ink focus-visible:text-ink"
               >
                 {{ guide.label }}
               </a>

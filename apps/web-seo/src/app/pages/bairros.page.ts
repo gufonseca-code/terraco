@@ -407,9 +407,22 @@ function resolveBairroMedia(
                         <a
                           [routerLink]="['/lancamentos']"
                           [queryParams]="{ q: row.searchQuery }"
-                          class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-normal text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
+                          class="terraco-link-editorial inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-normal text-ink hover:text-brand focus-visible:text-brand sm:min-h-[40px]"
                         >
-                          Ver lançamentos
+                          <span>Ver lançamentos</span>
+                          <svg
+                            aria-hidden="true"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="terraco-link-arrow h-4 w-4 shrink-0"
+                          >
+                            <path d="M4.5 10h11" />
+                            <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                          </svg>
                         </a>
                       }
                     </div>
