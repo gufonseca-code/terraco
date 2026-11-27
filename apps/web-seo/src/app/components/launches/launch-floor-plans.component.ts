@@ -13,6 +13,10 @@ import {
   type LaunchFloorPlan,
   type LaunchMediaItem,
 } from '../../core';
+import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../shared/m3-tactile.directives';
 import { ImageLightboxComponent } from './image-lightbox.component';
 
 type PlanIntentKey = 'tabela_planta' | 'simular_entrada' | 'agendar_visita';
@@ -44,7 +48,13 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 @Component({
   selector: 'app-launch-floor-plans',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Listbox, Option, ImageLightboxComponent],
+  imports: [
+    Listbox,
+    Option,
+    M3ButtonDirective,
+    M3ChipDirective,
+    ImageLightboxComponent,
+  ],
   styles: `
     .m3e-plan-item {
       border-radius: 20px;
@@ -116,13 +126,12 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
               @let active = selectedCategory() === category.name;
               <button
                 type="button"
+                appM3Chip
+                tone="canvas"
+                [active]="active"
                 (click)="selectCategory(category.name)"
                 [attr.aria-pressed]="active"
-                [class]="
-                  active
-                    ? 'terraco-m3-chip inline-flex min-h-[44px] shrink-0 cursor-pointer items-center gap-1.5 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:min-h-[38px]'
-                    : 'terraco-m3-chip inline-flex min-h-[44px] shrink-0 cursor-pointer items-center gap-1.5 border border-transparent bg-canvas px-4 py-1.5 text-[13px] font-medium text-[#1C1B19] hover:bg-elevated sm:min-h-[38px]'
-                "
+                class="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 px-4 py-1.5 text-[13px] font-medium sm:min-h-[38px]"
               >
                 <span>{{ category.name }}</span>
                 <span
@@ -150,13 +159,12 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
               @let isSelected = activePlan()?.id === plan.id;
               <button
                 type="button"
+                appM3Chip
+                tone="canvas"
+                [active]="isSelected"
                 (click)="selectPlan(plan.id)"
                 [attr.aria-pressed]="isSelected"
-                [class]="
-                  isSelected
-                    ? 'terraco-m3-chip inline-flex min-h-[44px] shrink-0 cursor-pointer items-center gap-2 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:min-h-[40px]'
-                    : 'terraco-m3-chip inline-flex min-h-[44px] shrink-0 cursor-pointer items-center gap-2 border border-transparent bg-canvas px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-elevated sm:min-h-[40px]'
-                "
+                class="inline-flex min-h-[44px] shrink-0 items-center gap-2 px-4 py-1.5 text-[13px] sm:min-h-[40px]"
               >
                 <span>{{ plan.titulo }}</span>
                 <span
@@ -270,9 +278,11 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 
                 <button
                   type="button"
+                  appM3Button
+                  variant="tonal"
                   (click)="openActivePlanLightbox()"
                   aria-label="Ampliar planta em tela cheia"
-                  class="terraco-m3-tonal-btn absolute right-3 bottom-3 inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 border border-border-subtle bg-elevated/95 px-3.5 py-1.5 text-[13px] font-medium text-ink shadow-xs backdrop-blur-xs hover:border-ink/35 sm:min-h-[38px]"
+                  class="absolute right-3 bottom-3 inline-flex min-h-[44px] items-center gap-1.5 border border-border-subtle bg-elevated/95 px-3.5 py-1.5 text-[13px] text-ink shadow-xs backdrop-blur-xs hover:border-ink/35 hover:bg-elevated sm:min-h-[38px]"
                 >
                   <svg
                     aria-hidden="true"
@@ -392,13 +402,12 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     @for (intent of intentOptions; track intent.key) {
                       <button
                         type="button"
+                        appM3Chip
+                        tone="light"
+                        [active]="selectedIntent() === intent.key"
                         (click)="selectIntent(intent.key)"
                         [attr.aria-pressed]="selectedIntent() === intent.key"
-                        [class]="
-                          selectedIntent() === intent.key
-                            ? 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-3.5 py-1.5 text-[13px] font-medium text-[#FAF8F4] sm:min-h-[38px]'
-                            : 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-3.5 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5] sm:min-h-[38px]'
-                        "
+                        class="inline-flex min-h-[44px] items-center px-3.5 py-1.5 text-[13px] sm:min-h-[38px]"
                       >
                         {{ intent.label }}
                       </button>
@@ -410,7 +419,9 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                       [href]="activePlanWhatsappHref()"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="terraco-m3-tonal-btn inline-flex min-h-[44px] flex-1 items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-[13px] font-medium text-[#1C1B19] hover:bg-[#EAE3D5]"
+                      appM3Button
+                      variant="tonal"
+                      class="inline-flex min-h-[44px] flex-1 items-center justify-center px-5 py-2.5 text-[13px]"
                     >
                       {{ activeIntentOption().ctaLabel }}
                     </a>

@@ -30,6 +30,10 @@ import {
   type LaunchPilarGroup,
 } from '../../core';
 import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../shared/m3-tactile.directives';
+import {
   type JourneyDestination,
   NextJourneyComponent,
 } from '../shared/next-journey.component';
@@ -182,6 +186,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
   imports: [
     NgOptimizedImage,
     RouterLink,
+    M3ButtonDirective,
+    M3ChipDirective,
     FavoriteButtonComponent,
     ImageLightboxComponent,
     LaunchCardComponent,
@@ -276,8 +282,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                     <button
                       type="button"
+                      appM3Button
+                      variant="tonal"
                       (click)="openLightbox(0)"
-                      class="terraco-m3-tonal-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
+                      class="absolute right-3 bottom-3 z-10 inline-flex min-h-[44px] items-center gap-1.5 border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] text-ink shadow-chip backdrop-blur-xs hover:border-border-strong hover:bg-elevated sm:min-h-[38px]"
                     >
                       <svg
                         aria-hidden="true"
@@ -399,7 +407,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   [href]="primaryWhatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="terraco-btn flex min-h-[46px] w-full items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover sm:min-h-[48px]"
+                  appM3Button
+                  variant="primary"
+                  class="flex min-h-[46px] w-full items-center justify-center px-6 py-2.5 text-[14px] leading-[1.35] sm:min-h-[48px]"
                 >
                   Falar no WhatsApp
                 </a>
@@ -706,13 +716,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     @let active = activePilar()?.id === pilar.id;
                     <button
                       type="button"
+                      appM3Chip
+                      tone="light"
+                      [active]="active"
                       (click)="selectPilar(pilar.id)"
                       [attr.aria-pressed]="active"
-                      [class]="
-                        active
-                          ? 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center gap-2 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:min-h-[40px] sm:text-[14px]'
-                          : 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center gap-2 border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5] sm:min-h-[40px] sm:text-[14px]'
-                      "
+                      class="inline-flex min-h-[44px] items-center gap-2 px-4 py-1.5 text-[13px] sm:min-h-[40px] sm:text-[14px]"
                     >
                       <span>{{ pilar.label }}</span>
                     </button>
@@ -817,25 +826,23 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     >
                       <button
                         type="button"
+                        appM3Chip
+                        tone="light"
+                        [active]="entornoMode() === 'a-pe'"
                         (click)="setEntornoMode('a-pe')"
                         [attr.aria-pressed]="entornoMode() === 'a-pe'"
-                        [class]="
-                          entornoMode() === 'a-pe'
-                            ? 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:min-h-[38px]'
-                            : 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5] sm:min-h-[38px]'
-                        "
+                        class="inline-flex min-h-[44px] items-center px-4 py-1.5 text-[13px] sm:min-h-[38px]"
                       >
                         A pé
                       </button>
                       <button
                         type="button"
+                        appM3Chip
+                        tone="light"
+                        [active]="entornoMode() === 'carro'"
                         (click)="setEntornoMode('carro')"
                         [attr.aria-pressed]="entornoMode() === 'carro'"
-                        [class]="
-                          entornoMode() === 'carro'
-                            ? 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:min-h-[38px]'
-                            : 'terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5] sm:min-h-[38px]'
-                        "
+                        class="inline-flex min-h-[44px] items-center px-4 py-1.5 text-[13px] sm:min-h-[38px]"
                       >
                         De carro
                       </button>
@@ -974,7 +981,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [href]="specialConditionsWhatsappHref()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="terraco-m3-tonal-btn inline-flex min-h-[44px] items-center justify-center border border-border-strong/40 bg-canvas px-6 py-2.5 text-[14px] font-medium text-[#1C1B19] hover:bg-elevated"
+                    appM3Button
+                    variant="tonal"
+                    class="inline-flex min-h-[44px] items-center justify-center border border-border-strong/40 bg-canvas px-6 py-2.5 text-[14px] hover:bg-elevated"
                   >
                     Solicitar tabela atualizada no WhatsApp
                   </a>
@@ -1017,8 +1026,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                   <button
                     type="button"
+                    appM3Button
+                    variant="outline"
                     (click)="openLightbox(0)"
-                    class="terraco-m3-tonal-btn inline-flex min-h-[44px] w-fit shrink-0 cursor-pointer items-center gap-2 border border-border-strong/70 bg-surface/80 px-4 py-1.5 text-[13px] font-medium text-ink hover:bg-surface tabular-nums sm:min-h-[40px]"
+                    class="inline-flex min-h-[44px] w-fit shrink-0 items-center gap-2 px-4 py-1.5 text-[13px] tabular-nums sm:min-h-[40px]"
                   >
                     Ver todas as {{ galleryImages().length }} fotos
                   </button>
@@ -1136,13 +1147,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   @let active = selectedIntent() === option.key;
                   <button
                     type="button"
+                    appM3Chip
+                    tone="dark"
+                    [active]="active"
                     (click)="selectIntent(option.key)"
                     [attr.aria-pressed]="active"
-                    [class]="
-                      active
-                        ? 'terraco-m3-chip inline-flex min-h-[44px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/75 bg-ink-inverse/16 px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:min-h-[42px] sm:text-[14px]'
-                        : 'terraco-m3-chip inline-flex min-h-[44px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:min-h-[42px] sm:text-[14px]'
-                    "
+                    class="inline-flex min-h-[44px] w-auto items-center gap-2 px-4 py-2 text-left text-[13px] leading-[1.3] sm:min-h-[42px] sm:text-[14px]"
                   >
                     @if (active) {
                       <span
@@ -1169,7 +1179,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   [href]="whatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="terraco-btn mt-5 inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+                  appM3Button
+                  variant="primary"
+                  class="mt-5 inline-flex min-h-[46px] w-fit items-center justify-center px-6 py-2.5 text-[14px] leading-[1.35]"
                 >
                   Abrir WhatsApp com esta mensagem
                 </a>

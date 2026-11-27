@@ -40,14 +40,17 @@
   --shadow-floating: 0 16px 40px rgba(28, 27, 25, 0.08);
 
   /* Movimento (M3 Expressive) */
-  --ease-expressive: cubic-bezier(0.2, 0, 0, 1);
+  --ease-expressive: cubic-bezier(0.32, 1.48, 0.42, 1);
+  --ease-expressive-return: cubic-bezier(0.2, 0, 0, 1);
   --ease-emphasized: cubic-bezier(0.3, 0, 0.2, 1);
   --duration-fast: 150ms;
   --duration-normal: 250ms;
   --duration-slow: 400ms;
-  --duration-spring-fast: 280ms;
-  --scale-press: 0.97;
+  --duration-spring-fast: 320ms;
+  --scale-press: 0.95;
+  --scale-press-chip: 0.94;
   --scale-press-icon: 0.94;
+  --scale-active-chip: 1.02;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -57,6 +60,8 @@
     --duration-slow: 0ms;
     --duration-spring-fast: 0ms;
     --scale-press: 1;
+    --scale-press-chip: 1;
     --scale-press-icon: 1;
+    --scale-active-chip: 1;
   }
 }

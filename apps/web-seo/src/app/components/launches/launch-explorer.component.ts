@@ -15,6 +15,10 @@ import { LancamentosService, buildWhatsAppUrl } from '../../core';
 import { BAIRROS_BH, type BairroGuide } from '../../core/bairros.data';
 import { M3SearchBarComponent } from '../shared/m3-search-bar.component';
 import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../shared/m3-tactile.directives';
+import {
   type JourneyDestination,
   NextJourneyComponent,
 } from '../shared/next-journey.component';
@@ -37,6 +41,8 @@ const TIPOLOGIA_FILTERS = [
     Option,
     LaunchCardComponent,
     LaunchCardSkeletonComponent,
+    M3ButtonDirective,
+    M3ChipDirective,
     M3SearchBarComponent,
     NextJourneyComponent,
   ],
@@ -261,11 +267,14 @@ const TIPOLOGIA_FILTERS = [
                   @if (objetivoFilter(); as objetivo) {
                     <button
                       type="button"
+                      appM3Chip
+                      tone="brand"
+                      [active]="true"
                       (click)="clearObjetivo()"
                       [attr.aria-label]="
                         'Remover filtro de objetivo ' + objetivo
                       "
-                      class="terraco-m3-chip terraco-m3-chip--active inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 border border-brand/35 bg-[#E5F2EC] px-4 py-1.5 text-[13px] font-medium text-[#1F6F50] sm:min-h-[40px]"
+                      class="inline-flex min-h-[44px] items-center gap-1.5 px-4 py-1.5 text-[13px] sm:min-h-[40px]"
                     >
                       <span>Objetivo: {{ objetivo }}</span>
                       <span aria-hidden="true">×</span>
@@ -275,8 +284,11 @@ const TIPOLOGIA_FILTERS = [
                   @if (hasActiveFilters()) {
                     <button
                       type="button"
+                      appM3Chip
+                      tone="brand"
+                      [active]="false"
                       (click)="clearFilters()"
-                      class="terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 border border-border-subtle bg-surface px-3.5 py-1.5 text-[13px] font-medium text-ink-muted hover:border-border-strong hover:text-ink sm:min-h-[40px]"
+                      class="inline-flex min-h-[44px] items-center gap-1.5 px-3.5 py-1.5 text-[13px] text-ink-muted hover:text-ink sm:min-h-[40px]"
                     >
                       <span>Limpar filtros</span>
                       <span aria-hidden="true">×</span>
@@ -442,7 +454,9 @@ const TIPOLOGIA_FILTERS = [
               [href]="whatsappConciergeHref()"
               target="_blank"
               rel="noopener noreferrer"
-              class="terraco-btn inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+              appM3Button
+              variant="primary"
+              class="inline-flex min-h-[46px] w-fit items-center justify-center px-6 py-2.5 text-[14px] leading-[1.35]"
             >
               Falar no WhatsApp sobre meu perfil
             </a>
@@ -712,11 +726,7 @@ export class LaunchExplorerComponent {
   }
 
   selectTipologia(tipologia: string): void {
-    const next =
-      this.tipologiaFilter().toLowerCase() === tipologia.toLowerCase() &&
-      tipologia !== 'Todas'
-        ? 'Todas'
-        : tipologia;
+    const next = tipologia.trim() || 'Todas';
     this.lancamentosService.setTipologiaFilter(next);
     this.syncQueryParams({ tipologia: next === 'Todas' ? '' : next });
   }

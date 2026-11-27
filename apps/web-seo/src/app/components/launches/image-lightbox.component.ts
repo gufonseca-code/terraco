@@ -14,9 +14,11 @@ import {
   viewChild,
 } from '@angular/core';
 import type { LaunchMediaItem } from '../../core';
+import { M3ButtonDirective } from '../shared/m3-tactile.directives';
 
 @Component({
   selector: 'app-image-lightbox',
+  imports: [M3ButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:keydown)': 'onKeydown($event)',
@@ -43,9 +45,11 @@ import type { LaunchMediaItem } from '../../core';
           <button
             #closeButton
             type="button"
+            appM3Button
+            variant="icon"
             (click)="close()"
             aria-label="Fechar galeria"
-            class="terraco-m3-icon-btn inline-flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center border border-ink-inverse/20 bg-ink/60 px-3 text-[13px] font-medium text-ink-inverse hover:border-ink-inverse/40 hover:bg-ink"
+            class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center border border-ink-inverse/20 bg-ink/60 px-3 text-[13px] font-medium text-ink-inverse hover:border-ink-inverse/40 hover:bg-ink"
           >
             <svg
               aria-hidden="true"
@@ -70,9 +74,11 @@ import type { LaunchMediaItem } from '../../core';
           @if (hasMultiple()) {
             <button
               type="button"
+              appM3Button
+              variant="icon"
               (click)="previous()"
               aria-label="Imagem anterior"
-              class="terraco-m3-icon-btn absolute left-0 z-10 inline-flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center border border-ink-inverse/20 bg-ink/70 text-ink-inverse hover:border-ink-inverse/45 hover:bg-ink sm:left-2"
+              class="absolute left-0 z-10 inline-flex min-h-[44px] min-w-[44px] items-center justify-center border border-ink-inverse/20 bg-ink/70 text-ink-inverse hover:border-ink-inverse/45 hover:bg-ink sm:left-2"
             >
               <svg
                 aria-hidden="true"
@@ -105,9 +111,11 @@ import type { LaunchMediaItem } from '../../core';
           @if (hasMultiple()) {
             <button
               type="button"
+              appM3Button
+              variant="icon"
               (click)="next()"
               aria-label="Próxima imagem"
-              class="terraco-m3-icon-btn absolute right-0 z-10 inline-flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center border border-ink-inverse/20 bg-ink/70 text-ink-inverse hover:border-ink-inverse/45 hover:bg-ink sm:right-2"
+              class="absolute right-0 z-10 inline-flex min-h-[44px] min-w-[44px] items-center justify-center border border-ink-inverse/20 bg-ink/70 text-ink-inverse hover:border-ink-inverse/45 hover:bg-ink sm:right-2"
             >
               <svg
                 aria-hidden="true"

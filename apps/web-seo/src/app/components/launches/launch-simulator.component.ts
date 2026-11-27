@@ -14,6 +14,10 @@ import {
   formatCurrencyBRL,
   type Lancamento,
 } from '../../core';
+import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../shared/m3-tactile.directives';
 
 const MIN_PROPERTY_VALUE = 300_000;
 const MAX_PROPERTY_VALUE = 2_000_000;
@@ -49,6 +53,7 @@ function resolveInitialPropertyValue(item: Lancamento): number {
 
 @Component({
   selector: 'app-launch-simulator',
+  imports: [M3ButtonDirective, M3ChipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block',
@@ -176,13 +181,12 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               @for (percent of downPaymentPresets; track percent) {
                 <button
                   type="button"
+                  appM3Chip
+                  tone="canvas"
+                  [active]="downPaymentPercent() === percent"
                   (click)="selectDownPaymentPercent(percent)"
                   [attr.aria-pressed]="downPaymentPercent() === percent"
-                  [class]="
-                    downPaymentPercent() === percent
-                      ? 'terraco-m3-chip flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip sm:min-h-[42px]'
-                      : 'terraco-m3-chip flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong sm:min-h-[42px]'
-                  "
+                  class="flex min-h-[44px] flex-1 items-center justify-center border px-3 py-1.5 text-[13px] leading-[1.3] tabular-nums sm:min-h-[42px]"
                 >
                   {{ percent }}%
                 </button>
@@ -205,13 +209,12 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               @for (preset of fgtsPresets; track preset.value) {
                 <button
                   type="button"
+                  appM3Chip
+                  tone="canvas"
+                  [active]="clampedFgts() === preset.value"
                   (click)="selectFgtsAmount(preset.value)"
                   [attr.aria-pressed]="clampedFgts() === preset.value"
-                  [class]="
-                    clampedFgts() === preset.value
-                      ? 'terraco-m3-chip flex min-h-[44px] cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip sm:min-h-[42px]'
-                      : 'terraco-m3-chip flex min-h-[44px] cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong sm:min-h-[42px]'
-                  "
+                  class="flex min-h-[44px] items-center justify-center border px-3 py-1.5 text-[13px] leading-[1.3] tabular-nums sm:min-h-[42px]"
                 >
                   {{ preset.label }}
                 </button>
@@ -229,13 +232,12 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               @for (years of termYearPresets; track years) {
                 <button
                   type="button"
+                  appM3Chip
+                  tone="canvas"
+                  [active]="termYears() === years"
                   (click)="selectTermYears(years)"
                   [attr.aria-pressed]="termYears() === years"
-                  [class]="
-                    termYears() === years
-                      ? 'terraco-m3-chip flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-ink bg-ink px-3 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse tabular-nums shadow-chip sm:min-h-[42px]'
-                      : 'terraco-m3-chip flex min-h-[44px] flex-1 cursor-pointer items-center justify-center border border-border-subtle bg-canvas px-3 py-1.5 text-[13px] font-normal leading-[1.3] text-ink tabular-nums hover:border-border-strong sm:min-h-[42px]'
-                  "
+                  class="flex min-h-[44px] flex-1 items-center justify-center border px-3 py-1.5 text-[13px] leading-[1.3] tabular-nums sm:min-h-[42px]"
                 >
                   {{ years }} anos
                 </button>
@@ -297,8 +299,10 @@ function resolveInitialPropertyValue(item: Lancamento): number {
               [href]="whatsappSimulationHref()"
               target="_blank"
               rel="noopener noreferrer"
+              appM3Button
+              variant="tonal"
               data-testid="simulator-whatsapp-cta"
-              class="terraco-m3-tonal-btn flex min-h-[46px] w-full items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-center text-[13px] font-medium leading-[1.35] text-[#1C1B19] hover:bg-[#EAE3D5]"
+              class="flex min-h-[46px] w-full items-center justify-center px-5 py-2.5 text-center text-[13px] leading-[1.35]"
             >
               Enviar simulação no WhatsApp
             </a>
