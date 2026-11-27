@@ -15,8 +15,9 @@ import {
   NextJourneyComponent,
 } from '../components/shared/next-journey.component';
 import {
-  BAIRROS_BH,
   type BairroGuide,
+  type BairroMedia,
+  BairrosService,
   type Lancamento,
   LancamentosService,
   SeoService,
@@ -33,14 +34,6 @@ type BairroFilterId =
 interface BairroFilterOption {
   readonly id: BairroFilterId;
   readonly label: string;
-}
-
-interface BairroMedia {
-  readonly url: string;
-  readonly alt: string;
-  readonly width: number;
-  readonly height: number;
-  readonly caption: string;
 }
 
 interface BairroIndexRow {
@@ -153,9 +146,8 @@ function resolveBairroMedia(
   directMatches: readonly Lancamento[],
   nearbyMatches: readonly Lancamento[]
 ): BairroMedia | null {
-  const curated = CURATED_BAIRRO_MEDIA[bairro.slug];
-  if (curated) {
-    return curated;
+  if (bairro.media?.url) {
+    return bairro.media;
   }
 
   const reference = directMatches[0] ?? nearbyMatches[0];
@@ -514,9 +506,10 @@ function resolveBairroMedia(
 })
 export class BairrosPageComponent implements OnInit {
   private readonly lancamentosService = inject(LancamentosService);
+  private readonly bairrosService = inject(BairrosService);
   private readonly seoService = inject(SeoService);
 
-  readonly bairros = BAIRROS_BH;
+  readonly bairros = this.bairrosService.bairros;
   readonly filters = BAIRRO_FILTERS;
   readonly decisionProfiles = DECISION_PROFILES;
   readonly nextDestinations = BAIRROS_NEXT_DESTINATIONS;
@@ -526,7 +519,7 @@ export class BairrosPageComponent implements OnInit {
 
   readonly bairroRows = computed<readonly BairroIndexRow[]>(() => {
     const allLaunches = this.lancamentosService.lancamentos();
-    return this.bairros.map((bairro) => {
+    return this.bairros().map((bairro) => {
       const directMatches = allLaunches.filter((item) =>
         bairro.matchBairros.some(
           (name) => name.toLowerCase() === item.bairro.trim().toLowerCase()
@@ -605,7 +598,7 @@ export class BairrosPageComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    this.seoService.updateBairrosIndexMeta(this.bairros);
+    this.seoService.updateBairrosIndexMeta(this.bairros());
   }
 
   setFilter(id: BairroFilterId): void {

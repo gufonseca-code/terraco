@@ -22,15 +22,14 @@ import {
 } from '../components/shared/next-journey.component';
 import { SectionHandoffComponent } from '../components/shared/section-handoff.component';
 import {
-  BAIRROS_BH,
   type BairroGuide,
+  BairrosService,
   type Lancamento,
   LancamentosService,
   SITE_NAME,
   SITE_URL,
   SeoService,
   buildWhatsAppUrl,
-  getBairroBySlug,
 } from '../core';
 import { NotFoundPageComponent } from './not-found.page';
 
@@ -599,6 +598,7 @@ function buildBairroJsonLd(
 export class BairroDetailPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly lancamentosService = inject(LancamentosService);
+  private readonly bairrosService = inject(BairrosService);
   private readonly seoService = inject(SeoService);
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
@@ -618,7 +618,9 @@ export class BairroDetailPageComponent {
     );
   });
 
-  readonly bairro = computed(() => getBairroBySlug(this.resolvedSlug()));
+  readonly bairro = computed(() =>
+    this.bairrosService.getBySlug(this.resolvedSlug())
+  );
 
   readonly editorialPillars = computed<readonly EditorialPillar[]>(() => {
     const current = this.bairro();
@@ -668,7 +670,9 @@ export class BairroDetailPageComponent {
 
   readonly otherBairros = computed<BairroGuide[]>(() => {
     const current = this.bairro();
-    return BAIRROS_BH.filter((item) => item.slug !== current?.slug);
+    return this.bairrosService
+      .bairros()
+      .filter((item) => item.slug !== current?.slug);
   });
 
   readonly bairroWhatsappHref = computed(() => {

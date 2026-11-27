@@ -26,8 +26,10 @@ const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, '..');
 
 const CATALOG_PATH = path.join(ROOT_DIR, 'scripts/seed-launches.json');
+const BAIRROS_PATH = path.join(ROOT_DIR, 'scripts/seed-bairros.json');
 const MANIFEST_PATH = path.join(ROOT_DIR, 'scripts/media-manifest.json');
 const COLLECTION_NAME = 'launches';
+const BAIRROS_COLLECTION_NAME = 'bairros';
 
 function parseArgs(argv) {
   const args = {
@@ -116,48 +118,106 @@ function ensureWebpUrl(url, slug) {
   return url;
 }
 
-function buildLaunchDocument(raw, index, mediaEntry, useStorageUrls) {
+function buildFirebaseStoragePublicUrl(bucket, storagePath) {
+  return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(storagePath)}?alt=media`;
+}
+
+function buildManifestLocalPathIndex(manifest) {
+  const index = new Map();
+  if (!manifest?.launches) return index;
+  for (const [slug, entry] of Object.entries(manifest.launches)) {
+    const records = [
+      entry?.cover,
+      ...(Array.isArray(entry?.gallery) ? entry.gallery : []),
+      ...(Array.isArray(entry?.plantas) ? entry.plantas : []),
+    ].filter(Boolean);
+    for (const rec of records) {
+      if (rec.localPath && rec.publicUrl) {
+        index.set(rec.localPath, rec);
+      } else if (rec.storagePath && rec.publicUrl) {
+        const filename = path.posix.basename(rec.storagePath);
+        index.set(`/images/lancamentos/${slug}/${filename}`, rec);
+      }
+    }
+  }
+  return index;
+}
+
+function resolveMediaUrl(localOrRemoteUrl, manifestIndex, bucket, useStorageUrls) {
+  if (!localOrRemoteUrl || typeof localOrRemoteUrl !== 'string') {
+    return { url: localOrRemoteUrl, record: null };
+  }
+  if (!useStorageUrls || /^https?:\/\//i.test(localOrRemoteUrl)) {
+    return { url: localOrRemoteUrl, record: null };
+  }
+
+  const fromManifest = manifestIndex.get(localOrRemoteUrl);
+  if (fromManifest?.publicUrl) {
+    return { url: fromManifest.publicUrl, record: fromManifest };
+  }
+
+  const match = localOrRemoteUrl.match(/^\/images\/lancamentos\/([^/]+)\/(.+)$/);
+  if (match && bucket) {
+    const [, slug, filename] = match;
+    const storagePath = `launches/${slug}/images/${filename.replace(/\//g, '-')}`;
+    return {
+      url: buildFirebaseStoragePublicUrl(bucket, storagePath),
+      record: null,
+    };
+  }
+
+  return { url: localOrRemoteUrl, record: null };
+}
+
+function buildLaunchDocument(raw, index, mediaEntry, manifestIndex, bucket, useStorageUrls) {
   const slug = String(raw.slug || '').trim();
   if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
     throw new Error(`Invalid launch slug: "${raw.slug}"`);
   }
 
-  const coverFromManifest = useStorageUrls && mediaEntry?.cover ? mediaEntry.cover : null;
-  const imagem = ensureWebpUrl(coverFromManifest?.publicUrl ?? raw.imagem, slug);
+  const resolvedCover = resolveMediaUrl(raw.imagem, manifestIndex, bucket, useStorageUrls);
+  const coverFromManifest =
+    resolvedCover.record ?? (useStorageUrls && mediaEntry?.cover ? mediaEntry.cover : null);
+  const imagem = ensureWebpUrl(
+    resolvedCover.url ?? coverFromManifest?.publicUrl ?? raw.imagem,
+    slug
+  );
   const imagemWidth = coverFromManifest?.width ?? raw.imagemWidth;
   const imagemHeight = coverFromManifest?.height ?? raw.imagemHeight;
 
-  const galeria =
-    useStorageUrls && Array.isArray(mediaEntry?.gallery) && mediaEntry.gallery.length > 0
-      ? mediaEntry.gallery.map((g, i) => ({
-          url: ensureWebpUrl(g.publicUrl, slug),
-          alt: `${raw.nome} — foto ${i + 1}`,
-          width: g.width,
-          height: g.height,
-        }))
-      : Array.isArray(raw.galeria)
-        ? raw.galeria.map((g) => ({
-            ...g,
-            url: ensureWebpUrl(g.url, slug),
-          }))
-        : [];
+  const galeria = Array.isArray(raw.galeria)
+    ? raw.galeria.map((g) => {
+        const resolved = resolveMediaUrl(g.url, manifestIndex, bucket, useStorageUrls);
+        return stripUndefined({
+          url: ensureWebpUrl(resolved.url, slug),
+          alt: g.alt,
+          width: resolved.record?.width ?? g.width,
+          height: resolved.record?.height ?? g.height,
+        });
+      })
+    : [];
 
   const plantas = Array.isArray(raw.plantas)
-    ? raw.plantas.map((p) => ({
-        ...p,
-        imagem: ensureWebpUrl(p.imagem, slug),
-      }))
+    ? raw.plantas.map((p) => {
+        const resolved = resolveMediaUrl(p.imagem, manifestIndex, bucket, useStorageUrls);
+        return stripUndefined({
+          ...p,
+          imagem: ensureWebpUrl(resolved.url, slug),
+          width: resolved.record?.width ?? p.width,
+          height: resolved.record?.height ?? p.height,
+        });
+      })
     : [];
 
   const condicoesEspeciais = Array.isArray(raw.condicoesEspeciais)
     ? raw.condicoesEspeciais
     : [];
 
-  const bookUrl = useStorageUrls && mediaEntry?.bookUrl ? mediaEntry.bookUrl : undefined;
+  const bookUrl = useStorageUrls && mediaEntry?.bookUrl ? mediaEntry.bookUrl : raw.bookUrl;
   const plantasUrls =
     useStorageUrls && Array.isArray(mediaEntry?.plantasUrls) && mediaEntry.plantasUrls.length > 0
       ? mediaEntry.plantasUrls
-      : undefined;
+      : raw.plantasUrls;
 
   const doc = stripUndefined({
     slug,
@@ -168,6 +228,9 @@ function buildLaunchDocument(raw, index, mediaEntry, useStorageUrls) {
     cidade: raw.cidade,
     uf: raw.uf,
     endereco: raw.endereco,
+    estrutura: raw.estrutura,
+    projetos: raw.projetos,
+    registro: raw.registro,
     badge: raw.badge,
     tags: Array.isArray(raw.tags) ? raw.tags : [],
     quartos: raw.quartos,
@@ -175,6 +238,7 @@ function buildLaunchDocument(raw, index, mediaEntry, useStorageUrls) {
     tipologias: raw.tipologias,
     vagas: raw.vagas,
     precoAPartirDe: typeof raw.precoAPartirDe === 'number' ? raw.precoAPartirDe : undefined,
+    entradaMinima: typeof raw.entradaMinima === 'number' ? raw.entradaMinima : undefined,
     entrega: raw.entrega,
     resumo: raw.resumo,
     corCapa: raw.corCapa,
@@ -183,17 +247,63 @@ function buildLaunchDocument(raw, index, mediaEntry, useStorageUrls) {
     imagemHeight,
     imagemAlt: raw.imagemAlt,
     diferenciais: Array.isArray(raw.diferenciais) ? raw.diferenciais : [],
-    condicoesEspeciais,
+    pilares: Array.isArray(raw.pilares) && raw.pilares.length > 0 ? raw.pilares : undefined,
+    entorno: Array.isArray(raw.entorno) && raw.entorno.length > 0 ? raw.entorno : undefined,
+    condicoesEspeciais: condicoesEspeciais.length > 0 ? condicoesEspeciais : undefined,
     whatsappMensagem: raw.whatsappMensagem,
     galeria,
     plantas,
     bookUrl,
     plantasUrls,
-    published: true,
-    order: index,
+    published: raw.published ?? true,
+    order: typeof raw.order === 'number' ? raw.order : index,
   });
 
   assertNoBinaryOrBase64(doc, `${COLLECTION_NAME}/${slug}`);
+  return doc;
+}
+
+function buildBairroDocument(raw, index, manifestIndex, bucket, useStorageUrls) {
+  const slug = String(raw.slug || '').trim().toLowerCase();
+  if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
+    throw new Error(`Invalid bairro slug: "${raw.slug}"`);
+  }
+
+  let media = raw.media;
+  if (media?.url) {
+    const resolved = resolveMediaUrl(media.url, manifestIndex, bucket, useStorageUrls);
+    media = stripUndefined({
+      ...media,
+      url: ensureWebpUrl(resolved.url, slug),
+      width: resolved.record?.width ?? media.width,
+      height: resolved.record?.height ?? media.height,
+    });
+  }
+
+  const doc = stripUndefined({
+    slug,
+    nome: raw.nome,
+    regiao: raw.regiao,
+    cidade: raw.cidade,
+    uf: raw.uf,
+    tituloSeo: raw.tituloSeo,
+    descricaoSeo: raw.descricaoSeo,
+    resumo: raw.resumo,
+    mobilidade: raw.mobilidade,
+    servicos: raw.servicos,
+    perfilImoveis: raw.perfilImoveis,
+    matchBairros: Array.isArray(raw.matchBairros) ? raw.matchBairros : [],
+    nearbyBairros:
+      Array.isArray(raw.nearbyBairros) && raw.nearbyBairros.length > 0
+        ? raw.nearbyBairros
+        : undefined,
+    media,
+    faqs: Array.isArray(raw.faqs) ? raw.faqs : [],
+    published: raw.published ?? true,
+    order: typeof raw.order === 'number' ? raw.order : index,
+  });
+
+  assertNoBinaryOrBase64(doc, `${BAIRROS_COLLECTION_NAME}/${slug}`);
   return doc;
 }
 
@@ -213,21 +323,47 @@ async function main() {
   const manifest = await loadMediaManifest();
   const shouldUseStorageUrls =
     args.useStorageUrls || (manifest && manifest.mode && manifest.mode !== 'local');
+  const bucket = manifest?.bucket || `${projectId}.firebasestorage.app`;
+  const manifestIndex = buildManifestLocalPathIndex(manifest);
 
   const docs = launches.map((item, idx) => {
     const mediaEntry = manifest?.launches?.[item.slug] ?? null;
-    return buildLaunchDocument(item, idx, mediaEntry, Boolean(shouldUseStorageUrls));
+    return buildLaunchDocument(
+      item,
+      idx,
+      mediaEntry,
+      manifestIndex,
+      bucket,
+      Boolean(shouldUseStorageUrls)
+    );
   });
 
+  const bairrosRaw = existsSync(BAIRROS_PATH)
+    ? JSON.parse(await readFile(BAIRROS_PATH, 'utf8'))
+    : [];
+  const bairroDocs = Array.isArray(bairrosRaw)
+    ? bairrosRaw.map((item, idx) =>
+        buildBairroDocument(
+          item,
+          idx,
+          manifestIndex,
+          bucket,
+          Boolean(shouldUseStorageUrls)
+        )
+      )
+    : [];
+
   console.log(
-    `[firestore:seed] Prepared ${docs.length} launch document(s) for project "${projectId}" (database: ${args.databaseId}, storageUrls: ${Boolean(shouldUseStorageUrls)}).`
+    `[firestore:seed] Prepared ${docs.length} launch doc(s) and ${bairroDocs.length} bairro doc(s) for project "${projectId}" (database: ${args.databaseId}, storageUrls: ${Boolean(shouldUseStorageUrls)}, bucket: ${bucket}).`
   );
 
   if (args.dryRun) {
     console.log('[firestore:seed] DRY-RUN mode — no writes performed. Payloads:');
     for (const doc of docs) {
-      console.log(`  -> ${COLLECTION_NAME}/${doc.slug}`);
-      console.log(JSON.stringify(doc, null, 2));
+      console.log(`  -> ${COLLECTION_NAME}/${doc.slug} (imagem: ${doc.imagem}, galeria: ${doc.galeria?.length ?? 0}, plantas: ${doc.plantas?.length ?? 0})`);
+    }
+    for (const doc of bairroDocs) {
+      console.log(`  -> ${BAIRROS_COLLECTION_NAME}/${doc.slug} (media: ${doc.media?.url ?? 'none'})`);
     }
     return;
   }
@@ -256,13 +392,24 @@ async function main() {
       { merge: true }
     );
   }
+  for (const doc of bairroDocs) {
+    const ref = db.collection(BAIRROS_COLLECTION_NAME).doc(doc.slug);
+    batch.set(
+      ref,
+      {
+        ...doc,
+        updatedAt: FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+  }
 
   await batch.commit();
   const target = process.env.FIRESTORE_EMULATOR_HOST
     ? `emulator (${process.env.FIRESTORE_EMULATOR_HOST})`
     : `production (${projectId}/${args.databaseId})`;
   console.log(
-    `[firestore:seed] Successfully upserted ${docs.length} document(s) to ${COLLECTION_NAME} in ${target}: ${docs.map((d) => d.slug).join(', ')}`
+    `[firestore:seed] Successfully upserted ${docs.length} launch(es) and ${bairroDocs.length} bairro(s) in ${target}: launches=[${docs.map((d) => d.slug).join(', ')}], bairros=[${bairroDocs.map((d) => d.slug).join(', ')}]`
   );
 }
 

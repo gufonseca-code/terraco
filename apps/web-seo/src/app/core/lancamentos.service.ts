@@ -92,6 +92,21 @@ function serializeTimestamp(value: unknown): string | null | undefined {
   return undefined;
 }
 
+function pickNonEmptyString(
+  remote: unknown,
+  fallback?: string
+): string {
+  return typeof remote === 'string' && remote.trim().length > 0
+    ? remote
+    : (fallback ?? '');
+}
+
+function pickNonEmptyArray<T>(remote: unknown, fallback?: T[]): T[] {
+  return Array.isArray(remote) && remote.length > 0
+    ? (remote as T[])
+    : (fallback ?? []);
+}
+
 function normalizeLancamento(
   slug: string,
   raw: Record<string, unknown>
@@ -106,87 +121,108 @@ function normalizeLancamento(
       ? corCapaRaw
       : (canonical?.corCapa ?? 'moss');
 
-  if (canonical) {
-    return {
-      ...canonical,
-      ...(typeof raw['published'] === 'boolean'
-        ? { published: raw['published'] }
-        : {}),
-      ...(typeof raw['order'] === 'number' ? { order: raw['order'] } : {}),
-      ...(raw['updatedAt'] !== undefined
-        ? { updatedAt: serializeTimestamp(raw['updatedAt']) }
-        : {}),
-    };
-  }
+  const construtora = pickNonEmptyString(
+    raw['construtora'],
+    canonical?.construtora
+  ).trim();
+  const estrutura = pickNonEmptyString(raw['estrutura'], canonical?.estrutura);
+  const projetos = pickNonEmptyString(raw['projetos'], canonical?.projetos);
+  const registro = pickNonEmptyString(raw['registro'], canonical?.registro);
+  const entrega = pickNonEmptyString(raw['entrega'], canonical?.entrega);
+  const bookUrl = pickNonEmptyString(raw['bookUrl'], canonical?.bookUrl);
+
+  const pilares = pickNonEmptyArray<LaunchPilarGroup>(
+    raw['pilares'],
+    canonical?.pilares
+  );
+  const entorno = pickNonEmptyArray<LaunchEntornoItem>(
+    raw['entorno'],
+    canonical?.entorno
+  );
+  const condicoesEspeciais = pickNonEmptyArray<string>(
+    raw['condicoesEspeciais'],
+    canonical?.condicoesEspeciais
+  );
+  const galeria = pickNonEmptyArray<LaunchMediaItem>(
+    raw['galeria'],
+    canonical?.galeria
+  );
+  const plantas = pickNonEmptyArray<LaunchFloorPlan>(
+    raw['plantas'],
+    canonical?.plantas
+  );
+  const plantasUrls = pickNonEmptyArray<LaunchDocItem>(
+    raw['plantasUrls'],
+    canonical?.plantasUrls
+  );
+
+  const precoAPartirDe =
+    typeof raw['precoAPartirDe'] === 'number'
+      ? raw['precoAPartirDe']
+      : canonical?.precoAPartirDe;
+  const entradaMinima =
+    typeof raw['entradaMinima'] === 'number'
+      ? raw['entradaMinima']
+      : canonical?.entradaMinima;
 
   return {
     slug: resolvedSlug,
-    nome: String(raw['nome'] ?? ''),
-    ...(typeof raw['construtora'] === 'string' && raw['construtora'].trim()
-      ? { construtora: raw['construtora'].trim() }
-      : {}),
-    tagline: String(raw['tagline'] ?? ''),
-    bairro: String(raw['bairro'] ?? ''),
-    cidade: String(raw['cidade'] ?? ''),
-    uf: String(raw['uf'] ?? ''),
-    endereco: String(raw['endereco'] ?? ''),
-    ...(typeof raw['estrutura'] === 'string'
-      ? { estrutura: raw['estrutura'] }
-      : {}),
-    ...(typeof raw['projetos'] === 'string'
-      ? { projetos: raw['projetos'] }
-      : {}),
-    ...(typeof raw['registro'] === 'string'
-      ? { registro: raw['registro'] }
-      : {}),
-    badge: String(raw['badge'] ?? 'Lançamento'),
-    tags: Array.isArray(raw['tags']) ? raw['tags'].map(String) : [],
-    quartos: String(raw['quartos'] ?? ''),
-    metragem: String(raw['metragem'] ?? ''),
-    tipologias: String(raw['tipologias'] ?? ''),
-    vagas: String(raw['vagas'] ?? ''),
-    ...(typeof raw['precoAPartirDe'] === 'number'
-      ? { precoAPartirDe: raw['precoAPartirDe'] }
-      : {}),
-    ...(typeof raw['entradaMinima'] === 'number'
-      ? { entradaMinima: raw['entradaMinima'] }
-      : {}),
-    ...(typeof raw['entrega'] === 'string' ? { entrega: raw['entrega'] } : {}),
-    resumo: String(raw['resumo'] ?? ''),
+    nome: pickNonEmptyString(raw['nome'], canonical?.nome),
+    ...(construtora ? { construtora } : {}),
+    tagline: pickNonEmptyString(raw['tagline'], canonical?.tagline),
+    bairro: pickNonEmptyString(raw['bairro'], canonical?.bairro),
+    cidade: pickNonEmptyString(raw['cidade'], canonical?.cidade),
+    uf: pickNonEmptyString(raw['uf'], canonical?.uf),
+    endereco: pickNonEmptyString(raw['endereco'], canonical?.endereco),
+    ...(estrutura ? { estrutura } : {}),
+    ...(projetos ? { projetos } : {}),
+    ...(registro ? { registro } : {}),
+    badge: pickNonEmptyString(raw['badge'], canonical?.badge || 'Lançamento'),
+    tags: pickNonEmptyArray<string>(raw['tags'], canonical?.tags).map(String),
+    quartos: pickNonEmptyString(raw['quartos'], canonical?.quartos),
+    metragem: pickNonEmptyString(raw['metragem'], canonical?.metragem),
+    tipologias: pickNonEmptyString(raw['tipologias'], canonical?.tipologias),
+    vagas: pickNonEmptyString(raw['vagas'], canonical?.vagas),
+    ...(typeof precoAPartirDe === 'number' ? { precoAPartirDe } : {}),
+    ...(typeof entradaMinima === 'number' ? { entradaMinima } : {}),
+    ...(entrega ? { entrega } : {}),
+    resumo: pickNonEmptyString(raw['resumo'], canonical?.resumo),
     corCapa,
-    imagem: String(raw['imagem'] ?? ''),
+    imagem: pickNonEmptyString(raw['imagem'], canonical?.imagem),
     imagemWidth:
-      typeof raw['imagemWidth'] === 'number' ? raw['imagemWidth'] : 1024,
+      typeof raw['imagemWidth'] === 'number'
+        ? raw['imagemWidth']
+        : (canonical?.imagemWidth ?? 1024),
     imagemHeight:
-      typeof raw['imagemHeight'] === 'number' ? raw['imagemHeight'] : 614,
-    imagemAlt: String(raw['imagemAlt'] ?? ''),
-    diferenciais: Array.isArray(raw['diferenciais'])
-      ? raw['diferenciais'].map(String)
-      : [],
-    ...(Array.isArray(raw['pilares'])
-      ? { pilares: raw['pilares'] as LaunchPilarGroup[] }
-      : {}),
-    ...(Array.isArray(raw['entorno'])
-      ? { entorno: raw['entorno'] as LaunchEntornoItem[] }
-      : {}),
-    ...(Array.isArray(raw['condicoesEspeciais'])
-      ? { condicoesEspeciais: raw['condicoesEspeciais'].map(String) }
-      : {}),
-    whatsappMensagem: String(raw['whatsappMensagem'] ?? ''),
-    ...(Array.isArray(raw['galeria'])
-      ? { galeria: raw['galeria'] as LaunchMediaItem[] }
-      : {}),
-    ...(Array.isArray(raw['plantas'])
-      ? { plantas: raw['plantas'] as LaunchFloorPlan[] }
-      : {}),
-    ...(typeof raw['bookUrl'] === 'string' ? { bookUrl: raw['bookUrl'] } : {}),
-    ...(Array.isArray(raw['plantasUrls'])
-      ? { plantasUrls: raw['plantasUrls'] as LaunchDocItem[] }
-      : {}),
+      typeof raw['imagemHeight'] === 'number'
+        ? raw['imagemHeight']
+        : (canonical?.imagemHeight ?? 614),
+    imagemAlt: pickNonEmptyString(raw['imagemAlt'], canonical?.imagemAlt),
+    diferenciais: pickNonEmptyArray<string>(
+      raw['diferenciais'],
+      canonical?.diferenciais
+    ).map(String),
+    ...(pilares.length > 0 ? { pilares } : {}),
+    ...(entorno.length > 0 ? { entorno } : {}),
+    ...(condicoesEspeciais.length > 0 ? { condicoesEspeciais } : {}),
+    whatsappMensagem: pickNonEmptyString(
+      raw['whatsappMensagem'],
+      canonical?.whatsappMensagem
+    ),
+    ...(galeria.length > 0 ? { galeria } : {}),
+    ...(plantas.length > 0 ? { plantas } : {}),
+    ...(bookUrl ? { bookUrl } : {}),
+    ...(plantasUrls.length > 0 ? { plantasUrls } : {}),
     ...(typeof raw['published'] === 'boolean'
       ? { published: raw['published'] }
-      : {}),
-    ...(typeof raw['order'] === 'number' ? { order: raw['order'] } : {}),
+      : canonical?.published !== undefined
+        ? { published: canonical.published }
+        : {}),
+    ...(typeof raw['order'] === 'number'
+      ? { order: raw['order'] }
+      : canonical?.order !== undefined
+        ? { order: canonical.order }
+        : {}),
     ...(raw['updatedAt'] !== undefined
       ? { updatedAt: serializeTimestamp(raw['updatedAt']) }
       : {}),

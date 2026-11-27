@@ -9,6 +9,7 @@
 
 export const FIRESTORE_COLLECTIONS = {
   LAUNCHES: 'launches',
+  BAIRROS: 'bairros',
   LEADS: 'leads',
 } as const;
 
@@ -38,12 +39,15 @@ export interface LaunchDocItem {
 export interface LaunchDocument {
   slug: string;
   nome: string;
-  construtora: string;
+  construtora?: string;
   tagline: string;
   bairro: string;
   cidade: string;
   uf: string;
   endereco: string;
+  estrutura?: string;
+  projetos?: string;
+  registro?: string;
   badge: string;
   tags: string[];
   quartos: string;
@@ -51,6 +55,7 @@ export interface LaunchDocument {
   tipologias: string;
   vagas: string;
   precoAPartirDe?: number;
+  entradaMinima?: number;
   entrega?: string;
   resumo: string;
   corCapa: 'moss' | 'ipe' | 'guava';
@@ -59,12 +64,43 @@ export interface LaunchDocument {
   imagemHeight: number;
   imagemAlt: string;
   diferenciais: string[];
+  pilares?: unknown[];
+  entorno?: unknown[];
+  condicoesEspeciais?: string[];
   whatsappMensagem: string;
   galeria?: LaunchMediaItem[];
+  plantas?: unknown[];
   bookUrl?: string;
   plantasUrls?: LaunchDocItem[];
   published: boolean;
   order: number;
+  updatedAt?: unknown;
+}
+
+export interface BairroDocument {
+  slug: string;
+  nome: string;
+  regiao: string;
+  cidade: string;
+  uf: string;
+  tituloSeo: string;
+  descricaoSeo: string;
+  resumo: string;
+  mobilidade: string;
+  servicos: string;
+  perfilImoveis: string;
+  matchBairros: string[];
+  nearbyBairros?: string[];
+  faqs: Array<{ pergunta: string; resposta: string }>;
+  media?: {
+    url: string;
+    alt: string;
+    width: number;
+    height: number;
+    caption: string;
+  };
+  published?: boolean;
+  order?: number;
   updatedAt?: unknown;
 }
 

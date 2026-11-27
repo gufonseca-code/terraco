@@ -319,12 +319,11 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:gap-3">
                     @for (
                       preview of heroSecondaryImages();
-                      track preview.url;
-                      let idx = $index
+                      track preview.url
                     ) {
                       <button
                         type="button"
-                        (click)="openLightbox(idx)"
+                        (click)="openLightboxForMedia(preview)"
                         [attr.aria-label]="'Ampliar foto: ' + preview.alt"
                         class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer transition-transform duration-200 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
                       >
@@ -1370,9 +1369,12 @@ export class PrimeViewLandingComponent {
     this.galleryImages().slice(0, 6)
   );
 
-  readonly heroSecondaryImages = computed<readonly LaunchMediaItem[]>(() =>
-    this.galleryImages().slice(0, 2)
-  );
+  readonly heroSecondaryImages = computed<readonly LaunchMediaItem[]>(() => {
+    const coverUrl = this.item().imagem;
+    return this.galleryImages()
+      .filter((media) => media.url !== coverUrl)
+      .slice(0, 2);
+  });
 
   readonly hasGallery = computed(() => this.galleryImages().length > 0);
 
@@ -1635,6 +1637,11 @@ export class PrimeViewLandingComponent {
     if (!this.hasGallery()) return;
     this.lightboxIndex.set(index);
     this.lightboxOpen.set(true);
+  }
+
+  openLightboxForMedia(media: LaunchMediaItem): void {
+    const idx = this.galleryImages().findIndex((item) => item.url === media.url);
+    this.openLightbox(idx >= 0 ? idx : 0);
   }
 
   closeLightbox(): void {

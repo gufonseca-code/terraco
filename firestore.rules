@@ -22,6 +22,9 @@ rules_version = '2';
 //   - cidade: string (required) - City
 //   - uf: string (required) - State abbreviation
 //   - endereco: string (required) - Street address
+//   - estrutura: string (optional) - Structural system details
+//   - projetos: string (optional) - Architectural/engineering project credits
+//   - registro: string (optional) - Legal/incorporation registration info
 //   - badge: string (required) - Status badge label
 //   - tags: list<string> (required) - Filter tags
 //   - quartos: string (required) - Bedroom summary
@@ -29,6 +32,7 @@ rules_version = '2';
 //   - tipologias: string (required) - Unit typologies
 //   - vagas: string (required) - Parking spaces summary
 //   - precoAPartirDe: number (optional) - Starting price in BRL
+//   - entradaMinima: number (optional) - Minimum down payment in BRL
 //   - entrega: string (optional) - Expected delivery date label
 //   - resumo: string (required) - Editorial description
 //   - corCapa: string (required) - Cover palette key ('moss' | 'ipe' | 'guava')
@@ -37,10 +41,39 @@ rules_version = '2';
 //   - imagemHeight: number (required) - Primary image height in px
 //   - imagemAlt: string (required) - Primary image alt text
 //   - diferenciais: list<string> (required) - Key highlights
+//   - pilares: list<map> (optional) - Architectural/concept pillars
+//   - entorno: list<map> (optional) - Nearby points of interest
+//   - condicoesEspeciais: list<string> (optional) - Special commercial conditions
 //   - whatsappMensagem: string (required) - Pre-filled WhatsApp message
 //   - galeria: list<map> (optional) - Gallery media items
+//   - plantas: list<map> (optional) - Floorplan metadata items
 //   - bookUrl: string (optional) - Brochure PDF URL
 //   - plantasUrls: list<map> (optional) - Floorplan document links
+//   - published: bool (optional) - Publication flag
+//   - order: number (optional) - Display sort order
+//   - updatedAt: timestamp | string | null (optional) - Last update marker
+//
+// Collection: bairros
+// Document ID: {slug} (URL-safe neighborhood identifier, e.g., "buritis")
+// Access: Public read-only catalog (contains no PII). All writes are
+//         performed exclusively via trusted server-side Firebase Admin SDK
+//         migration/sync scripts.
+// Fields (managed server-side):
+//   - slug: string (required) - URL slug matching document ID
+//   - nome: string (required) - Neighborhood display name
+//   - regiao: string (required) - City region
+//   - cidade: string (required) - City
+//   - uf: string (required) - State abbreviation
+//   - tituloSeo: string (required) - SEO page title
+//   - descricaoSeo: string (required) - SEO meta description
+//   - resumo: string (required) - Editorial neighborhood summary
+//   - mobilidade: string (required) - Mobility overview
+//   - servicos: string (required) - Services & amenities overview
+//   - perfilImoveis: string (required) - Real-estate profile overview
+//   - matchBairros: list<string> (required) - Matching neighborhood names/aliases
+//   - nearbyBairros: list<string> (optional) - Nearby neighborhood slugs
+//   - faqs: list<map> (required) - FAQ items ({ pergunta, resposta })
+//   - media: map (optional) - Cover media ({ url, alt, width, height, caption })
 //   - published: bool (optional) - Publication flag
 //   - order: number (optional) - Display sort order
 //   - updatedAt: timestamp | string | null (optional) - Last update marker
@@ -164,6 +197,13 @@ service cloud.firestore {
     // Public catalog of real-estate launches (read-only for clients;
     // writes occur exclusively via Firebase Admin SDK migration scripts).
     match /launches/{slug} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Public catalog of neighborhood guides (read-only for clients;
+    // writes occur exclusively via Firebase Admin SDK migration scripts).
+    match /bairros/{slug} {
       allow read: if true;
       allow write: if false;
     }
