@@ -30,7 +30,7 @@ export const SITE_CONTACT_CHANNELS: ContactChannelsConfig = {
     label: 'WhatsApp',
     description: 'Atendimento direto e sem burocracia',
     defaultMessage:
-      'Oi! Gostaria de conversar sobre os lançamentos da Terraço em BH.',
+      'Olá! Vim pelo site da Terraço e gostaria de conversar sobre os lançamentos em Belo Horizonte.',
   },
   email: {
     enabled: false,
