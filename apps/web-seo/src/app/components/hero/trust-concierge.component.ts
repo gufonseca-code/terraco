@@ -5,6 +5,10 @@ import {
   signal,
 } from '@angular/core';
 import { buildWhatsAppUrl } from '../../core';
+import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../shared/m3-tactile.directives';
 
 export type WhatsAppIntentId = 'plantas' | 'simulacao' | 'visita' | 'duvida';
 
@@ -70,6 +74,7 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
 
 @Component({
   selector: 'app-trust-concierge',
+  imports: [M3ButtonDirective, M3ChipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section
@@ -132,20 +137,13 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
                 @let active = selectedIntentId() === option.id;
                 <button
                   type="button"
+                  appM3Chip
+                  tone="dark"
+                  [active]="active"
                   (click)="selectIntent(option.id)"
                   [attr.aria-pressed]="active"
-                  [class]="
-                    active
-                      ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-ink-inverse/75 bg-ink-inverse/16 px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:min-h-[44px] sm:text-[14px]'
-                      : 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2.5 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:min-h-[44px] sm:text-[14px]'
-                  "
+                  class="inline-flex min-h-[44px] w-auto items-center px-4 py-2 text-left text-[13px] leading-[1.3] sm:text-[14px]"
                 >
-                  @if (active) {
-                    <span
-                      aria-hidden="true"
-                      class="h-2 w-2 shrink-0 rounded-full bg-accent"
-                    ></span>
-                  }
                   <span>{{ option.label }}</span>
                 </button>
               }
@@ -153,7 +151,8 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
 
             <div class="mt-6 border-t border-ink-inverse/15 pt-5 sm:mt-7 sm:pt-6">
               <p
-                class="max-w-[54ch] border-l-2 border-accent pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
+                data-testid="home-whatsapp-preview"
+                class="max-w-[54ch] border-l-2 border-highlight pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
               >
                 “{{ selectedIntent().message }}”
               </p>
@@ -162,7 +161,9 @@ const TRUST_PILLARS: readonly TrustPillar[] = [
                 [href]="whatsappHref()"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="terraco-btn mt-5 inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+                appM3Button
+                variant="primary"
+                class="mt-5 inline-flex min-h-[46px] w-fit items-center justify-center px-6 py-2.5 text-[14px] leading-[1.35]"
               >
                 Falar no WhatsApp
               </a>

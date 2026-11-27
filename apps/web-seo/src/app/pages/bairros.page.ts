@@ -11,6 +11,10 @@ import { RouterLink } from '@angular/router';
 import { BotanicalArchMotifComponent } from '../components/hero';
 import { FooterComponent, NavbarComponent } from '../components/layout';
 import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../components/shared/m3-tactile.directives';
+import {
   type JourneyDestination,
   NextJourneyComponent,
 } from '../components/shared/next-journey.component';
@@ -185,6 +189,8 @@ function resolveBairroMedia(
   imports: [
     NgOptimizedImage,
     RouterLink,
+    M3ButtonDirective,
+    M3ChipDirective,
     BotanicalArchMotifComponent,
     NavbarComponent,
     NextJourneyComponent,
@@ -250,13 +256,12 @@ function resolveBairroMedia(
                   @let active = selectedFilter() === filter.id;
                   <button
                     type="button"
+                    appM3Chip
+                    tone="light"
+                    [active]="active"
                     (click)="setFilter(filter.id)"
                     [attr.aria-pressed]="active"
-                    [class]="
-                      active
-                        ? 'terraco-m3-chip inline-flex min-h-[40px] w-auto cursor-pointer items-center gap-2 border border-ink bg-ink px-4 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:text-[14px]'
-                        : 'terraco-m3-chip inline-flex min-h-[40px] w-auto cursor-pointer items-center gap-2 border border-border-subtle bg-surface/80 px-4 py-1.5 text-[13px] font-normal leading-[1.3] text-ink hover:border-border-strong hover:bg-surface sm:text-[14px]'
-                    "
+                    class="inline-flex min-h-[44px] w-auto items-center gap-2 px-4 py-1.5 text-[13px] leading-[1.3] sm:min-h-[40px] sm:text-[14px]"
                   >
                     <span>{{ filter.label }}</span>
                     <span
@@ -450,20 +455,13 @@ function resolveBairroMedia(
                     @let active = selectedProfileId() === profile.id;
                     <button
                       type="button"
+                      appM3Chip
+                      tone="dark"
+                      [active]="active"
                       (click)="selectProfile(profile.id)"
                       [attr.aria-pressed]="active"
-                      [class]="
-                        active
-                          ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/75 bg-ink-inverse/16 px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:text-[14px]'
-                          : 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:text-[14px]'
-                      "
+                      class="inline-flex min-h-[44px] w-auto items-center px-4 py-2 text-left text-[13px] leading-[1.3] sm:min-h-[42px] sm:text-[14px]"
                     >
-                      @if (active) {
-                        <span
-                          aria-hidden="true"
-                          class="h-2 w-2 shrink-0 rounded-full bg-accent"
-                        ></span>
-                      }
                       <span>{{ profile.label }}</span>
                     </button>
                   }
@@ -473,7 +471,8 @@ function resolveBairroMedia(
                   class="mt-6 border-t border-ink-inverse/15 pt-5 sm:mt-7 sm:pt-6"
                 >
                   <p
-                    class="max-w-[56ch] border-l-2 border-accent pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
+                    data-testid="bairros-whatsapp-preview"
+                    class="max-w-[56ch] border-l-2 border-highlight pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
                   >
                     {{ selectedProfile().summary }}
                   </p>
@@ -482,7 +481,9 @@ function resolveBairroMedia(
                     [href]="decisionWhatsappHref()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="terraco-btn mt-5 inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+                    appM3Button
+                    variant="primary"
+                    class="mt-5 inline-flex min-h-[46px] w-fit items-center justify-center px-6 py-2.5 text-[14px] leading-[1.35]"
                   >
                     Comparar bairros no WhatsApp
                   </a>
