@@ -1206,7 +1206,7 @@ h4 {
 /* Degraus ascendentes reutilizáveis (60fps, GPU-composited via transform + opacity) */
 .terraco-stairs {
   --stairs-duration: 1050ms;
-  --stairs-ease: var(--ease-enter);
+  --stairs-ease: var(--ease-expressive);
 }
 
 .terraco-stairs-step,
@@ -1214,8 +1214,8 @@ h4 {
   transform-box: fill-box;
   transform-origin: 100% 50%;
   transition:
-    transform 220ms var(--ease-enter),
-    opacity 180ms var(--ease-ui);
+    transform 240ms var(--ease-expressive),
+    opacity 180ms var(--ease-expressive-return);
 }
 
 .terraco-stairs-step--4 {

@@ -120,16 +120,16 @@ export class TerracoLogoComponent {
 
   readonly stepClasses = computed(
     () =>
-      `h-7 w-7 transition-colors duration-200 ${
+      `h-7 w-7 transition-colors duration-200 motion-reduce:transition-none ${
         this.inverted()
-          ? 'text-accent'
-          : 'text-ink group-hover:text-accent group-focus-visible:text-accent'
+          ? 'text-highlight'
+          : 'text-ink group-hover:text-brand group-focus-visible:text-brand'
       }`
   );
 
   readonly linkClasses = computed(() =>
     [
-      'terraco-logo group terraco-stairs terraco-btn inline-flex items-center gap-1.5 rounded-sm py-0.5 shrink-0',
+      'terraco-logo group terraco-stairs inline-flex items-center gap-1.5 rounded-sm py-0.5 shrink-0 transition-transform duration-150 ease-[var(--ease-expressive-return)] active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100',
       this.className(),
     ]
       .filter(Boolean)
