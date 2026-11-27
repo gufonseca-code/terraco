@@ -325,6 +325,7 @@ const TIPOLOGIA_FILTERS = [
           </div>
         } @else if (filteredLancamentos().length > 0) {
           <div
+            data-testid="lancamentos-grid"
             class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8"
           >
             @for (launch of filteredLancamentos(); track launch.slug) {

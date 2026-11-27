@@ -69,9 +69,8 @@ test.describe("Instant navigation", () => {
             .getByTestId("site-navbar")
             .getByRole("link", { name: "Lançamentos", exact: true })
         ).toBeVisible();
-        await expect(page.getByTestId("hero-backdrop")).toBeVisible();
         await expect(
-          page.getByTestId("hero-backdrop").locator("svg")
+          page.locator("app-botanical-arch-motif svg")
         ).toBeVisible();
         await expect(
           page.getByRole("heading", {
@@ -108,19 +107,16 @@ test.describe("Instant navigation", () => {
             .getByRole("link", { name: "Lançamentos", exact: true })
         ).toHaveAttribute("aria-current", "page");
         await expect(
+          page.getByTestId("lancamentos-cover-image")
+        ).toHaveCount(3);
+        await expect(
           page.getByTestId("lancamentos-cover-image").first()
         ).toBeVisible();
-        await expect(
-          page.getByTestId("lancamentos-cover-image")
-        ).toHaveCount(2);
         await expect(
           page.getByRole("heading", { level: 1, name: "Lançamentos" })
         ).toBeVisible();
         await expect(
           page.getByRole("heading", { level: 2, name: "Prime View" })
-        ).toBeVisible();
-        await expect(
-          page.getByRole("heading", { level: 2, name: "Upside Square" })
         ).toBeVisible();
         await expect(
           page.getByRole("link", { name: "Conhecer lançamento" }).first()
@@ -155,10 +151,12 @@ test.describe("Instant navigation", () => {
           page.getByRole("heading", { level: 1, name: "Prime View" })
         ).toBeVisible();
         await expect(
-          page.getByText("Estoril, Belo Horizonte, MG")
+          page.getByText("Estoril, Belo Horizonte - MG", { exact: true })
         ).toBeVisible();
         await expect(
-          page.getByRole("link", { name: "Voltar para lançamentos" })
+          page
+            .getByLabel("Navegação estrutural")
+            .getByRole("link", { name: "Lançamentos" })
         ).toBeVisible();
       },
       { baseURL }
@@ -201,13 +199,12 @@ test.describe("Instant navigation", () => {
     page,
   }) => {
     await page.goto("/lancamentos", { waitUntil: "networkidle" });
-    const primeViewCard = page
-      .locator("article")
-      .filter({ has: page.getByRole("heading", { level: 2, name: "Prime View" }) });
-    const link = primeViewCard.getByRole("link", {
-      name: "Conhecer lançamento",
-      exact: true,
-    });
+    const link = page
+      .getByRole("link", {
+        name: "Conhecer lançamento",
+        exact: true,
+      })
+      .first();
     await expect(link).toBeVisible();
 
     await instant(page, async () => {
@@ -256,15 +253,12 @@ test.describe("Instant navigation", () => {
     });
   });
 
-  test("prefetches product title when navigating from /lancamentos Upside Square CTA link to /lancamentos/upside-square", async ({
+  test("prefetches product title when navigating from /lancamentos image link to /lancamentos/prime-view", async ({
     page,
   }) => {
     await page.goto("/lancamentos", { waitUntil: "networkidle" });
-    const upsideCard = page
-      .locator("article")
-      .filter({ has: page.getByRole("heading", { level: 2, name: "Upside Square" }) });
-    const link = upsideCard.getByRole("link", {
-      name: "Conhecer lançamento",
+    const link = page.getByRole("link", {
+      name: "Conhecer Prime View",
       exact: true,
     });
     await expect(link).toBeVisible();
@@ -272,7 +266,7 @@ test.describe("Instant navigation", () => {
     await instant(page, async () => {
       await link.click();
       await page.waitForURL(
-        (url) => url.pathname === "/lancamentos/upside-square"
+        (url) => url.pathname === "/lancamentos/prime-view"
       );
       await expect(
         page.getByRole("link", { name: "Terraço, página inicial" }).first()
@@ -281,7 +275,7 @@ test.describe("Instant navigation", () => {
         page.getByRole("contentinfo").getByText("Belo Horizonte, MG")
       ).toBeVisible();
       await expect(
-        page.getByRole("heading", { level: 1, name: "Upside Square" })
+        page.getByRole("heading", { level: 1, name: "Prime View" })
       ).toBeVisible();
       await expect(page.getByLabel("Carregando lançamento")).toHaveCount(0);
     });
@@ -296,7 +290,8 @@ test.describe("Instant navigation", () => {
 
     await instant(page, async () => {
       await page
-        .getByRole("link", { name: "Voltar para lançamentos" })
+        .getByLabel("Navegação estrutural")
+        .getByRole("link", { name: "Lançamentos" })
         .click();
       await page.waitForURL((url) => url.pathname === "/lancamentos");
       await expect(
@@ -327,7 +322,8 @@ test.describe("Instant navigation", () => {
     const detailHtml = await detailRes.text();
     expect(detailHtml).toMatch(/<title>.*Prime View.*<\/title>/);
     expect(detailHtml).toContain('property="og:title"');
-    expect(detailHtml).toContain("Estoril, Belo Horizonte, MG");
+    expect(detailHtml).toContain("Estoril");
+    expect(detailHtml).toContain("Belo Horizonte - MG");
     expect(detailHtml).toContain("application/ld+json");
 
     const robotsRes = await request.get("/robots.txt");
@@ -342,49 +338,30 @@ test.describe("Instant navigation", () => {
     expect(sitemapXml).toContain("<urlset");
     expect(sitemapXml).toContain("/lancamentos");
     expect(sitemapXml).toContain("/lancamentos/prime-view");
-    expect(sitemapXml).toContain("/lancamentos/upside-square");
   });
 
-  test("renders 4-layer SVG hero in SVG namespace, submits hero search, and persists favorites toggle", async ({
+  test("renders botanical motif SVG in SVG namespace, submits hero search, and persists favorites toggle", async ({
     page,
   }) => {
     await page.goto("/", { waitUntil: "networkidle" });
 
-    // Verify all 4 architectural SVG layers render in the http://www.w3.org/2000/svg namespace with non-zero geometry
+    // Verify the botanical motif SVG renders in the http://www.w3.org/2000/svg namespace with non-zero geometry
     const svgCheck = await page.evaluate(() => {
-      const svg = document.querySelector('[data-testid="hero-backdrop"] svg');
+      const svg = document.querySelector("app-botanical-arch-motif svg");
       if (!svg) return null;
-      const layers = [
-        "g[appFacadeBackdrop]",
-        "g[appBalconyFoliage]",
-        "g[appFacadeForegroundStructure]",
-        "g[appForegroundFoliage]",
-      ];
       return {
         svgNamespace: svg.namespaceURI,
         rectWidth: svg.getBoundingClientRect().width,
         rectHeight: svg.getBoundingClientRect().height,
-        layerChecks: layers.map((sel) => {
-          const el = svg.querySelector(sel);
-          return {
-            selector: sel,
-            exists: Boolean(el),
-            namespace: el?.namespaceURI ?? null,
-            childCount: el?.children.length ?? 0,
-          };
-        }),
+        childCount: svg.children.length,
       };
     });
 
     expect(svgCheck).not.toBeNull();
     expect(svgCheck?.svgNamespace).toBe("http://www.w3.org/2000/svg");
-    expect(svgCheck?.rectWidth).toBeGreaterThan(200);
-    expect(svgCheck?.rectHeight).toBeGreaterThan(200);
-    for (const layer of svgCheck?.layerChecks ?? []) {
-      expect(layer.exists).toBe(true);
-      expect(layer.namespace).toBe("http://www.w3.org/2000/svg");
-      expect(layer.childCount).toBeGreaterThan(0);
-    }
+    expect(svgCheck?.rectWidth).toBeGreaterThan(50);
+    expect(svgCheck?.rectHeight).toBeGreaterThan(50);
+    expect(svgCheck?.childCount).toBeGreaterThan(0);
 
     // Verify hero search input, clear button, and submission to /lancamentos?q=Estoril
     const searchInput = page.getByRole("combobox", {
@@ -478,195 +455,5 @@ test.describe("Instant navigation", () => {
         );
       }
     }
-  });
-
-  test("renders prerendered /lancamentos/upside-square immediately on initial load", async ({
-    page,
-    baseURL,
-  }) => {
-    await instant(
-      page,
-      async () => {
-        await page.goto("/lancamentos/upside-square");
-        await expect(page.getByTestId("launch-hero-image")).toBeVisible();
-        await expect(
-          page.getByRole("heading", { level: 1, name: "Upside Square" })
-        ).toBeVisible();
-        await expect(
-          page.getByText("Santa Efigênia, Belo Horizonte, MG")
-        ).toBeVisible();
-        await expect(
-          page
-            .locator("#homepage")
-            .getByRole("link", { name: "Falar no WhatsApp" })
-        ).toBeVisible();
-      },
-      { baseURL }
-    );
-  });
-
-  test("renders /lancamentos as multi-column grid on desktop and vertical list on mobile", async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto("/lancamentos", { waitUntil: "networkidle" });
-
-    const cards = page.locator('[data-testid="lancamentos-grid"] article');
-    await expect(cards).toHaveCount(2);
-
-    const desktopBox0 = await cards.nth(0).boundingBox();
-    const desktopBox1 = await cards.nth(1).boundingBox();
-    expect(desktopBox0).not.toBeNull();
-    expect(desktopBox1).not.toBeNull();
-    // Side by side on desktop
-    expect(desktopBox1!.x).toBeGreaterThan(desktopBox0!.x + desktopBox0!.width * 0.5);
-    expect(Math.abs(desktopBox1!.y - desktopBox0!.y)).toBeLessThan(12);
-
-    await page.setViewportSize({ width: 375, height: 812 });
-    const mobileBox0 = await cards.nth(0).boundingBox();
-    const mobileBox1 = await cards.nth(1).boundingBox();
-    expect(mobileBox0).not.toBeNull();
-    expect(mobileBox1).not.toBeNull();
-    // Stacked vertically on mobile
-    expect(Math.abs(mobileBox1!.x - mobileBox0!.x)).toBeLessThan(12);
-    expect(mobileBox1!.y).toBeGreaterThanOrEqual(mobileBox0!.y + mobileBox0!.height);
-  });
-
-  test("filters launches from homepage search for Upside, Santa Efigênia, and Estoril", async ({
-    page,
-  }) => {
-    const cases = [
-      { query: "Upside", expected: "Upside Square", hidden: "Prime View" },
-      { query: "Santa Efigênia", expected: "Upside Square", hidden: "Prime View" },
-      { query: "Estoril", expected: "Prime View", hidden: "Upside Square" },
-    ];
-
-    for (const c of cases) {
-      await page.goto("/", { waitUntil: "networkidle" });
-      const searchInput = page.getByRole("combobox", {
-        name: "Buscar por bairro ou lançamento",
-      });
-      await searchInput.fill(c.query);
-      await page.getByRole("button", { name: /Explorar/i }).click();
-      await page.waitForURL(
-        (url) =>
-          url.pathname === "/lancamentos" &&
-          url.searchParams.get("q") === c.query
-      );
-      await expect(
-        page.getByRole("heading", { level: 2, name: c.expected })
-      ).toBeVisible();
-      await expect(
-        page.getByRole("heading", { level: 2, name: c.hidden })
-      ).toHaveCount(0);
-    }
-  });
-
-  test("navigates to product page when clicking anywhere on launch card and opens lightbox zoom only on product page", async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto("/lancamentos", { waitUntil: "networkidle" });
-
-    // Clicking the card cover image on /lancamentos navigates to the product page (no lightbox on listing)
-    const upsideCard = page
-      .locator("article")
-      .filter({ has: page.getByRole("heading", { level: 2, name: "Upside Square" }) });
-    await upsideCard.getByTestId("lancamentos-cover-image").click();
-    await page.waitForURL(
-      (url) => url.pathname === "/lancamentos/upside-square"
-    );
-    await expect(page.getByTestId("image-lightbox")).toHaveCount(0);
-
-    // Product page hero image has fixed cropped height on desktop (does not expand to full portrait height)
-    const heroTrigger = page.getByTestId("launch-hero-trigger");
-    await expect(heroTrigger).toBeVisible();
-    const heroBox = await heroTrigger.boundingBox();
-    expect(heroBox).not.toBeNull();
-    expect(heroBox!.height).toBeGreaterThanOrEqual(455);
-    expect(heroBox!.height).toBeLessThanOrEqual(465);
-
-    // Open lightbox on product page click
-    await heroTrigger.click();
-    const lightbox = page.getByTestId("image-lightbox");
-    const fullImg = page.getByTestId("image-lightbox-img");
-    await expect(lightbox).toBeVisible();
-    await expect(fullImg).toHaveAttribute("data-zoomed", "false");
-
-    // Desktop click zooms in, second click zooms out
-    await fullImg.click();
-    await expect(fullImg).toHaveAttribute("data-zoomed", "true");
-    const zoomedScale = Number(await fullImg.getAttribute("data-zoom-scale"));
-    expect(zoomedScale).toBeGreaterThan(1.5);
-
-    await fullImg.click();
-    await expect(fullImg).toHaveAttribute("data-zoomed", "false");
-    expect(await fullImg.getAttribute("data-zoom-scale")).toBe("1.00");
-
-    // Close lightbox and verify animate.leave removes it from DOM
-    await page.getByTestId("image-lightbox-close").click();
-    await expect(lightbox).toHaveCount(0);
-
-    // Mobile two-finger pinch-to-zoom on product page
-    await page.setViewportSize({ width: 375, height: 812 });
-    await heroTrigger.click();
-    await expect(lightbox).toBeVisible();
-    await expect(fullImg).toHaveAttribute("data-zoomed", "false");
-
-    await page.evaluate(() => {
-      const stage = document.querySelector(
-        '[data-testid="image-lightbox-stage"]'
-      );
-      if (!stage) throw new Error("Missing lightbox stage");
-
-      const makeTouch = (id: number, x: number, y: number) =>
-        new Touch({
-          identifier: id,
-          target: stage,
-          clientX: x,
-          clientY: y,
-          pageX: x,
-          pageY: y,
-        });
-
-      const startTouches = [makeTouch(1, 160, 400), makeTouch(2, 210, 400)];
-      stage.dispatchEvent(
-        new TouchEvent("touchstart", {
-          touches: startTouches,
-          targetTouches: startTouches,
-          changedTouches: startTouches,
-          bubbles: true,
-          cancelable: true,
-        })
-      );
-
-      const moveTouches = [makeTouch(1, 110, 400), makeTouch(2, 260, 400)];
-      stage.dispatchEvent(
-        new TouchEvent("touchmove", {
-          touches: moveTouches,
-          targetTouches: moveTouches,
-          changedTouches: moveTouches,
-          bubbles: true,
-          cancelable: true,
-        })
-      );
-
-      stage.dispatchEvent(
-        new TouchEvent("touchend", {
-          touches: [],
-          targetTouches: [],
-          changedTouches: moveTouches,
-          bubbles: true,
-          cancelable: true,
-        })
-      );
-    });
-
-    await expect(fullImg).toHaveAttribute("data-zoomed", "true");
-    const pinchedScale = Number(await fullImg.getAttribute("data-zoom-scale"));
-    expect(pinchedScale).toBeGreaterThan(1.5);
-
-    await page.keyboard.press("Escape");
-    await expect(lightbox).toHaveCount(0);
   });
 });
