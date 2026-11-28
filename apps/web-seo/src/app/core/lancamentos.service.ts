@@ -421,6 +421,22 @@ export class LancamentosService {
     return url.toString();
   }
 
+  private mergeWithInitialData(items: Lancamento[]): Lancamento[] {
+    const mergedBySlug = new Map<string, Lancamento>();
+    for (const fallbackItem of this.initialData) {
+      if (fallbackItem.published !== false) {
+        mergedBySlug.set(fallbackItem.slug, fallbackItem);
+      }
+    }
+    for (const remoteItem of items) {
+      mergedBySlug.set(remoteItem.slug, remoteItem);
+    }
+    const merged = Array.from(mergedBySlug.values()).sort(
+      (a, b) => (a.order ?? 999) - (b.order ?? 999)
+    );
+    return merged.length > 0 ? merged : this.initialData;
+  }
+
   private async fetchLancamentosFromFirestore(): Promise<Lancamento[]> {
     if (isPlatformServer(this.platformId) && this.serverReader) {
       this.isLoadingList.set(true);
@@ -429,9 +445,7 @@ export class LancamentosService {
           this.serverReader.loadList(),
           FIRESTORE_READ_TIMEOUT_MS
         );
-        return this.commitListResult(
-          items.length > 0 ? items : this.initialData
-        );
+        return this.commitListResult(this.mergeWithInitialData(items));
       } catch {
         // Fall through to Web SDK / initialData fallback if Admin ADC is unavailable locally.
       } finally {
@@ -485,22 +499,7 @@ export class LancamentosService {
           .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
       }
 
-      const mergedBySlug = new Map<string, Lancamento>();
-      for (const fallbackItem of this.initialData) {
-        if (fallbackItem.published !== false) {
-          mergedBySlug.set(fallbackItem.slug, fallbackItem);
-        }
-      }
-      for (const remoteItem of items) {
-        mergedBySlug.set(remoteItem.slug, remoteItem);
-      }
-      const merged = Array.from(mergedBySlug.values()).sort(
-        (a, b) => (a.order ?? 999) - (b.order ?? 999)
-      );
-
-      return this.commitListResult(
-        merged.length > 0 ? merged : this.initialData
-      );
+      return this.commitListResult(this.mergeWithInitialData(items));
     } catch {
       return this.commitListResult(this.initialData);
     } finally {
@@ -518,7 +517,13 @@ export class LancamentosService {
           this.serverReader.loadBySlug(slug),
           FIRESTORE_READ_TIMEOUT_MS
         );
-        return this.commitDetailResult(slug, item ?? null);
+        const resolved =
+          item ??
+          this.initialData.find(
+            (fallback) => fallback.slug === slug && fallback.published !== false
+          ) ??
+          null;
+        return this.commitDetailResult(slug, resolved);
       } catch {
         // Fall through to Web SDK / initialData fallback if Admin ADC is unavailable locally.
       } finally {
