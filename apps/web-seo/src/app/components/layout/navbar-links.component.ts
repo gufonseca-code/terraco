@@ -178,7 +178,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
         aria-label="Menu de navegação"
         animate.enter="terraco-m3-sheet-enter"
         animate.leave="terraco-m3-sheet-leave"
-        class="pointer-events-auto absolute inset-x-4 top-full z-40 mt-2 rounded-[24px] border border-border-subtle bg-elevated/98 p-5 shadow-floating backdrop-blur-md sm:inset-x-6 md:hidden"
+        class="pointer-events-auto absolute inset-x-4 top-full z-40 mt-2 rounded-[20px] border border-[#1C1B19]/10 bg-[#FAF8F4] p-4 shadow-floating sm:inset-x-6 md:hidden"
       >
         <div class="space-y-1">
           @for (item of primaryItems; track item.route) {
