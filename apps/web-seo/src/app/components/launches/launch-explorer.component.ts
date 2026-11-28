@@ -669,8 +669,10 @@ export class LaunchExplorerComponent {
 
   dropdownTriggerClass(active: boolean): string {
     const base =
-      'terraco-dropdown-trigger inline-flex min-h-[44px] items-center gap-2 px-4 py-1.5 text-[13px] font-medium cursor-pointer sm:min-h-[42px]';
-    return active ? `${base} terraco-dropdown-trigger--active` : base;
+      'terraco-m3-chip terraco-dropdown-trigger inline-flex min-h-[44px] items-center gap-2 px-4 py-1.5 text-[13px] font-medium cursor-pointer sm:min-h-[42px]';
+    return active
+      ? `${base} terraco-m3-chip--active terraco-dropdown-trigger--active`
+      : base;
   }
 
   dropdownOptionClass(selected: boolean): string {

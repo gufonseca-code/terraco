@@ -208,177 +208,6 @@ h4 {
   background-size: 64px 64px;
 }
 
-/* Cartão-Terraço (Rodapé elevado em Areia Clara com cobogó em baixo-relevo) */
-.terraco-footer-card {
-  isolation: isolate;
-  border-top: 1px solid rgba(28, 27, 25, 0.08);
-  border-inline: 1px solid rgba(28, 27, 25, 0.06);
-  box-shadow:
-    0 -14px 36px -18px rgba(28, 27, 25, 0.09),
-    0 -2px 10px -2px rgba(28, 27, 25, 0.04),
-    inset 0 1px 0 rgba(255, 253, 249, 0.88);
-}
-
-.terraco-cobogo-debossed {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  mask-image: radial-gradient(
-    ellipse 96% 90% at 78% 18%,
-    rgba(0, 0, 0, 0.96) 0%,
-    rgba(0, 0, 0, 0.62) 56%,
-    rgba(0, 0, 0, 0.22) 100%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 96% 90% at 78% 18%,
-    rgba(0, 0, 0, 0.96) 0%,
-    rgba(0, 0, 0, 0.62) 56%,
-    rgba(0, 0, 0, 0.22) 100%
-  );
-}
-
-.terraco-cobogo-debossed::before,
-.terraco-cobogo-debossed::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-size: 64px 64px;
-}
-
-.terraco-cobogo-debossed::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%231C1B19' stroke-width='1.15' stroke-opacity='0.095'%3E%3Crect x='5' y='5' width='54' height='54' rx='12'/%3E%3Ccircle cx='32' cy='32' r='13'/%3E%3Cpath d='M32 5v14M32 45v14M5 32h14M45 32h14'/%3E%3C/g%3E%3C/svg%3E");
-  background-position: 0 0;
-  mix-blend-mode: multiply;
-}
-
-.terraco-cobogo-debossed::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23FFFDF9' stroke-width='1.15' stroke-opacity='0.82'%3E%3Crect x='5' y='5' width='54' height='54' rx='12'/%3E%3Ccircle cx='32' cy='32' r='13'/%3E%3Cpath d='M32 5v14M32 45v14M5 32h14M45 32h14'/%3E%3C/g%3E%3C/svg%3E");
-  background-position: 1px 1px;
-}
-
-/* CTA principal do rodapé: Terracota Solar com contraste AA para texto Creme e sombra M3E */
-.terraco-footer-cta {
-  background-color: #C24717;
-  box-shadow:
-    0 10px 24px -8px rgba(240, 106, 54, 0.44),
-    0 2px 6px -1px rgba(28, 27, 25, 0.10),
-    inset 0 1px 0 rgba(255, 250, 245, 0.22);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .terraco-footer-cta:hover {
-    background-color: #AD3E14;
-    box-shadow:
-      0 14px 28px -8px rgba(240, 106, 54, 0.50),
-      0 4px 10px -2px rgba(28, 27, 25, 0.12),
-      inset 0 1px 0 rgba(255, 250, 245, 0.26);
-  }
-}
-
-.terraco-footer-cta:active {
-  box-shadow: 0 2px 6px -2px rgba(28, 27, 25, 0.12);
-}
-
-/* Padronização M3E de links do rodapé (sem sublinhado, Urban Leaf Green no hover, escala no :active) */
-.terraco-footer-link {
-  text-decoration: none;
-  border-radius: var(--radius-sm);
-  transform-origin: left center;
-  transition:
-    color var(--duration-ui) var(--ease-expressive-return),
-    transform 180ms var(--ease-expressive);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .terraco-footer-link:hover {
-    color: #2E6F40;
-  }
-}
-
-.terraco-footer-link:focus-visible {
-  color: #2E6F40;
-}
-
-.terraco-footer-link:active {
-  color: #1F6F50;
-  transform: scale(0.97);
-  transition-duration: 130ms;
-  transition-timing-function: var(--ease-expressive-return);
-}
-
-/* Botão flutuante M3E "Voltar ao Topo" (superfície Areia + anel Terracota suave) */
-.terraco-backtop-btn {
-  border-radius: var(--radius-pill);
-  background-color: color-mix(in srgb, var(--color-bg-surface) 94%, transparent);
-  border: 1px solid rgba(240, 106, 54, 0.34);
-  box-shadow:
-    0 10px 26px -10px rgba(28, 27, 25, 0.18),
-    0 0 0 3px rgba(240, 106, 54, 0.10),
-    inset 0 1px 0 rgba(255, 253, 249, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition:
-    border-radius var(--duration-spring-fast) var(--ease-expressive),
-    transform var(--duration-spring-fast) var(--ease-expressive),
-    background-color var(--duration-ui) var(--ease-expressive-return),
-    border-color var(--duration-ui) var(--ease-expressive-return),
-    color var(--duration-ui) var(--ease-expressive-return),
-    box-shadow var(--duration-ui) var(--ease-expressive-return);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .terraco-backtop-btn:hover {
-    border-radius: var(--radius-morph-active);
-    background-color: var(--color-bg-elevated);
-    border-color: rgba(240, 106, 54, 0.62);
-    color: #2E6F40;
-    transform: translateY(-2px);
-    box-shadow:
-      0 14px 30px -10px rgba(28, 27, 25, 0.20),
-      0 0 0 4px rgba(240, 106, 54, 0.14),
-      inset 0 1px 0 rgba(255, 253, 249, 0.95);
-  }
-}
-
-.terraco-backtop-btn:active {
-  border-radius: var(--radius-m3-md);
-  transform: scale(var(--scale-press));
-  box-shadow: 0 4px 12px -4px rgba(28, 27, 25, 0.14);
-  transition-duration: 130ms;
-  transition-timing-function: var(--ease-expressive-return);
-}
-
-@keyframes terraco-backtop-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes terraco-backtop-out {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(8px) scale(0.94);
-  }
-}
-
-.terraco-backtop-enter {
-  animation: terraco-backtop-in var(--duration-spring-fast) var(--ease-expressive) both;
-}
-
-.terraco-backtop-leave {
-  animation: terraco-backtop-out 160ms var(--ease-expressive-return) both;
-}
-
 /* Anel de foco consistente e imediato (em @layer base para permitir override por utilitários) */
 @layer base {
   :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
@@ -1304,31 +1133,16 @@ h4 {
   animation: terraco-search-panel-out 130ms var(--ease-ui) both;
 }
 
-/* M3 Expressive: Dropdown Triggers, Chevrons & Panels (Areia Clara + Creme + Terracota) */
+/* M3 Expressive: Dropdown Triggers (usa .terraco-m3-chip para física/morphing e define paleta Areia Clara + Terracota) */
 .terraco-dropdown-trigger {
-  border-radius: var(--radius-morph-pill);
   background-color: var(--color-bg-surface);
   color: var(--color-text-primary);
-  transition:
-    border-radius var(--duration-spring-fast) var(--ease-expressive),
-    transform var(--duration-spring-fast) var(--ease-expressive),
-    background-color var(--duration-ui) var(--ease-expressive-return),
-    color var(--duration-ui) var(--ease-expressive-return),
-    box-shadow var(--duration-ui) var(--ease-expressive-return);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .terraco-dropdown-trigger:hover {
-    border-radius: var(--radius-md);
     background-color: #EAE3D5;
-    transform: translateY(-1px);
   }
-}
-
-.terraco-dropdown-trigger[aria-expanded="true"],
-.terraco-dropdown-trigger--active {
-  border-radius: var(--radius-morph-active);
-  transform: scale(var(--scale-active-chip));
 }
 
 .terraco-dropdown-trigger[aria-expanded="true"] {
@@ -1352,17 +1166,8 @@ h4 {
 @media (hover: hover) and (pointer: fine) {
   .terraco-dropdown-trigger[aria-expanded="true"]:hover,
   .terraco-dropdown-trigger--active:hover {
-    border-radius: var(--radius-morph-active);
     background-color: #EAE3D5;
-    transform: translateY(-1px) scale(var(--scale-active-chip));
   }
-}
-
-.terraco-dropdown-trigger:active {
-  border-radius: var(--radius-m3-md);
-  transform: scale(var(--scale-press-chip));
-  transition-duration: 130ms;
-  transition-timing-function: var(--ease-expressive-return);
 }
 
 .terraco-dropdown-chevron {
@@ -1878,8 +1683,6 @@ h4 {
   .terraco-dropdown-panel-leave,
   .terraco-m3-sheet-enter,
   .terraco-m3-sheet-leave,
-  .terraco-backtop-enter,
-  .terraco-backtop-leave,
   .terraco-skeleton::after,
   .hero-enter-title,
   .hero-enter-form,
@@ -1930,9 +1733,6 @@ h4 {
   .terraco-link-nav,
   .terraco-link-editorial,
   .terraco-link-editorial .terraco-link-arrow,
-  .terraco-footer-cta,
-  .terraco-footer-link,
-  .terraco-backtop-btn,
   .terraco-stairs-step,
   .terraco-logo-step {
     animation: none !important;
