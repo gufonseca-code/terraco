@@ -1,8 +1,10 @@
 import { Listbox, Option } from '@angular/aria/listbox';
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  PLATFORM_ID,
   computed,
   effect,
   inject,
@@ -15,14 +17,20 @@ import { LancamentosService, buildWhatsAppUrl } from '../../core';
 import { BAIRROS_BH, type BairroGuide } from '../../core/bairros.data';
 import { M3SearchBarComponent } from '../shared/m3-search-bar.component';
 import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../shared/m3-tactile.directives';
+import {
   type JourneyDestination,
   NextJourneyComponent,
 } from '../shared/next-journey.component';
+import { ViewTransitionDirective } from '../shared/view-transition.directive';
 import { LaunchCardComponent } from './launch-card.component';
 import { LaunchCardSkeletonComponent } from './launch-skeleton.component';
 
 const TIPOLOGIA_FILTERS = [
   'Todas',
+  'Studio',
   '1 quarto',
   '2 quartos',
   'Garden',
@@ -37,13 +45,16 @@ const TIPOLOGIA_FILTERS = [
     Option,
     LaunchCardComponent,
     LaunchCardSkeletonComponent,
+    M3ButtonDirective,
+    M3ChipDirective,
     M3SearchBarComponent,
     NextJourneyComponent,
+    ViewTransitionDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:click)': 'onDocumentClick($event)',
-    '(document:keydown.escape)': 'closeMenus()',
+    '(document:keydown.escape)': 'onDocumentEscape()',
   },
   template: `
     <section
@@ -72,6 +83,7 @@ const TIPOLOGIA_FILTERS = [
           <header class="max-w-2xl space-y-3">
             <h1
               id="lancamentos-heading"
+              appViewTransition="page-heading"
               class="terraco-reveal font-display text-[clamp(2rem,4vw,3rem)] font-medium not-italic leading-[1.06] tracking-[-0.03em] text-ink text-balance"
             >
               Lançamentos
@@ -113,18 +125,21 @@ const TIPOLOGIA_FILTERS = [
                   @if (quickNeighborhoods().length > 0) {
                     <div class="relative">
                       <button
+                        #neighborhoodTriggerRef
                         type="button"
                         (click)="toggleNeighborhoodMenu($event)"
+                        (keydown)="onTriggerKeydown($event, 'neighborhood')"
                         [attr.aria-expanded]="neighborhoodMenuOpen()"
                         aria-haspopup="listbox"
                         aria-controls="bairro-filter-listbox"
-                        [class]="
-                          dropdownTriggerClass(
-                            hasActiveNeighborhood(),
-                            neighborhoodMenuOpen()
-                          )
-                        "
+                        [class]="dropdownTriggerClass(hasActiveNeighborhood())"
                       >
+                        @if (hasActiveNeighborhood()) {
+                          <span
+                            aria-hidden="true"
+                            class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F06A36]"
+                          ></span>
+                        }
                         <span>{{ selectedNeighborhoodLabel() }}</span>
                         <svg
                           aria-hidden="true"
@@ -134,7 +149,7 @@ const TIPOLOGIA_FILTERS = [
                           stroke-width="1.75"
                           stroke-linecap="round"
                           stroke-linejoin="round"
-                          [class]="chevronClass(neighborhoodMenuOpen())"
+                          [class]="chevronClass()"
                         >
                           <path d="m5.5 7.5 4.5 4.5 4.5-4.5" />
                         </svg>
@@ -142,15 +157,19 @@ const TIPOLOGIA_FILTERS = [
 
                       @if (neighborhoodMenuOpen()) {
                         <ul
+                          #neighborhoodListboxRef
                           id="bairro-filter-listbox"
                           ngListbox
+                          selectionMode="explicit"
+                          tabindex="-1"
                           [value]="selectedNeighborhoodValue()"
                           (valueChange)="onNeighborhoodListboxChange($event)"
                           [multi]="false"
                           orientation="vertical"
                           aria-label="Filtrar por bairro"
-                          animate.enter="terraco-chip-enter"
-                          class="absolute left-0 top-full z-30 mt-2 min-w-[210px] rounded-[20px] border border-border-subtle bg-elevated p-1.5 shadow-card"
+                          animate.enter="terraco-dropdown-panel-enter"
+                          animate.leave="terraco-dropdown-panel-leave"
+                          class="origin-top absolute left-0 top-full z-30 mt-2 min-w-[220px] rounded-[20px] border border-[#1C1B19]/10 bg-[#FAF8F4] p-1.5 shadow-floating focus-visible:outline-none"
                         >
                           <li
                             ngOption
@@ -163,7 +182,10 @@ const TIPOLOGIA_FILTERS = [
                           >
                             <span>Todos os bairros</span>
                             @if (!hasActiveNeighborhood()) {
-                              <span aria-hidden="true" class="text-brand">✓</span>
+                              <span
+                                aria-hidden="true"
+                                class="font-semibold text-[#F06A36]"
+                              >✓</span>
                             }
                           </li>
                           @for (bairro of quickNeighborhoods(); track bairro) {
@@ -180,7 +202,10 @@ const TIPOLOGIA_FILTERS = [
                             >
                               <span>{{ bairro }}</span>
                               @if (isNeighborhoodActive(bairro)) {
-                                <span aria-hidden="true" class="text-brand">✓</span>
+                                <span
+                                  aria-hidden="true"
+                                  class="font-semibold text-[#F06A36]"
+                                >✓</span>
                               }
                             </li>
                           }
@@ -191,18 +216,23 @@ const TIPOLOGIA_FILTERS = [
 
                   <div class="relative">
                     <button
+                      #tipologiaTriggerRef
                       type="button"
                       (click)="toggleTipologiaMenu($event)"
+                      (keydown)="onTriggerKeydown($event, 'tipologia')"
                       [attr.aria-expanded]="tipologiaMenuOpen()"
                       aria-haspopup="listbox"
                       aria-controls="tipologia-filter-listbox"
                       [class]="
-                        dropdownTriggerClass(
-                          tipologiaFilter() !== 'Todas',
-                          tipologiaMenuOpen()
-                        )
+                        dropdownTriggerClass(tipologiaFilter() !== 'Todas')
                       "
                     >
+                      @if (tipologiaFilter() !== 'Todas') {
+                        <span
+                          aria-hidden="true"
+                          class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F06A36]"
+                        ></span>
+                      }
                       <span>{{ selectedTipologiaLabel() }}</span>
                       <svg
                         aria-hidden="true"
@@ -212,7 +242,7 @@ const TIPOLOGIA_FILTERS = [
                         stroke-width="1.75"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        [class]="chevronClass(tipologiaMenuOpen())"
+                        [class]="chevronClass()"
                       >
                         <path d="m5.5 7.5 4.5 4.5 4.5-4.5" />
                       </svg>
@@ -220,15 +250,19 @@ const TIPOLOGIA_FILTERS = [
 
                     @if (tipologiaMenuOpen()) {
                       <ul
+                        #tipologiaListboxRef
                         id="tipologia-filter-listbox"
                         ngListbox
+                        selectionMode="explicit"
+                        tabindex="-1"
                         [value]="selectedTipologiaValue()"
                         (valueChange)="onTipologiaListboxChange($event)"
                         [multi]="false"
                         orientation="vertical"
                         aria-label="Filtrar por tipologia"
-                        animate.enter="terraco-chip-enter"
-                        class="absolute left-0 top-full z-30 mt-2 min-w-[220px] rounded-[20px] border border-border-subtle bg-elevated p-1.5 shadow-card"
+                        animate.enter="terraco-dropdown-panel-enter"
+                        animate.leave="terraco-dropdown-panel-leave"
+                        class="origin-top absolute left-0 top-full z-30 mt-2 min-w-[220px] rounded-[20px] border border-[#1C1B19]/10 bg-[#FAF8F4] p-1.5 shadow-floating focus-visible:outline-none"
                       >
                         @for (tipologia of tipologiaFilters; track tipologia) {
                           <li
@@ -250,7 +284,10 @@ const TIPOLOGIA_FILTERS = [
                                 : tipologia
                             }}</span>
                             @if (isTipologiaActive(tipologia)) {
-                              <span aria-hidden="true" class="text-brand">✓</span>
+                              <span
+                                aria-hidden="true"
+                                class="font-semibold text-[#F06A36]"
+                              >✓</span>
                             }
                           </li>
                         }
@@ -261,11 +298,14 @@ const TIPOLOGIA_FILTERS = [
                   @if (objetivoFilter(); as objetivo) {
                     <button
                       type="button"
+                      appM3Chip
+                      tone="brand"
+                      [active]="true"
                       (click)="clearObjetivo()"
                       [attr.aria-label]="
                         'Remover filtro de objetivo ' + objetivo
                       "
-                      class="terraco-m3-chip terraco-m3-chip--active inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 border border-brand/35 bg-[#E5F2EC] px-4 py-1.5 text-[13px] font-medium text-[#1F6F50]"
+                      class="inline-flex min-h-[44px] items-center gap-1.5 px-4 py-1.5 text-[13px] sm:min-h-[40px]"
                     >
                       <span>Objetivo: {{ objetivo }}</span>
                       <span aria-hidden="true">×</span>
@@ -275,8 +315,11 @@ const TIPOLOGIA_FILTERS = [
                   @if (hasActiveFilters()) {
                     <button
                       type="button"
+                      appM3Chip
+                      tone="brand"
+                      [active]="false"
                       (click)="clearFilters()"
-                      class="terraco-m3-chip inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 border border-border-subtle bg-surface px-3.5 py-1.5 text-[13px] font-medium text-ink-muted hover:border-border-strong hover:text-ink"
+                      class="inline-flex min-h-[44px] items-center gap-1.5 px-3.5 py-1.5 text-[13px] text-ink-muted hover:text-ink sm:min-h-[40px]"
                     >
                       <span>Limpar filtros</span>
                       <span aria-hidden="true">×</span>
@@ -306,9 +349,22 @@ const TIPOLOGIA_FILTERS = [
                     Quer entender mobilidade, serviços e perfil do bairro?
                     <a
                       [routerLink]="['/bairros', bairroGuide.slug]"
-                      class="terraco-link-underline ml-1 font-medium text-brand hover:text-brand-hover"
+                      class="terraco-link-editorial ml-1 inline-flex items-center gap-1 font-medium text-brand hover:text-brand-hover focus-visible:text-brand-hover"
                     >
-                      Ver guia completo do {{ bairroGuide.nome }}
+                      <span>Ver guia completo do {{ bairroGuide.nome }}</span>
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="terraco-link-arrow h-3.5 w-3.5 shrink-0"
+                      >
+                        <path d="M4.5 10h11" />
+                        <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                      </svg>
                     </a>
                   </p>
                 }
@@ -365,7 +421,7 @@ const TIPOLOGIA_FILTERS = [
                 <button
                   type="button"
                   (click)="clearFilters()"
-                  class="terraco-m3-chip inline-flex min-h-[42px] cursor-pointer items-center justify-center border border-ink bg-ink px-5 py-2 text-[13px] font-medium text-ink-inverse hover:bg-ink/90"
+                  class="terraco-m3-chip inline-flex min-h-[44px] cursor-pointer items-center justify-center border border-ink bg-ink px-5 py-2 text-[13px] font-medium text-ink-inverse hover:bg-ink/90"
                 >
                   Ver todos os lançamentos
                 </button>
@@ -373,7 +429,7 @@ const TIPOLOGIA_FILTERS = [
                   [href]="whatsappConciergeHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="group inline-flex min-h-[40px] items-center gap-1.5 text-[14px] font-medium text-brand transition-colors duration-150 motion-reduce:transition-none hover:text-brand-hover"
+                  class="terraco-link-editorial group inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-medium text-brand hover:text-brand-hover focus-visible:text-brand-hover sm:min-h-[40px]"
                 >
                   <span>Perguntar no WhatsApp</span>
                   <svg
@@ -384,7 +440,7 @@ const TIPOLOGIA_FILTERS = [
                     stroke-width="1.8"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+                    class="terraco-link-arrow h-4 w-4 shrink-0"
                   >
                     <path d="M4.5 10h11" />
                     <path d="m11 5.5 4.5 4.5-4.5 4.5" />
@@ -403,7 +459,7 @@ const TIPOLOGIA_FILTERS = [
           @for (guide of bairrosGuides; track guide.slug) {
             <a
               [routerLink]="['/bairros', guide.slug]"
-              class="terraco-link-underline inline-flex min-h-[40px] items-center font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink focus-visible:text-ink"
+              class="terraco-link-nav inline-flex min-h-[44px] items-center px-3 font-normal text-ink-muted hover:text-ink focus-visible:text-ink sm:min-h-[40px]"
             >
               {{ guide.nome }}
             </a>
@@ -442,7 +498,9 @@ const TIPOLOGIA_FILTERS = [
               [href]="whatsappConciergeHref()"
               target="_blank"
               rel="noopener noreferrer"
-              class="terraco-btn inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+              appM3Button
+              variant="primary"
+              class="inline-flex min-h-[46px] w-fit items-center justify-center px-6 py-2.5 text-[14px] leading-[1.35]"
             >
               Falar no WhatsApp sobre meu perfil
             </a>
@@ -465,6 +523,7 @@ const TIPOLOGIA_FILTERS = [
 export class LaunchExplorerComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly lancamentosService = inject(LancamentosService);
 
   readonly lancamentos = this.lancamentosService.lancamentos;
@@ -489,7 +548,7 @@ export class LaunchExplorerComponent {
     {
       title: 'Guias de bairros em BH',
       description:
-        'Compare mobilidade, serviços de rotina e perfil dos lançamentos em Estoril, Santa Efigênia, Serrano e Buritis.',
+        'Compare mobilidade, serviços de rotina e perfil dos lançamentos em Estoril, Prado, Santa Efigênia, Serrano e Buritis.',
       actionLabel: 'Explorar bairros',
       route: '/bairros',
     },
@@ -576,6 +635,14 @@ export class LaunchExplorerComponent {
     viewChild<M3SearchBarComponent>('searchBarRef');
   private readonly filtersContainerRef =
     viewChild<ElementRef<HTMLElement>>('filtersContainerRef');
+  private readonly neighborhoodTriggerRef =
+    viewChild<ElementRef<HTMLButtonElement>>('neighborhoodTriggerRef');
+  private readonly neighborhoodListboxRef =
+    viewChild<ElementRef<HTMLElement>>('neighborhoodListboxRef');
+  private readonly tipologiaTriggerRef =
+    viewChild<ElementRef<HTMLButtonElement>>('tipologiaTriggerRef');
+  private readonly tipologiaListboxRef =
+    viewChild<ElementRef<HTMLElement>>('tipologiaListboxRef');
 
   constructor() {
     // Sync initial query params synchronously so SSR and prerendered HTML filter immediately.
@@ -600,28 +667,24 @@ export class LaunchExplorerComponent {
     });
   }
 
-  dropdownTriggerClass(active: boolean, open: boolean): string {
+  dropdownTriggerClass(active: boolean): string {
     const base =
-      'terraco-m3-chip inline-flex min-h-[42px] items-center gap-2 border px-4 py-1.5 text-[13px] cursor-pointer';
-    if (open) {
-      return `${base} terraco-m3-chip--active border-brand bg-elevated font-medium text-brand shadow-card`;
-    }
-    if (active) {
-      return `${base} terraco-m3-chip--active border-brand/35 bg-[#E5F2EC] font-medium text-[#1F6F50]`;
-    }
-    return `${base} border-border-subtle bg-surface/80 font-medium text-ink hover:border-border-strong hover:bg-surface`;
+      'terraco-m3-chip terraco-dropdown-trigger inline-flex min-h-[44px] items-center gap-2 px-4 py-1.5 text-[13px] font-medium cursor-pointer sm:min-h-[42px]';
+    return active
+      ? `${base} terraco-m3-chip--active terraco-dropdown-trigger--active`
+      : base;
   }
 
   dropdownOptionClass(selected: boolean): string {
+    const base =
+      'terraco-dropdown-option flex min-h-[44px] w-full items-center justify-between gap-3 rounded-[12px] px-3 py-2 text-left text-[13px] text-[#1C1B19] transition-[background-color,color,transform] duration-150 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-[#1C1B19] focus-visible:outline-offset-[-2px] motion-reduce:transition-none motion-reduce:active:scale-100 cursor-pointer sm:min-h-[38px]';
     return selected
-      ? 'flex w-full items-center justify-between gap-3 rounded-[14px] bg-[#E5F2EC] px-3 py-2 text-left text-[13px] font-medium text-[#1F6F50] transition-colors duration-150 cursor-pointer'
-      : 'flex w-full items-center justify-between gap-3 rounded-[14px] px-3 py-2 text-left text-[13px] font-normal text-ink transition-colors duration-150 hover:bg-surface/70 cursor-pointer';
+      ? `${base} bg-[#F3EFE6] font-medium`
+      : `${base} font-normal hover:bg-[#F3EFE6] data-[active=true]:bg-[#F3EFE6]`;
   }
 
-  chevronClass(open: boolean): string {
-    return `h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none ${
-      open ? 'rotate-180' : ''
-    }`;
+  chevronClass(): string {
+    return 'terraco-dropdown-chevron h-4 w-4 shrink-0 text-[#1C1B19]/75';
   }
 
   toggleNeighborhoodMenu(event: Event): void {
@@ -636,9 +699,65 @@ export class LaunchExplorerComponent {
     this.tipologiaMenuOpen.update((open) => !open);
   }
 
+  onTriggerKeydown(
+    event: KeyboardEvent,
+    menu: 'neighborhood' | 'tipologia'
+  ): void {
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+      return;
+    }
+
+    event.preventDefault();
+    if (menu === 'neighborhood') {
+      this.tipologiaMenuOpen.set(false);
+      this.neighborhoodMenuOpen.set(true);
+      this.focusListbox('neighborhood');
+    } else {
+      this.neighborhoodMenuOpen.set(false);
+      this.tipologiaMenuOpen.set(true);
+      this.focusListbox('tipologia');
+    }
+  }
+
+  onDocumentEscape(): void {
+    const wasNeighborhoodOpen = this.neighborhoodMenuOpen();
+    const wasTipologiaOpen = this.tipologiaMenuOpen();
+    if (!wasNeighborhoodOpen && !wasTipologiaOpen) {
+      return;
+    }
+
+    this.closeMenus();
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    if (wasNeighborhoodOpen) {
+      this.neighborhoodTriggerRef()?.nativeElement.focus();
+    } else if (wasTipologiaOpen) {
+      this.tipologiaTriggerRef()?.nativeElement.focus();
+    }
+  }
+
   closeMenus(): void {
     this.neighborhoodMenuOpen.set(false);
     this.tipologiaMenuOpen.set(false);
+  }
+
+  private focusListbox(menu: 'neighborhood' | 'tipologia'): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    queueMicrotask(() => {
+      const listbox =
+        menu === 'neighborhood'
+          ? this.neighborhoodListboxRef()?.nativeElement
+          : this.tipologiaListboxRef()?.nativeElement;
+      if (!listbox) return;
+      const selectedOption =
+        listbox.querySelector<HTMLElement>('[aria-selected="true"]') ??
+        listbox.querySelector<HTMLElement>('[role="option"]');
+      (selectedOption ?? listbox).focus();
+    });
   }
 
   onDocumentClick(event: Event): void {
@@ -712,11 +831,7 @@ export class LaunchExplorerComponent {
   }
 
   selectTipologia(tipologia: string): void {
-    const next =
-      this.tipologiaFilter().toLowerCase() === tipologia.toLowerCase() &&
-      tipologia !== 'Todas'
-        ? 'Todas'
-        : tipologia;
+    const next = tipologia.trim() || 'Todas';
     this.lancamentosService.setTipologiaFilter(next);
     this.syncQueryParams({ tipologia: next === 'Todas' ? '' : next });
   }

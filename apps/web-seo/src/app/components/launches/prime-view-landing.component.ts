@@ -30,9 +30,14 @@ import {
   type LaunchPilarGroup,
 } from '../../core';
 import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../shared/m3-tactile.directives';
+import {
   type JourneyDestination,
   NextJourneyComponent,
 } from '../shared/next-journey.component';
+import { ViewTransitionDirective } from '../shared/view-transition.directive';
 import { FavoriteButtonComponent } from './favorite-button.component';
 import { ImageLightboxComponent } from './image-lightbox.component';
 import { LaunchCardComponent } from './launch-card.component';
@@ -182,6 +187,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
   imports: [
     NgOptimizedImage,
     RouterLink,
+    M3ButtonDirective,
+    M3ChipDirective,
+    ViewTransitionDirective,
     FavoriteButtonComponent,
     ImageLightboxComponent,
     LaunchCardComponent,
@@ -190,38 +198,6 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
     NextJourneyComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    .m3e-tab-chip {
-      border-radius: 9999px;
-      transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    .m3e-tab-chip[aria-pressed='true'],
-    .m3e-tonal-btn:hover,
-    .m3e-tonal-btn:active {
-      border-radius: 12px;
-    }
-
-    .m3e-tonal-btn {
-      border-radius: 9999px;
-      transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .m3e-tab-chip,
-      .m3e-tonal-btn {
-        transition: none;
-      }
-    }
-  `,
   template: `
     <div class="flex flex-1 flex-col bg-canvas">
       <!-- Primeira dobra limpa e protagonista sobre #FAF8F4 -->
@@ -290,7 +266,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [width]="item().imagemWidth"
                     [height]="item().imagemHeight"
                     priority
-                    [style.view-transition-name]="'launch-image-' + item().slug"
+                    appViewTransition="launch-image"
+                    [vtSlug]="item().slug"
                     (load)="markImageLoaded()"
                     (error)="markImageLoaded()"
                     class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100 lg:rounded-[24px]"
@@ -308,8 +285,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                     <button
                       type="button"
+                      appM3Button
+                      variant="tonal"
                       (click)="openLightbox(0)"
-                      class="terraco-btn absolute right-3 bottom-3 z-10 inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] font-medium text-ink shadow-chip backdrop-blur-xs hover:border-border-strong sm:min-h-[38px]"
+                      class="absolute right-3 bottom-3 z-10 inline-flex min-h-[44px] items-center gap-1.5 border border-border-subtle bg-elevated/95 px-3.5 py-1 text-[13px] text-ink shadow-chip backdrop-blur-xs hover:border-border-strong hover:bg-elevated sm:min-h-[38px]"
                     >
                       <svg
                         aria-hidden="true"
@@ -343,14 +322,13 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   <div class="hidden lg:col-span-3 lg:flex lg:flex-col lg:gap-3">
                     @for (
                       preview of heroSecondaryImages();
-                      track preview.url;
-                      let idx = $index
+                      track preview.url
                     ) {
                       <button
                         type="button"
-                        (click)="openLightbox(idx)"
+                        (click)="openLightboxForMedia(preview)"
                         [attr.aria-label]="'Ampliar foto: ' + preview.alt"
-                        class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer"
+                        class="group relative flex-1 overflow-hidden rounded-[18px] bg-surface cursor-pointer transition-transform duration-200 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
                       >
                         <img
                           [src]="preview.url"
@@ -375,7 +353,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     @if (bairroGuideSlug(); as guideSlug) {
                       <a
                         [routerLink]="['/bairros', guideSlug]"
-                        class="terraco-link-underline text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
+                        class="text-ink transition-colors duration-200 ease-[var(--ease-expressive-return)] hover:text-brand focus-visible:text-brand motion-reduce:transition-none"
                       >{{ item().bairro }}</a>
                     } @else {
                       <span>{{ item().bairro }}</span>
@@ -392,7 +370,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                 <h1
                   id="launch-heading"
-                  [style.view-transition-name]="'launch-title-' + item().slug"
+                  appViewTransition="launch-title"
+                  [vtSlug]="item().slug"
                   class="font-display text-[clamp(1.75rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
                 >
                   {{ item().nome }}
@@ -431,7 +410,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   [href]="primaryWhatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="terraco-btn flex min-h-[46px] w-full items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover sm:min-h-[48px]"
+                  appM3Button
+                  variant="primary"
+                  class="flex min-h-[46px] w-full items-center justify-center px-6 py-2.5 text-[14px] leading-[1.35] sm:min-h-[48px]"
                 >
                   Falar no WhatsApp
                 </a>
@@ -459,7 +440,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                         <button
                           type="button"
                           (click)="toggleCallbackForm()"
-                          class="cursor-pointer text-[13px] font-normal text-ink-muted hover:text-ink"
+                          class="terraco-m3-chip inline-flex min-h-[36px] cursor-pointer items-center px-2.5 text-[13px] font-normal text-ink-muted hover:bg-canvas hover:text-ink"
                         >
                           Fechar
                         </button>
@@ -509,7 +490,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       type="button"
                       (click)="toggleCallbackForm()"
                       data-testid="launch-callback-toggle"
-                      class="terraco-link-underline w-full cursor-pointer py-0.5 text-center text-[13px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                      class="terraco-link-nav w-full cursor-pointer py-1.5 text-center text-[13px] font-normal text-ink-muted hover:text-ink focus-visible:text-ink"
                     >
                       Prefere que um especialista te chame?
                     </button>
@@ -534,9 +515,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             #sectionNavLink
             data-section-id="sobre"
             href="#sobre"
+            appM3Chip
+            tone="nav"
+            [active]="activeSection() === 'sobre'"
             (click)="scrollToSection($event, 'sobre')"
             [attr.aria-current]="activeSection() === 'sobre' ? 'true' : null"
-            [class]="sectionNavPillClass('sobre')"
+            class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
           >
             Sobre
           </a>
@@ -545,11 +529,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               #sectionNavLink
               data-section-id="pilares"
               href="#pilares"
+              appM3Chip
+              tone="nav"
+              [active]="activeSection() === 'pilares'"
               (click)="scrollToSection($event, 'pilares')"
               [attr.aria-current]="
                 activeSection() === 'pilares' ? 'true' : null
               "
-              [class]="sectionNavPillClass('pilares')"
+              class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
             >
               Estrutura &amp; Lazer
             </a>
@@ -559,11 +546,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               #sectionNavLink
               data-section-id="entorno"
               href="#entorno"
+              appM3Chip
+              tone="nav"
+              [active]="activeSection() === 'entorno'"
               (click)="scrollToSection($event, 'entorno')"
               [attr.aria-current]="
                 activeSection() === 'entorno' ? 'true' : null
               "
-              [class]="sectionNavPillClass('entorno')"
+              class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
             >
               Entorno
             </a>
@@ -573,11 +563,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               #sectionNavLink
               data-section-id="plantas"
               href="#plantas"
+              appM3Chip
+              tone="nav"
+              [active]="activeSection() === 'plantas'"
               (click)="scrollToSection($event, 'plantas')"
               [attr.aria-current]="
                 activeSection() === 'plantas' ? 'true' : null
               "
-              [class]="sectionNavPillClass('plantas')"
+              class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
             >
               Plantas
             </a>
@@ -586,11 +579,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
             #sectionNavLink
             data-section-id="condicoes"
             href="#condicoes"
+            appM3Chip
+            tone="nav"
+            [active]="activeSection() === 'condicoes'"
             (click)="scrollToSection($event, 'condicoes')"
             [attr.aria-current]="
               activeSection() === 'condicoes' ? 'true' : null
             "
-            [class]="sectionNavPillClass('condicoes')"
+            class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
           >
             {{ hasPrice() ? 'Simulador' : 'Tabela' }}
           </a>
@@ -599,11 +595,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               #sectionNavLink
               data-section-id="galeria"
               href="#galeria"
+              appM3Chip
+              tone="nav"
+              [active]="activeSection() === 'galeria'"
               (click)="scrollToSection($event, 'galeria')"
               [attr.aria-current]="
                 activeSection() === 'galeria' ? 'true' : null
               "
-              [class]="sectionNavPillClass('galeria')"
+              class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
             >
               Galeria
             </a>
@@ -613,11 +612,14 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               #sectionNavLink
               data-section-id="outros-lancamentos"
               href="#outros-lancamentos"
+              appM3Chip
+              tone="nav"
+              [active]="activeSection() === 'outros-lancamentos'"
               (click)="scrollToSection($event, 'outros-lancamentos')"
               [attr.aria-current]="
                 activeSection() === 'outros-lancamentos' ? 'true' : null
               "
-              [class]="sectionNavPillClass('outros-lancamentos')"
+              class="inline-flex min-h-[44px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap sm:min-h-[38px]"
             >
               Comparar em BH
             </a>
@@ -738,13 +740,12 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     @let active = activePilar()?.id === pilar.id;
                     <button
                       type="button"
+                      appM3Chip
+                      tone="light"
+                      [active]="active"
                       (click)="selectPilar(pilar.id)"
                       [attr.aria-pressed]="active"
-                      [class]="
-                        active
-                          ? 'm3e-tab-chip inline-flex min-h-[40px] cursor-pointer items-center gap-2 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip sm:text-[14px]'
-                          : 'm3e-tab-chip inline-flex min-h-[40px] cursor-pointer items-center gap-2 border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5] sm:text-[14px]'
-                      "
+                      class="inline-flex min-h-[44px] items-center gap-2 px-4 py-1.5 text-[13px] sm:min-h-[40px] sm:text-[14px]"
                     >
                       <span>{{ pilar.label }}</span>
                     </button>
@@ -849,25 +850,23 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     >
                       <button
                         type="button"
+                        appM3Chip
+                        tone="light"
+                        [active]="entornoMode() === 'a-pe'"
                         (click)="setEntornoMode('a-pe')"
                         [attr.aria-pressed]="entornoMode() === 'a-pe'"
-                        [class]="
-                          entornoMode() === 'a-pe'
-                            ? 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
-                            : 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
-                        "
+                        class="inline-flex min-h-[44px] items-center px-4 py-1.5 text-[13px] sm:min-h-[38px]"
                       >
                         A pé
                       </button>
                       <button
                         type="button"
+                        appM3Chip
+                        tone="light"
+                        [active]="entornoMode() === 'carro'"
                         (click)="setEntornoMode('carro')"
                         [attr.aria-pressed]="entornoMode() === 'carro'"
-                        [class]="
-                          entornoMode() === 'carro'
-                            ? 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
-                            : 'm3e-tab-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
-                        "
+                        class="inline-flex min-h-[44px] items-center px-4 py-1.5 text-[13px] sm:min-h-[38px]"
                       >
                         De carro
                       </button>
@@ -878,10 +877,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [href]="googleMapsHref()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="terraco-link-underline inline-flex min-h-[38px] items-center gap-1 text-[14px] font-medium text-brand hover:text-brand-hover"
+                    class="terraco-link-editorial inline-flex min-h-[44px] items-center gap-1 text-[14px] font-medium text-brand hover:text-brand-hover sm:min-h-[38px]"
                   >
                     <span>Abrir rotas no Google Maps</span>
-                    <span aria-hidden="true">↗</span>
+                    <span aria-hidden="true" class="terraco-link-arrow">↗</span>
                   </a>
                 </div>
               </div>
@@ -1006,7 +1005,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [href]="specialConditionsWhatsappHref()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="m3e-tonal-btn inline-flex min-h-[44px] items-center justify-center border border-border-strong/40 bg-canvas px-6 py-2.5 text-[14px] font-medium text-[#1C1B19] hover:bg-elevated"
+                    appM3Button
+                    variant="tonal"
+                    class="inline-flex min-h-[44px] items-center justify-center border border-border-strong/40 bg-canvas px-6 py-2.5 text-[14px] hover:bg-elevated"
                   >
                     Solicitar tabela atualizada no WhatsApp
                   </a>
@@ -1049,8 +1050,10 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                   <button
                     type="button"
+                    appM3Button
+                    variant="outline"
                     (click)="openLightbox(0)"
-                    class="terraco-btn inline-flex min-h-[40px] w-fit shrink-0 cursor-pointer items-center gap-2 rounded-pill border border-border-strong/70 bg-surface/80 px-4 py-1.5 text-[13px] font-medium text-ink hover:bg-surface tabular-nums"
+                    class="inline-flex min-h-[44px] w-fit shrink-0 items-center gap-2 px-4 py-1.5 text-[13px] tabular-nums sm:min-h-[40px]"
                   >
                     Ver todas as {{ galleryImages().length }} fotos
                   </button>
@@ -1071,7 +1074,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       [attr.aria-label]="
                         'Ampliar imagem ' + (i + 1) + ': ' + media.alt
                       "
-                      class="group relative aspect-[4/3] w-[82vw] max-w-[320px] shrink-0 snap-start overflow-hidden rounded-[20px] bg-surface text-left cursor-pointer md:w-auto md:max-w-none"
+                      class="group relative aspect-[4/3] w-[82vw] max-w-[320px] shrink-0 snap-start overflow-hidden rounded-[20px] bg-surface text-left cursor-pointer transition-transform duration-200 active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 md:w-auto md:max-w-none"
                     >
                       <img
                         [src]="media.url"
@@ -1115,9 +1118,22 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                   <a
                     routerLink="/lancamentos"
-                    class="terraco-link-underline inline-flex min-h-[40px] w-fit items-center text-[14px] font-medium text-brand transition-colors duration-150 motion-reduce:transition-none hover:text-brand-hover"
+                    class="terraco-link-editorial inline-flex min-h-[44px] w-fit items-center gap-1.5 text-[14px] font-medium text-brand hover:text-brand-hover focus-visible:text-brand-hover sm:min-h-[40px]"
                   >
-                    Ver catálogo completo
+                    <span>Ver catálogo completo</span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="terraco-link-arrow h-4 w-4 shrink-0"
+                    >
+                      <path d="M4.5 10h11" />
+                      <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                    </svg>
                   </a>
                 </div>
 
@@ -1168,20 +1184,13 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   @let active = selectedIntent() === option.key;
                   <button
                     type="button"
+                    appM3Chip
+                    tone="dark"
+                    [active]="active"
                     (click)="selectIntent(option.key)"
                     [attr.aria-pressed]="active"
-                    [class]="
-                      active
-                        ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/75 bg-ink-inverse/16 px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:text-[14px]'
-                        : 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:text-[14px]'
-                    "
+                    class="inline-flex min-h-[44px] w-auto items-center px-4 py-2 text-left text-[13px] leading-[1.3] sm:min-h-[42px] sm:text-[14px]"
                   >
-                    @if (active) {
-                      <span
-                        aria-hidden="true"
-                        class="h-2 w-2 shrink-0 rounded-full bg-accent"
-                      ></span>
-                    }
                     <span>{{ option.label }}</span>
                   </button>
                 }
@@ -1192,7 +1201,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
               >
                 <p
                   data-testid="launch-whatsapp-preview"
-                  class="max-w-[54ch] border-l-2 border-accent pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
+                  class="max-w-[54ch] border-l-2 border-highlight pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
                 >
                   “{{ selectedIntentMessage() }}”
                 </p>
@@ -1201,7 +1210,9 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   [href]="whatsappHref()"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="terraco-btn mt-5 inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+                  appM3Button
+                  variant="primary"
+                  class="mt-5 inline-flex min-h-[46px] w-fit items-center justify-center px-6 py-2.5 text-[14px] leading-[1.35]"
                 >
                   Abrir WhatsApp com esta mensagem
                 </a>
@@ -1375,9 +1386,12 @@ export class PrimeViewLandingComponent {
     this.galleryImages().slice(0, 6)
   );
 
-  readonly heroSecondaryImages = computed<readonly LaunchMediaItem[]>(() =>
-    this.galleryImages().slice(0, 2)
-  );
+  readonly heroSecondaryImages = computed<readonly LaunchMediaItem[]>(() => {
+    const coverUrl = this.item().imagem;
+    return this.galleryImages()
+      .filter((media) => media.url !== coverUrl)
+      .slice(0, 2);
+  });
 
   readonly hasGallery = computed(() => this.galleryImages().length > 0);
 
@@ -1642,6 +1656,11 @@ export class PrimeViewLandingComponent {
     this.lightboxOpen.set(true);
   }
 
+  openLightboxForMedia(media: LaunchMediaItem): void {
+    const idx = this.galleryImages().findIndex((item) => item.url === media.url);
+    this.openLightbox(idx >= 0 ? idx : 0);
+  }
+
   closeLightbox(): void {
     this.lightboxOpen.set(false);
   }
@@ -1654,15 +1673,6 @@ export class PrimeViewLandingComponent {
   onCallbackNameInput(event: Event): void {
     const inputEl = event.target as HTMLInputElement | null;
     this.callbackName.set(inputEl?.value ?? '');
-  }
-
-  sectionNavPillClass(sectionId: string): string {
-    const base =
-      'terraco-m3-chip inline-flex min-h-[36px] shrink-0 items-center px-3.5 py-1 text-[13px] whitespace-nowrap';
-    if (this.activeSection() === sectionId) {
-      return `${base} terraco-m3-chip--active bg-surface font-medium text-ink shadow-chip`;
-    }
-    return `${base} bg-transparent font-normal text-ink-muted hover:bg-surface/60 hover:text-ink`;
   }
 
   scrollToSection(event: MouseEvent, sectionId: string): void {

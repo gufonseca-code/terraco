@@ -152,7 +152,8 @@ function inferSlugAndTargetForLaunchImage(filePath) {
     const slug = parsed.name;
     return {
       slug,
-      isCover: true,
+      kind: 'cover',
+      localPath: `/images/lancamentos/${webpFilename}`,
       storagePath: `launches/${slug}/images/${webpFilename}`,
     };
   }
@@ -160,9 +161,13 @@ function inferSlugAndTargetForLaunchImage(filePath) {
   const slug = parts[0];
   const nestedName = parts.slice(1).join('-').replace(/\.[^.]+$/, '.webp');
   const isCover = parsed.name === 'cover' || parsed.name === 'capa' || parsed.name === slug;
+  const isPlanta = /^(planta-|layout-)/i.test(parsed.name);
+  const kind = isCover ? 'cover' : isPlanta ? 'planta' : 'gallery';
+  const relPosix = rel.split(path.sep).join('/').replace(/\.[^.]+$/, '.webp');
   return {
     slug,
-    isCover,
+    kind,
+    localPath: `/images/lancamentos/${relPosix}`,
     storagePath: `launches/${slug}/images/${nestedName}`,
   };
 }
@@ -269,6 +274,7 @@ async function main() {
       manifest.launches[slug] = {
         cover: null,
         gallery: [],
+        plantas: [],
         bookUrl: null,
         plantasUrls: [],
       };
@@ -282,7 +288,7 @@ async function main() {
   );
 
   for (const filePath of launchFiles) {
-    const { slug, isCover, storagePath } = inferSlugAndTargetForLaunchImage(filePath);
+    const { slug, kind, localPath, storagePath } = inferSlugAndTargetForLaunchImage(filePath);
     const converted = await convertToWebp(filePath, args.quality, args.maxWidth);
     const cachePath = path.join(CACHE_DIR, storagePath);
     await mkdir(path.dirname(cachePath), { recursive: true });
@@ -312,6 +318,7 @@ async function main() {
 
     const entry = ensureLaunchEntry(slug);
     const record = {
+      localPath,
       storagePath,
       publicUrl,
       width: converted.width,
@@ -320,8 +327,10 @@ async function main() {
       webpBytes: converted.webpBytes,
     };
 
-    if (isCover && !entry.cover) {
+    if (kind === 'cover' && !entry.cover) {
       entry.cover = record;
+    } else if (kind === 'planta') {
+      entry.plantas.push(record);
     } else {
       entry.gallery.push(record);
     }

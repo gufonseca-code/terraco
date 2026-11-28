@@ -22,7 +22,7 @@ import {
       <a
         [href]="'#' + targetId()"
         (click)="scrollToTarget($event)"
-        class="terraco-link-underline group inline-flex min-h-[44px] items-center gap-1.5 font-medium text-ink transition-colors duration-150 hover:text-action-hover focus-visible:text-action-hover"
+        class="terraco-link-editorial group inline-flex min-h-[44px] items-center gap-1.5 font-medium text-ink hover:text-action-hover focus-visible:text-action-hover"
       >
         <span>{{ label() }}</span>
         <svg
@@ -33,7 +33,7 @@ import {
           stroke-width="1.8"
           stroke-linecap="round"
           stroke-linejoin="round"
-          class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-y-0.5"
+          class="h-4 w-4 shrink-0 transition-transform duration-[260ms] ease-[var(--ease-expressive)] motion-reduce:transition-none group-hover:translate-y-1 group-focus-visible:translate-y-1 motion-reduce:group-hover:translate-y-0 motion-reduce:group-focus-visible:translate-y-0"
         >
           <path d="M10 4.5v11" />
           <path d="m5.5 11 4.5 4.5 4.5-4.5" />

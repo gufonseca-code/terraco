@@ -11,12 +11,18 @@ import { RouterLink } from '@angular/router';
 import { BotanicalArchMotifComponent } from '../components/hero';
 import { FooterComponent, NavbarComponent } from '../components/layout';
 import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../components/shared/m3-tactile.directives';
+import {
   type JourneyDestination,
   NextJourneyComponent,
 } from '../components/shared/next-journey.component';
+import { ViewTransitionDirective } from '../components/shared/view-transition.directive';
 import {
-  BAIRROS_BH,
   type BairroGuide,
+  type BairroMedia,
+  BairrosService,
   type Lancamento,
   LancamentosService,
   SeoService,
@@ -33,14 +39,6 @@ type BairroFilterId =
 interface BairroFilterOption {
   readonly id: BairroFilterId;
   readonly label: string;
-}
-
-interface BairroMedia {
-  readonly url: string;
-  readonly alt: string;
-  readonly width: number;
-  readonly height: number;
-  readonly caption: string;
 }
 
 interface BairroIndexRow {
@@ -73,6 +71,13 @@ const CURATED_BAIRRO_MEDIA: Record<string, BairroMedia> = {
     width: 1024,
     height: 614,
     caption: 'Prime View · Estoril',
+  },
+  prado: {
+    url: '/images/lancamentos/brumadinho-165/localizacao-prado.webp',
+    alt: 'Vista aérea da localização estratégica do Brumadinho 165 no Prado, próximo ao Hospital Mater Dei, Hospital Felício Rocho, Colégio Pio XII, VerdeMar e Av. Amazonas',
+    width: 1600,
+    height: 1139,
+    caption: 'Brumadinho 165 · Prado',
   },
   'santa-efigenia': {
     url: '/images/lancamentos/upside-square/piscina-vista-ampla.webp',
@@ -108,11 +113,11 @@ const DECISION_PROFILES: readonly DecisionProfileOption[] = [
   },
   {
     id: 'pe-metro',
-    label: 'Fazer tudo a pé e metrô',
+    label: 'Fazer tudo a pé e região central',
     summary:
-      'Santa Efigênia reúne metrô, hospitais, comércio consolidado e mobilidade direta para o Centro e Savassi.',
+      'Prado e Santa Efigênia oferecem acesso rápido ao Centro, polos hospitalares, serviços e alta demanda por studios e apartamentos compactos.',
     whatsappMessage:
-      'Olá! Tenho interesse em morar ou investir perto de metrô e serviços a pé em BH, como em Santa Efigênia. Quais opções você recomenda?',
+      'Olá! Tenho interesse em morar ou investir perto da região central e polos de serviços em BH, como no Prado ou Santa Efigênia. Quais opções você recomenda?',
   },
   {
     id: 'vida-bairro',
@@ -146,9 +151,8 @@ function resolveBairroMedia(
   directMatches: readonly Lancamento[],
   nearbyMatches: readonly Lancamento[]
 ): BairroMedia | null {
-  const curated = CURATED_BAIRRO_MEDIA[bairro.slug];
-  if (curated) {
-    return curated;
+  if (bairro.media?.url) {
+    return bairro.media;
   }
 
   const reference = directMatches[0] ?? nearbyMatches[0];
@@ -186,9 +190,12 @@ function resolveBairroMedia(
   imports: [
     NgOptimizedImage,
     RouterLink,
+    M3ButtonDirective,
+    M3ChipDirective,
     BotanicalArchMotifComponent,
     NavbarComponent,
     NextJourneyComponent,
+    ViewTransitionDirective,
     FooterComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -222,6 +229,7 @@ function resolveBairroMedia(
               <div class="max-w-2xl space-y-3">
                 <h1
                   id="bairros-heading"
+                  appViewTransition="page-heading"
                   class="font-display text-[clamp(2rem,4vw,3rem)] font-medium not-italic leading-[1.06] tracking-[-0.03em] text-ink text-balance"
                 >
                   Bairros em Belo Horizonte
@@ -235,7 +243,10 @@ function resolveBairroMedia(
               </div>
 
               <div class="flex items-center justify-start lg:justify-end">
-                <app-botanical-arch-motif class="h-16 sm:h-20 lg:h-24" />
+                <app-botanical-arch-motif
+                  appViewTransition="botanical-arch"
+                  class="h-16 sm:h-20 lg:h-24"
+                />
               </div>
             </header>
 
@@ -251,13 +262,12 @@ function resolveBairroMedia(
                   @let active = selectedFilter() === filter.id;
                   <button
                     type="button"
+                    appM3Chip
+                    tone="light"
+                    [active]="active"
                     (click)="setFilter(filter.id)"
                     [attr.aria-pressed]="active"
-                    [class]="
-                      active
-                        ? 'terraco-m3-chip inline-flex min-h-[40px] w-auto cursor-pointer items-center gap-2 border border-ink bg-ink px-4 py-1.5 text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:text-[14px]'
-                        : 'terraco-m3-chip inline-flex min-h-[40px] w-auto cursor-pointer items-center gap-2 border border-border-subtle bg-surface/80 px-4 py-1.5 text-[13px] font-normal leading-[1.3] text-ink hover:border-border-strong hover:bg-surface sm:text-[14px]'
-                    "
+                    class="inline-flex min-h-[44px] w-auto items-center gap-2 px-4 py-1.5 text-[13px] leading-[1.3] sm:min-h-[40px] sm:text-[14px]"
                   >
                     <span>{{ filter.label }}</span>
                     <span
@@ -355,6 +365,8 @@ function resolveBairroMedia(
                     </div>
 
                     <h2
+                      appViewTransition="bairro-title"
+                      [vtSlug]="row.bairro.slug"
                       class="font-display text-[clamp(1.5rem,2.4vw,1.875rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
                     >
                       <a
@@ -381,7 +393,7 @@ function resolveBairroMedia(
                     <div class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1">
                       <a
                         [routerLink]="['/bairros', row.bairro.slug]"
-                        class="group inline-flex min-h-[40px] items-center gap-1.5 text-[14px] font-medium text-brand transition-colors duration-150 motion-reduce:transition-none hover:text-brand-hover"
+                        class="terraco-link-editorial group inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-medium text-brand hover:text-brand-hover focus-visible:text-brand-hover sm:min-h-[40px]"
                       >
                         <span>Ler guia do bairro</span>
                         <svg
@@ -392,7 +404,7 @@ function resolveBairroMedia(
                           stroke-width="1.8"
                           stroke-linecap="round"
                           stroke-linejoin="round"
-                          class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+                          class="terraco-link-arrow h-4 w-4 shrink-0"
                         >
                           <path d="M4.5 10h11" />
                           <path d="m11 5.5 4.5 4.5-4.5 4.5" />
@@ -403,9 +415,22 @@ function resolveBairroMedia(
                         <a
                           [routerLink]="['/lancamentos']"
                           [queryParams]="{ q: row.searchQuery }"
-                          class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-normal text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
+                          class="terraco-link-editorial inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-normal text-ink hover:text-brand focus-visible:text-brand sm:min-h-[40px]"
                         >
-                          Ver lançamentos
+                          <span>Ver lançamentos</span>
+                          <svg
+                            aria-hidden="true"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="terraco-link-arrow h-4 w-4 shrink-0"
+                          >
+                            <path d="M4.5 10h11" />
+                            <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                          </svg>
                         </a>
                       }
                     </div>
@@ -451,20 +476,13 @@ function resolveBairroMedia(
                     @let active = selectedProfileId() === profile.id;
                     <button
                       type="button"
+                      appM3Chip
+                      tone="dark"
+                      [active]="active"
                       (click)="selectProfile(profile.id)"
                       [attr.aria-pressed]="active"
-                      [class]="
-                        active
-                          ? 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/75 bg-ink-inverse/16 px-4 py-2 text-left text-[13px] font-medium leading-[1.3] text-ink-inverse shadow-chip sm:text-[14px]'
-                          : 'terraco-m3-chip inline-flex min-h-[42px] w-auto cursor-pointer items-center gap-2 border border-ink-inverse/20 bg-transparent px-4 py-2 text-left text-[13px] font-normal leading-[1.3] text-ink-inverse/90 hover:border-ink-inverse/45 hover:bg-ink-inverse/10 hover:text-ink-inverse sm:text-[14px]'
-                      "
+                      class="inline-flex min-h-[44px] w-auto items-center px-4 py-2 text-left text-[13px] leading-[1.3] sm:min-h-[42px] sm:text-[14px]"
                     >
-                      @if (active) {
-                        <span
-                          aria-hidden="true"
-                          class="h-2 w-2 shrink-0 rounded-full bg-accent"
-                        ></span>
-                      }
                       <span>{{ profile.label }}</span>
                     </button>
                   }
@@ -474,7 +492,8 @@ function resolveBairroMedia(
                   class="mt-6 border-t border-ink-inverse/15 pt-5 sm:mt-7 sm:pt-6"
                 >
                   <p
-                    class="max-w-[56ch] border-l-2 border-accent pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
+                    data-testid="bairros-whatsapp-preview"
+                    class="max-w-[56ch] border-l-2 border-highlight pl-4 text-[15px] font-normal leading-[1.55] text-ink-inverse/90"
                   >
                     {{ selectedProfile().summary }}
                   </p>
@@ -483,7 +502,9 @@ function resolveBairroMedia(
                     [href]="decisionWhatsappHref()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="terraco-btn mt-5 inline-flex min-h-[46px] w-fit items-center justify-center rounded-pill bg-action px-6 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+                    appM3Button
+                    variant="primary"
+                    class="mt-5 inline-flex min-h-[46px] w-fit items-center justify-center px-6 py-2.5 text-[14px] leading-[1.35]"
                   >
                     Comparar bairros no WhatsApp
                   </a>
@@ -507,9 +528,10 @@ function resolveBairroMedia(
 })
 export class BairrosPageComponent implements OnInit {
   private readonly lancamentosService = inject(LancamentosService);
+  private readonly bairrosService = inject(BairrosService);
   private readonly seoService = inject(SeoService);
 
-  readonly bairros = BAIRROS_BH;
+  readonly bairros = this.bairrosService.bairros;
   readonly filters = BAIRRO_FILTERS;
   readonly decisionProfiles = DECISION_PROFILES;
   readonly nextDestinations = BAIRROS_NEXT_DESTINATIONS;
@@ -519,7 +541,7 @@ export class BairrosPageComponent implements OnInit {
 
   readonly bairroRows = computed<readonly BairroIndexRow[]>(() => {
     const allLaunches = this.lancamentosService.lancamentos();
-    return this.bairros.map((bairro) => {
+    return this.bairros().map((bairro) => {
       const directMatches = allLaunches.filter((item) =>
         bairro.matchBairros.some(
           (name) => name.toLowerCase() === item.bairro.trim().toLowerCase()
@@ -598,7 +620,7 @@ export class BairrosPageComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    this.seoService.updateBairrosIndexMeta(this.bairros);
+    this.seoService.updateBairrosIndexMeta(this.bairros());
   }
 
   setFilter(id: BairroFilterId): void {

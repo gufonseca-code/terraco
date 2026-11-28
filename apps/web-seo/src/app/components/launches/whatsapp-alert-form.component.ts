@@ -15,6 +15,10 @@ import {
   validate,
 } from '@angular/forms/signals';
 import { LeadsService } from '../../core';
+import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../shared/m3-tactile.directives';
 
 const QUICK_PREFERENCES = [
   '2 quartos',
@@ -37,32 +41,11 @@ export function formatBrazilianPhone(raw: string): string {
 
 @Component({
   selector: 'app-whatsapp-alert-form',
-  imports: [FormField],
+  imports: [FormField, M3ButtonDirective, M3ChipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block',
   },
-  styles: `
-    .wa-pref-chip {
-      border-radius: 9999px;
-      transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1),
-        box-shadow 180ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    .wa-pref-chip[aria-pressed='true'] {
-      border-radius: 14px;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .wa-pref-chip {
-        transition: none;
-      }
-    }
-  `,
   template: `
     <div [class]="compact() ? '' : 'rounded-[24px] bg-surface'">
       @if (submitted()) {
@@ -117,20 +100,13 @@ export function formatBrazilianPhone(raw: string): string {
                 @let active = selectedPreference() === pref;
                 <button
                   type="button"
+                  appM3Chip
+                  tone="brand"
+                  [active]="active"
                   (click)="togglePreference(pref)"
                   [attr.aria-pressed]="active"
-                  [class]="
-                    active
-                      ? 'wa-pref-chip inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 border border-[#1F6F50]/35 bg-[#E5F2EC] px-3.5 py-1.5 text-[13px] font-medium leading-[1.3] text-[#1F6F50] shadow-chip'
-                      : 'wa-pref-chip inline-flex min-h-[36px] cursor-pointer items-center gap-1.5 border border-border-subtle bg-canvas px-3.5 py-1.5 text-[13px] font-normal leading-[1.3] text-ink hover:border-border-strong hover:bg-elevated'
-                  "
+                  class="inline-flex min-h-[44px] items-center px-3.5 py-1.5 text-[13px] leading-[1.3] sm:min-h-[38px]"
                 >
-                  @if (active) {
-                    <span
-                      aria-hidden="true"
-                      class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#1F6F50]"
-                    ></span>
-                  }
                   <span>{{ pref }}</span>
                 </button>
               }
@@ -165,8 +141,10 @@ export function formatBrazilianPhone(raw: string): string {
           />
           <button
             type="submit"
+            appM3Button
+            variant="primary"
             [disabled]="submitting()"
-            class="terraco-btn inline-flex min-h-[44px] shrink-0 cursor-pointer items-center justify-center rounded-pill bg-action px-5 py-2.5 text-[13px] font-medium leading-[1.35] text-white hover:bg-action-hover disabled:cursor-not-allowed disabled:opacity-60"
+            class="inline-flex min-h-[44px] shrink-0 items-center justify-center px-5 py-2.5 text-[13px] leading-[1.35] disabled:cursor-not-allowed disabled:opacity-60"
           >
             @if (submitting()) {
               Enviando...

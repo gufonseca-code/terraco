@@ -21,16 +21,16 @@ import {
   NextJourneyComponent,
 } from '../components/shared/next-journey.component';
 import { SectionHandoffComponent } from '../components/shared/section-handoff.component';
+import { ViewTransitionDirective } from '../components/shared/view-transition.directive';
 import {
-  BAIRROS_BH,
   type BairroGuide,
+  BairrosService,
   type Lancamento,
   LancamentosService,
   SITE_NAME,
   SITE_URL,
   SeoService,
   buildWhatsAppUrl,
-  getBairroBySlug,
 } from '../core';
 import { NotFoundPageComponent } from './not-found.page';
 
@@ -149,6 +149,7 @@ function buildBairroJsonLd(
     LaunchCardComponent,
     NextJourneyComponent,
     SectionHandoffComponent,
+    ViewTransitionDirective,
     RouterLink,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -228,6 +229,8 @@ function buildBairroJsonLd(
 
                   <h1
                     id="bairro-heading"
+                    appViewTransition="bairro-title"
+                    [vtSlug]="current.slug"
                     class="font-display text-[clamp(2rem,4.2vw,3rem)] font-medium not-italic leading-[1.06] tracking-[-0.03em] text-ink text-balance"
                   >
                     Morar em {{ current.nome }}, {{ current.cidade }}
@@ -251,15 +254,31 @@ function buildBairroJsonLd(
                     <a
                       routerLink="/lancamentos"
                       [queryParams]="{ q: current.nome }"
-                      class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                      class="terraco-link-editorial inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-normal text-ink-muted hover:text-ink focus-visible:text-ink sm:min-h-[40px]"
                     >
-                      Abrir no catálogo completo
+                      <span>Abrir no catálogo completo</span>
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="terraco-link-arrow h-4 w-4 shrink-0"
+                      >
+                        <path d="M4.5 10h11" />
+                        <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                      </svg>
                     </a>
                   </div>
                 </div>
 
                 <div class="flex items-center justify-start lg:justify-end">
-                  <app-botanical-arch-motif class="h-16 sm:h-20 lg:h-24" />
+                  <app-botanical-arch-motif
+                    appViewTransition="botanical-arch"
+                    class="h-16 sm:h-20 lg:h-24"
+                  />
                 </div>
               </header>
             </div>
@@ -343,9 +362,22 @@ function buildBairroJsonLd(
                   <a
                     routerLink="/lancamentos"
                     [queryParams]="{ q: current.nome }"
-                    class="terraco-link-underline inline-flex min-h-[40px] w-fit shrink-0 items-center text-[14px] font-medium text-ink transition-colors duration-150 motion-reduce:transition-none hover:text-brand"
+                    class="terraco-link-editorial inline-flex min-h-[44px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium text-ink hover:text-brand focus-visible:text-brand sm:min-h-[40px]"
                   >
-                    Ver no catálogo
+                    <span>Ver no catálogo</span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="terraco-link-arrow h-4 w-4 shrink-0"
+                    >
+                      <path d="M4.5 10h11" />
+                      <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                    </svg>
                   </a>
                 }
               </div>
@@ -391,7 +423,7 @@ function buildBairroJsonLd(
                       [href]="bairroWhatsappHref()"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="group inline-flex min-h-[40px] items-center gap-1.5 text-[14px] font-medium text-brand transition-colors duration-150 motion-reduce:transition-none hover:text-brand-hover"
+                      class="terraco-link-editorial group inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-medium text-brand hover:text-brand-hover focus-visible:text-brand-hover sm:min-h-[40px]"
                     >
                       <span>Receber aviso no WhatsApp sobre {{ current.nome }}</span>
                       <svg
@@ -402,7 +434,7 @@ function buildBairroJsonLd(
                         stroke-width="1.8"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+                        class="terraco-link-arrow h-4 w-4 shrink-0"
                       >
                         <path d="M4.5 10h11" />
                         <path d="m11 5.5 4.5 4.5-4.5 4.5" />
@@ -410,9 +442,22 @@ function buildBairroJsonLd(
                     </a>
                     <a
                       routerLink="/lancamentos"
-                      class="terraco-link-underline inline-flex min-h-[40px] items-center text-[14px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                      class="terraco-link-editorial inline-flex min-h-[44px] items-center gap-1.5 text-[14px] font-normal text-ink-muted hover:text-ink focus-visible:text-ink sm:min-h-[40px]"
                     >
-                      Explorar todos os lançamentos em BH
+                      <span>Explorar todos os lançamentos em BH</span>
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="terraco-link-arrow h-4 w-4 shrink-0"
+                      >
+                        <path d="M4.5 10h11" />
+                        <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                      </svg>
                     </a>
                   </div>
                 </div>
@@ -561,9 +606,22 @@ function buildBairroJsonLd(
                   </h2>
                   <a
                     routerLink="/bairros"
-                    class="terraco-link-underline inline-flex min-h-[40px] w-fit items-center text-[14px] font-normal text-ink-muted transition-colors duration-150 motion-reduce:transition-none hover:text-ink"
+                    class="terraco-link-editorial inline-flex min-h-[44px] w-fit items-center gap-1.5 text-[14px] font-normal text-ink-muted hover:text-ink focus-visible:text-ink sm:min-h-[40px]"
                   >
-                    Ver índice de bairros
+                    <span>Ver índice de bairros</span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="terraco-link-arrow h-4 w-4 shrink-0"
+                    >
+                      <path d="M4.5 10h11" />
+                      <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                    </svg>
                   </a>
                 </div>
 
@@ -599,6 +657,7 @@ function buildBairroJsonLd(
 export class BairroDetailPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly lancamentosService = inject(LancamentosService);
+  private readonly bairrosService = inject(BairrosService);
   private readonly seoService = inject(SeoService);
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
@@ -618,7 +677,9 @@ export class BairroDetailPageComponent {
     );
   });
 
-  readonly bairro = computed(() => getBairroBySlug(this.resolvedSlug()));
+  readonly bairro = computed(() =>
+    this.bairrosService.getBySlug(this.resolvedSlug())
+  );
 
   readonly editorialPillars = computed<readonly EditorialPillar[]>(() => {
     const current = this.bairro();
@@ -668,7 +729,9 @@ export class BairroDetailPageComponent {
 
   readonly otherBairros = computed<BairroGuide[]>(() => {
     const current = this.bairro();
-    return BAIRROS_BH.filter((item) => item.slug !== current?.slug);
+    return this.bairrosService
+      .bairros()
+      .filter((item) => item.slug !== current?.slug);
   });
 
   readonly bairroWhatsappHref = computed(() => {

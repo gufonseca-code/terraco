@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { type Lancamento, formatCurrencyBRL } from '../../core';
+import { ViewTransitionDirective } from '../shared/view-transition.directive';
 import { FavoriteButtonComponent } from './favorite-button.component';
 
 export interface LaunchThirdSpec {
@@ -38,7 +39,12 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
 
 @Component({
   selector: 'app-launch-card',
-  imports: [NgOptimizedImage, RouterLink, FavoriteButtonComponent],
+  imports: [
+    NgOptimizedImage,
+    RouterLink,
+    ViewTransitionDirective,
+    FavoriteButtonComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block h-full',
@@ -68,7 +74,8 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
             [width]="item.imagemWidth"
             [height]="item.imagemHeight"
             [priority]="priority()"
-            [style.view-transition-name]="'launch-image-' + item.slug"
+            appViewTransition="launch-image"
+            [vtSlug]="item.slug"
             (load)="markImageLoaded()"
             (error)="markImageLoaded()"
             class="h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
@@ -97,7 +104,8 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
 
           @if (headingLevel() === 'h3') {
             <h3
-              [style.view-transition-name]="'launch-title-' + item.slug"
+              appViewTransition="launch-title"
+              [vtSlug]="item.slug"
               class="font-display text-[1.25rem] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
             >
               <a
@@ -109,7 +117,8 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
             </h3>
           } @else if (headingLevel() === 'h4') {
             <h4
-              [style.view-transition-name]="'launch-title-' + item.slug"
+              appViewTransition="launch-title"
+              [vtSlug]="item.slug"
               class="font-display text-[1.25rem] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
             >
               <a
@@ -121,7 +130,8 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
             </h4>
           } @else {
             <h2
-              [style.view-transition-name]="'launch-title-' + item.slug"
+              appViewTransition="launch-title"
+              [vtSlug]="item.slug"
               class="font-display text-[1.25rem] font-medium not-italic leading-[1.2] tracking-[-0.015em] text-ink text-balance"
             >
               <a
@@ -183,7 +193,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
         <div class="mt-auto pt-1">
           <a
             [routerLink]="['/lancamentos', item.slug]"
-            class="terraco-link-underline inline-flex min-h-[40px] w-fit items-center gap-1.5 text-[13px] font-medium leading-[1.35] text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
+            class="terraco-link-editorial inline-flex min-h-[40px] w-fit items-center gap-1.5 text-[13px] font-medium leading-[1.35] text-brand hover:text-brand-hover focus-visible:text-brand-hover"
           >
             <span>Conhecer lançamento</span>
             <svg
@@ -194,7 +204,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
               stroke-width="1.8"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+              class="terraco-link-arrow h-4 w-4 shrink-0 group-hover:translate-x-1 motion-reduce:group-hover:translate-x-0"
             >
               <path d="M4.5 10h11" />
               <path d="m11 5.5 4.5 4.5-4.5 4.5" />

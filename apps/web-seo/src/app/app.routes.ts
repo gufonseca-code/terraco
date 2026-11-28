@@ -1,6 +1,11 @@
 import { inject } from '@angular/core';
 import { type ResolveFn, type Routes } from '@angular/router';
-import { type Lancamento, LancamentosService } from './core';
+import {
+  type BairroGuide,
+  BairrosService,
+  type Lancamento,
+  LancamentosService,
+} from './core';
 import { HomePageComponent } from './pages/home.page';
 
 const lancamentosListResolver: ResolveFn<Lancamento[]> = () =>
@@ -9,6 +14,14 @@ const lancamentosListResolver: ResolveFn<Lancamento[]> = () =>
 const lancamentoDetailResolver: ResolveFn<Lancamento | undefined> = (route) => {
   const slug = route.paramMap.get('slug') ?? '';
   return inject(LancamentosService).loadBySlug(slug);
+};
+
+const bairrosListResolver: ResolveFn<BairroGuide[]> = () =>
+  inject(BairrosService).loadBairros();
+
+const bairroDetailResolver: ResolveFn<BairroGuide | undefined> = (route) => {
+  const slug = route.paramMap.get('slug') ?? '';
+  return inject(BairrosService).loadBySlug(slug);
 };
 
 export const routes: Routes = [
@@ -43,6 +56,7 @@ export const routes: Routes = [
       import('./pages/bairros.page').then((m) => m.BairrosPageComponent),
     resolve: {
       lancamentos: lancamentosListResolver,
+      bairros: bairrosListResolver,
     },
   },
   {
@@ -53,6 +67,7 @@ export const routes: Routes = [
       ),
     resolve: {
       lancamentos: lancamentosListResolver,
+      bairro: bairroDetailResolver,
     },
   },
   {

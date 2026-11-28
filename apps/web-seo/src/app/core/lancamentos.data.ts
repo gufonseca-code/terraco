@@ -49,7 +49,7 @@ export interface LaunchFloorPlan {
 export interface Lancamento {
   slug: string;
   nome: string;
-  construtora: string;
+  construtora?: string;
   tagline: string;
   bairro: string;
   cidade: string;
@@ -1290,19 +1290,191 @@ export const LANCAMENTOS: Lancamento[] = [
     published: true,
     order: 3,
   },
+  {
+    slug: 'brumadinho-165',
+    nome: 'Brumadinho 165',
+    tagline: 'Studios compactos em localização estratégica no Prado.',
+    bairro: 'Prado',
+    cidade: 'Belo Horizonte',
+    uf: 'MG',
+    endereco: 'Rua Brumadinho, 165, esquina com Rua Chapecó',
+    estrutura:
+      '31 unidades · Studios em torno de 29 m² · Elevador · Rooftop de convivência · Condomínio econômico',
+    badge: 'Lançamento',
+    tags: [
+      'Studio ~29 m²',
+      'Rooftop de convivência',
+      'Condomínio econômico',
+      'Prado',
+    ],
+    quartos: 'Studios compactos',
+    metragem: 'Em torno de 29 m²',
+    tipologias: 'Studio (5 layouts)',
+    vagas: '12 carro e 18 moto (vendidas à parte)',
+    resumo:
+      'Um empreendimento contemporâneo em uma esquina estratégica do Prado, pensado para quem valoriza praticidade, mobilidade e um jeito atual de viver a cidade. Reúne 31 unidades de studios compactos em torno de 29 m² com cinco alternativas ilustrativas de layout, elevador, rooftop de convivência e condomínio econômico, a apenas 3,9 km da Praça Sete. Conta ainda com 12 vagas de carro e 18 vagas de moto vendidas à parte.',
+    corCapa: 'moss',
+    imagem: '/images/lancamentos/brumadinho-165/cover.webp',
+    imagemWidth: 1400,
+    imagemHeight: 1833,
+    imagemAlt:
+      'Fachada contemporânea do Brumadinho 165 na esquina da Rua Brumadinho com Rua Chapecó, no Prado, Belo Horizonte',
+    diferenciais: [
+      '31 unidades de studios compactos em torno de 29 m² com cinco alternativas ilustrativas de layout',
+      'Rooftop de convivência pensado para encontros, pausas e momentos ao ar livre, com espaço fitness e área de estar',
+      'Elevador e condomínio econômico em uma esquina estratégica do Prado',
+      '12 vagas de carro e 18 vagas de moto vendidas à parte',
+      'A apenas 3,9 km da Praça Sete, com acesso facilitado ao Centro de BH, Av. Francisco Sá, Av. do Contorno e Av. Amazonas',
+    ],
+    pilares: [
+      {
+        id: 'lazer',
+        label: 'Rooftop & Convivência',
+        itens: [
+          'Rooftop de convivência ao ar livre',
+          'Espaço fitness no rooftop',
+          'Mesas e áreas de estar com paisagismo',
+          'Vista urbana do Prado',
+        ],
+      },
+      {
+        id: 'praticidade',
+        label: 'Produto & Praticidade',
+        itens: [
+          '31 unidades exclusivas',
+          'Studios em torno de 29 m²',
+          '5 variações ilustrativas de layout',
+          'Elevador',
+          'Condomínio econômico',
+          '12 vagas de carro vendidas à parte',
+          '18 vagas de moto vendidas à parte',
+        ],
+      },
+    ],
+    entorno: [
+      { local: 'Praça Sete', tempo: '3,9 km' },
+      { local: 'Av. Francisco Sá', tempo: 'Acesso imediato' },
+      { local: 'Av. Amazonas', tempo: 'Acesso facilitado' },
+      { local: 'Av. do Contorno', tempo: 'Acesso facilitado' },
+      { local: 'Hospital Mater Dei', tempo: 'Região hospitalar' },
+      { local: 'Hospital Felício Rocho', tempo: 'Região hospitalar' },
+      { local: 'Colégio Pio XII', tempo: 'Entorno próximo' },
+      { local: 'VerdeMar', tempo: 'Entorno próximo' },
+    ],
+    whatsappMensagem:
+      'Oi! Gostaria de receber mais informações e disponibilidade do Brumadinho 165 (Prado).',
+    galeria: [
+      {
+        url: '/images/lancamentos/brumadinho-165/cover.webp',
+        alt: 'Perspectiva da fachada do Brumadinho 165 na esquina da Rua Brumadinho com Rua Chapecó, no Prado',
+        width: 1400,
+        height: 1833,
+      },
+      {
+        url: '/images/lancamentos/brumadinho-165/rooftop-convivencia.webp',
+        alt: 'Rooftop de convivência ao entardecer com mesas, guarda-sol e vista urbana no Brumadinho 165',
+        width: 1526,
+        height: 674,
+      },
+      {
+        url: '/images/lancamentos/brumadinho-165/rooftop-perspectiva-3d.webp',
+        alt: 'Perspectiva 3D do rooftop de convivência e lazer com espaço fitness no Brumadinho 165',
+        width: 1600,
+        height: 897,
+      },
+      {
+        url: '/images/lancamentos/brumadinho-165/localizacao-prado.webp',
+        alt: 'Mapa aéreo da localização estratégica do Brumadinho 165 no Prado, próximo ao Hospital Mater Dei, Hospital Felício Rocho, Colégio Pio XII, VerdeMar, Av. Francisco Sá, Av. do Contorno e Av. Amazonas',
+        width: 1600,
+        height: 1139,
+      },
+    ],
+    plantas: [
+      {
+        id: 'brumadinho-layout-01',
+        titulo: 'Layout 01',
+        categoria: 'Studio ~29 m²',
+        metragem: 'Em torno de 29 m²',
+        quartos: 'Studio',
+        banhos: '1 banho',
+        destaque: 'Variação ilustrativa de layout',
+        imagem: '/images/lancamentos/brumadinho-165/layout-01.webp',
+        width: 340,
+        height: 400,
+        alt: 'Planta humanizada Layout 01 do studio de aproximadamente 29 m² do Brumadinho 165',
+      },
+      {
+        id: 'brumadinho-layout-02',
+        titulo: 'Layout 02',
+        categoria: 'Studio ~29 m²',
+        metragem: 'Em torno de 29 m²',
+        quartos: 'Studio',
+        banhos: '1 banho',
+        destaque: 'Variação ilustrativa de layout',
+        imagem: '/images/lancamentos/brumadinho-165/layout-02.webp',
+        width: 635,
+        height: 282,
+        alt: 'Planta humanizada Layout 02 do studio de aproximadamente 29 m² do Brumadinho 165',
+      },
+      {
+        id: 'brumadinho-layout-03',
+        titulo: 'Layout 03',
+        categoria: 'Studio ~29 m²',
+        metragem: 'Em torno de 29 m²',
+        quartos: 'Studio',
+        banhos: '1 banho',
+        destaque: 'Variação ilustrativa de layout',
+        imagem: '/images/lancamentos/brumadinho-165/layout-03.webp',
+        width: 340,
+        height: 475,
+        alt: 'Planta humanizada Layout 03 do studio de aproximadamente 29 m² do Brumadinho 165',
+      },
+      {
+        id: 'brumadinho-layout-04',
+        titulo: 'Layout 04',
+        categoria: 'Studio ~29 m²',
+        metragem: 'Em torno de 29 m²',
+        quartos: 'Studio',
+        banhos: '1 banho',
+        destaque: 'Variação ilustrativa de layout',
+        imagem: '/images/lancamentos/brumadinho-165/layout-04.webp',
+        width: 1175,
+        height: 885,
+        alt: 'Planta humanizada Layout 04 do studio de aproximadamente 29 m² do Brumadinho 165',
+      },
+      {
+        id: 'brumadinho-layout-05',
+        titulo: 'Layout 05',
+        categoria: 'Studio ~29 m²',
+        metragem: 'Em torno de 29 m²',
+        quartos: 'Studio',
+        banhos: '1 banho',
+        destaque: 'Variação ilustrativa de layout',
+        imagem: '/images/lancamentos/brumadinho-165/layout-05.webp',
+        width: 385,
+        height: 447,
+        alt: 'Planta humanizada Layout 05 do studio de aproximadamente 29 m² do Brumadinho 165',
+      },
+    ],
+    published: true,
+    order: 4,
+  },
 ];
 
 export const SEARCH_SUGGESTIONS: string[] = [
   'Estoril',
+  'Prado',
   'Santa Efigênia',
   'Serrano',
   'Prime View',
   'Upside Square',
   'Horizon',
+  'Brumadinho 165',
 ];
 
 export const QUICK_NEIGHBORHOODS: string[] = [
   'Estoril',
+  'Prado',
   'Santa Efigênia',
   'Serrano',
 ];
@@ -1366,7 +1538,13 @@ export function scoreLancamentoForObjetivo(
   if (normalizedObjetivo.includes('investir')) {
     if (haystack.includes('studio') || haystack.includes('1 quarto')) score += 3;
     if (haystack.includes('coworking') || haystack.includes('novomarket')) score += 2;
-    if (haystack.includes('santa efigenia') || haystack.includes('estoril')) score += 2;
+    if (
+      haystack.includes('santa efigenia') ||
+      haystack.includes('estoril') ||
+      haystack.includes('prado')
+    ) {
+      score += 2;
+    }
     if (haystack.includes('edge') || haystack.includes('patrimar')) score += 1;
     return score;
   }
@@ -1427,7 +1605,7 @@ export function filterLancamentos(
     const searchable = normalizeSearchText(
       [
         item.nome,
-        item.construtora,
+        item.construtora ?? '',
         item.bairro,
         item.cidade,
         item.quartos,

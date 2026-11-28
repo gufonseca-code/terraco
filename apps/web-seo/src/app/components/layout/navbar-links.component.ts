@@ -14,7 +14,12 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { FavoritesService, buildWhatsAppUrl } from '../../core';
+import {
+  FavoritesService,
+  SITE_CONTACT_CHANNELS,
+  buildWhatsAppUrl,
+} from '../../core';
+import { M3ChipDirective } from '../shared/m3-tactile.directives';
 
 interface PrimaryNavItem {
   readonly label: string;
@@ -30,7 +35,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
 
 @Component({
   selector: 'app-navbar-links',
-  imports: [RouterLink],
+  imports: [RouterLink, M3ChipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:click)': 'onDocumentClick($event)',
@@ -43,7 +48,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
       aria-label="Navegação principal"
       class="flex w-full items-center justify-end gap-3 md:justify-between md:pl-8"
     >
-      <!-- Desktop (md+): Clean flat links with M3 Expressive shape morphing -->
+      <!-- Desktop (md+): Clean flat links + integrated Contato link with M3 Expressive shape morphing -->
       <div class="hidden items-center gap-2 md:flex">
         @for (item of primaryItems; track item.route) {
           @let active = isRouteActive(item);
@@ -60,9 +65,19 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             {{ item.label }}
           </a>
         }
+
+        <a
+          [href]="whatsappHref"
+          target="_blank"
+          rel="noopener noreferrer"
+          (click)="closeAllMenus()"
+          class="terraco-nav-morph inline-flex min-h-[38px] items-center px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink-muted hover:bg-surface/65 hover:text-ink"
+        >
+          Contato
+        </a>
       </div>
 
-      <!-- Desktop (md+): Live saved signal (only when > 0) + Discreet WhatsApp link -->
+      <!-- Desktop (md+): Live saved signal (only when > 0) -->
       <div class="hidden items-center gap-3 md:flex">
         @if (favoritesCount() > 0) {
           <a
@@ -72,7 +87,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
                 ? '1 lançamento salvo'
                 : favoritesCount() + ' lançamentos salvos'
             "
-            class="inline-flex min-h-[38px] items-center gap-1.5 rounded-pill px-3 py-1.5 text-[13px] font-medium leading-[1.35] text-ink-muted tabular-nums transition-colors duration-150 hover:bg-surface hover:text-ink"
+            class="terraco-nav-morph inline-flex min-h-[38px] items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium leading-[1.35] text-ink-muted tabular-nums hover:bg-surface hover:text-ink"
           >
             <svg
               aria-hidden="true"
@@ -87,29 +102,6 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
             <span>{{ favoritesCount() }}</span>
           </a>
         }
-
-        <a
-          [href]="whatsappHref"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="terraco-nav-morph inline-flex min-h-[38px] items-center gap-1.5 border border-border-strong/75 px-3.5 py-1.5 text-[14px] font-medium leading-[1.35] text-ink hover:border-ink hover:bg-surface/65"
-        >
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="h-4 w-4 shrink-0 text-ink-muted"
-          >
-            <path
-              d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"
-            />
-          </svg>
-          <span>WhatsApp</span>
-        </a>
       </div>
 
       <!-- Mobile (< md): Optional live saved count + Tactile M3E menu trigger -->
@@ -122,7 +114,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
                 ? '1 lançamento salvo'
                 : favoritesCount() + ' lançamentos salvos'
             "
-            class="inline-flex h-10 items-center gap-1 rounded-[12px] px-2.5 text-[13px] font-medium text-ink tabular-nums transition-colors duration-150 hover:bg-surface/80"
+            class="terraco-nav-morph inline-flex h-11 items-center gap-1 px-3 text-[13px] font-medium text-ink tabular-nums hover:bg-surface/80"
           >
             <svg
               aria-hidden="true"
@@ -147,7 +139,7 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
           [attr.aria-label]="
             mobileMenuOpen() ? 'Fechar menu de navegação' : 'Abrir menu de navegação'
           "
-          class="terraco-nav-menu-trigger cursor-pointer"
+          class="terraco-nav-menu-trigger !h-11 !w-11 cursor-pointer"
         >
           <svg
             aria-hidden="true"
@@ -186,49 +178,35 @@ const PRIMARY_NAV_ITEMS: readonly PrimaryNavItem[] = [
         aria-label="Menu de navegação"
         animate.enter="terraco-m3-sheet-enter"
         animate.leave="terraco-m3-sheet-leave"
-        class="pointer-events-auto absolute inset-x-4 top-full z-40 mt-2 rounded-[24px] border border-border-subtle bg-elevated/98 p-5 shadow-floating backdrop-blur-md sm:inset-x-6 md:hidden"
+        class="pointer-events-auto absolute inset-x-4 top-full z-40 mt-2 rounded-[20px] border border-[#1C1B19]/10 bg-[#FAF8F4] p-4 shadow-floating sm:inset-x-6 md:hidden"
       >
         <div class="space-y-1">
           @for (item of primaryItems; track item.route) {
             @let active = isRouteActive(item);
             <a
               [href]="item.route"
+              appM3Chip
+              tone="nav"
+              [active]="active"
               [attr.aria-current]="active ? 'page' : null"
               (click)="navigateFromMobileSheet($event, [item.route])"
-              [class]="
-                active
-                  ? 'flex min-h-11 items-center rounded-[12px] bg-surface px-3.5 py-2.5 text-[15px] font-semibold text-ink transition-colors duration-150'
-                  : 'flex min-h-11 items-center rounded-[12px] px-3.5 py-2.5 text-[15px] font-medium text-ink-muted transition-colors duration-150 hover:bg-surface/65 hover:text-ink'
-              "
+              class="flex min-h-11 items-center px-3.5 py-2.5 text-[15px]"
             >
               {{ item.label }}
             </a>
           }
-        </div>
 
-        <div class="mt-4 border-t border-border-subtle pt-4">
           <a
             [href]="whatsappHref"
             target="_blank"
             rel="noopener noreferrer"
+            appM3Chip
+            tone="nav"
+            [active]="false"
             (click)="closeAllMenus()"
-            class="terraco-btn flex min-h-[46px] w-full items-center justify-center gap-2 rounded-pill bg-action px-5 py-2.5 text-[14px] font-medium leading-[1.35] text-white hover:bg-action-hover"
+            class="flex min-h-11 items-center px-3.5 py-2.5 text-[15px]"
           >
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.85"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-4 w-4 shrink-0"
-            >
-              <path
-                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"
-              />
-            </svg>
-            <span>Falar no WhatsApp</span>
+            Contato
           </a>
         </div>
       </div>
@@ -258,7 +236,7 @@ export class NavbarLinksComponent {
   );
 
   readonly whatsappHref = buildWhatsAppUrl(
-    'Oi! Gostaria de conversar sobre os lançamentos da Terraço em BH.'
+    SITE_CONTACT_CHANNELS.whatsapp.defaultMessage
   );
 
   constructor() {

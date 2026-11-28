@@ -70,7 +70,7 @@ export interface JourneyDestination {
                     </div>
 
                     <span
-                      class="inline-flex min-h-[40px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-brand transition-colors duration-150 motion-reduce:transition-none group-hover:text-brand-hover"
+                      class="inline-flex min-h-[40px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-brand transition-colors duration-200 motion-reduce:transition-none group-hover:text-brand-hover"
                     >
                       <span>{{ dest.actionLabel }}</span>
                       <svg
@@ -81,7 +81,7 @@ export interface JourneyDestination {
                         stroke-width="1.8"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+                        class="h-4 w-4 shrink-0 transition-transform duration-[260ms] ease-[var(--ease-expressive)] motion-reduce:transition-none group-hover:translate-x-1 motion-reduce:group-hover:translate-x-0"
                       >
                         <path d="M4.5 10h11" />
                         <path d="m11 5.5 4.5 4.5-4.5 4.5" />
@@ -147,7 +147,7 @@ export interface JourneyDestination {
                       stroke-width="1.8"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      class="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+                      class="h-4 w-4 shrink-0 transition-transform duration-[260ms] ease-[var(--ease-expressive)] motion-reduce:transition-none group-hover:translate-x-1 motion-reduce:group-hover:translate-x-0"
                     >
                       <path d="M4.5 10h11" />
                       <path d="m11 5.5 4.5 4.5-4.5 4.5" />

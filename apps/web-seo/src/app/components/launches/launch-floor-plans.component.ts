@@ -13,6 +13,10 @@ import {
   type LaunchFloorPlan,
   type LaunchMediaItem,
 } from '../../core';
+import {
+  M3ButtonDirective,
+  M3ChipDirective,
+} from '../shared/m3-tactile.directives';
 import { ImageLightboxComponent } from './image-lightbox.component';
 
 type PlanIntentKey = 'tabela_planta' | 'simular_entrada' | 'agendar_visita';
@@ -44,48 +48,42 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 @Component({
   selector: 'app-launch-floor-plans',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Listbox, Option, ImageLightboxComponent],
+  imports: [
+    Listbox,
+    Option,
+    M3ButtonDirective,
+    M3ChipDirective,
+    ImageLightboxComponent,
+  ],
   styles: `
-    .m3e-chip {
-      border-radius: 9999px;
-      transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        border-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    .m3e-chip[aria-pressed='true'],
-    .m3e-tonal-btn:hover,
-    .m3e-tonal-btn:active {
-      border-radius: 12px;
-    }
-
     .m3e-plan-item {
       border-radius: 20px;
       transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
+        border-radius var(--duration-spring-fast) var(--ease-expressive),
+        background-color var(--duration-ui) var(--ease-ui),
+        color var(--duration-ui) var(--ease-ui),
+        transform 180ms var(--ease-expressive);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .m3e-plan-item:hover {
+        border-radius: 16px;
+      }
     }
 
     .m3e-plan-item[aria-selected='true'] {
-      border-radius: 12px;
+      border-radius: var(--radius-m3-md);
     }
 
-    .m3e-tonal-btn {
-      border-radius: 9999px;
-      transition:
-        border-radius 240ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 160ms cubic-bezier(0.2, 0, 0, 1),
-        color 160ms cubic-bezier(0.2, 0, 0, 1);
+    .m3e-plan-item:active {
+      border-radius: var(--radius-m3-md);
+      transform: scale(0.985);
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .m3e-chip,
-      .m3e-plan-item,
-      .m3e-tonal-btn {
+      .m3e-plan-item {
         transition: none;
+        transform: none;
       }
     }
   `,
@@ -128,13 +126,12 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
               @let active = selectedCategory() === category.name;
               <button
                 type="button"
+                appM3Chip
+                tone="canvas"
+                [active]="active"
                 (click)="selectCategory(category.name)"
                 [attr.aria-pressed]="active"
-                [class]="
-                  active
-                    ? 'm3e-chip inline-flex min-h-[38px] shrink-0 cursor-pointer items-center gap-1.5 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
-                    : 'm3e-chip inline-flex min-h-[38px] shrink-0 cursor-pointer items-center gap-1.5 border border-transparent bg-canvas px-4 py-1.5 text-[13px] font-medium text-[#1C1B19] hover:bg-elevated'
-                "
+                class="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 px-4 py-1.5 text-[13px] font-medium sm:min-h-[38px]"
               >
                 <span>{{ category.name }}</span>
                 <span
@@ -162,13 +159,12 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
               @let isSelected = activePlan()?.id === plan.id;
               <button
                 type="button"
+                appM3Chip
+                tone="canvas"
+                [active]="isSelected"
                 (click)="selectPlan(plan.id)"
                 [attr.aria-pressed]="isSelected"
-                [class]="
-                  isSelected
-                    ? 'm3e-chip inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-2 border border-transparent bg-[#1C1B19] px-4 py-1.5 text-[13px] font-medium text-[#FAF8F4] shadow-chip'
-                    : 'm3e-chip inline-flex min-h-[40px] shrink-0 cursor-pointer items-center gap-2 border border-transparent bg-canvas px-4 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-elevated'
-                "
+                class="inline-flex min-h-[44px] shrink-0 items-center gap-2 px-4 py-1.5 text-[13px] sm:min-h-[40px]"
               >
                 <span>{{ plan.titulo }}</span>
                 <span
@@ -282,9 +278,11 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
 
                 <button
                   type="button"
+                  appM3Button
+                  variant="tonal"
                   (click)="openActivePlanLightbox()"
                   aria-label="Ampliar planta em tela cheia"
-                  class="terraco-btn absolute right-3 bottom-3 inline-flex min-h-[38px] items-center gap-1.5 rounded-pill border border-border-subtle bg-elevated/95 px-3 py-1.5 text-[13px] font-medium text-ink shadow-xs backdrop-blur-xs hover:border-ink/35"
+                  class="absolute right-3 bottom-3 inline-flex min-h-[44px] items-center gap-1.5 border border-border-subtle bg-elevated/95 px-3.5 py-1.5 text-[13px] text-ink shadow-xs backdrop-blur-xs hover:border-ink/35 hover:bg-elevated sm:min-h-[38px]"
                 >
                   <svg
                     aria-hidden="true"
@@ -404,13 +402,12 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                     @for (intent of intentOptions; track intent.key) {
                       <button
                         type="button"
+                        appM3Chip
+                        tone="light"
+                        [active]="selectedIntent() === intent.key"
                         (click)="selectIntent(intent.key)"
                         [attr.aria-pressed]="selectedIntent() === intent.key"
-                        [class]="
-                          selectedIntent() === intent.key
-                            ? 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#1C1B19] px-3.5 py-1.5 text-[13px] font-medium text-[#FAF8F4]'
-                            : 'm3e-chip inline-flex min-h-[38px] cursor-pointer items-center border border-transparent bg-[#F3EFE6] px-3.5 py-1.5 text-[13px] font-normal text-[#1C1B19] hover:bg-[#EAE3D5]'
-                        "
+                        class="inline-flex min-h-[44px] items-center px-3.5 py-1.5 text-[13px] sm:min-h-[38px]"
                       >
                         {{ intent.label }}
                       </button>
@@ -422,7 +419,9 @@ const PLAN_INTENT_OPTIONS: readonly PlanIntentOption[] = [
                       [href]="activePlanWhatsappHref()"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="m3e-tonal-btn inline-flex min-h-[44px] flex-1 items-center justify-center bg-[#F3EFE6] px-5 py-2.5 text-[13px] font-medium text-[#1C1B19] hover:bg-[#EAE3D5]"
+                      appM3Button
+                      variant="tonal"
+                      class="inline-flex min-h-[44px] flex-1 items-center justify-center px-5 py-2.5 text-[13px]"
                     >
                       {{ activeIntentOption().ctaLabel }}
                     </a>

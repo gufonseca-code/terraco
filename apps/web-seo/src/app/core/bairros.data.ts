@@ -3,6 +3,14 @@ export interface BairroFaqItem {
   resposta: string;
 }
 
+export interface BairroMedia {
+  url: string;
+  alt: string;
+  width: number;
+  height: number;
+  caption: string;
+}
+
 export interface BairroGuide {
   slug: string;
   nome: string;
@@ -17,7 +25,11 @@ export interface BairroGuide {
   perfilImoveis: string;
   matchBairros: string[];
   nearbyBairros?: string[];
+  media?: BairroMedia;
   faqs: BairroFaqItem[];
+  published?: boolean;
+  order?: number;
+  updatedAt?: string | null;
 }
 
 export const BAIRROS_BH: readonly BairroGuide[] = [
@@ -39,6 +51,15 @@ export const BAIRROS_BH: readonly BairroGuide[] = [
     perfilImoveis:
       'Predomínio de condomínios residenciais contemporâneos de 1 e 2 quartos com suíte, plantas entre 49 e 103 m², varanda ou área garden e lazer completo entregue decorado.',
     matchBairros: ['Estoril'],
+    media: {
+      url: '/images/lancamentos/prime-view/cover.webp',
+      alt: 'Fachada contemporânea do residencial Prime View no Estoril, Belo Horizonte',
+      width: 1024,
+      height: 614,
+      caption: 'Prime View · Estoril',
+    },
+    published: true,
+    order: 0,
     faqs: [
       {
         pergunta: 'Como é morar no bairro Estoril em Belo Horizonte?',
@@ -63,6 +84,56 @@ export const BAIRROS_BH: readonly BairroGuide[] = [
     ],
   },
   {
+    slug: 'prado',
+    nome: 'Prado',
+    regiao: 'Região Oeste',
+    cidade: 'Belo Horizonte',
+    uf: 'MG',
+    tituloSeo: 'Lançamentos no Prado, Belo Horizonte | Terraço',
+    descricaoSeo:
+      'Guia do bairro Prado em Belo Horizonte: acesso facilitado ao Centro (3,9 km da Praça Sete), Av. Francisco Sá, Av. do Contorno, Av. Amazonas, hospitais e studios compactos.',
+    resumo:
+      'Bairro tradicional em localização estratégica na Região Oeste de Belo Horizonte, a cerca de 3,9 km da Praça Sete, com acesso facilitado ao Centro e forte presença de serviços de saúde, educação e comércio.',
+    mobilidade:
+      'Posição estratégica com ligação direta à Av. Francisco Sá, Av. do Contorno e Av. Amazonas, garantindo deslocamento rápido ao Centro de Belo Horizonte (3,9 km da Praça Sete) e aos principais corredores da cidade.',
+    servicos:
+      'Entorno completo com proximidade ao Hospital Mater Dei, Hospital Felício Rocho, Colégio Pio XII e supermercado VerdeMar, além de oferta consolidada de serviços urbanos e comércio de bairro.',
+    perfilImoveis:
+      'Forte aderência à vida urbana e à moradia prática, com alta demanda por locação de imóveis compactos em regiões centrais — destaque para studios em torno de 29 m² com layouts inteligentes e condomínio econômico.',
+    matchBairros: ['Prado'],
+    media: {
+      url: '/images/lancamentos/brumadinho-165/localizacao-prado.webp',
+      alt: 'Vista aérea da localização estratégica do Brumadinho 165 no Prado, próximo ao Hospital Mater Dei, Hospital Felício Rocho, Colégio Pio XII, VerdeMar e Av. Amazonas',
+      width: 1600,
+      height: 1139,
+      caption: 'Brumadinho 165 · Prado',
+    },
+    published: true,
+    order: 1,
+    faqs: [
+      {
+        pergunta: 'Como é a localização e o acesso do bairro Prado em BH?',
+        resposta:
+          'O Prado fica em posição estratégica a apenas 3,9 km da Praça Sete, com acesso facilitado ao Centro de Belo Horizonte pelas avenidas Francisco Sá, do Contorno e Amazonas.',
+      },
+      {
+        pergunta: 'Quais serviços e referências ficam próximos ao Prado?',
+        resposta:
+          'A região conta com acesso próximo a importantes polos de serviços e saúde, como o Hospital Mater Dei, o Hospital Felício Rocho, o Colégio Pio XII e o supermercado VerdeMar.',
+      },
+      {
+        pergunta: 'Por que o Prado tem boa demanda para locação de studios compactos?',
+        resposta:
+          'Imóveis compactos bem localizados concentram procura em áreas com forte oferta de serviços, mobilidade e proximidade a polos de trabalho e saúde — perfil atendido diretamente pelo Prado.',
+      },
+      {
+        pergunta: 'Qual é o perfil do lançamento disponível no Prado?',
+        resposta:
+          'O Brumadinho 165 (na Rua Brumadinho, 165, esquina com Rua Chapecó) reúne 31 unidades de studios compactos em torno de 29 m² com 5 variações ilustrativas de layout, elevador, rooftop de convivência e condomínio econômico.',
+      },
+    ],
+  },
+  {
     slug: 'santa-efigenia',
     nome: 'Santa Efigênia',
     regiao: 'Região Centro-Sul / Leste',
@@ -80,6 +151,15 @@ export const BAIRROS_BH: readonly BairroGuide[] = [
     perfilImoveis:
       'Forte demanda de moradia prática e locação de curta ou longa duração, com destaque para torres únicas contemporâneas que reúnem studios, 1 quarto e apartamentos de 2 suítes.',
     matchBairros: ['Santa Efigênia'],
+    media: {
+      url: '/images/lancamentos/upside-square/piscina-vista-ampla.webp',
+      alt: 'Área da piscina climatizada com vista panorâmica do Upside Square em Santa Efigênia',
+      width: 803,
+      height: 584,
+      caption: 'Upside Square · Santa Efigênia',
+    },
+    published: true,
+    order: 2,
     faqs: [
       {
         pergunta: 'Por que o Santa Efigênia é tão procurado para morar e investir?',
@@ -121,6 +201,15 @@ export const BAIRROS_BH: readonly BairroGuide[] = [
     perfilImoveis:
       'Excelente relação entre metragem, lazer e valor por metro quadrado, com destaque para apartamentos novos de 1 e 2 quartos com suíte, varanda, garagem e condomínios cercados por área verde.',
     matchBairros: ['Serrano'],
+    media: {
+      url: '/images/lancamentos/horizon/cover.webp',
+      alt: 'Fachada do residencial Horizon cercado por área verde no Serrano, Belo Horizonte',
+      width: 641,
+      height: 576,
+      caption: 'Horizon · Serrano',
+    },
+    published: true,
+    order: 3,
     faqs: [
       {
         pergunta: 'Onde fica localizado o bairro Serrano em Belo Horizonte?',
@@ -163,6 +252,15 @@ export const BAIRROS_BH: readonly BairroGuide[] = [
       'Alta procura por apartamentos modernos de 2 e 3 quartos com lazer completo. Pela escassez de terrenos disponíveis dentro do Buritis, muitos compradores também avaliam lançamentos vizinhos no Estoril.',
     matchBairros: ['Buritis'],
     nearbyBairros: ['Estoril'],
+    media: {
+      url: '/images/lancamentos/prime-view/piscina.webp',
+      alt: 'Piscina e área de lazer do Prime View na divisa entre Estoril e Buritis',
+      width: 800,
+      height: 550,
+      caption: 'Divisa Buritis / Estoril · Prime View',
+    },
+    published: true,
+    order: 4,
     faqs: [
       {
         pergunta: 'Por que o Buritis é um dos bairros mais buscados de BH?',

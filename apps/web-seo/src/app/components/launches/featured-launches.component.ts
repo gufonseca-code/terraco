@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LancamentosService, ScrollRevealDirective } from '../../core';
+import { ViewTransitionDirective } from '../shared/view-transition.directive';
 import { FavoriteButtonComponent } from './favorite-button.component';
 import {
   LaunchCardComponent,
@@ -34,6 +35,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
     LaunchCardComponent,
     LaunchCardSkeletonComponent,
     ScrollRevealDirective,
+    ViewTransitionDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -102,7 +104,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
 
             <a
               routerLink="/lancamentos"
-              class="terraco-link-underline group inline-flex min-h-[40px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-ink transition-colors duration-150 hover:text-action-hover focus-visible:text-action-hover"
+              class="terraco-link-editorial inline-flex min-h-[40px] w-fit shrink-0 items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-ink hover:text-action-hover focus-visible:text-action-hover"
             >
               <span>Ver catálogo completo</span>
               <svg
@@ -113,7 +115,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                 stroke-width="1.8"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+                class="terraco-link-arrow h-4 w-4 shrink-0"
               >
                 <path d="M4.5 10h11" />
                 <path d="m11 5.5 4.5 4.5-4.5 4.5" />
@@ -145,9 +147,8 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                       [width]="lead.imagemWidth"
                       [height]="lead.imagemHeight"
                       priority
-                      [style.view-transition-name]="
-                        'launch-image-' + lead.slug
-                      "
+                      appViewTransition="launch-image"
+                      [vtSlug]="lead.slug"
                       (load)="markLeadImageLoaded()"
                       (error)="markLeadImageLoaded()"
                       class="h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
@@ -179,7 +180,8 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                   </div>
 
                   <h3
-                    [style.view-transition-name]="'launch-title-' + lead.slug"
+                    appViewTransition="launch-title"
+                    [vtSlug]="lead.slug"
                     class="mt-1 font-display text-[clamp(1.5rem,2.4vw,1.875rem)] font-medium not-italic leading-[1.14] tracking-[-0.02em] text-ink text-balance"
                   >
                     <a
@@ -294,9 +296,22 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
             <a
               href="#descoberta-guiada"
               (click)="scrollToGuidedDiscovery($event)"
-              class="terraco-link-underline inline-flex min-h-[44px] items-center font-medium text-brand transition-colors duration-150 hover:text-brand-hover focus-visible:text-brand-hover"
+              class="terraco-link-editorial inline-flex min-h-[44px] items-center gap-1.5 font-medium text-brand hover:text-brand-hover focus-visible:text-brand-hover"
             >
-              Descubra pelo seu momento
+              <span>Descubra pelo seu momento</span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="terraco-link-arrow h-4 w-4 shrink-0"
+              >
+                <path d="M4.5 10h11" />
+                <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+              </svg>
             </a>
           </div>
         </div>

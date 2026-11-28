@@ -66,7 +66,7 @@ export class FavoriteButtonComponent {
 
   readonly iconClasses = computed(
     () =>
-      `h-4 w-4 transition-transform duration-200 ease-out group-active:scale-90 motion-reduce:transition-none ${
+      `h-4 w-4 transition-transform duration-200 ease-[var(--ease-expressive)] group-active:scale-90 motion-reduce:transition-none motion-reduce:group-active:scale-100 ${
         this.isFavorited() ? 'scale-110 fill-current' : 'scale-100'
       }`
   );

@@ -18,6 +18,7 @@ import {
 } from '../../core';
 import { FavoriteButtonComponent } from '../launches/favorite-button.component';
 import { resolveLaunchThirdSpec } from '../launches/launch-card.component';
+import { ViewTransitionDirective } from '../shared/view-transition.directive';
 import { BotanicalArchMotifComponent } from './botanical-arch-motif.component';
 import { HeroSearchFormComponent } from './hero-search-form.component';
 
@@ -26,6 +27,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
   imports: [
     NgOptimizedImage,
     RouterLink,
+    ViewTransitionDirective,
     BotanicalArchMotifComponent,
     HeroSearchFormComponent,
     FavoriteButtonComponent,
@@ -44,10 +46,14 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
         >
           <div class="space-y-4 sm:space-y-5 lg:col-span-6 lg:space-y-6">
             <div class="terraco-reveal space-y-3 sm:space-y-4">
-              <app-botanical-arch-motif class="h-32 sm:h-36 lg:h-40" />
+              <app-botanical-arch-motif
+                appViewTransition="botanical-arch"
+                class="h-32 sm:h-36 lg:h-40"
+              />
 
               <h1
                 id="hero-heading"
+                appViewTransition="page-heading"
                 class="max-w-[14ch] font-display text-[clamp(2rem,4.2vw,3.125rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink text-balance"
               >
                 Seu próximo canto, sem burocracia.
@@ -86,9 +92,22 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
                 <a
                   href="#lancamentos-selecionados"
                   (click)="scrollToFeatured($event)"
-                  class="terraco-link-underline hidden min-h-[36px] items-center px-1.5 text-[13px] font-medium text-ink transition-colors duration-150 hover:text-action-hover focus-visible:text-action-hover sm:inline-flex"
+                  class="terraco-link-editorial hidden min-h-[36px] items-center gap-1 px-1.5 text-[13px] font-medium text-ink hover:text-action-hover focus-visible:text-action-hover sm:inline-flex"
                 >
-                  Ver lançamentos
+                  <span>Ver lançamentos</span>
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="terraco-link-arrow h-3.5 w-3.5 shrink-0"
+                  >
+                    <path d="M4.5 10h11" />
+                    <path d="m11 5.5 4.5 4.5-4.5 4.5" />
+                  </svg>
                 </a>
               </nav>
             </div>
@@ -146,7 +165,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
 
                   <a
                     [routerLink]="['/lancamentos', lead.slug]"
-                    class="terraco-link-underline group inline-flex min-h-[36px] items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-ink transition-colors duration-150 hover:text-action-hover focus-visible:text-action-hover"
+                    class="terraco-link-editorial group inline-flex min-h-[36px] items-center gap-1.5 text-[14px] font-medium leading-[1.35] text-ink hover:text-action-hover focus-visible:text-action-hover"
                   >
                     <span>Conhecer lançamento</span>
                     <svg
@@ -157,7 +176,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
                       stroke-width="1.8"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      class="h-4 w-4 shrink-0 transition-transform duration-150 motion-reduce:transition-none group-hover:translate-x-0.5 motion-reduce:group-hover:translate-x-0"
+                      class="terraco-link-arrow h-4 w-4 shrink-0"
                     >
                       <path d="M4.5 10h11" />
                       <path d="m11 5.5 4.5 4.5-4.5 4.5" />
