@@ -212,7 +212,7 @@ h4 {
 
 /* Superfície base do footer com fundo SVG risograph de cobogó e folhagens */
 .terraco-cobogo-surface {
-  background-color: var(--color-bg-surface);
+  background-color: #103626;
 }
 
 .terraco-cobogo-band {

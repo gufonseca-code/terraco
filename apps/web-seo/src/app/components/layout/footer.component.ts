@@ -25,7 +25,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
     <footer
       id="contato"
       appViewTransition="footer"
-      class="terraco-cobogo-surface relative isolate mt-auto overflow-hidden border-t border-border-subtle bg-surface scroll-mt-24"
+      class="terraco-cobogo-surface relative isolate mt-auto overflow-hidden border-t border-border-subtle bg-[#103626] scroll-mt-24"
     >
       @if (showBackdrop()) {
         <app-footer-cobogo-backdrop />

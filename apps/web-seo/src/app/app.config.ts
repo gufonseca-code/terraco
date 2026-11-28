@@ -56,7 +56,7 @@ export const appConfig: ApplicationConfig = {
         if (
           config.width &&
           config.width <= 400 &&
-          /^\/images\/lancamentos\/(prime-view|horizon|upside-square)\/cover\.webp$/.test(
+          /^\/images\/lancamentos\/(prime-view|horizon|upside-square|brumadinho-165)\/cover\.webp$/.test(
             config.src,
           )
         ) {

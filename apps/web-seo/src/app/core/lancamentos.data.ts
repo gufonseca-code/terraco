@@ -1317,8 +1317,8 @@ export const LANCAMENTOS: Lancamento[] = [
       'Um empreendimento contemporâneo em uma esquina estratégica do Prado, pensado para quem valoriza praticidade, mobilidade e um jeito atual de viver a cidade. Reúne 31 unidades de studios compactos em torno de 29 m² com cinco alternativas ilustrativas de layout, elevador, rooftop de convivência e condomínio econômico, a apenas 3,9 km da Praça Sete. Conta ainda com 12 vagas de carro e 18 vagas de moto vendidas à parte.',
     corCapa: 'moss',
     imagem: '/images/lancamentos/brumadinho-165/cover.webp',
-    imagemWidth: 1400,
-    imagemHeight: 1833,
+    imagemWidth: 800,
+    imagemHeight: 1047,
     imagemAlt:
       'Fachada contemporânea do Brumadinho 165 na esquina da Rua Brumadinho com Rua Chapecó, no Prado, Belo Horizonte',
     diferenciais: [
