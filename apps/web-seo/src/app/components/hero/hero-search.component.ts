@@ -44,17 +44,6 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
         >
           <div class="space-y-4 sm:space-y-5 lg:col-span-6 lg:space-y-6">
             <div class="terraco-reveal space-y-3 sm:space-y-4">
-              <p
-                class="inline-flex w-fit items-center gap-2 rounded-full border border-ink/10 bg-surface px-3 py-1 text-[12px] font-medium leading-[1.3] tracking-[0.01em] text-ink"
-              >
-                <span aria-hidden="true" class="inline-flex items-end gap-[2px]">
-                  <span class="h-1.5 w-[2.5px] rounded-full bg-[#F06A36]"></span>
-                  <span class="h-2.5 w-[2.5px] rounded-full bg-[#F06A36]"></span>
-                  <span class="h-3.5 w-[2.5px] rounded-full bg-[#F06A36]"></span>
-                </span>
-                <span>Curadoria residencial em Belo Horizonte</span>
-              </p>
-
               <h1
                 id="hero-heading"
                 appViewTransition="page-heading"
