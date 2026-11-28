@@ -143,7 +143,7 @@ function buildManifestLocalPathIndex(manifest) {
   return index;
 }
 
-function resolveMediaUrl(localOrRemoteUrl, manifestIndex, bucket, useStorageUrls) {
+function resolveMediaUrl(localOrRemoteUrl, manifestIndex, useStorageUrls) {
   if (!localOrRemoteUrl || typeof localOrRemoteUrl !== 'string') {
     return { url: localOrRemoteUrl, record: null };
   }
@@ -156,26 +156,16 @@ function resolveMediaUrl(localOrRemoteUrl, manifestIndex, bucket, useStorageUrls
     return { url: fromManifest.publicUrl, record: fromManifest };
   }
 
-  const match = localOrRemoteUrl.match(/^\/images\/lancamentos\/([^/]+)\/(.+)$/);
-  if (match && bucket) {
-    const [, slug, filename] = match;
-    const storagePath = `launches/${slug}/images/${filename.replace(/\//g, '-')}`;
-    return {
-      url: buildFirebaseStoragePublicUrl(bucket, storagePath),
-      record: null,
-    };
-  }
-
   return { url: localOrRemoteUrl, record: null };
 }
 
-function buildLaunchDocument(raw, index, mediaEntry, manifestIndex, bucket, useStorageUrls) {
+function buildLaunchDocument(raw, index, mediaEntry, manifestIndex, useStorageUrls) {
   const slug = String(raw.slug || '').trim();
   if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
     throw new Error(`Invalid launch slug: "${raw.slug}"`);
   }
 
-  const resolvedCover = resolveMediaUrl(raw.imagem, manifestIndex, bucket, useStorageUrls);
+  const resolvedCover = resolveMediaUrl(raw.imagem, manifestIndex, useStorageUrls);
   const coverFromManifest =
     resolvedCover.record ?? (useStorageUrls && mediaEntry?.cover ? mediaEntry.cover : null);
   const imagem = ensureWebpUrl(
@@ -187,7 +177,7 @@ function buildLaunchDocument(raw, index, mediaEntry, manifestIndex, bucket, useS
 
   const galeria = Array.isArray(raw.galeria)
     ? raw.galeria.map((g) => {
-        const resolved = resolveMediaUrl(g.url, manifestIndex, bucket, useStorageUrls);
+        const resolved = resolveMediaUrl(g.url, manifestIndex, useStorageUrls);
         return stripUndefined({
           url: ensureWebpUrl(resolved.url, slug),
           alt: g.alt,
@@ -199,7 +189,7 @@ function buildLaunchDocument(raw, index, mediaEntry, manifestIndex, bucket, useS
 
   const plantas = Array.isArray(raw.plantas)
     ? raw.plantas.map((p) => {
-        const resolved = resolveMediaUrl(p.imagem, manifestIndex, bucket, useStorageUrls);
+        const resolved = resolveMediaUrl(p.imagem, manifestIndex, useStorageUrls);
         return stripUndefined({
           ...p,
           imagem: ensureWebpUrl(resolved.url, slug),
@@ -263,7 +253,7 @@ function buildLaunchDocument(raw, index, mediaEntry, manifestIndex, bucket, useS
   return doc;
 }
 
-function buildBairroDocument(raw, index, manifestIndex, bucket, useStorageUrls) {
+function buildBairroDocument(raw, index, manifestIndex, useStorageUrls) {
   const slug = String(raw.slug || '').trim().toLowerCase();
   if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
     throw new Error(`Invalid bairro slug: "${raw.slug}"`);
@@ -271,7 +261,7 @@ function buildBairroDocument(raw, index, manifestIndex, bucket, useStorageUrls) 
 
   let media = raw.media;
   if (media?.url) {
-    const resolved = resolveMediaUrl(media.url, manifestIndex, bucket, useStorageUrls);
+    const resolved = resolveMediaUrl(media.url, manifestIndex, useStorageUrls);
     media = stripUndefined({
       ...media,
       url: ensureWebpUrl(resolved.url, slug),
@@ -321,8 +311,7 @@ async function main() {
   }
 
   const manifest = await loadMediaManifest();
-  const shouldUseStorageUrls =
-    args.useStorageUrls || (manifest && manifest.mode && manifest.mode !== 'local');
+  const shouldUseStorageUrls = Boolean(args.useStorageUrls);
   const bucket = manifest?.bucket || `${projectId}.firebasestorage.app`;
   const manifestIndex = buildManifestLocalPathIndex(manifest);
 
@@ -333,8 +322,7 @@ async function main() {
       idx,
       mediaEntry,
       manifestIndex,
-      bucket,
-      Boolean(shouldUseStorageUrls)
+      shouldUseStorageUrls
     );
   });
 
@@ -347,8 +335,7 @@ async function main() {
           item,
           idx,
           manifestIndex,
-          bucket,
-          Boolean(shouldUseStorageUrls)
+          shouldUseStorageUrls
         )
       )
     : [];
