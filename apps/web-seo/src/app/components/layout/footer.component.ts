@@ -46,7 +46,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
             routerLink="/lancamentos"
             appM3Button
             variant="tonal"
-            class="inline-flex min-h-[44px] items-center justify-center border border-ink/10 bg-canvas/88 px-5 py-3 text-[15px] leading-[1.35] backdrop-blur-[2px] hover:bg-elevated focus-visible:text-ink"
+            class="inline-flex min-h-[44px] items-center justify-center bg-canvas px-5 py-3 text-[15px] leading-[1.35] text-ink shadow-chip hover:bg-surface focus-visible:text-ink"
           >
             Lançamentos
           </a>
