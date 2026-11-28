@@ -97,12 +97,32 @@ app.get(['/.well-known/ard.json', '/.well-known/ai-catalog.json'], (req, res) =>
     );
 });
 
+const SITEMAP_PATHS: ReadonlyArray<{ path: string; priority: string }> = [
+  { path: '', priority: '1' },
+  { path: '/lancamentos', priority: '0.9' },
+  { path: '/lancamentos/prime-view', priority: '0.8' },
+  { path: '/lancamentos/upside-square', priority: '0.8' },
+  { path: '/lancamentos/horizon', priority: '0.8' },
+  { path: '/lancamentos/brumadinho-165', priority: '0.8' },
+  { path: '/bairros', priority: '0.8' },
+  { path: '/bairros/estoril', priority: '0.8' },
+  { path: '/bairros/prado', priority: '0.8' },
+  { path: '/bairros/santa-efigenia', priority: '0.8' },
+  { path: '/bairros/serrano', priority: '0.8' },
+  { path: '/bairros/buritis', priority: '0.8' },
+];
+
 app.get('/sitemap.xml', (_req, res) => {
+  const urls = SITEMAP_PATHS.map(
+    ({ path, priority }) =>
+      `  <url>\n    <loc>${SITE_URL}${path}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>${priority}</priority>\n  </url>`,
+  ).join('\n');
+
   res
     .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
     .type('application/xml')
     .send(
-      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${SITE_URL}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>1</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/prime-view</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/upside-square</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/horizon</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/estoril</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/santa-efigenia</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/serrano</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/buritis</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n</urlset>\n`,
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
     );
 });
 
