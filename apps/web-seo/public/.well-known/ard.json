@@ -1,10 +1,10 @@
 {
-  "specVersion": "0.91",
+  "specVersion": "1.0",
   "entries": [
     {
       "identifier": "urn:air:meuterraco.com.br:web:llms-txt",
       "displayName": "Terraço — Índice de Conteúdo para LLMs (llms.txt)",
-      "type": "application/vnd.llms+markdown",
+      "type": "text/markdown; profile=\"urn:air:agent-skills\"",
       "url": "https://meuterraco.com.br/llms.txt",
       "representativeQueries": [
         "Quais lançamentos imobiliários estão disponíveis no Terraço em Belo Horizonte?",
@@ -15,7 +15,7 @@
     {
       "identifier": "urn:air:meuterraco.com.br:web:launches-catalog",
       "displayName": "Terraço — Catálogo de Lançamentos em Belo Horizonte",
-      "type": "application/vnd.terraco.launches+json",
+      "type": "application/ai-catalog+json",
       "data": {
         "catalogUrl": "https://meuterraco.com.br/lancamentos",
         "city": "Belo Horizonte",
@@ -56,7 +56,7 @@
     {
       "identifier": "urn:air:meuterraco.com.br:web:neighborhood-guides",
       "displayName": "Terraço — Guia de Bairros de Belo Horizonte",
-      "type": "application/vnd.terraco.neighborhoods+json",
+      "type": "application/ai-catalog+json",
       "data": {
         "indexUrl": "https://meuterraco.com.br/bairros",
         "neighborhoods": [
