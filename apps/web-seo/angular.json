@@ -65,6 +65,9 @@
               "allowedHosts": [
                 "localhost",
                 "127.0.0.1",
+                "meuterraco.com.br",
+                "www.meuterraco.com.br",
+                "*.meuterraco.com.br",
                 "terraco.com.br",
                 "*.terraco.com.br",
                 "*.hosted.app",

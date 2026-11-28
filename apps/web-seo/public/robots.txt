@@ -1,4 +1,4 @@
 User-Agent: *
 Allow: /
 
-Sitemap: https://terraco-a5ff7.web.app/sitemap.xml
+Sitemap: https://meuterraco.com.br/sitemap.xml

@@ -16,6 +16,9 @@ const angularApp = new AngularNodeAppEngine({
   allowedHosts: [
     'localhost',
     '127.0.0.1',
+    'meuterraco.com.br',
+    'www.meuterraco.com.br',
+    '*.meuterraco.com.br',
     'terraco.com.br',
     '*.terraco.com.br',
     '*.web.app',
@@ -29,7 +32,7 @@ const angularApp = new AngularNodeAppEngine({
 const SITE_URL = (
   process.env['NEXT_PUBLIC_SITE_URL'] ??
   process.env['SITE_URL'] ??
-  'https://terraco-a5ff7.web.app'
+  'https://meuterraco.com.br'
 ).replace(/\/+$/, '');
 
 const SSR_HTML_CACHE_CONTROL =

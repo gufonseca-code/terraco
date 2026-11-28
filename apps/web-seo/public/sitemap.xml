@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://terraco-a5ff7.web.app</loc>
+    <loc>https://meuterraco.com.br</loc>
     <changefreq>weekly</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://terraco-a5ff7.web.app/lancamentos</loc>
+    <loc>https://meuterraco.com.br/lancamentos</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://terraco-a5ff7.web.app/lancamentos/prime-view</loc>
+    <loc>https://meuterraco.com.br/lancamentos/prime-view</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://terraco-a5ff7.web.app/lancamentos/upside-square</loc>
+    <loc>https://meuterraco.com.br/lancamentos/upside-square</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://terraco-a5ff7.web.app/lancamentos/horizon</loc>
+    <loc>https://meuterraco.com.br/lancamentos/horizon</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://terraco-a5ff7.web.app/bairros/estoril</loc>
+    <loc>https://meuterraco.com.br/bairros/estoril</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://terraco-a5ff7.web.app/bairros/santa-efigenia</loc>
+    <loc>https://meuterraco.com.br/bairros/santa-efigenia</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://terraco-a5ff7.web.app/bairros/serrano</loc>
+    <loc>https://meuterraco.com.br/bairros/serrano</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://terraco-a5ff7.web.app/bairros/buritis</loc>
+    <loc>https://meuterraco.com.br/bairros/buritis</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

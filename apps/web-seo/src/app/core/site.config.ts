@@ -2,7 +2,21 @@ import { InjectionToken } from '@angular/core';
 
 export const SITE_NAME = 'Terraço';
 
-export const SITE_URL = 'https://terraco-a5ff7.web.app';
+export const DEFAULT_SITE_URL = 'https://meuterraco.com.br';
+
+/**
+ * Resolves the canonical site URL from server environment variables when available,
+ * falling back to the official production domain. Safe for browser bundles.
+ */
+export function resolveSiteUrl(fallback: string = DEFAULT_SITE_URL): string {
+  const env = (
+    globalThis as { process?: { env?: Record<string, string | undefined> } }
+  ).process?.env;
+  const raw = env?.['NEXT_PUBLIC_SITE_URL'] ?? env?.['SITE_URL'] ?? fallback;
+  return raw.replace(/\/+$/, '');
+}
+
+export const SITE_URL = resolveSiteUrl();
 
 export const FLUTTER_APP_URL = 'https://app.terraco.com.br';
 

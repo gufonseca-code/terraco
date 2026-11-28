@@ -36,7 +36,7 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:type', content: 'website' });
     this.meta.updateTag({ property: 'og:locale', content: 'pt_BR' });
     this.meta.updateTag({ property: 'og:site_name', content: SITE_NAME });
-    this.meta.updateTag({ property: 'og:url', content: '/' });
+    this.meta.updateTag({ property: 'og:url', content: this.buildCanonicalUrl('/') });
     this.meta.updateTag({ property: 'og:title', content: pageTitle });
     this.meta.updateTag({ property: 'og:description', content: ogDescription });
     this.meta.updateTag({
@@ -85,7 +85,7 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:type', content: 'website' });
     this.meta.updateTag({ property: 'og:locale', content: 'pt_BR' });
     this.meta.updateTag({ property: 'og:site_name', content: SITE_NAME });
-    this.meta.updateTag({ property: 'og:url', content: '/lancamentos' });
+    this.meta.updateTag({ property: 'og:url', content: this.buildCanonicalUrl('/lancamentos') });
     this.meta.updateTag({ property: 'og:title', content: pageTitle });
     this.meta.updateTag({ property: 'og:description', content: description });
     this.meta.updateTag({
@@ -129,7 +129,7 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:type', content: 'website' });
     this.meta.updateTag({ property: 'og:locale', content: 'pt_BR' });
     this.meta.updateTag({ property: 'og:site_name', content: SITE_NAME });
-    this.meta.updateTag({ property: 'og:url', content: '/bairros' });
+    this.meta.updateTag({ property: 'og:url', content: this.buildCanonicalUrl('/bairros') });
     this.meta.updateTag({ property: 'og:title', content: pageTitle });
     this.meta.updateTag({ property: 'og:description', content: description });
     this.meta.updateTag({
@@ -175,7 +175,7 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:type', content: 'website' });
     this.meta.updateTag({ property: 'og:locale', content: 'pt_BR' });
     this.meta.updateTag({ property: 'og:site_name', content: SITE_NAME });
-    this.meta.updateTag({ property: 'og:url', content: canonicalPath });
+    this.meta.updateTag({ property: 'og:url', content: this.buildCanonicalUrl(canonicalPath) });
     this.meta.updateTag({ property: 'og:title', content: pageTitle });
     this.meta.updateTag({ property: 'og:description', content: description });
     this.meta.updateTag({
@@ -221,7 +221,7 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:type', content: 'website' });
     this.meta.updateTag({ property: 'og:locale', content: 'pt_BR' });
     this.meta.updateTag({ property: 'og:site_name', content: SITE_NAME });
-    this.meta.updateTag({ property: 'og:url', content: canonicalPath });
+    this.meta.updateTag({ property: 'og:url', content: this.buildCanonicalUrl(canonicalPath) });
     this.meta.updateTag({ property: 'og:title', content: socialTitle });
     this.meta.updateTag({ property: 'og:description', content: description });
     this.meta.updateTag({ property: 'og:image', content: item.imagem });
@@ -429,6 +429,11 @@ export class SeoService {
     this.document?.getElementById(BAIRROS_JSONLD_ID)?.remove();
   }
 
+  private buildCanonicalUrl(path: string): string {
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    return normalizedPath === '/' ? SITE_URL : `${SITE_URL}${normalizedPath}`;
+  }
+
   private setCanonical(path: string): void {
     const head = this.document?.head;
     if (!head) {
@@ -441,6 +446,6 @@ export class SeoService {
       link.setAttribute('rel', 'canonical');
       head.appendChild(link);
     }
-    link.setAttribute('href', path);
+    link.setAttribute('href', this.buildCanonicalUrl(path));
   }
 }
