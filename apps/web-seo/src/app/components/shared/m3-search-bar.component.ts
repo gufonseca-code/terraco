@@ -71,7 +71,9 @@ function splitHighlight(
   selector: 'app-m3-search-bar',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'block relative',
+    class: 'block relative z-20',
+    '[class.z-40]': 'isDropdownVisible()',
+    style: 'view-transition-name: terraco-search-bar',
     '(document:click)': 'onDocumentClick($event)',
   },
   template: `
@@ -126,7 +128,7 @@ function splitHighlight(
           (input)="onInput($event)"
           (keydown)="onKeydown($event)"
           [placeholder]="placeholder()"
-          class="w-full min-w-0 bg-transparent py-2.5 pr-1 text-[15px] font-normal text-ink placeholder:text-ink-muted focus-visible:outline-none sm:text-base [&::-webkit-search-cancel-button]:hidden"
+          class="w-full min-w-0 bg-transparent py-2.5 pr-1 text-[15px] font-normal text-[#1C1B19] placeholder:text-[#5C5852] !outline-none focus:!outline-none focus:ring-0 focus-visible:!outline-none sm:text-base [&::-webkit-search-cancel-button]:hidden"
         />
 
         @if (query().length > 0) {
@@ -137,7 +139,7 @@ function splitHighlight(
             aria-label="Limpar busca"
             animate.enter="terraco-chip-enter"
             animate.leave="terraco-chip-leave"
-            class="terraco-m3-icon-btn inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center text-ink-muted hover:bg-surface hover:text-ink sm:h-9 sm:w-9"
+            class="terraco-m3-icon-btn inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#F3EFE6] text-[#5C5852] hover:bg-[#EAE3D5] hover:text-[#1C1B19] active:scale-[0.94] motion-reduce:transition-none motion-reduce:active:scale-100 sm:h-9 sm:w-9"
           >
             <svg
               aria-hidden="true"
@@ -168,11 +170,13 @@ function splitHighlight(
 
       @if (isDropdownVisible()) {
         <div
-          animate.enter="terraco-search-panel-enter"
-          animate.leave="terraco-search-panel-leave"
-          class="absolute inset-x-0 top-full z-40 mt-1.5 overflow-hidden rounded-t-[14px] rounded-b-[28px] border border-border-subtle bg-elevated p-2 shadow-floating"
+          animate.enter="terraco-dropdown-panel-enter"
+          animate.leave="terraco-dropdown-panel-leave"
+          class="origin-top absolute inset-x-0 top-full z-40 mt-1.5 overflow-hidden rounded-[24px] border border-[#1C1B19]/10 bg-[#FAF8F4] p-2 shadow-floating"
         >
-          <p class="px-3 pt-1 pb-1.5 text-[13px] font-normal text-ink-muted">
+          <p
+            class="rounded-[14px] px-3 pt-1 pb-1.5 text-[13px] font-medium text-[#5C5852]"
+          >
             Bairros com lançamentos
           </p>
 
@@ -193,8 +197,8 @@ function splitHighlight(
                 (click)="selectNeighborhood(item.name)"
                 [class]="
                   isActive
-                    ? 'flex min-h-[48px] cursor-pointer items-center justify-between gap-3 rounded-[16px] bg-brand/10 px-3 py-2 text-ink transition-colors duration-150'
-                    : 'flex min-h-[48px] cursor-pointer items-center justify-between gap-3 rounded-[16px] px-3 py-2 text-ink transition-colors duration-150 hover:bg-surface/85'
+                    ? 'flex min-h-[48px] cursor-pointer items-center justify-between gap-3 rounded-[14px] bg-[#F3EFE6] px-3 py-2 text-[#1C1B19] transition-colors duration-150 motion-reduce:transition-none'
+                    : 'flex min-h-[48px] cursor-pointer items-center justify-between gap-3 rounded-[14px] px-3 py-2 text-[#1C1B19] transition-colors duration-150 hover:bg-[#F3EFE6] motion-reduce:transition-none'
                 "
               >
                 <span class="flex min-w-0 items-center gap-3">
@@ -202,8 +206,8 @@ function splitHighlight(
                     aria-hidden="true"
                     [class]="
                       isActive
-                        ? 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand transition-colors duration-150'
-                        : 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface text-ink-muted transition-colors duration-150'
+                        ? 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FDECE5] text-[#F06A36] transition-colors duration-150 motion-reduce:transition-none'
+                        : 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E5F2EC] text-[#1F6F50] transition-colors duration-150 motion-reduce:transition-none'
                     "
                   >
                     <svg
@@ -224,17 +228,21 @@ function splitHighlight(
 
                   <span class="truncate text-[14px] leading-[1.35]">
                     @if (item.match) {
-                      <span class="font-normal text-ink">{{ item.prefix }}</span
-                      ><span class="font-medium text-brand">{{ item.match }}</span
-                      ><span class="font-normal text-ink">{{ item.suffix }}</span>
+                      <span class="font-normal text-[#1C1B19]">{{ item.prefix }}</span
+                      ><span class="font-medium text-[#C84B1B]">{{ item.match }}</span
+                      ><span class="font-normal text-[#1C1B19]">{{ item.suffix }}</span>
                     } @else {
-                      <span class="font-normal text-ink">{{ item.name }}</span>
+                      <span class="font-normal text-[#1C1B19]">{{ item.name }}</span>
                     }
                   </span>
                 </span>
 
                 <span
-                  class="shrink-0 text-[13px] font-normal text-ink-muted tabular-nums"
+                  [class]="
+                    isActive
+                      ? 'shrink-0 rounded-pill bg-[#E5F2EC] px-2.5 py-0.5 text-[12px] font-medium text-[#1F6F50] tabular-nums transition-colors duration-150 motion-reduce:transition-none'
+                      : 'shrink-0 rounded-pill bg-[#F3EFE6] px-2.5 py-0.5 text-[12px] font-medium text-[#1C1B19] tabular-nums transition-colors duration-150 motion-reduce:transition-none'
+                  "
                 >
                   {{ item.count }}
                   {{ item.count === 1 ? 'lançamento' : 'lançamentos' }}
@@ -343,10 +351,10 @@ export class M3SearchBarComponent {
     const isHero = this.size() === 'hero';
     const padding = isHero ? 'p-1.5 pl-2.5' : 'p-1.5 pl-2';
     const openState = open
-      ? 'terraco-m3-search--open border-brand/50 shadow-floating'
-      : 'border-border-subtle shadow-chip hover:border-ink/25 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 focus-within:shadow-card';
+      ? 'terraco-m3-search--open border-[#F06A36]/60 ring-2 ring-[#F06A36]/35 shadow-floating'
+      : 'border-[#1C1B19]/10 shadow-chip hover:border-[#1C1B19]/22 focus-within:border-[#F06A36]/60 focus-within:ring-2 focus-within:ring-[#F06A36]/35 focus-within:shadow-card';
 
-    return `terraco-m3-search flex w-full items-center gap-1.5 border bg-elevated ${padding} ${openState}`;
+    return `terraco-m3-search flex w-full items-center gap-1.5 border bg-[#FAF8F4] ${padding} ${openState}`;
   });
 
   readonly submitButtonClasses = computed(() => {
