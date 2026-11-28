@@ -827,19 +827,20 @@ h4 {
 /* M3 Expressive: Filter / Intent Chip com Shape Morphing (24px -> 14px ativo, 12px press) */
 .terraco-m3-chip {
   border-radius: var(--radius-morph-pill);
+  will-change: transform;
+  backface-visibility: hidden;
   transition:
     border-radius var(--duration-spring-fast) var(--ease-expressive),
     transform var(--duration-spring-fast) var(--ease-expressive),
     background-color var(--duration-ui) var(--ease-expressive-return),
     border-color var(--duration-ui) var(--ease-expressive-return),
-    color var(--duration-ui) var(--ease-expressive-return),
-    box-shadow var(--duration-ui) var(--ease-expressive-return);
+    color var(--duration-ui) var(--ease-expressive-return);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .terraco-m3-chip:hover {
     border-radius: var(--radius-md);
-    transform: translateY(-1px);
+    transform: translate3d(0, -1px, 0);
   }
 }
 
@@ -847,7 +848,7 @@ h4 {
 .terraco-m3-chip[aria-expanded="true"],
 .terraco-m3-chip--active {
   border-radius: var(--radius-morph-active);
-  transform: scale(var(--scale-active-chip));
+  transform: scale(var(--scale-active-chip)) translateZ(0);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -855,13 +856,13 @@ h4 {
   .terraco-m3-chip[aria-expanded="true"]:hover,
   .terraco-m3-chip--active:hover {
     border-radius: var(--radius-morph-active);
-    transform: translateY(-1px) scale(var(--scale-active-chip));
+    transform: translate3d(0, -1px, 0) scale(var(--scale-active-chip));
   }
 }
 
 .terraco-m3-chip:active {
   border-radius: var(--radius-m3-md);
-  transform: scale(var(--scale-press-chip));
+  transform: scale(var(--scale-press-chip)) translateZ(0);
   transition-duration: 130ms;
   transition-timing-function: var(--ease-expressive-return);
 }
@@ -1135,6 +1136,7 @@ h4 {
 
 /* M3 Expressive: Dropdown Triggers (usa .terraco-m3-chip para física/morphing e define paleta Areia Clara + Terracota) */
 .terraco-dropdown-trigger {
+  border: 1.5px solid transparent;
   background-color: var(--color-bg-surface);
   color: var(--color-text-primary);
 }
@@ -1147,20 +1149,17 @@ h4 {
 
 .terraco-dropdown-trigger[aria-expanded="true"] {
   background-color: #EAE3D5;
-  box-shadow: var(--shadow-chip);
 }
 
 .terraco-dropdown-trigger--active {
+  border-color: rgba(240, 106, 54, 0.65);
   background-color: var(--color-bg-surface);
   color: var(--color-text-primary);
-  box-shadow: inset 0 0 0 1.5px rgba(240, 106, 54, 0.6);
 }
 
 .terraco-dropdown-trigger--active[aria-expanded="true"] {
+  border-color: rgba(240, 106, 54, 0.8);
   background-color: #EAE3D5;
-  box-shadow:
-    inset 0 0 0 1.5px rgba(240, 106, 54, 0.75),
-    var(--shadow-chip);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1171,42 +1170,47 @@ h4 {
 }
 
 .terraco-dropdown-chevron {
+  will-change: transform;
   transition: transform var(--duration-spring-fast) var(--ease-expressive);
 }
 
 .terraco-dropdown-trigger[aria-expanded="true"] .terraco-dropdown-chevron {
-  transform: rotate(180deg);
+  transform: rotate(180deg) translateZ(0);
 }
 
 @keyframes terraco-dropdown-in {
   from {
     opacity: 0;
-    transform: translateY(-6px) scale(0.96);
+    transform: translate3d(0, -6px, 0) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
 @keyframes terraco-dropdown-out {
   from {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   to {
     opacity: 0;
-    transform: translateY(-4px) scale(0.97);
+    transform: translate3d(0, -4px, 0) scale(0.97);
   }
 }
 
 .terraco-dropdown-panel-enter {
   transform-origin: top center;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
   animation: terraco-dropdown-in var(--duration-spring-fast) var(--ease-expressive) both;
 }
 
 .terraco-dropdown-panel-leave {
   transform-origin: top center;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
   animation: terraco-dropdown-out 140ms var(--ease-expressive-return) both;
 }
 
