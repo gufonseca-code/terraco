@@ -19,7 +19,6 @@ import {
 import { FavoriteButtonComponent } from '../launches/favorite-button.component';
 import { resolveLaunchThirdSpec } from '../launches/launch-card.component';
 import { ViewTransitionDirective } from '../shared/view-transition.directive';
-import { BotanicalArchMotifComponent } from './botanical-arch-motif.component';
 import { HeroSearchFormComponent } from './hero-search-form.component';
 
 @Component({
@@ -28,7 +27,6 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
     NgOptimizedImage,
     RouterLink,
     ViewTransitionDirective,
-    BotanicalArchMotifComponent,
     HeroSearchFormComponent,
     FavoriteButtonComponent,
   ],
@@ -38,18 +36,24 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
   template: `
     <section
       aria-labelledby="hero-heading"
-      class="bg-canvas pt-4 pb-6 sm:pt-7 sm:pb-10 lg:py-12 xl:py-14"
+      class="bg-canvas pt-5 pb-6 sm:pt-8 sm:pb-10 lg:pt-10 lg:pb-14 xl:pt-12 xl:pb-16"
     >
       <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
-          class="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
+          class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-10 xl:gap-12"
         >
           <div class="space-y-4 sm:space-y-5 lg:col-span-6 lg:space-y-6">
             <div class="terraco-reveal space-y-3 sm:space-y-4">
-              <app-botanical-arch-motif
-                appViewTransition="botanical-arch"
-                class="h-32 sm:h-36 lg:h-40"
-              />
+              <p
+                class="inline-flex w-fit items-center gap-2 rounded-full border border-ink/10 bg-surface px-3 py-1 text-[12px] font-medium leading-[1.3] tracking-[0.01em] text-ink"
+              >
+                <span aria-hidden="true" class="inline-flex items-end gap-[2px]">
+                  <span class="h-1.5 w-[2.5px] rounded-full bg-[#F06A36]"></span>
+                  <span class="h-2.5 w-[2.5px] rounded-full bg-[#F06A36]"></span>
+                  <span class="h-3.5 w-[2.5px] rounded-full bg-[#F06A36]"></span>
+                </span>
+                <span>Curadoria residencial em Belo Horizonte</span>
+              </p>
 
               <h1
                 id="hero-heading"
