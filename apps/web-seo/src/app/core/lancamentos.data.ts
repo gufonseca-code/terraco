@@ -596,12 +596,6 @@ export const LANCAMENTOS: Lancamento[] = [
       'Oi! Gostaria de receber as plantas, valores e condições do Upside Square (Santa Efigênia).',
     galeria: [
       {
-        url: '/images/lancamentos/upside-square/fachada-tarde.webp',
-        alt: 'Fachada contemporânea da torre única do Upside Square ao entardecer no Santa Efigênia',
-        width: 803,
-        height: 1282,
-      },
-      {
         url: '/images/lancamentos/upside-square/piscina-climatizada.webp',
         alt: 'Piscina climatizada com vista panorâmica para Belo Horizonte no Upside Square',
         width: 800,
@@ -612,6 +606,12 @@ export const LANCAMENTOS: Lancamento[] = [
         alt: 'Área da piscina climatizada integrada ao espaço grill e academia no Upside Square',
         width: 803,
         height: 584,
+      },
+      {
+        url: '/images/lancamentos/upside-square/fachada-tarde.webp',
+        alt: 'Fachada contemporânea da torre única do Upside Square ao entardecer no Santa Efigênia',
+        width: 803,
+        height: 1282,
       },
       {
         url: '/images/lancamentos/upside-square/espaco-grill.webp',
