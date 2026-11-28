@@ -19,8 +19,6 @@ const angularApp = new AngularNodeAppEngine({
     'meuterraco.com.br',
     'www.meuterraco.com.br',
     '*.meuterraco.com.br',
-    'terraco.com.br',
-    '*.terraco.com.br',
     '*.web.app',
     '*.firebaseapp.com',
     '*.hosted.app',
