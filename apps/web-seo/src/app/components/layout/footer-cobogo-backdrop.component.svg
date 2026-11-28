@@ -119,6 +119,12 @@
       />
     </g>
 
+    <!-- Single detached tropical leaflet for falling wind-drift animation -->
+    <g id="fc-falling-leaf">
+      <path d="M0 0C5 -7 15 -9 21 -3C16 4 7 6 0 0Z" fill="currentColor" />
+      <path d="M2 0C8 -2 14 -2.5 19 -3" stroke="#FAF8F4" stroke-width="0.7" stroke-linecap="round" opacity="0.35" />
+    </g>
+
     <!-- Tactile Risograph paper & soy-ink grain filter -->
     <filter id="fc-riso-grain" x="0%" y="0%" width="100%" height="100%">
       <feTurbulence
@@ -206,47 +212,106 @@
     <use href="#fc-leaf-sprig" transform="translate(324 252) rotate(24) scale(1.75)" />
   </g>
 
-  <!-- Organic overhanging branches spilling gracefully out over the backlit cobogó -->
+  <!-- Organic overhanging branches spilling gracefully out over the backlit cobogó (gently swaying in 60fps breeze) -->
   <g color="#17573E" opacity="0.92">
-    <path
-      d="M480 18C554 14 612 34 676 62M468 122C536 126 594 152 648 192M438 232C498 242 544 268 588 302"
-      stroke="currentColor"
-      stroke-width="2.6"
-      stroke-linecap="round"
-    />
-    <use href="#fc-leaf-sprig" transform="translate(534 -4) rotate(10) scale(1.7)" />
-    <use href="#fc-leaf-twig" transform="translate(612 28) rotate(26) scale(1.6)" />
-    <use href="#fc-leaf-sprig" transform="translate(508 106) rotate(24) scale(1.65)" />
-    <use href="#fc-leaf-twig" transform="translate(592 152) rotate(38) scale(1.5)" />
-    <use href="#fc-leaf-sprig" transform="translate(468 214) rotate(18) scale(1.55)" />
-    <use href="#fc-leaf-twig" transform="translate(546 258) rotate(34) scale(1.4)" />
+    <g class="svg-footer-breeze-a" style="animation-delay: -1.4s">
+      <path d="M480 18C554 14 612 34 676 62" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+      <use href="#fc-leaf-sprig" transform="translate(534 -4) rotate(10) scale(1.7)" />
+      <use href="#fc-leaf-twig" transform="translate(612 28) rotate(26) scale(1.6)" />
+    </g>
+    <g class="svg-footer-breeze-b" style="animation-delay: -4.2s">
+      <path d="M468 122C536 126 594 152 648 192" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+      <use href="#fc-leaf-sprig" transform="translate(508 106) rotate(24) scale(1.65)" />
+      <use href="#fc-leaf-twig" transform="translate(592 152) rotate(38) scale(1.5)" />
+    </g>
+    <g class="svg-footer-breeze-a" style="animation-delay: -6.8s">
+      <path d="M438 232C498 242 544 268 588 302" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+      <use href="#fc-leaf-sprig" transform="translate(468 214) rotate(18) scale(1.55)" />
+      <use href="#fc-leaf-twig" transform="translate(546 258) rotate(34) scale(1.4)" />
+    </g>
 
     <!-- Far-right delicate foliage accent framing the right edge -->
-    <use href="#fc-leaf-twig" transform="translate(1456 26) rotate(154) scale(1.55)" />
-    <use href="#fc-leaf-twig" transform="translate(1458 214) rotate(196) scale(1.35)" />
+    <g class="svg-footer-breeze-right" style="animation-delay: -2.6s">
+      <use href="#fc-leaf-twig" transform="translate(1456 26) rotate(154) scale(1.55)" />
+    </g>
+    <g class="svg-footer-breeze-right" style="animation-delay: -7.1s">
+      <use href="#fc-leaf-twig" transform="translate(1458 214) rotate(196) scale(1.35)" />
+    </g>
   </g>
 
   <!-- Deep shadow leaf accents inside the canopy for Risograph botanical depth -->
   <g color="#0F3525" opacity="0.62">
-    <use href="#fc-leaf-sprig" transform="translate(24 24) rotate(34) scale(1.9)" />
-    <use href="#fc-leaf-sprig" transform="translate(226 16) rotate(38) scale(1.8)" />
-    <use href="#fc-leaf-sprig" transform="translate(64 146) rotate(22) scale(1.85)" />
-    <use href="#fc-leaf-sprig" transform="translate(244 134) rotate(42) scale(1.75)" />
-    <use href="#fc-leaf-sprig" transform="translate(402 108) rotate(28) scale(1.65)" />
+    <g class="svg-footer-breeze-b" style="animation-delay: -2.1s">
+      <use href="#fc-leaf-sprig" transform="translate(24 24) rotate(34) scale(1.9)" />
+      <use href="#fc-leaf-sprig" transform="translate(226 16) rotate(38) scale(1.8)" />
+    </g>
+    <g class="svg-footer-breeze-a" style="animation-delay: -5.5s">
+      <use href="#fc-leaf-sprig" transform="translate(64 146) rotate(22) scale(1.85)" />
+      <use href="#fc-leaf-sprig" transform="translate(244 134) rotate(42) scale(1.75)" />
+      <use href="#fc-leaf-sprig" transform="translate(402 108) rotate(28) scale(1.65)" />
+    </g>
     <use href="#fc-leaf-twig" transform="translate(112 248) rotate(16) scale(1.7)" />
   </g>
 
   <!-- Golden-hour sunlit leaf tips along the canopy's right edge catching the warm light -->
   <g color="#4D8F66" opacity="0.68">
-    <use href="#fc-leaf-twig" transform="translate(556 12) rotate(14) scale(1.45)" />
-    <use href="#fc-leaf-twig" transform="translate(526 112) rotate(28) scale(1.4)" />
-    <use href="#fc-leaf-twig" transform="translate(494 218) rotate(22) scale(1.35)" />
+    <g class="svg-footer-breeze-a" style="animation-delay: -1.4s">
+      <use href="#fc-leaf-twig" transform="translate(556 12) rotate(14) scale(1.45)" />
+    </g>
+    <g class="svg-footer-breeze-b" style="animation-delay: -4.2s">
+      <use href="#fc-leaf-twig" transform="translate(526 112) rotate(28) scale(1.4)" />
+    </g>
+    <g class="svg-footer-breeze-a" style="animation-delay: -6.8s">
+      <use href="#fc-leaf-twig" transform="translate(494 218) rotate(22) scale(1.35)" />
+    </g>
   </g>
   <g color="#97AC4F" opacity="0.52">
-    <use href="#fc-leaf-twig" transform="translate(622 36) rotate(30) scale(1.3)" />
-    <use href="#fc-leaf-twig" transform="translate(598 158) rotate(40) scale(1.25)" />
-    <use href="#fc-leaf-twig" transform="translate(552 264) rotate(36) scale(1.2)" />
-    <use href="#fc-leaf-twig" transform="translate(1448 34) rotate(160) scale(1.2)" />
+    <g class="svg-footer-breeze-a" style="animation-delay: -1.4s">
+      <use href="#fc-leaf-twig" transform="translate(622 36) rotate(30) scale(1.3)" />
+    </g>
+    <g class="svg-footer-breeze-b" style="animation-delay: -4.2s">
+      <use href="#fc-leaf-twig" transform="translate(598 158) rotate(40) scale(1.25)" />
+    </g>
+    <g class="svg-footer-breeze-a" style="animation-delay: -6.8s">
+      <use href="#fc-leaf-twig" transform="translate(552 264) rotate(36) scale(1.2)" />
+    </g>
+    <g class="svg-footer-breeze-right" style="animation-delay: -2.6s">
+      <use href="#fc-leaf-twig" transform="translate(1448 34) rotate(160) scale(1.2)" />
+    </g>
+  </g>
+
+  <!-- Gentle falling leaves drifting across the golden-hour cobogó (GPU-composited 60fps) -->
+  <g aria-hidden="true">
+    <g transform="translate(548 16)" color="#1F6F50">
+      <g class="svg-footer-leaf-fall-a" style="animation-delay: -2.2s">
+        <use href="#fc-falling-leaf" transform="scale(0.95)" />
+      </g>
+    </g>
+    <g transform="translate(604 42)" color="#4D8F66">
+      <g class="svg-footer-leaf-fall-b" style="animation-delay: -6.8s">
+        <use href="#fc-falling-leaf" transform="scale(0.82)" />
+      </g>
+    </g>
+    <g transform="translate(518 78)" color="#97AC4F">
+      <g class="svg-footer-leaf-fall-a" style="animation-delay: -9.6s">
+        <use href="#fc-falling-leaf" transform="scale(0.76)" />
+      </g>
+    </g>
+    <g transform="translate(652 8)" color="#1F6F50">
+      <g class="svg-footer-leaf-fall-b" style="animation-delay: -12.4s">
+        <use href="#fc-falling-leaf" transform="scale(0.88)" />
+      </g>
+    </g>
+    <g transform="translate(476 112)" color="#2E8B67">
+      <g class="svg-footer-leaf-fall-a" style="animation-delay: -4.9s">
+        <use href="#fc-falling-leaf" transform="scale(0.8)" />
+      </g>
+    </g>
+    <g transform="translate(578 -6)" color="#8CA048">
+      <g class="svg-footer-leaf-fall-b" style="animation-delay: -0.9s">
+        <use href="#fc-falling-leaf" transform="scale(0.72)" />
+      </g>
+    </g>
   </g>
 
   <!-- 6. Subtle deep-green vignette behind the left text block to guarantee effortless cream text contrast -->
