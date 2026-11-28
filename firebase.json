@@ -29,6 +29,8 @@
       "ignore": [
         "firebase.json",
         "**/.*",
+        "!**/.well-known",
+        "!**/.well-known/**",
         "**/node_modules/**"
       ],
       "headers": [
@@ -38,6 +40,41 @@
             {
               "key": "Cache-Control",
               "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "/.well-known/ard.json",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, s-maxage=86400"
+            }
+          ]
+        },
+        {
+          "source": "/llms.txt",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600, s-maxage=86400"
+            }
+          ]
+        },
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "Link",
+              "value": "</.well-known/ard.json>; rel=\"ard\""
             }
           ]
         }
@@ -56,6 +93,8 @@
       "ignore": [
         "firebase.json",
         "**/.*",
+        "!**/.well-known",
+        "!**/.well-known/**",
         "**/node_modules/**"
       ],
       "rewrites": [

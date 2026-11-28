@@ -43,7 +43,39 @@ app.get('/robots.txt', (_req, res) => {
   res
     .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
     .type('text/plain')
-    .send(`User-Agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+    .send(
+      `User-Agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\nAgentmap: ${SITE_URL}/.well-known/ard.json\n`,
+    );
+});
+
+app.get('/llms.txt', (_req, res) => {
+  res
+    .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
+    .type('text/plain; charset=utf-8')
+    .sendFile(join(browserDistFolder, 'llms.txt'), (err) => {
+      if (err && !res.headersSent) {
+        res
+          .type('text/plain; charset=utf-8')
+          .send(
+            `# Terraço\n\n> Curadoria de lançamentos imobiliários residenciais em Belo Horizonte (MG), com plantas claras e atendimento direto no WhatsApp.\n\n## Páginas Principais\n\n- [Início](${SITE_URL}/)\n- [Catálogo de Lançamentos](${SITE_URL}/lancamentos)\n- [Guia de Bairros](${SITE_URL}/bairros)\n`,
+          );
+      }
+    });
+});
+
+app.get('/.well-known/ard.json', (_req, res) => {
+  res
+    .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
+    .type('application/json; charset=utf-8')
+    .sendFile(
+      join(browserDistFolder, '.well-known/ard.json'),
+      { dotfiles: 'allow' },
+      (err) => {
+        if (err && !res.headersSent) {
+          res.status(404).json({ error: 'ARD manifest not found' });
+        }
+      },
+    );
 });
 
 app.get('/sitemap.xml', (_req, res) => {
@@ -93,6 +125,9 @@ app.use((req, res, next) => {
         } else if (response.status === 404) {
           headers.set('Cache-Control', SSR_NOT_FOUND_CACHE_CONTROL);
         }
+      }
+      if (response.status >= 200 && response.status < 300) {
+        headers.append('Link', '</.well-known/ard.json>; rel="ard"');
       }
       const cachedResponse = new Response(response.body, {
         status: response.status,

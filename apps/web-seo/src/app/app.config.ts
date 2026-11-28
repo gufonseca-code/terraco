@@ -16,6 +16,7 @@ import {
 } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { routes } from './app.routes';
+import { provideTerracoWebMcpTools } from './core/webmcp.providers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -48,5 +49,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideClientHydration(withEventReplay(), withIncrementalHydration()),
     provideHttpClient(withFetch()),
+    provideTerracoWebMcpTools(),
   ],
 };

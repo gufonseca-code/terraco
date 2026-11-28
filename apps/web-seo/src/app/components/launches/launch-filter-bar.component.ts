@@ -20,6 +20,9 @@ import {
         <form
           (submit)="handleSubmit($event)"
           role="search"
+          toolname="filter_launches"
+          tooldescription="Filtra a lista de lançamentos imobiliários em Belo Horizonte por bairro, nome do empreendimento ou tipologia."
+          toolautosubmit
           aria-label="Filtrar lançamentos"
           class="flex w-full max-w-lg items-center gap-2 rounded-pill border border-border-subtle bg-elevated p-1.5 pl-5 shadow-chip transition-[border-color,box-shadow] duration-150 hover:border-ink/25 focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 focus-within:shadow-card"
         >
@@ -29,7 +32,9 @@ import {
           <input
             #searchInput
             id="lancamentos-search"
+            name="q"
             type="search"
+            toolparamdescription="Termo de busca para filtrar lançamentos por bairro, nome ou tipologia (ex: Estoril, 2 quartos)."
             enterkeyhint="search"
             list="lancamentos-sugestoes"
             [value]="query()"

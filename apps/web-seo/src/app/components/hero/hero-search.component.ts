@@ -54,7 +54,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
               <h1
                 id="hero-heading"
                 appViewTransition="page-heading"
-                class="max-w-[14ch] font-display text-[clamp(2rem,4.2vw,3.125rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink text-balance"
+                class="max-w-[29rem] font-display text-[clamp(2rem,4.2vw,3.125rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink text-balance"
               >
                 Seu próximo canto, sem burocracia.
               </h1>
@@ -71,12 +71,13 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
 
               <nav
                 aria-label="Atalhos de busca em BH"
-                class="flex flex-wrap items-center gap-2"
+                class="flex max-w-lg flex-wrap items-center gap-2"
               >
                 @for (bairro of quickNeighborhoods; track bairro) {
                   <a
                     [routerLink]="['/lancamentos']"
                     [queryParams]="{ q: bairro }"
+                    [attr.aria-label]="'Buscar lançamentos em ' + bairro"
                     class="inline-flex min-h-[36px] items-center rounded-pill border border-border-subtle bg-surface/80 px-3.5 py-1.5 text-[13px] font-normal leading-[1.3] text-ink transition-colors duration-150 hover:border-border-strong hover:bg-surface"
                   >
                     {{ bairro }}

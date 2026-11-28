@@ -3,18 +3,18 @@
 @font-face {
   font-family: "Fraunces Fallback";
   src: local("Georgia"), local("Times New Roman"), local("Liberation Serif"), local("Noto Serif");
-  size-adjust: 105%;
-  ascent-override: 97.8%;
-  descent-override: 25.5%;
+  size-adjust: 94%;
+  ascent-override: 96%;
+  descent-override: 25%;
   line-gap-override: 0%;
 }
 
 @font-face {
   font-family: "Plus Jakarta Sans Fallback";
   src: local("Arial"), local("Liberation Sans"), local("Noto Sans"), local("DejaVu Sans");
-  size-adjust: 103.36%;
-  ascent-override: 103.8%;
-  descent-override: 22.2%;
+  size-adjust: 103.5%;
+  ascent-override: 101%;
+  descent-override: 22%;
   line-gap-override: 0%;
 }
 
@@ -159,8 +159,8 @@
   --color-error-fg: var(--color-error-fg);
   --color-error-bg: var(--color-error-bg);
 
-  --font-display: var(--font-fraunces), "Fraunces Fallback", Georgia, serif;
-  --font-sans: var(--font-plus-jakarta), "Plus Jakarta Sans Fallback", system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-plus-jakarta);
 
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
