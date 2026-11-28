@@ -23,14 +23,14 @@ import { TerracoLogoComponent } from './terraco-logo.component';
       <app-footer-cobogo-backdrop />
       <div
         aria-hidden="true"
-        class="pointer-events-none absolute inset-0 bg-gradient-to-b from-canvas/62 via-canvas/70 to-canvas/40 md:hidden"
+        class="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#103626]/40 via-[#103626]/30 to-[#103626]/20 md:hidden"
       ></div>
       <div
         class="relative z-10 mx-auto flex max-w-7xl flex-col gap-6 px-4 py-14 sm:px-6 sm:py-16 lg:px-8 md:flex-row md:items-end md:justify-between"
       >
         <div class="max-w-md space-y-3">
-          <app-terraco-logo [animate]="false" />
-          <p class="text-base font-normal leading-[1.55] text-ink/85">
+          <app-terraco-logo [inverted]="true" [animate]="false" />
+          <p class="text-base font-normal leading-[1.55] text-ink-inverse/92">
             Curadoria de lançamentos residenciais em Belo Horizonte, com
             atendimento direto no WhatsApp.
           </p>
