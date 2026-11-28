@@ -93,6 +93,7 @@
                 },
                 "fonts": true
               },
+              "sourceMap": true,
               "budgets": [
                 {
                   "type": "initial",

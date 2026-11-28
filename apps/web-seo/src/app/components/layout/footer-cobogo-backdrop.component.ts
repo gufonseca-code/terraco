@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 /**
- * Full-bleed Risograph-style architectural SVG backdrop for the site footer.
- * Combines an 8-petal Brazilian floral cobogó tile grid in terracotta clay,
- * golden-hour backlit glow, overhanging Urban Leaf Green tropical branches,
- * and subtle soy-ink grain — using an external `.svg` template to preserve
- * SVG namespace integrity during Angular SSR/prerendering.
+ * Terracota backdrop placeholder (arte SVG removida para teste de performance).
+ * Mantém a mesma geometria de host (absolute inset-0) para não alterar layout.
  */
 @Component({
   selector: 'app-footer-cobogo-backdrop',
@@ -14,6 +11,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     class: 'pointer-events-none absolute inset-0 block overflow-hidden select-none',
     'aria-hidden': 'true',
   },
-  templateUrl: './footer-cobogo-backdrop.component.svg',
+  template: `<div class="block h-full w-full bg-[#C84E22]" aria-hidden="true"></div>`,
 })
 export class FooterCobogoBackdropComponent {}

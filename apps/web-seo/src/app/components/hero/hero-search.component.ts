@@ -131,10 +131,13 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
                     data-testid="hero-lead-cover-image"
                     [attr.data-slug]="lead.slug"
                     [ngSrc]="lead.imagem"
+                    sizes="(max-width: 767px) 200px, 640px"
                     [alt]="lead.imagemAlt"
                     [width]="lead.imagemWidth"
                     [height]="lead.imagemHeight"
                     priority
+                    fetchpriority="high"
+                    loading="eager"
                     (load)="markLeadImageLoaded()"
                     (error)="markLeadImageLoaded()"
                     class="h-full w-full rounded-[24px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"

@@ -8,315 +8,48 @@
   class="block h-full w-full"
 >
   <defs>
-    <!-- Base warm cream paper & golden-hour backlighting -->
+    <!-- Warm cream paper base -->
     <linearGradient id="fc-paper-base" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FAF8F4" />
-      <stop offset="45%" stop-color="#F7F0DF" />
       <stop offset="100%" stop-color="#F6E3B4" />
     </linearGradient>
 
-    <!-- Primary golden-hour backlit glow pouring through the cobogó openings -->
-    <radialGradient id="fc-golden-glow-main" cx="72%" cy="76%" r="58%">
-      <stop offset="0%" stop-color="#F7C957" stop-opacity="0.78" />
-      <stop offset="38%" stop-color="#F9D87C" stop-opacity="0.48" />
-      <stop offset="72%" stop-color="#FFF2CC" stop-opacity="0.22" />
+    <!-- Golden-hour backlighting -->
+    <radialGradient id="fc-golden-glow" cx="70%" cy="70%" r="60%">
+      <stop offset="0%" stop-color="#F7C957" stop-opacity="0.45" />
       <stop offset="100%" stop-color="#FAF8F4" stop-opacity="0" />
     </radialGradient>
 
-    <!-- Secondary warm terracotta-amber sunset bounce from the right edge -->
-    <radialGradient id="fc-golden-glow-warm" cx="90%" cy="28%" r="44%">
-      <stop offset="0%" stop-color="#F06A36" stop-opacity="0.24" />
-      <stop offset="45%" stop-color="#F7C957" stop-opacity="0.30" />
-      <stop offset="100%" stop-color="#FAF8F4" stop-opacity="0" />
-    </radialGradient>
-
-    <!-- Deep botanical canopy gradient (dark Urban Leaf Green for crisp cream text legibility) -->
+    <!-- Deep canopy depth -->
     <linearGradient id="fc-canopy-depth" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#103626" />
-      <stop offset="55%" stop-color="#154733" />
       <stop offset="100%" stop-color="#1C5E44" />
     </linearGradient>
 
-    <!-- Soft organic vignette inside left canopy so cream typography stays ultra-crisp -->
-    <radialGradient id="fc-canopy-text-bed" cx="20%" cy="46%" r="32%">
-      <stop offset="0%" stop-color="#0E3021" stop-opacity="0.58" />
-      <stop offset="65%" stop-color="#133D2B" stop-opacity="0.30" />
-      <stop offset="100%" stop-color="#133D2B" stop-opacity="0" />
-    </radialGradient>
-
-    <!-- Risograph subtle halftone dot screen -->
-    <pattern id="fc-riso-halftone" width="8" height="8" patternUnits="userSpaceOnUse">
-      <circle cx="2" cy="2" r="0.85" fill="#D95724" opacity="0.085" />
-      <circle cx="6" cy="6" r="0.7" fill="#F7C957" opacity="0.14" />
-    </pattern>
-
-    <!-- 8-Petal Brazilian Floral Ceramic Cobogó Tile (60x60) -->
+    <!-- 8-Petal Brazilian floral ceramic cobogó tile (60x60) -->
     <pattern id="fc-cobogo-tile" width="60" height="60" patternUnits="userSpaceOnUse">
-      <!-- Risograph overprint highlight shift (golden solar rim) -->
-      <g transform="translate(1.1 0.9)" stroke="#F7C957" stroke-linecap="round" stroke-linejoin="round" opacity="0.44">
-        <rect x="2.2" y="2.2" width="55.6" height="55.6" rx="2.5" stroke-width="4.2" />
-        <path d="M30 5C25 14 25 22 30 25C35 22 35 14 30 5Z" stroke-width="2.1" />
-        <path d="M30 55C25 46 25 38 30 35C35 38 35 46 30 55Z" stroke-width="2.1" />
-        <path d="M5 30C14 25 22 25 25 30C22 35 14 35 5 30Z" stroke-width="2.1" />
-        <path d="M55 30C46 25 38 25 35 30C38 35 46 35 55 30Z" stroke-width="2.1" />
-        <path d="M9.5 9.5C18 13.5 23.5 19 26.2 26.2C19 23.5 13.5 18 9.5 9.5Z" stroke-width="1.9" />
-        <path d="M50.5 9.5C42 13.5 36.5 19 33.8 26.2C41 23.5 46.5 18 50.5 9.5Z" stroke-width="1.9" />
-        <path d="M9.5 50.5C18 46.5 23.5 41 26.2 33.8C19 36.5 13.5 42 9.5 50.5Z" stroke-width="1.9" />
-        <path d="M50.5 50.5C42 46.5 36.5 41 33.8 33.8C41 36.5 46.5 42 50.5 50.5Z" stroke-width="1.9" />
+      <g stroke="#C84E22" stroke-linecap="round" stroke-linejoin="round" opacity="0.55">
+        <rect x="2" y="2" width="56" height="56" rx="2" stroke-width="3" />
+        <path d="M30 4C24 14 24 22 30 25C35 22 35 14 30 4Z" stroke-width="2" />
+        <path d="M30 55C24 46 24 38 30 34C35 38 35 46 30 55Z" stroke-width="2" />
+        <path d="M4 30C14 24 22 24 25 30C22 35 14 35 4 30Z" stroke-width="2" />
+        <path d="M56 30C46 24 38 24 34 30C38 35 46 35 56 30Z" stroke-width="2" />
+        <circle cx="30" cy="30" r="4" stroke-width="2" />
       </g>
-
-      <!-- Main terracotta clay cobogó ribs -->
-      <g stroke="#C84E22" stroke-linecap="round" stroke-linejoin="round" opacity="0.62">
-        <rect x="2.2" y="2.2" width="55.6" height="55.6" rx="2.5" stroke-width="4.4" />
-        <path d="M30 4.5C24.5 14 24.5 22 30 25.5C35.5 22 35.5 14 30 4.5Z" stroke-width="2.4" />
-        <path d="M30 55.5C24.5 46 24.5 38 30 34.5C35.5 38 35.5 46 30 55.5Z" stroke-width="2.4" />
-        <path d="M4.5 30C14 24.5 22 24.5 25.5 30C22 35.5 14 35.5 4.5 30Z" stroke-width="2.4" />
-        <path d="M55.5 30C46 24.5 38 24.5 34.5 30C38 35.5 46 35.5 55.5 30Z" stroke-width="2.4" />
-        <path d="M8.5 8.5C17.8 13 23.5 18.8 26.5 26.5C18.8 23.5 13 17.8 8.5 8.5Z" stroke-width="2.1" />
-        <path d="M51.5 8.5C42.2 13 36.5 18.8 33.5 26.5C41.2 23.5 47 17.8 51.5 8.5Z" stroke-width="2.1" />
-        <path d="M8.5 51.5C17.8 47 23.5 41.2 26.5 33.5C18.8 36.5 13 42.2 8.5 51.5Z" stroke-width="2.1" />
-        <path d="M51.5 51.5C42.2 47 36.5 41.2 33.5 33.5C41.2 36.5 47 42.2 51.5 51.5Z" stroke-width="2.1" />
-        <circle cx="30" cy="30" r="5" stroke-width="2.6" />
-      </g>
-
-      <!-- Subtle terracotta bevel depth & mortar seam -->
-      <rect x="0.4" y="0.4" width="59.2" height="59.2" stroke="#9B3915" stroke-width="0.8" opacity="0.24" />
-      <circle cx="30" cy="30" r="2.2" fill="#FFF6DC" opacity="0.48" />
+      <rect x="0.4" y="0.4" width="59.2" height="59.2" stroke="#9B3915" stroke-width="0.8" opacity="0.2" />
     </pattern>
-
-    <!-- Reusable pinnate compound tropical leaf sprig -->
-    <g id="fc-leaf-sprig">
-      <path d="M0 0C22 14 48 25 84 31" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
-      <path d="M12 6C14 -5 24 -10 30 -4C26 3 19 8 12 6Z" fill="currentColor" />
-      <path d="M26 13C29 1 40 -3 46 3C41 10 34 15 26 13Z" fill="currentColor" />
-      <path d="M41 20C45 9 56 5 62 11C57 18 49 22 41 20Z" fill="currentColor" />
-      <path d="M57 25C61 15 71 12 76 18C71 24 64 27 57 25Z" fill="currentColor" />
-      <path d="M72 29C77 21 86 20 91 25C86 30 79 32 72 29Z" fill="currentColor" />
-      <path d="M10 8C3 17 2 26 10 29C17 24 18 15 10 8Z" fill="currentColor" />
-      <path d="M24 15C17 25 17 34 25 36C32 31 32 22 24 15Z" fill="currentColor" />
-      <path d="M39 22C33 31 33 40 41 42C48 37 47 28 39 22Z" fill="currentColor" />
-      <path d="M55 27C50 36 51 44 58 45C64 40 63 32 55 27Z" fill="currentColor" />
-      <path d="M70 31C66 39 68 45 75 46C80 41 78 34 70 31Z" fill="currentColor" />
-    </g>
-
-    <!-- Secondary delicate leaf frond -->
-    <g id="fc-leaf-twig">
-      <path d="M0 0C16 6 34 10 56 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" />
-      <path d="M9 3C11 -4 18 -7 23 -3C19 2 14 4 9 3Z" fill="currentColor" />
-      <path d="M22 6C25 -1 32 -3 36 1C32 6 27 7 22 6Z" fill="currentColor" />
-      <path d="M36 9C39 3 46 1 50 5C46 9 41 10 36 9Z" fill="currentColor" />
-      <path d="M49 11C53 6 59 5 63 9C59 13 54 13 49 11Z" fill="currentColor" />
-      <path d="M8 5C4 11 4 18 9 20C14 16 14 10 8 5Z" fill="currentColor" />
-      <path d="M21 8C17 14 17 21 22 22C27 19 26 13 21 8Z" fill="currentColor" />
-      <path d="M35 11C31 17 32 23 37 24C41 20 40 15 35 11Z" fill="currentColor" />
-    </g>
-
-    <!-- Lush clustered foliage tuft for dense organic tree canopy edges -->
-    <g id="fc-foliage-cluster">
-      <path
-        d="M0 32C-4 14 8 0 26 4C36 -8 58 -6 66 10C82 8 96 22 90 38C104 48 98 68 80 72C74 88 52 92 38 82C22 92 2 84 -2 66C-14 56 -12 38 0 32Z"
-        fill="currentColor"
-      />
-    </g>
-
-    <!-- Single detached tropical leaflet for falling wind-drift animation -->
-    <g id="fc-falling-leaf">
-      <path d="M0 0C5 -7 15 -9 21 -3C16 4 7 6 0 0Z" fill="currentColor" />
-      <path d="M2 0C8 -2 14 -2.5 19 -3" stroke="#FAF8F4" stroke-width="0.7" stroke-linecap="round" opacity="0.35" />
-    </g>
-
-    <!-- Tactile Risograph paper & soy-ink grain filter -->
-    <filter id="fc-riso-grain" x="0%" y="0%" width="100%" height="100%">
-      <feTurbulence
-        type="fractalNoise"
-        baseFrequency="0.78"
-        numOctaves="3"
-        seed="7"
-        stitchTiles="stitch"
-        result="noise"
-      />
-      <feColorMatrix
-        type="matrix"
-        values="
-          0.35 0 0 0 0.22
-          0 0.30 0 0 0.16
-          0 0 0.24 0 0.10
-          0 0 0 0.22 0"
-        in="noise"
-      />
-    </filter>
   </defs>
 
-  <!-- 1. Warm cream paper base & golden-hour backlighting -->
+  <!-- Paper base + golden glow -->
   <rect width="1440" height="340" fill="url(#fc-paper-base)" />
-  <rect width="1440" height="340" fill="url(#fc-golden-glow-main)" />
-  <rect width="1440" height="340" fill="url(#fc-golden-glow-warm)" />
+  <rect width="1440" height="340" fill="url(#fc-golden-glow)" />
 
-  <!-- Diagonal golden-hour sunbeams streaming behind the cobogó -->
-  <g opacity="0.28">
-    <polygon points="560,0 780,0 600,340 380,340" fill="#FFF6DC" />
-    <polygon points="860,0 1140,0 930,340 650,340" fill="#F7C957" opacity="0.58" />
-    <polygon points="1190,0 1390,0 1210,340 1010,340" fill="#FFF6DC" opacity="0.72" />
-  </g>
-
-  <!-- 2. Full-bleed 8-petal floral terracotta cobogó wall -->
+  <!-- Cobogó tile wall -->
   <rect width="1440" height="340" fill="url(#fc-cobogo-tile)" />
-  <rect width="1440" height="340" fill="url(#fc-riso-halftone)" />
 
-  <!-- 3. Soft cast shadow of the dense left canopy onto the cobogó wall -->
-  <g transform="translate(16 12)" color="#103626" opacity="0.16">
-    <path
-      d="M-20 -20H618C598 18 614 48 584 74C608 102 586 144 554 160C572 194 548 232 512 246C528 282 504 322 470 356H-20Z"
-      fill="currentColor"
-    />
-    <use href="#fc-leaf-sprig" transform="translate(540 14) rotate(14) scale(1.8)" />
-    <use href="#fc-leaf-sprig" transform="translate(502 128) rotate(28) scale(1.75)" />
-    <use href="#fc-leaf-twig" transform="translate(476 226) rotate(36) scale(1.65)" />
-  </g>
-
-  <!-- 4. Dense left botanical canopy base (creates rich dark green bed for cream footer typography) -->
+  <!-- Deep left canopy -->
   <path
     d="M-24 -24H596C582 8 598 38 572 62C592 86 580 122 550 140C568 168 552 204 522 222C536 254 516 292 486 314C494 334 482 350 462 360H-24Z"
     fill="url(#fc-canopy-depth)"
   />
-
-  <!-- Organic scalloped foliage clusters along the canopy edge so it blends naturally into the cobogó -->
-  <g color="#154733">
-    <use href="#fc-foliage-cluster" transform="translate(524 -24) scale(1.25)" />
-    <use href="#fc-foliage-cluster" transform="translate(506 54) rotate(18) scale(1.2)" />
-    <use href="#fc-foliage-cluster" transform="translate(474 134) rotate(-14) scale(1.25)" />
-    <use href="#fc-foliage-cluster" transform="translate(442 214) rotate(22) scale(1.2)" />
-    <use href="#fc-foliage-cluster" transform="translate(412 276) rotate(-8) scale(1.15)" />
-  </g>
-
-  <!-- 5. Layered Risograph foliage depth inside & extending from the left canopy -->
-  <!-- Mid-tone Urban Leaf Green leaves across the canopy interior -->
-  <g color="#1F6F50" opacity="0.88">
-    <use href="#fc-leaf-sprig" transform="translate(-18 -14) rotate(16) scale(2.2)" />
-    <use href="#fc-leaf-sprig" transform="translate(150 -28) rotate(22) scale(2.1)" />
-    <use href="#fc-leaf-sprig" transform="translate(330 -24) rotate(14) scale(2.0)" />
-    <use href="#fc-leaf-sprig" transform="translate(476 -16) rotate(18) scale(1.85)" />
-
-    <use href="#fc-leaf-sprig" transform="translate(-26 78) rotate(28) scale(2.15)" />
-    <use href="#fc-leaf-sprig" transform="translate(132 72) rotate(14) scale(1.95)" />
-    <use href="#fc-leaf-sprig" transform="translate(298 62) rotate(26) scale(1.9)" />
-    <use href="#fc-leaf-sprig" transform="translate(454 68) rotate(22) scale(1.8)" />
-
-    <use href="#fc-leaf-sprig" transform="translate(-24 182) rotate(18) scale(2.1)" />
-    <use href="#fc-leaf-sprig" transform="translate(148 176) rotate(32) scale(1.95)" />
-    <use href="#fc-leaf-sprig" transform="translate(304 168) rotate(16) scale(1.85)" />
-    <use href="#fc-leaf-sprig" transform="translate(432 164) rotate(30) scale(1.75)" />
-
-    <use href="#fc-leaf-sprig" transform="translate(-14 268) rotate(10) scale(1.95)" />
-    <use href="#fc-leaf-sprig" transform="translate(168 258) rotate(18) scale(1.8)" />
-    <use href="#fc-leaf-sprig" transform="translate(324 252) rotate(24) scale(1.75)" />
-  </g>
-
-  <!-- Organic overhanging branches spilling gracefully out over the backlit cobogó (gently swaying in 60fps breeze) -->
-  <g color="#17573E" opacity="0.92">
-    <g class="svg-footer-breeze-a" style="animation-delay: -1.4s">
-      <path d="M480 18C554 14 612 34 676 62" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
-      <use href="#fc-leaf-sprig" transform="translate(534 -4) rotate(10) scale(1.7)" />
-      <use href="#fc-leaf-twig" transform="translate(612 28) rotate(26) scale(1.6)" />
-    </g>
-    <g class="svg-footer-breeze-b" style="animation-delay: -4.2s">
-      <path d="M468 122C536 126 594 152 648 192" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
-      <use href="#fc-leaf-sprig" transform="translate(508 106) rotate(24) scale(1.65)" />
-      <use href="#fc-leaf-twig" transform="translate(592 152) rotate(38) scale(1.5)" />
-    </g>
-    <g class="svg-footer-breeze-a" style="animation-delay: -6.8s">
-      <path d="M438 232C498 242 544 268 588 302" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
-      <use href="#fc-leaf-sprig" transform="translate(468 214) rotate(18) scale(1.55)" />
-      <use href="#fc-leaf-twig" transform="translate(546 258) rotate(34) scale(1.4)" />
-    </g>
-
-    <!-- Far-right delicate foliage accent framing the right edge -->
-    <g class="svg-footer-breeze-right" style="animation-delay: -2.6s">
-      <use href="#fc-leaf-twig" transform="translate(1456 26) rotate(154) scale(1.55)" />
-    </g>
-    <g class="svg-footer-breeze-right" style="animation-delay: -7.1s">
-      <use href="#fc-leaf-twig" transform="translate(1458 214) rotate(196) scale(1.35)" />
-    </g>
-  </g>
-
-  <!-- Deep shadow leaf accents inside the canopy for Risograph botanical depth -->
-  <g color="#0F3525" opacity="0.62">
-    <g class="svg-footer-breeze-b" style="animation-delay: -2.1s">
-      <use href="#fc-leaf-sprig" transform="translate(24 24) rotate(34) scale(1.9)" />
-      <use href="#fc-leaf-sprig" transform="translate(226 16) rotate(38) scale(1.8)" />
-    </g>
-    <g class="svg-footer-breeze-a" style="animation-delay: -5.5s">
-      <use href="#fc-leaf-sprig" transform="translate(64 146) rotate(22) scale(1.85)" />
-      <use href="#fc-leaf-sprig" transform="translate(244 134) rotate(42) scale(1.75)" />
-      <use href="#fc-leaf-sprig" transform="translate(402 108) rotate(28) scale(1.65)" />
-    </g>
-    <use href="#fc-leaf-twig" transform="translate(112 248) rotate(16) scale(1.7)" />
-  </g>
-
-  <!-- Golden-hour sunlit leaf tips along the canopy's right edge catching the warm light -->
-  <g color="#4D8F66" opacity="0.68">
-    <g class="svg-footer-breeze-a" style="animation-delay: -1.4s">
-      <use href="#fc-leaf-twig" transform="translate(556 12) rotate(14) scale(1.45)" />
-    </g>
-    <g class="svg-footer-breeze-b" style="animation-delay: -4.2s">
-      <use href="#fc-leaf-twig" transform="translate(526 112) rotate(28) scale(1.4)" />
-    </g>
-    <g class="svg-footer-breeze-a" style="animation-delay: -6.8s">
-      <use href="#fc-leaf-twig" transform="translate(494 218) rotate(22) scale(1.35)" />
-    </g>
-  </g>
-  <g color="#97AC4F" opacity="0.52">
-    <g class="svg-footer-breeze-a" style="animation-delay: -1.4s">
-      <use href="#fc-leaf-twig" transform="translate(622 36) rotate(30) scale(1.3)" />
-    </g>
-    <g class="svg-footer-breeze-b" style="animation-delay: -4.2s">
-      <use href="#fc-leaf-twig" transform="translate(598 158) rotate(40) scale(1.25)" />
-    </g>
-    <g class="svg-footer-breeze-a" style="animation-delay: -6.8s">
-      <use href="#fc-leaf-twig" transform="translate(552 264) rotate(36) scale(1.2)" />
-    </g>
-    <g class="svg-footer-breeze-right" style="animation-delay: -2.6s">
-      <use href="#fc-leaf-twig" transform="translate(1448 34) rotate(160) scale(1.2)" />
-    </g>
-  </g>
-
-  <!-- Gentle falling leaves drifting across the golden-hour cobogó (GPU-composited 60fps) -->
-  <g aria-hidden="true">
-    <g transform="translate(548 16)" color="#1F6F50">
-      <g class="svg-footer-leaf-fall-a" style="animation-delay: -2.2s">
-        <use href="#fc-falling-leaf" transform="scale(0.95)" />
-      </g>
-    </g>
-    <g transform="translate(604 42)" color="#4D8F66">
-      <g class="svg-footer-leaf-fall-b" style="animation-delay: -6.8s">
-        <use href="#fc-falling-leaf" transform="scale(0.82)" />
-      </g>
-    </g>
-    <g transform="translate(518 78)" color="#97AC4F">
-      <g class="svg-footer-leaf-fall-a" style="animation-delay: -9.6s">
-        <use href="#fc-falling-leaf" transform="scale(0.76)" />
-      </g>
-    </g>
-    <g transform="translate(652 8)" color="#1F6F50">
-      <g class="svg-footer-leaf-fall-b" style="animation-delay: -12.4s">
-        <use href="#fc-falling-leaf" transform="scale(0.88)" />
-      </g>
-    </g>
-    <g transform="translate(476 112)" color="#2E8B67">
-      <g class="svg-footer-leaf-fall-a" style="animation-delay: -4.9s">
-        <use href="#fc-falling-leaf" transform="scale(0.8)" />
-      </g>
-    </g>
-    <g transform="translate(578 -6)" color="#8CA048">
-      <g class="svg-footer-leaf-fall-b" style="animation-delay: -0.9s">
-        <use href="#fc-falling-leaf" transform="scale(0.72)" />
-      </g>
-    </g>
-  </g>
-
-  <!-- 6. Subtle deep-green vignette behind the left text block to guarantee effortless cream text contrast -->
-  <rect width="1440" height="340" fill="url(#fc-canopy-text-bed)" />
-
-  <!-- 7. Authentic Risograph paper & soy-ink grain overlay -->
-  <rect width="1440" height="340" filter="url(#fc-riso-grain)" opacity="0.20" />
 </svg>

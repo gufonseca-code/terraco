@@ -55,12 +55,24 @@ export const appConfig: ApplicationConfig = {
       useValue: (config: ImageLoaderConfig) => {
         if (
           config.width &&
-          config.width <= 400 &&
           /^\/images\/lancamentos\/(prime-view|horizon|upside-square|brumadinho-165)\/cover\.webp$/.test(
             config.src,
           )
         ) {
-          return config.src.replace(/\/cover\.webp$/, '/cover-400w.webp');
+          if (config.width <= 200) {
+            return config.src.replace(/\/cover\.webp$/, '/cover-200w.webp');
+          }
+          if (config.width <= 400) {
+            return config.src.replace(/\/cover\.webp$/, '/cover-400w.webp');
+          }
+          if (
+            config.width <= 640 &&
+            /^\/images\/lancamentos\/(prime-view|brumadinho-165)\/cover\.webp$/.test(
+              config.src,
+            )
+          ) {
+            return config.src.replace(/\/cover\.webp$/, '/cover-640w.webp');
+          }
         }
         return config.src;
       },
