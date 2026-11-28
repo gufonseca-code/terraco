@@ -282,7 +282,6 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                 <app-launch-card
                   [launch]="launch"
                   headingLevel="h3"
-                  [priority]="$index < 2"
                   class="w-[82vw] max-w-[332px] shrink-0 snap-start md:w-auto md:max-w-none"
                 />
               }

@@ -6,22 +6,9 @@ import {
   inject,
   makeStateKey,
 } from '@angular/core';
-import {
-  type FirebaseApp,
-  getApp,
-  getApps,
-  initializeApp,
-} from 'firebase/app';
-import {
-  type AppCheck,
-  ReCaptchaEnterpriseProvider,
-  initializeAppCheck,
-} from 'firebase/app-check';
-import {
-  type Firestore,
-  connectFirestoreEmulator,
-  getFirestore,
-} from 'firebase/firestore';
+import type { FirebaseApp } from 'firebase/app';
+import type { AppCheck } from 'firebase/app-check';
+import type { Firestore } from 'firebase/firestore';
 import {
   FIREBASE_CONFIG,
   type FirebaseEnvironmentConfig,
@@ -94,7 +81,7 @@ export class FirebaseService {
     this.isConfigured = isFirebaseConfigured(this.config);
   }
 
-  getFirebaseApp(): FirebaseApp | null {
+  async getFirebaseApp(): Promise<FirebaseApp | null> {
     if (!this.isConfigured) {
       return null;
     }
@@ -103,6 +90,7 @@ export class FirebaseService {
       return this.appInstance;
     }
 
+    const { getApp, getApps, initializeApp } = await import('firebase/app');
     const existingApps = getApps();
     this.appInstance =
       existingApps.length > 0
@@ -120,7 +108,7 @@ export class FirebaseService {
     return this.appInstance;
   }
 
-  getFirestore(): Firestore | null {
+  async getFirestore(): Promise<Firestore | null> {
     if (!this.isConfigured) {
       return null;
     }
@@ -129,10 +117,18 @@ export class FirebaseService {
       return this.firestoreInstance;
     }
 
-    const app = this.getFirebaseApp();
+    const app = await this.getFirebaseApp();
     if (!app) {
       return null;
     }
+
+    if (isPlatformBrowser(this.platformId)) {
+      await this.initAppCheck();
+    }
+
+    const { connectFirestoreEmulator, getFirestore } = await import(
+      'firebase/firestore'
+    );
 
     const databaseId = this.config.firestoreDatabaseId;
     const db =
@@ -157,7 +153,7 @@ export class FirebaseService {
    * Initializes Firebase App Check with reCAPTCHA Enterprise strictly in the browser.
    * Safe no-op on SSR server and when site key / Firebase config is absent.
    */
-  initAppCheck(): AppCheck | null {
+  async initAppCheck(): Promise<AppCheck | null> {
     if (!isPlatformBrowser(this.platformId)) {
       return null;
     }
@@ -168,11 +164,6 @@ export class FirebaseService {
 
     const siteKey = this.config.recaptchaEnterpriseSiteKey?.trim();
     if (!siteKey) {
-      return null;
-    }
-
-    const app = this.getFirebaseApp();
-    if (!app) {
       return null;
     }
 
@@ -190,6 +181,15 @@ export class FirebaseService {
         return null;
       }
     }
+
+    const app = await this.getFirebaseApp();
+    if (!app) {
+      return null;
+    }
+
+    const { ReCaptchaEnterpriseProvider, initializeAppCheck } = await import(
+      'firebase/app-check'
+    );
 
     this.appCheckInstance = initializeAppCheck(app, {
       provider: new ReCaptchaEnterpriseProvider(siteKey),

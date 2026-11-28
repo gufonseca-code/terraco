@@ -8,10 +8,10 @@
       "cover": {
         "storagePath": "launches/prime-view/images/prime-view.webp",
         "publicUrl": "https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/launches%2Fprime-view%2Fimages%2Fprime-view.webp?alt=media",
-        "width": 1024,
-        "height": 614,
+        "width": 800,
+        "height": 480,
         "originalBytes": 62658,
-        "webpBytes": 61572
+        "webpBytes": 33910
       },
       "gallery": [],
       "bookUrl": null,
@@ -21,10 +21,10 @@
       "cover": {
         "storagePath": "launches/upside-square/images/upside-square.webp",
         "publicUrl": "https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/launches%2Fupside-square%2Fimages%2Fupside-square.webp?alt=media",
-        "width": 641,
-        "height": 1024,
+        "width": 640,
+        "height": 400,
         "originalBytes": 317893,
-        "webpBytes": 76696
+        "webpBytes": 20302
       },
       "gallery": [],
       "bookUrl": null,
@@ -34,10 +34,10 @@
       "cover": {
         "storagePath": "launches/horizon/images/horizon.webp",
         "publicUrl": "https://firebasestorage.googleapis.com/v0/b/terraco-a5ff7.firebasestorage.app/o/launches%2Fhorizon%2Fimages%2Fhorizon.webp?alt=media",
-        "width": 641,
-        "height": 576,
+        "width": 640,
+        "height": 400,
         "originalBytes": 78614,
-        "webpBytes": 51624
+        "webpBytes": 24494
       },
       "gallery": [],
       "bookUrl": null,

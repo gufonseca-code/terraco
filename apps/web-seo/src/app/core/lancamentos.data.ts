@@ -126,8 +126,8 @@ export const LANCAMENTOS: Lancamento[] = [
       'Condomínio residencial no Estoril implantado em terreno de 5.855,90 m² com 2 torres e 2 elevadores por torre. Reúne 7 opções de plantas entre Tipo, Garden, PCD e Cobertura Linear de 49,38 a 103,54 m², com áreas comuns entregues mobiliadas e decoradas a 2 minutos a pé da Av. Barão Homem de Melo.',
     corCapa: 'moss',
     imagem: '/images/lancamentos/prime-view/cover.webp',
-    imagemWidth: 1024,
-    imagemHeight: 614,
+    imagemWidth: 800,
+    imagemHeight: 480,
     imagemAlt:
       'Fachada contemporânea do residencial Prime View no Estoril, Belo Horizonte',
     diferenciais: [
@@ -502,8 +502,8 @@ export const LANCAMENTOS: Lancamento[] = [
       'Torre única do 4º ao 21º pavimento em terreno de 1.453,35 m² no coração de Santa Efigênia, assinada por Torres Miranda (Arquitetura), Piacesi (Áreas Comuns) e Forma Garden (Paisagismo). Conta com certificação internacional EDGE, plantas de 30,10 a 122,25 m² e mobilidade a pé para a Praça Floriano Peixoto, Hospital da Unimed e Shopping Boulevard.',
     corCapa: 'ipe',
     imagem: '/images/lancamentos/upside-square/cover.webp',
-    imagemWidth: 641,
-    imagemHeight: 1024,
+    imagemWidth: 640,
+    imagemHeight: 400,
     imagemAlt:
       'Fachada contemporânea do residencial Upside Square no bairro Santa Efigênia, Belo Horizonte',
     diferenciais: [
@@ -969,8 +969,8 @@ export const LANCAMENTOS: Lancamento[] = [
       'Torre única em terreno de 6.673 m² com 4 elevadores e área de preservação permanente no entorno no bairro Serrano. Oferece 6 plantas entre apartamentos Tipo com varanda e Garden de 52,36 a 83,34 m², lazer completo e comodidades integradas a poucos minutos da Av. Abílio Machado.',
     corCapa: 'guava',
     imagem: '/images/lancamentos/horizon/cover.webp',
-    imagemWidth: 641,
-    imagemHeight: 576,
+    imagemWidth: 640,
+    imagemHeight: 400,
     imagemAlt:
       'Fachada da torre única do residencial Horizon cercado por área verde no bairro Serrano, Belo Horizonte',
     diferenciais: [
