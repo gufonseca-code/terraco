@@ -1,153 +1,460 @@
 <svg
   xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 384 148"
+  viewBox="0 0 360 156"
   fill="none"
   aria-hidden="true"
   focusable="false"
   class="block h-full w-auto max-w-full"
 >
   <defs>
-    <!-- Minimalist diagonal louver pattern (airy, light, zero heavy outlines) -->
-    <pattern id="mw-louver-l" width="8" height="8" patternUnits="userSpaceOnUse">
-      <rect width="8" height="8" fill="#FAF8F4" />
-      <path d="M-1 9L9 -1" stroke="#1C1B19" stroke-width="0.9" opacity="0.22" />
-    </pattern>
-    <pattern id="mw-louver-r" width="8" height="8" patternUnits="userSpaceOnUse">
-      <rect width="8" height="8" fill="#FAF8F4" />
-      <path d="M-1 -1L9 9" stroke="#1C1B19" stroke-width="0.9" opacity="0.22" />
-    </pattern>
-
-    <clipPath id="mw-min-glass-1">
-      <path d="M36 36Q64 25 92 36V110H36V36Z" />
+    <clipPath id="fv-arch-1">
+      <path d="M22 50a35 35 0 0 1 70 0v72H22V50Z" />
     </clipPath>
-    <clipPath id="mw-min-glass-2">
-      <path d="M164 36Q192 25 220 36V110H164V36Z" />
+    <clipPath id="fv-arch-2">
+      <path d="M145 50a35 35 0 0 1 70 0v72h-70V50Z" />
     </clipPath>
-    <clipPath id="mw-min-glass-3">
-      <path d="M292 36Q320 25 348 36V110H292V36Z" />
+    <clipPath id="fv-arch-3">
+      <path d="M268 50a35 35 0 0 1 70 0v72h-70V50Z" />
     </clipPath>
   </defs>
 
-  <!-- =============================================================== -->
-  <!-- WINDOW 1 (LEFT): Urban Leaf Green (#1F6F50)                     -->
-  <!-- =============================================================== -->
-  <g id="window-leaf">
-    <!-- Sculpted colonial cornice -->
-    <path
-      d="M27 24C37 22 48 12 64 12C80 12 91 22 101 24L98 28C89 26 78 18 64 18C50 18 39 26 30 28Z"
-      fill="#F7C957"
-    />
-
-    <!-- Segmental-arched frame -->
-    <path d="M30 32Q64 19 98 32V116H30V32Z" fill="#1F6F50" />
-
-    <!-- Calm sunlit window opening -->
-    <g clip-path="url(#mw-min-glass-1)">
-      <rect x="36" y="25" width="56" height="85" fill="#173A2B" />
-      <rect x="36" y="25" width="56" height="47" fill="#FFF6DC" />
-      <circle cx="74" cy="42" r="14" fill="#F7C957" opacity="0.55" />
-      <!-- Minimalist 2x2 upper sash mullions -->
-      <path d="M64 26V72M36 52H92M36 72H92" stroke="#1F6F50" stroke-width="2" />
-    </g>
-
-    <!-- Open folding shutters -->
-    <path d="M10 34L28 36V113L11.5 111Z" fill="#1F6F50" />
-    <path d="M13.5 38.5L24.5 40V108.5L14.5 107Z" fill="url(#mw-louver-l)" />
-
-    <path d="M100 36L118 34L116.5 111L100 113Z" fill="#1F6F50" />
-    <path d="M103.5 40L114.5 38.5L113.5 107L103.5 108.5Z" fill="url(#mw-louver-r)" />
-
-    <!-- Minimalist foliage & blossoms -->
-    <path d="M40 115C38 106 45 102 51 107C53 102 61 101 65 107C70 101 78 103 80 109C85 106 90 109 88 115Z" fill="#2E8B67" />
-    <circle cx="46" cy="109" r="2.6" fill="#FAF8F4" />
-    <circle cx="59" cy="107" r="2.6" fill="#F06A36" />
-    <circle cx="72" cy="109" r="2.6" fill="#F7C957" />
-    <circle cx="82" cy="110" r="2.3" fill="#FAF8F4" />
-
-    <!-- Sleek graphite flower box -->
-    <path d="M35 116H93L90.5 131H37.5Z" fill="#1C1B19" />
-    <path d="M45 118V129M55 118V129M64 118V129M73 118V129M83 118V129" stroke="#FAF8F4" stroke-width="1.1" opacity="0.28" />
+  <!-- Subtle architectural brick wall lines -->
+  <g stroke="#1C1B19" stroke-width="1.15" stroke-linecap="round" opacity="0.28">
+    <path d="M108 42h18M114 42v6M105 48h16" />
+    <path d="M236 16h24M244 16v6M252 16v6M239 22h22M248 22v6M242 28h14" />
+    <path d="M4 62h12M8 62v6M2 68h10" />
+    <path d="M312 146h22M320 146v6M315 152h18" />
+    <path d="M46 144h24M58 144v5M52 149h12" />
   </g>
 
-  <!-- =============================================================== -->
-  <!-- WINDOW 2 (CENTER): Terracota Solar (#F06A36)                    -->
-  <!-- =============================================================== -->
-  <g id="window-terracota">
-    <!-- Sculpted colonial cornice -->
+  <!-- ========================================================= -->
+  <!-- ARCH 1 (LEFT): Sunlit Solar Arch + Costela-de-Adão + Palm -->
+  <!-- ========================================================= -->
+  <g>
+    <!-- Outer arch molding -->
     <path
-      d="M155 22C165 20 176 10 192 10C208 10 219 20 229 22L226 26C217 24 206 16 192 16C178 16 167 24 158 26Z"
+      d="M16 50a41 41 0 0 1 82 0v74H16V50Z"
       fill="#F7C957"
+      stroke="#1C1B19"
+      stroke-width="1.6"
+      stroke-linejoin="round"
+    />
+    <!-- Inner sunlit opening -->
+    <path d="M22 50a35 35 0 0 1 70 0v72H22V50Z" fill="#FFF6DC" />
+    <g clip-path="url(#fv-arch-1)">
+      <!-- Warm morning sun -->
+      <circle cx="72" cy="40" r="21" fill="#F7C957" opacity="0.72" />
+      <circle cx="72" cy="40" r="13" fill="#FDE6A4" />
+      <!-- French window mullions & radial sunburst transom -->
+      <g stroke="#1C1B19" stroke-width="1.25" stroke-linecap="round">
+        <path d="M22 50h70" />
+        <path d="M45 50a12 12 0 0 1 24 0" />
+        <path d="M57 15v23M34 25l14 17M80 25L66 42" />
+        <path d="M57 50v72" />
+        <path d="M28 56h23v36H28zM63 56h23v36H63z" opacity="0.55" />
+      </g>
+    </g>
+    <!-- Inner arch stroke -->
+    <path
+      d="M22 50a35 35 0 0 1 70 0v72H22V50Z"
+      stroke="#1C1B19"
+      stroke-width="1.4"
     />
 
-    <!-- Segmental-arched frame -->
-    <path d="M158 30Q192 17 226 30V116H158V30Z" fill="#F06A36" />
-
-    <!-- Calm sunlit window opening -->
-    <g clip-path="url(#mw-min-glass-2)">
-      <rect x="164" y="25" width="56" height="85" fill="#1C1B19" />
-      <rect x="164" y="25" width="56" height="47" fill="#FFF6DC" />
-      <circle cx="192" cy="48" r="16" fill="#F7C957" opacity="0.72" />
-      <!-- Minimalist 2x2 upper sash mullions -->
-      <path d="M192 26V72M164 52H220M164 72H220" stroke="#F06A36" stroke-width="2" />
+    <!-- Wrought-iron balcony railing (behind foreground foliage) -->
+    <g stroke="#1C1B19" stroke-width="1.4" stroke-linecap="round">
+      <path d="M12 88h90M12 93h90" />
+      <path d="M16 88v36M26 88v36M36 88v36M46 88v36M57 88v36M68 88v36M78 88v36M88 88v36M98 88v36" />
     </g>
 
-    <!-- Open folding shutters -->
-    <path d="M138 32L156 34V113L139.5 111Z" fill="#F06A36" />
-    <path d="M141.5 36.5L152.5 38V108.5L142.5 107Z" fill="url(#mw-louver-l)" />
+    <!-- Left planter: Urban Leaf pot + Costela-de-Adão (Monstera) -->
+    <g>
+      <!-- Stems -->
+      <path
+        d="M27 104c-2-10-4-18-8-25M29 104c2-11 6-19 10-25M28 104c0-10-1-19 1-28"
+        stroke="#17573E"
+        stroke-width="1.6"
+        stroke-linecap="round"
+      />
+      <!-- Monstera leaf 1 (left) -->
+      <path
+        d="M17 85c-7-3-10-11-6-17 4-6 13-5 17 2 4 6 2 14-5 16l-6-1Z"
+        fill="#1F6F50"
+        stroke="#1C1B19"
+        stroke-width="1.35"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M14 75h5M15 80h4M24 74h4"
+        stroke="#FAF8F4"
+        stroke-width="1.4"
+        stroke-linecap="round"
+      />
+      <!-- Monstera leaf 2 (upper center) -->
+      <path
+        d="M26 78c-5-6-3-16 4-19 7-3 15 2 15 10 0 7-6 12-13 12l-6-3Z"
+        fill="#2E8B67"
+        stroke="#1C1B19"
+        stroke-width="1.35"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M30 68l4 3M36 73l4-2M32 76l3 2"
+        stroke="#FAF8F4"
+        stroke-width="1.35"
+        stroke-linecap="round"
+      />
+      <!-- Planter pot -->
+      <path
+        d="M19 104h18l-2.5 20h-13L19 104Z"
+        fill="#1F6F50"
+        stroke="#1C1B19"
+        stroke-width="1.4"
+        stroke-linejoin="round"
+      />
+      <path d="M17 104h22" stroke="#1C1B19" stroke-width="1.6" stroke-linecap="round" />
+    </g>
 
-    <path d="M228 34L246 32L244.5 111L228 113Z" fill="#F06A36" />
-    <path d="M231.5 38L242.5 36.5L241.5 107L231.5 108.5Z" fill="url(#mw-louver-r)" />
+    <!-- Right planter: Terracota pot + Tall Tropical Palm/Bird-of-Paradise -->
+    <g>
+      <!-- Tall overlapping tropical leaves -->
+      <path
+        d="M84 102c-8-14-14-27-16-40 9 7 15 18 18 33l-2 7Z"
+        fill="#1F6F50"
+        stroke="#1C1B19"
+        stroke-width="1.35"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M87 102c0-16 3-31 9-44 6 11 6 26-2 40l-7 4Z"
+        fill="#2E8B67"
+        stroke="#1C1B19"
+        stroke-width="1.35"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M89 102c6-12 14-21 23-28-2 12-8 22-18 29l-5-1Z"
+        fill="#1F6F50"
+        stroke="#1C1B19"
+        stroke-width="1.35"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M85 102c-9-8-16-14-24-18 5 9 11 16 20 20l4-2Z"
+        fill="#17573E"
+        stroke="#1C1B19"
+        stroke-width="1.3"
+        stroke-linejoin="round"
+      />
+      <!-- Terracota planter -->
+      <path
+        d="M76 102h20l-2.5 22h-15L76 102Z"
+        fill="#F06A36"
+        stroke="#1C1B19"
+        stroke-width="1.4"
+        stroke-linejoin="round"
+      />
+      <path d="M74 102h24" stroke="#1C1B19" stroke-width="1.6" stroke-linecap="round" />
+    </g>
 
-    <!-- Minimalist foliage & blossoms -->
-    <path d="M168 115C166 106 173 102 179 107C182 101 190 101 194 107C199 102 207 103 209 109C214 106 218 109 216 115Z" fill="#1F6F50" />
-    <circle cx="174" cy="109" r="2.6" fill="#F7C957" />
-    <circle cx="187" cy="107" r="2.6" fill="#FAF8F4" />
-    <circle cx="200" cy="109" r="2.6" fill="#F06A36" />
-    <circle cx="210" cy="110" r="2.3" fill="#F7C957" />
-
-    <!-- Sleek graphite flower box -->
-    <path d="M163 116H221L218.5 131H165.5Z" fill="#1C1B19" />
-    <path d="M173 118V129M183 118V129M192 118V129M201 118V129M211 118V129" stroke="#FAF8F4" stroke-width="1.1" opacity="0.28" />
-  </g>
-
-  <!-- =============================================================== -->
-  <!-- WINDOW 3 (RIGHT): Amarelo Solar (#F7C957)                       -->
-  <!-- =============================================================== -->
-  <g id="window-solar">
-    <!-- Sculpted colonial cornice -->
-    <path
-      d="M283 24C293 22 304 12 320 12C336 12 347 22 357 24L354 28C345 26 334 18 320 18C306 18 295 26 286 28Z"
+    <!-- Stepped architectural window sill -->
+    <rect
+      x="11"
+      y="124"
+      width="92"
+      height="7"
+      rx="2"
+      fill="#F7C957"
+      stroke="#1C1B19"
+      stroke-width="1.5"
+    />
+    <rect
+      x="17"
+      y="131"
+      width="80"
+      height="6"
+      rx="1.5"
       fill="#F06A36"
+      stroke="#1C1B19"
+      stroke-width="1.4"
+    />
+  </g>
+
+  <!-- ========================================================= -->
+  <!-- ARCH 2 (CENTER): Terracota Arch + Warm Sun + Samambaia    -->
+  <!-- ========================================================= -->
+  <g>
+    <!-- Outer arch molding -->
+    <path
+      d="M139 50a41 41 0 0 1 82 0v74h-82V50Z"
+      fill="#F06A36"
+      stroke="#1C1B19"
+      stroke-width="1.6"
+      stroke-linejoin="round"
+    />
+    <!-- Inner sunlit horizon opening -->
+    <path d="M145 50a35 35 0 0 1 70 0v72h-70V50Z" fill="#FFF6DC" />
+    <g clip-path="url(#fv-arch-2)">
+      <!-- Glowing warm sun behind skyline -->
+      <circle cx="180" cy="56" r="24" fill="#F7C957" />
+      <circle cx="180" cy="56" r="14" fill="#FFF6DC" opacity="0.55" />
+      <!-- Subtle BH architectural skyline silhouette -->
+      <path
+        d="M145 122V80h11V68h12v14h7V62h11v24h8V74h12v12h9v36h-70Z"
+        fill="#1F6F50"
+        opacity="0.92"
+      />
+      <!-- Tiny illuminated apartment windows -->
+      <g fill="#F7C957">
+        <rect x="159" y="74" width="3" height="4" rx="0.5" />
+        <rect x="164" y="74" width="3" height="4" rx="0.5" />
+        <rect x="178" y="68" width="3" height="4" rx="0.5" />
+        <rect x="178" y="76" width="3" height="4" rx="0.5" />
+        <rect x="197" y="80" width="3" height="4" rx="0.5" />
+      </g>
+      <!-- Radial transom -->
+      <g stroke="#1C1B19" stroke-width="1.25" stroke-linecap="round">
+        <path d="M145 50h70" />
+        <path d="M168 50a12 12 0 0 1 24 0" />
+        <path d="M180 15v23M157 25l14 17M203 25l-14 17" />
+      </g>
+    </g>
+    <path
+      d="M145 50a35 35 0 0 1 70 0v72h-70V50Z"
+      stroke="#1C1B19"
+      stroke-width="1.4"
     />
 
-    <!-- Segmental-arched frame -->
-    <path d="M286 32Q320 19 354 32V116H286V32Z" fill="#F7C957" />
-
-    <!-- Calm sunlit window opening -->
-    <g clip-path="url(#mw-min-glass-3)">
-      <rect x="292" y="25" width="56" height="85" fill="#173A2B" />
-      <rect x="292" y="25" width="56" height="47" fill="#FFF6DC" />
-      <circle cx="308" cy="42" r="13" fill="#F7C957" opacity="0.55" />
-      <!-- Minimalist 2x2 upper sash mullions -->
-      <path d="M320 26V72M292 52H348M292 72H348" stroke="#E5B23A" stroke-width="2" />
+    <!-- Wrought-iron balcony railing -->
+    <g stroke="#1C1B19" stroke-width="1.4" stroke-linecap="round">
+      <path d="M135 88h90M135 93h90" />
+      <path d="M139 88v36M149 88v36M159 88v36M169 88v36M180 88v36M191 88v36M201 88v36M211 88v36M221 88v36" />
     </g>
 
-    <!-- Open folding shutters -->
-    <path d="M266 34L284 36V113L267.5 111Z" fill="#F7C957" />
-    <path d="M269.5 38.5L280.5 40V108.5L270.5 107Z" fill="url(#mw-louver-l)" />
+    <!-- Left planter: Lush cascading Samambaia (Fern) -->
+    <g>
+      <path
+        d="M153 105c-10-4-17-12-20-20 8 2 15 6 20 13"
+        fill="#1F6F50"
+        stroke="#1C1B19"
+        stroke-width="1.25"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M154 104c-6-10-7-20-4-28 6 7 10 15 10 25"
+        fill="#2E8B67"
+        stroke="#1C1B19"
+        stroke-width="1.25"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M156 105c5-9 12-15 20-18-3 8-8 15-16 19"
+        fill="#1F6F50"
+        stroke="#1C1B19"
+        stroke-width="1.25"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M151 105c-9 3-15 8-18 15 7-2 13-5 17-10"
+        fill="#17573E"
+        stroke="#1C1B19"
+        stroke-width="1.2"
+        stroke-linejoin="round"
+      />
+      <!-- Terracota planter -->
+      <path
+        d="M145 106h18l-2 18h-14l-2-18Z"
+        fill="#F06A36"
+        stroke="#1C1B19"
+        stroke-width="1.4"
+        stroke-linejoin="round"
+      />
+      <path d="M143 106h22" stroke="#1C1B19" stroke-width="1.6" stroke-linecap="round" />
+    </g>
 
-    <path d="M356 36L374 34L372.5 111L356 113Z" fill="#F7C957" />
-    <path d="M359.5 40L370.5 38.5L369.5 107L359.5 108.5Z" fill="url(#mw-louver-r)" />
+    <!-- Right planter: Solar Yellow pot + Broad Tropical Foliage -->
+    <g>
+      <path
+        d="M207 102c-7-14-12-28-11-43 8 10 13 23 15 39l-4 4Z"
+        fill="#1F6F50"
+        stroke="#1C1B19"
+        stroke-width="1.35"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M210 102c2-17 7-31 15-42 3 13 0 28-9 41l-6 1Z"
+        fill="#2E8B67"
+        stroke="#1C1B19"
+        stroke-width="1.35"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M213 102c6-10 14-17 22-21-3 10-9 18-18 23l-4-2Z"
+        fill="#17573E"
+        stroke="#1C1B19"
+        stroke-width="1.3"
+        stroke-linejoin="round"
+      />
+      <!-- Solar Yellow pot -->
+      <path
+        d="M199 102h20l-2.5 22h-15L199 102Z"
+        fill="#F7C957"
+        stroke="#1C1B19"
+        stroke-width="1.4"
+        stroke-linejoin="round"
+      />
+      <path d="M197 102h24" stroke="#1C1B19" stroke-width="1.6" stroke-linecap="round" />
+    </g>
 
-    <!-- Minimalist foliage & blossoms -->
-    <path d="M296 115C294 106 301 102 307 107C309 102 317 101 321 107C326 101 334 103 336 109C341 106 346 109 344 115Z" fill="#2E8B67" />
-    <circle cx="302" cy="109" r="2.6" fill="#F06A36" />
-    <circle cx="315" cy="107" r="2.6" fill="#FAF8F4" />
-    <circle cx="328" cy="109" r="2.6" fill="#F7C957" />
-    <circle cx="338" cy="110" r="2.3" fill="#F06A36" />
+    <!-- Stepped architectural sill -->
+    <rect
+      x="134"
+      y="124"
+      width="92"
+      height="7"
+      rx="2"
+      fill="#F06A36"
+      stroke="#1C1B19"
+      stroke-width="1.5"
+    />
+    <rect
+      x="140"
+      y="131"
+      width="80"
+      height="6"
+      rx="1.5"
+      fill="#1F6F50"
+      stroke="#1C1B19"
+      stroke-width="1.4"
+    />
+  </g>
 
-    <!-- Sleek graphite flower box -->
-    <path d="M291 116H349L346.5 131H293.5Z" fill="#1C1B19" />
-    <path d="M301 118V129M311 118V129M320 118V129M329 118V129M339 118V129" stroke="#FAF8F4" stroke-width="1.1" opacity="0.28" />
+  <!-- ========================================================= -->
+  <!-- ARCH 3 (RIGHT): Urban Leaf Arch + Sunlit Leaves + Planter -->
+  <!-- ========================================================= -->
+  <g>
+    <!-- Outer arch molding -->
+    <path
+      d="M262 50a41 41 0 0 1 82 0v74h-82V50Z"
+      fill="#1F6F50"
+      stroke="#1C1B19"
+      stroke-width="1.6"
+      stroke-linejoin="round"
+    />
+    <!-- Inner deep-leaf shuttered opening with warm sunlit top -->
+    <path d="M268 50a35 35 0 0 1 70 0v72h-70V50Z" fill="#17573E" />
+    <g clip-path="url(#fv-arch-3)">
+      <!-- Sunlit arch transom glow -->
+      <path d="M268 50a35 35 0 0 1 70 0H268Z" fill="#2E8B67" />
+      <circle cx="303" cy="48" r="14" fill="#F7C957" opacity="0.32" />
+      <g stroke="#1C1B19" stroke-width="1.25" stroke-linecap="round">
+        <path d="M268 50h70" />
+        <path d="M291 50a12 12 0 0 1 24 0" />
+        <path d="M303 15v23M280 25l14 17M326 25l-14 17" />
+        <path d="M303 50v72" />
+        <path d="M275 56h22v36h-22zM309 56h22v36h-22z" opacity="0.45" />
+      </g>
+    </g>
+    <path
+      d="M268 50a35 35 0 0 1 70 0v72h-70V50Z"
+      stroke="#1C1B19"
+      stroke-width="1.4"
+    />
+
+    <!-- Wrought-iron balcony railing -->
+    <g stroke="#1C1B19" stroke-width="1.4" stroke-linecap="round">
+      <path d="M258 88h90M258 93h90" />
+      <path d="M262 88v36M272 88v36M282 88v36M292 88v36M303 88v36M314 88v36M324 88v36M334 88v36M344 88v36" />
+    </g>
+
+    <!-- Left planter: Sunlit spiky tropical agave/dracaena -->
+    <g>
+      <path
+        d="M278 104c-8-10-14-19-18-28 9 6 15 13 20 24"
+        fill="#F7C957"
+        stroke="#1C1B19"
+        stroke-width="1.25"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M280 104c-2-12-2-23 1-32 4 10 5 20 3 32"
+        fill="#F7C957"
+        stroke="#1C1B19"
+        stroke-width="1.25"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M283 104c5-10 11-18 18-24-3 10-8 18-14 25"
+        fill="#2E8B67"
+        stroke="#1C1B19"
+        stroke-width="1.25"
+        stroke-linejoin="round"
+      />
+      <!-- Planter pot -->
+      <path
+        d="M270 104h20l-2.5 20h-15L270 104Z"
+        fill="#F7C957"
+        stroke="#1C1B19"
+        stroke-width="1.4"
+        stroke-linejoin="round"
+      />
+      <path d="M268 104h24" stroke="#1C1B19" stroke-width="1.6" stroke-linecap="round" />
+    </g>
+
+    <!-- Right planter: Terracota pot + Sunlit Golden & Leaf Fronds -->
+    <g>
+      <path
+        d="M329 102c-7-13-11-26-10-39 7 9 12 21 13 36l-3 3Z"
+        fill="#F7C957"
+        stroke="#1C1B19"
+        stroke-width="1.35"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M332 102c3-16 8-30 16-40 2 12-1 27-10 39l-6 1Z"
+        fill="#2E8B67"
+        stroke="#1C1B19"
+        stroke-width="1.35"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M335 102c5-9 12-16 20-19-2 9-8 16-16 21l-4-2Z"
+        fill="#F7C957"
+        stroke="#1C1B19"
+        stroke-width="1.3"
+        stroke-linejoin="round"
+      />
+      <!-- Terracota planter -->
+      <path
+        d="M322 102h20l-2.5 22h-15L322 102Z"
+        fill="#F06A36"
+        stroke="#1C1B19"
+        stroke-width="1.4"
+        stroke-linejoin="round"
+      />
+      <path d="M320 102h24" stroke="#1C1B19" stroke-width="1.6" stroke-linecap="round" />
+    </g>
+
+    <!-- Stepped architectural sill -->
+    <rect
+      x="257"
+      y="124"
+      width="92"
+      height="7"
+      rx="2"
+      fill="#1F6F50"
+      stroke="#1C1B19"
+      stroke-width="1.5"
+    />
+    <rect
+      x="263"
+      y="131"
+      width="80"
+      height="6"
+      rx="1.5"
+      fill="#17573E"
+      stroke="#1C1B19"
+      stroke-width="1.4"
+    />
   </g>
 </svg>

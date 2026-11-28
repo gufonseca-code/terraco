@@ -363,6 +363,32 @@ test.describe("Instant navigation", () => {
     expect(svgCheck?.rectHeight).toBeGreaterThan(50);
     expect(svgCheck?.childCount).toBeGreaterThan(0);
 
+    // Verify the footer Risograph cobogó SVG renders in the SVG namespace with non-zero geometry
+    const footerSvgCheck = await page.evaluate(() => {
+      const svg = document.querySelector("app-footer-cobogo-backdrop svg");
+      if (!svg) return null;
+      return {
+        svgNamespace: svg.namespaceURI,
+        rectWidth: svg.getBoundingClientRect().width,
+        rectHeight: svg.getBoundingClientRect().height,
+        childCount: svg.children.length,
+      };
+    });
+
+    expect(footerSvgCheck).not.toBeNull();
+    expect(footerSvgCheck?.svgNamespace).toBe("http://www.w3.org/2000/svg");
+    expect(footerSvgCheck?.rectWidth).toBeGreaterThan(200);
+    expect(footerSvgCheck?.rectHeight).toBeGreaterThan(100);
+    expect(footerSvgCheck?.childCount).toBeGreaterThan(0);
+
+    const footer = page.getByRole("contentinfo");
+    await expect(
+      footer.getByRole("link", { name: "Lançamentos", exact: true })
+    ).toBeVisible();
+    await expect(
+      footer.getByRole("link", { name: "Falar no WhatsApp", exact: true })
+    ).toBeVisible();
+
     // Verify hero search input, clear button, and submission to /lancamentos?q=Estoril
     const searchInput = page.getByRole("combobox", {
       name: "Buscar por bairro ou lançamento",

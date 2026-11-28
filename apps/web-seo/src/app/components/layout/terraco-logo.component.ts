@@ -110,7 +110,6 @@ export class TerracoLogoComponent {
   readonly inverted = input<boolean>(false);
   readonly showSteps = input<boolean>(true);
   readonly animate = input<boolean>(true);
-  readonly accentSteps = input<boolean>(false);
   readonly className = input<string>('');
 
   readonly wordmarkLetters = WORDMARK_LETTERS;
@@ -122,7 +121,7 @@ export class TerracoLogoComponent {
   readonly stepClasses = computed(
     () =>
       `h-7 w-7 transition-colors duration-200 ease-[var(--ease-expressive-return)] ${
-        this.inverted() || this.accentSteps()
+        this.inverted()
           ? 'text-highlight'
           : 'text-ink group-hover:text-highlight group-focus-visible:text-highlight'
       }`
