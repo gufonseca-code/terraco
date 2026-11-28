@@ -44,7 +44,7 @@ app.get('/robots.txt', (_req, res) => {
     .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
     .type('text/plain')
     .send(
-      `User-Agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\nAgentmap: ${SITE_URL}/.well-known/ard.json\n`,
+      `User-Agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`,
     );
 });
 
@@ -64,6 +64,20 @@ app.get('/llms.txt', (_req, res) => {
 });
 
 app.get('/.well-known/ard.json', (_req, res) => {
+  const sendArdFallback = () => {
+    const devArdPath = join(
+      process.cwd(),
+      'apps/web-seo/public/.well-known/ard.json',
+    );
+    res
+      .type('application/json; charset=utf-8')
+      .sendFile(devArdPath, { dotfiles: 'allow' }, (fallbackErr) => {
+        if (fallbackErr && !res.headersSent) {
+          res.status(404).json({ error: 'ARD manifest not found' });
+        }
+      });
+  };
+
   res
     .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
     .type('application/json; charset=utf-8')
@@ -72,7 +86,7 @@ app.get('/.well-known/ard.json', (_req, res) => {
       { dotfiles: 'allow' },
       (err) => {
         if (err && !res.headersSent) {
-          res.status(404).json({ error: 'ARD manifest not found' });
+          sendArdFallback();
         }
       },
     );

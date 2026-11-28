@@ -2,4 +2,3 @@ User-Agent: *
 Allow: /
 
 Sitemap: https://meuterraco.com.br/sitemap.xml
-Agentmap: https://meuterraco.com.br/.well-known/ard.json
