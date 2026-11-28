@@ -1396,7 +1396,7 @@ h4 {
   will-change: transform;
 }
 
-/* Transições suaves do Angular Router (View Transitions API) */
+/* Transições suaves do Angular Router (View Transitions API + M3 Expressive) */
 @keyframes terraco-vt-out {
   from {
     opacity: 1;
@@ -1428,15 +1428,15 @@ h4 {
 
 ::view-transition-group(*) {
   animation-duration: 280ms;
-  animation-timing-function: var(--ease-enter);
+  animation-timing-function: var(--ease-expressive);
 }
 
 ::view-transition-old(root) {
-  animation: terraco-vt-out 150ms var(--ease-ui) both;
+  animation: terraco-vt-out 140ms var(--ease-expressive-return) both;
 }
 
 ::view-transition-new(root) {
-  animation: terraco-vt-in 240ms var(--ease-enter) both;
+  animation: terraco-vt-in 240ms var(--ease-expressive-return) both;
 }
 
 @keyframes terraco-letter-jump {

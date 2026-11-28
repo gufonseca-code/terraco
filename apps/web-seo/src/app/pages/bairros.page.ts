@@ -222,7 +222,7 @@ function resolveBairroMedia(
             </nav>
 
             <header
-              class="flex flex-col gap-6 border-b border-border-subtle pb-8 sm:pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-12"
+              class="terraco-reveal flex flex-col gap-6 border-b border-border-subtle pb-8 sm:pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-12"
             >
               <div class="max-w-2xl space-y-3">
                 <h1
@@ -359,6 +359,7 @@ function resolveBairroMedia(
                     </div>
 
                     <h2
+                      [style.view-transition-name]="'bairro-title-' + row.bairro.slug"
                       class="font-display text-[clamp(1.5rem,2.4vw,1.875rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
                     >
                       <a
