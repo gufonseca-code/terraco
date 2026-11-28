@@ -4,6 +4,7 @@ import {
   isMainModule,
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
+import compression from 'compression';
 import express from 'express';
 import { join } from 'node:path';
 import { handleCreateLead } from './server/leads.handler';
@@ -12,6 +13,7 @@ import { createLeadWebhookHandler } from './server/lead-webhook.handler';
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
+app.use(compression());
 const angularApp = new AngularNodeAppEngine({
   allowedHosts: [
     'localhost',
@@ -63,11 +65,14 @@ app.get('/llms.txt', (_req, res) => {
     });
 });
 
-app.get('/.well-known/ard.json', (_req, res) => {
+app.get(['/.well-known/ard.json', '/.well-known/ai-catalog.json'], (req, res) => {
+  const manifestFile = req.path.endsWith('ai-catalog.json')
+    ? 'ai-catalog.json'
+    : 'ard.json';
   const sendArdFallback = () => {
     const devArdPath = join(
       process.cwd(),
-      'apps/web-seo/public/.well-known/ard.json',
+      `apps/web-seo/public/.well-known/${manifestFile}`,
     );
     res
       .type('application/json; charset=utf-8')
@@ -82,7 +87,7 @@ app.get('/.well-known/ard.json', (_req, res) => {
     .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
     .type('application/json; charset=utf-8')
     .sendFile(
-      join(browserDistFolder, '.well-known/ard.json'),
+      join(browserDistFolder, `.well-known/${manifestFile}`),
       { dotfiles: 'allow' },
       (err) => {
         if (err && !res.headersSent) {

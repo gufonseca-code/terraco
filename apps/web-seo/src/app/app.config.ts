@@ -14,6 +14,7 @@ import {
   withEventReplay,
   withIncrementalHydration,
 } from '@angular/platform-browser';
+import { IMAGE_LOADER, type ImageLoaderConfig } from '@angular/common';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { routes } from './app.routes';
 import { provideTerracoWebMcpTools } from './core/webmcp.providers';
@@ -49,6 +50,21 @@ export const appConfig: ApplicationConfig = {
     ),
     provideClientHydration(withEventReplay(), withIncrementalHydration()),
     provideHttpClient(withFetch()),
+    {
+      provide: IMAGE_LOADER,
+      useValue: (config: ImageLoaderConfig) => {
+        if (
+          config.width &&
+          config.width <= 400 &&
+          /^\/images\/lancamentos\/(prime-view|horizon|upside-square)\/cover\.webp$/.test(
+            config.src,
+          )
+        ) {
+          return config.src.replace(/\/cover\.webp$/, '/cover-400w.webp');
+        }
+        return config.src;
+      },
+    },
     provideTerracoWebMcpTools(),
   ],
 };
