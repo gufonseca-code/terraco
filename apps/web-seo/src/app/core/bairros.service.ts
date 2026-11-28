@@ -9,15 +9,6 @@ import {
   signal,
 } from '@angular/core';
 import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore';
-import {
   BAIRROS_BH,
   type BairroFaqItem,
   type BairroGuide,
@@ -249,12 +240,15 @@ export class BairrosService {
   }
 
   private async fetchBairrosFromFirestore(): Promise<BairroGuide[]> {
-    const db = this.firebase.getFirestore();
+    const db = await this.firebase.getFirestore();
     if (!db) {
       return this.commitListResult(this.initialData);
     }
 
     try {
+      const { collection, getDocs, orderBy, query, where } = await import(
+        'firebase/firestore'
+      );
       const colRef = collection(db, BAIRROS_COLLECTION);
       let items: BairroGuide[];
 
@@ -314,7 +308,7 @@ export class BairrosService {
   private async fetchBairroBySlugFromFirestore(
     slug: string
   ): Promise<BairroGuide | undefined> {
-    const db = this.firebase.getFirestore();
+    const db = await this.firebase.getFirestore();
     if (!db) {
       const fallback =
         this.initialData.find((item) => item.slug === slug) ?? null;
@@ -322,6 +316,7 @@ export class BairrosService {
     }
 
     try {
+      const { doc, getDoc } = await import('firebase/firestore');
       const docRef = doc(db, BAIRROS_COLLECTION, slug);
       const snap = await withTimeout(
         getDoc(docRef),

@@ -10,15 +10,6 @@ import {
   signal,
 } from '@angular/core';
 import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore';
-import {
   FIRESTORE_READ_TIMEOUT_MS,
   pickNonEmptyArray,
   pickNonEmptyString,
@@ -448,13 +439,16 @@ export class LancamentosService {
       }
     }
 
-    const db = this.firebase.getFirestore();
+    const db = await this.firebase.getFirestore();
     if (!db) {
       return this.commitListResult(this.initialData);
     }
 
     this.isLoadingList.set(true);
     try {
+      const { collection, getDocs, orderBy, query, where } = await import(
+        'firebase/firestore'
+      );
       const colRef = collection(db, LAUNCHES_COLLECTION);
       let items: Lancamento[];
 
@@ -532,7 +526,7 @@ export class LancamentosService {
       }
     }
 
-    const db = this.firebase.getFirestore();
+    const db = await this.firebase.getFirestore();
     if (!db) {
       const fallback =
         this.initialData.find((item) => item.slug === slug) ?? null;
@@ -541,6 +535,7 @@ export class LancamentosService {
 
     this.isLoadingDetail.set(true);
     try {
+      const { doc, getDoc } = await import('firebase/firestore');
       const docRef = doc(db, LAUNCHES_COLLECTION, slug);
       const snap = await withTimeout(
         getDoc(docRef),
