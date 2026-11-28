@@ -2,18 +2,29 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { buildWhatsAppUrl } from '../../core';
 import { ViewTransitionDirective } from '../shared/view-transition.directive';
+import { FooterCobogoBackdropComponent } from './footer-cobogo-backdrop.component';
 import { TerracoLogoComponent } from './terraco-logo.component';
 
 @Component({
   selector: 'app-footer',
-  imports: [RouterLink, ViewTransitionDirective, TerracoLogoComponent],
+  imports: [
+    RouterLink,
+    ViewTransitionDirective,
+    FooterCobogoBackdropComponent,
+    TerracoLogoComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <footer
       id="contato"
       appViewTransition="footer"
-      class="terraco-cobogo-surface mt-auto overflow-hidden border-t border-border-subtle bg-surface scroll-mt-24"
+      class="terraco-cobogo-surface relative isolate mt-auto overflow-hidden border-t border-border-subtle bg-surface scroll-mt-24"
     >
+      <app-footer-cobogo-backdrop />
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 bg-gradient-to-b from-canvas/62 via-canvas/70 to-canvas/40 md:hidden"
+      ></div>
       <div
         class="relative z-10 mx-auto flex max-w-7xl flex-col gap-6 px-4 py-14 sm:px-6 sm:py-16 lg:px-8 md:flex-row md:items-end md:justify-between"
       >

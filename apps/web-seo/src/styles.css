@@ -190,43 +190,9 @@ h4 {
   font-variation-settings: "SOFT" 100, "WONK" 1;
 }
 
-/* Fundo risograph de cobogó brasileiro, folhagens tropicais e luz golden hour */
+/* Superfície base do footer com fundo SVG risograph de cobogó e folhagens */
 .terraco-cobogo-surface {
-  position: relative;
-  isolation: isolate;
   background-color: var(--color-bg-surface);
-  background-image:
-    radial-gradient(
-      ellipse 50% 96% at 18% 46%,
-      rgba(250, 248, 244, 0.74) 0%,
-      rgba(250, 248, 244, 0.36) 58%,
-      rgba(250, 248, 244, 0) 100%
-    ),
-    linear-gradient(
-      105deg,
-      rgba(250, 248, 244, 0.22) 0%,
-      rgba(247, 201, 87, 0.16) 58%,
-      rgba(240, 106, 54, 0.08) 100%
-    ),
-    url("/images/footer-cobogo-riso.webp");
-  background-size: 100% 100%, 100% 100%, cover;
-  background-position: center, center, left 22%;
-  background-repeat: no-repeat;
-}
-
-@media (max-width: 767px) {
-  .terraco-cobogo-surface {
-    background-image:
-      linear-gradient(
-        180deg,
-        rgba(250, 248, 244, 0.42) 0%,
-        rgba(250, 248, 244, 0.56) 55%,
-        rgba(255, 246, 220, 0.42) 100%
-      ),
-      url("/images/footer-cobogo-riso.webp");
-    background-size: 100% 100%, cover;
-    background-position: center, left 18%;
-  }
 }
 
 .terraco-cobogo-band {
