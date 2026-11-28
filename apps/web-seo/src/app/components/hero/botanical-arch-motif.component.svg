@@ -1,396 +1,153 @@
 <svg
   xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 384 156"
+  viewBox="0 0 384 148"
   fill="none"
   aria-hidden="true"
   focusable="false"
   class="block h-full w-auto max-w-full"
 >
   <defs>
-    <!-- Diagonal cream wood lattice (gelosia) patterns for left & right open shutters -->
-    <pattern id="mw-lattice-l" width="6" height="6" patternUnits="userSpaceOnUse">
-      <rect width="6" height="6" fill="#FAF8F4" />
-      <path d="M-1 7L7 -1M-1 1L1 -1M5 7L7 5" stroke="#1C1B19" stroke-width="0.95" opacity="0.62" />
-      <path d="M-1 4L4 -1M2 7L7 2" stroke="#1C1B19" stroke-width="0.55" opacity="0.28" />
+    <!-- Minimalist diagonal louver pattern (airy, light, zero heavy outlines) -->
+    <pattern id="mw-louver-l" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#FAF8F4" />
+      <path d="M-1 9L9 -1" stroke="#1C1B19" stroke-width="0.9" opacity="0.22" />
     </pattern>
-    <pattern id="mw-lattice-r" width="6" height="6" patternUnits="userSpaceOnUse">
-      <rect width="6" height="6" fill="#FAF8F4" />
-      <path d="M-1 -1L7 7M5 -1L7 1M-1 5L1 7" stroke="#1C1B19" stroke-width="0.95" opacity="0.62" />
-      <path d="M2 -1L7 4M-1 2L4 7" stroke="#1C1B19" stroke-width="0.55" opacity="0.28" />
+    <pattern id="mw-louver-r" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#FAF8F4" />
+      <path d="M-1 -1L9 9" stroke="#1C1B19" stroke-width="0.9" opacity="0.22" />
     </pattern>
 
-    <!-- Reusable segmental-arch inner window clip paths -->
-    <clipPath id="mw-glass-1">
-      <path d="M35 37Q64 25 93 37V114H35V37Z" />
+    <clipPath id="mw-min-glass-1">
+      <path d="M36 36Q64 25 92 36V110H36V36Z" />
     </clipPath>
-    <clipPath id="mw-glass-2">
-      <path d="M163 37Q192 25 221 37V114H163V37Z" />
+    <clipPath id="mw-min-glass-2">
+      <path d="M164 36Q192 25 220 36V110H164V36Z" />
     </clipPath>
-    <clipPath id="mw-glass-3">
-      <path d="M291 37Q320 25 349 37V114H291V37Z" />
+    <clipPath id="mw-min-glass-3">
+      <path d="M292 36Q320 25 348 36V110H292V36Z" />
     </clipPath>
   </defs>
 
-  <!-- Subtle architectural plaster/wall accents -->
-  <g stroke="#1C1B19" stroke-width="1.05" stroke-linecap="round" opacity="0.2">
-    <path d="M122 24h12M126 24v4M250 18h14M256 18v4M253 22h10" />
-    <path d="M124 134h10M252 138h12" />
-  </g>
-
   <!-- =============================================================== -->
-  <!-- WINDOW 1 (LEFT): Urban Leaf Green (#1F6F50) + Solar Cornice     -->
+  <!-- WINDOW 1 (LEFT): Urban Leaf Green (#1F6F50)                     -->
   <!-- =============================================================== -->
   <g id="window-leaf">
-    <!-- Curved colonial pediment cornice (sobreverga) -->
+    <!-- Sculpted colonial cornice -->
     <path
-      d="M24 26C32 25 46 11 64 11C82 11 96 25 104 26L101 30C92 28 80 17 64 17C48 17 36 28 27 30Z"
+      d="M27 24C37 22 48 12 64 12C80 12 91 22 101 24L98 28C89 26 78 18 64 18C50 18 39 26 30 28Z"
       fill="#F7C957"
-      stroke="#1C1B19"
-      stroke-width="1.35"
-      stroke-linejoin="round"
-    />
-    <path d="M34 25C44 21 53 14.5 64 14.5C75 14.5 84 21 94 25" stroke="#1C1B19" stroke-width="0.9" opacity="0.55" />
-
-    <!-- Outer arched wooden frame -->
-    <path
-      d="M29 33Q64 19 99 33V121H29V33Z"
-      fill="#1F6F50"
-      stroke="#1C1B19"
-      stroke-width="1.45"
-      stroke-linejoin="round"
     />
 
-    <!-- Inner opening: cozy dark interior + sunlit upper panes -->
-    <path d="M35 37Q64 25 93 37V114H35V37Z" fill="#1C1B19" />
-    <g clip-path="url(#mw-glass-1)">
-      <!-- Warm morning light reflection in upper sash -->
-      <rect x="35" y="26" width="58" height="48" fill="#17382B" />
-      <path d="M35 28L76 28L52 74L35 74Z" fill="#FFF6DC" opacity="0.22" />
-      <circle cx="74" cy="44" r="14" fill="#F7C957" opacity="0.28" />
-      <!-- Upper wooden sash frame (guilhotina) with 3x2 cream mullions -->
-      <path
-        d="M36 37Q64 26 92 37V74H36V37Z"
-        stroke="#FAF8F4"
-        stroke-width="3.2"
-        stroke-linejoin="round"
-      />
-      <g stroke="#FAF8F4" stroke-width="2.1">
-        <path d="M54.5 31V74M73.5 31V74M36 55H92" />
-      </g>
-      <path d="M35 74H93" stroke="#1C1B19" stroke-width="1.2" />
-      <!-- Lower sash panes (partially open) -->
-      <g stroke="#FAF8F4" stroke-width="1.8" opacity="0.35">
-        <path d="M54.5 76V114M73.5 76V114M36 96H92" />
-      </g>
-    </g>
-    <path d="M35 37Q64 25 93 37V114H35V37Z" stroke="#1C1B19" stroke-width="1.3" />
+    <!-- Segmental-arched frame -->
+    <path d="M30 32Q64 19 98 32V116H30V32Z" fill="#1F6F50" />
 
-    <!-- Left open lattice shutter (veneziana em treliça) -->
-    <g>
-      <path
-        d="M6 34L29 37V118L8 115Z"
-        fill="#1F6F50"
-        stroke="#1C1B19"
-        stroke-width="1.4"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M10.5 39L25 41.2V113.5L12 111Z"
-        fill="url(#mw-lattice-l)"
-        stroke="#1C1B19"
-        stroke-width="1.1"
-        stroke-linejoin="round"
-      />
-      <!-- Shutter hinges -->
-      <rect x="27.2" y="48" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
-      <rect x="27.2" y="98" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
+    <!-- Calm sunlit window opening -->
+    <g clip-path="url(#mw-min-glass-1)">
+      <rect x="36" y="25" width="56" height="85" fill="#173A2B" />
+      <rect x="36" y="25" width="56" height="47" fill="#FFF6DC" />
+      <circle cx="74" cy="42" r="14" fill="#F7C957" opacity="0.55" />
+      <!-- Minimalist 2x2 upper sash mullions -->
+      <path d="M64 26V72M36 52H92M36 72H92" stroke="#1F6F50" stroke-width="2" />
     </g>
 
-    <!-- Right open lattice shutter -->
-    <g>
-      <path
-        d="M99 37L122 34L120 115L99 118Z"
-        fill="#1F6F50"
-        stroke="#1C1B19"
-        stroke-width="1.4"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M103 41.2L117.5 39L116 111L103 113.5Z"
-        fill="url(#mw-lattice-r)"
-        stroke="#1C1B19"
-        stroke-width="1.1"
-        stroke-linejoin="round"
-      />
-      <!-- Shutter hinges -->
-      <rect x="97.6" y="48" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
-      <rect x="97.6" y="98" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
-    </g>
+    <!-- Open folding shutters -->
+    <path d="M10 34L28 36V113L11.5 111Z" fill="#1F6F50" />
+    <path d="M13.5 38.5L24.5 40V108.5L14.5 107Z" fill="url(#mw-louver-l)" />
 
-    <!-- Sill & Wrought-iron flower box brimming with foliage & blossoms -->
-    <rect x="25" y="118" width="78" height="5" rx="1.5" fill="#17573E" stroke="#1C1B19" stroke-width="1.35" />
-    <!-- Lush foliage behind blossoms -->
-    <g stroke="#1C1B19" stroke-width="1.15" stroke-linejoin="round">
-      <path d="M35 120C30 112 33 105 40 107C44 110 43 116 40 120Z" fill="#1F6F50" />
-      <path d="M48 120C45 109 53 102 60 107C62 112 58 117 54 120Z" fill="#2E8B67" />
-      <path d="M62 120C63 108 72 103 78 109C79 114 74 118 69 120Z" fill="#1F6F50" />
-      <path d="M76 120C80 109 89 106 94 112C94 117 88 120 82 120Z" fill="#17573E" />
-    </g>
-    <!-- Blossoms in Terraço palette (Cream, Terracota, Solar Yellow) -->
-    <g stroke="#1C1B19" stroke-width="1">
-      <circle cx="38" cy="112" r="3.6" fill="#FAF8F4" />
-      <circle cx="48" cy="109" r="3.8" fill="#F06A36" />
-      <circle cx="58" cy="113" r="3.5" fill="#F7C957" />
-      <circle cx="68" cy="108" r="3.8" fill="#FAF8F4" />
-      <circle cx="79" cy="112" r="3.6" fill="#F06A36" />
-      <circle cx="88" cy="113" r="3.4" fill="#F7C957" />
-    </g>
-    <g fill="#1C1B19">
-      <circle cx="38" cy="112" r="1.1" />
-      <circle cx="48" cy="109" r="1.1" />
-      <circle cx="58" cy="113" r="1" />
-      <circle cx="68" cy="108" r="1.1" />
-      <circle cx="79" cy="112" r="1.1" />
-      <circle cx="88" cy="113" r="1" />
-    </g>
-    <!-- Graphite wrought-iron flower box cage -->
-    <g stroke="#1C1B19" stroke-width="1.45" stroke-linejoin="round">
-      <path d="M32 121H96L93 139H35Z" fill="#1C1B19" fill-opacity="0.16" />
-      <path d="M32 121H96M35 139H93M41 121L42.5 139M50 121L51 139M59 121V139M69 121V139M78 121L77 139M87 121L85.5 139" />
-    </g>
+    <path d="M100 36L118 34L116.5 111L100 113Z" fill="#1F6F50" />
+    <path d="M103.5 40L114.5 38.5L113.5 107L103.5 108.5Z" fill="url(#mw-louver-r)" />
+
+    <!-- Minimalist foliage & blossoms -->
+    <path d="M40 115C38 106 45 102 51 107C53 102 61 101 65 107C70 101 78 103 80 109C85 106 90 109 88 115Z" fill="#2E8B67" />
+    <circle cx="46" cy="109" r="2.6" fill="#FAF8F4" />
+    <circle cx="59" cy="107" r="2.6" fill="#F06A36" />
+    <circle cx="72" cy="109" r="2.6" fill="#F7C957" />
+    <circle cx="82" cy="110" r="2.3" fill="#FAF8F4" />
+
+    <!-- Sleek graphite flower box -->
+    <path d="M35 116H93L90.5 131H37.5Z" fill="#1C1B19" />
+    <path d="M45 118V129M55 118V129M64 118V129M73 118V129M83 118V129" stroke="#FAF8F4" stroke-width="1.1" opacity="0.28" />
   </g>
 
   <!-- =============================================================== -->
-  <!-- WINDOW 2 (CENTER): Terracota Solar (#F06A36) + Solar Cornice    -->
+  <!-- WINDOW 2 (CENTER): Terracota Solar (#F06A36)                    -->
   <!-- =============================================================== -->
   <g id="window-terracota">
-    <!-- Curved colonial pediment cornice (sobreverga) -->
+    <!-- Sculpted colonial cornice -->
     <path
-      d="M152 24C160 23 174 9 192 9C210 9 224 23 232 24L229 28C220 26 208 15 192 15C176 15 164 26 155 28Z"
+      d="M155 22C165 20 176 10 192 10C208 10 219 20 229 22L226 26C217 24 206 16 192 16C178 16 167 24 158 26Z"
       fill="#F7C957"
-      stroke="#1C1B19"
-      stroke-width="1.35"
-      stroke-linejoin="round"
-    />
-    <path d="M162 23C172 19 181 12.5 192 12.5C203 12.5 212 19 222 23" stroke="#1C1B19" stroke-width="0.9" opacity="0.55" />
-
-    <!-- Outer arched wooden frame -->
-    <path
-      d="M157 31Q192 17 227 31V121H157V31Z"
-      fill="#F06A36"
-      stroke="#1C1B19"
-      stroke-width="1.45"
-      stroke-linejoin="round"
     />
 
-    <!-- Inner opening: warm sunlit upper sash + cozy dark lower interior -->
-    <path d="M163 37Q192 25 221 37V114H163V37Z" fill="#1C1B19" />
-    <g clip-path="url(#mw-glass-2)">
-      <rect x="163" y="26" width="58" height="48" fill="#2A2622" />
-      <!-- Golden-hour interior warmth -->
-      <circle cx="192" cy="50" r="22" fill="#F7C957" opacity="0.34" />
-      <path d="M163 28L204 28L180 74L163 74Z" fill="#FFF6DC" opacity="0.24" />
-      <!-- Upper wooden sash frame with 3x2 cream mullions -->
-      <path
-        d="M164 37Q192 26 220 37V74H164V37Z"
-        stroke="#FAF8F4"
-        stroke-width="3.2"
-        stroke-linejoin="round"
-      />
-      <g stroke="#FAF8F4" stroke-width="2.1">
-        <path d="M182.5 31V74M201.5 31V74M164 55H220" />
-      </g>
-      <path d="M163 74H221" stroke="#1C1B19" stroke-width="1.2" />
-      <!-- Lower sash subtle mullions -->
-      <g stroke="#FAF8F4" stroke-width="1.8" opacity="0.35">
-        <path d="M182.5 76V114M201.5 76V114M164 96H220" />
-      </g>
-    </g>
-    <path d="M163 37Q192 25 221 37V114H163V37Z" stroke="#1C1B19" stroke-width="1.3" />
+    <!-- Segmental-arched frame -->
+    <path d="M158 30Q192 17 226 30V116H158V30Z" fill="#F06A36" />
 
-    <!-- Left open lattice shutter -->
-    <g>
-      <path
-        d="M134 32L157 35V118L136 115Z"
-        fill="#F06A36"
-        stroke="#1C1B19"
-        stroke-width="1.4"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M138.5 37L153 39.2V113.5L140 111Z"
-        fill="url(#mw-lattice-l)"
-        stroke="#1C1B19"
-        stroke-width="1.1"
-        stroke-linejoin="round"
-      />
-      <rect x="155.2" y="48" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
-      <rect x="155.2" y="98" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
+    <!-- Calm sunlit window opening -->
+    <g clip-path="url(#mw-min-glass-2)">
+      <rect x="164" y="25" width="56" height="85" fill="#1C1B19" />
+      <rect x="164" y="25" width="56" height="47" fill="#FFF6DC" />
+      <circle cx="192" cy="48" r="16" fill="#F7C957" opacity="0.72" />
+      <!-- Minimalist 2x2 upper sash mullions -->
+      <path d="M192 26V72M164 52H220M164 72H220" stroke="#F06A36" stroke-width="2" />
     </g>
 
-    <!-- Right open lattice shutter -->
-    <g>
-      <path
-        d="M227 35L250 32L248 115L227 118Z"
-        fill="#F06A36"
-        stroke="#1C1B19"
-        stroke-width="1.4"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M231 39.2L245.5 37L244 111L231 113.5Z"
-        fill="url(#mw-lattice-r)"
-        stroke="#1C1B19"
-        stroke-width="1.1"
-        stroke-linejoin="round"
-      />
-      <rect x="225.6" y="48" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
-      <rect x="225.6" y="98" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
-    </g>
+    <!-- Open folding shutters -->
+    <path d="M138 32L156 34V113L139.5 111Z" fill="#F06A36" />
+    <path d="M141.5 36.5L152.5 38V108.5L142.5 107Z" fill="url(#mw-louver-l)" />
 
-    <!-- Sill & Wrought-iron flower box -->
-    <rect x="153" y="118" width="78" height="5" rx="1.5" fill="#D95724" stroke="#1C1B19" stroke-width="1.35" />
-    <g stroke="#1C1B19" stroke-width="1.15" stroke-linejoin="round">
-      <path d="M162 120C157 111 161 104 168 106C172 109 170 116 167 120Z" fill="#2E8B67" />
-      <path d="M175 120C173 108 182 101 189 107C190 112 186 117 182 120Z" fill="#1F6F50" />
-      <path d="M190 120C192 107 202 102 208 109C208 114 203 118 197 120Z" fill="#2E8B67" />
-      <path d="M205 120C209 109 218 106 223 113C222 118 216 120 210 120Z" fill="#1F6F50" />
-    </g>
-    <g stroke="#1C1B19" stroke-width="1">
-      <circle cx="166" cy="112" r="3.7" fill="#F7C957" />
-      <circle cx="177" cy="108" r="3.8" fill="#FAF8F4" />
-      <circle cx="187" cy="113" r="3.6" fill="#F06A36" />
-      <circle cx="197" cy="109" r="3.8" fill="#F7C957" />
-      <circle cx="208" cy="112" r="3.6" fill="#FAF8F4" />
-      <circle cx="218" cy="113" r="3.5" fill="#F06A36" />
-    </g>
-    <g fill="#1C1B19">
-      <circle cx="166" cy="112" r="1.1" />
-      <circle cx="177" cy="108" r="1.1" />
-      <circle cx="187" cy="113" r="1.1" />
-      <circle cx="197" cy="109" r="1.1" />
-      <circle cx="208" cy="112" r="1.1" />
-      <circle cx="218" cy="113" r="1" />
-    </g>
-    <g stroke="#1C1B19" stroke-width="1.45" stroke-linejoin="round">
-      <path d="M160 121H224L221 139H163Z" fill="#1C1B19" fill-opacity="0.16" />
-      <path d="M160 121H224M163 139H221M169 121L170.5 139M178 121L179 139M187 121V139M197 121V139M206 121L205 139M215 121L213.5 139" />
-    </g>
+    <path d="M228 34L246 32L244.5 111L228 113Z" fill="#F06A36" />
+    <path d="M231.5 38L242.5 36.5L241.5 107L231.5 108.5Z" fill="url(#mw-louver-r)" />
+
+    <!-- Minimalist foliage & blossoms -->
+    <path d="M168 115C166 106 173 102 179 107C182 101 190 101 194 107C199 102 207 103 209 109C214 106 218 109 216 115Z" fill="#1F6F50" />
+    <circle cx="174" cy="109" r="2.6" fill="#F7C957" />
+    <circle cx="187" cy="107" r="2.6" fill="#FAF8F4" />
+    <circle cx="200" cy="109" r="2.6" fill="#F06A36" />
+    <circle cx="210" cy="110" r="2.3" fill="#F7C957" />
+
+    <!-- Sleek graphite flower box -->
+    <path d="M163 116H221L218.5 131H165.5Z" fill="#1C1B19" />
+    <path d="M173 118V129M183 118V129M192 118V129M201 118V129M211 118V129" stroke="#FAF8F4" stroke-width="1.1" opacity="0.28" />
   </g>
 
   <!-- =============================================================== -->
-  <!-- WINDOW 3 (RIGHT): Amarelo Solar (#F7C957) + Terracota Cornice   -->
+  <!-- WINDOW 3 (RIGHT): Amarelo Solar (#F7C957)                       -->
   <!-- =============================================================== -->
   <g id="window-solar">
-    <!-- Curved colonial pediment cornice (sobreverga) -->
+    <!-- Sculpted colonial cornice -->
     <path
-      d="M280 26C288 25 302 11 320 11C338 11 352 25 360 26L357 30C348 28 336 17 320 17C304 17 292 28 283 30Z"
+      d="M283 24C293 22 304 12 320 12C336 12 347 22 357 24L354 28C345 26 334 18 320 18C306 18 295 26 286 28Z"
       fill="#F06A36"
-      stroke="#1C1B19"
-      stroke-width="1.35"
-      stroke-linejoin="round"
-    />
-    <path d="M290 25C300 21 309 14.5 320 14.5C331 14.5 340 21 350 25" stroke="#1C1B19" stroke-width="0.9" opacity="0.55" />
-
-    <!-- Outer arched wooden frame -->
-    <path
-      d="M285 33Q320 19 355 33V121H285V33Z"
-      fill="#F7C957"
-      stroke="#1C1B19"
-      stroke-width="1.45"
-      stroke-linejoin="round"
     />
 
-    <!-- Inner opening -->
-    <path d="M291 37Q320 25 349 37V114H291V37Z" fill="#1C1B19" />
-    <g clip-path="url(#mw-glass-3)">
-      <rect x="291" y="26" width="58" height="48" fill="#193A2C" />
-      <path d="M291 28L332 28L308 74L291 74Z" fill="#FFF6DC" opacity="0.22" />
-      <circle cx="330" cy="45" r="15" fill="#F7C957" opacity="0.26" />
-      <!-- Upper wooden sash frame with 3x2 cream mullions -->
-      <path
-        d="M292 37Q320 26 348 37V74H292V37Z"
-        stroke="#FAF8F4"
-        stroke-width="3.2"
-        stroke-linejoin="round"
-      />
-      <g stroke="#FAF8F4" stroke-width="2.1">
-        <path d="M310.5 31V74M329.5 31V74M292 55H348" />
-      </g>
-      <path d="M291 74H349" stroke="#1C1B19" stroke-width="1.2" />
-      <g stroke="#FAF8F4" stroke-width="1.8" opacity="0.35">
-        <path d="M310.5 76V114M329.5 76V114M292 96H348" />
-      </g>
-    </g>
-    <path d="M291 37Q320 25 349 37V114H291V37Z" stroke="#1C1B19" stroke-width="1.3" />
+    <!-- Segmental-arched frame -->
+    <path d="M286 32Q320 19 354 32V116H286V32Z" fill="#F7C957" />
 
-    <!-- Left open lattice shutter -->
-    <g>
-      <path
-        d="M262 34L285 37V118L264 115Z"
-        fill="#F7C957"
-        stroke="#1C1B19"
-        stroke-width="1.4"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M266.5 39L281 41.2V113.5L268 111Z"
-        fill="url(#mw-lattice-l)"
-        stroke="#1C1B19"
-        stroke-width="1.1"
-        stroke-linejoin="round"
-      />
-      <rect x="283.2" y="48" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
-      <rect x="283.2" y="98" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
+    <!-- Calm sunlit window opening -->
+    <g clip-path="url(#mw-min-glass-3)">
+      <rect x="292" y="25" width="56" height="85" fill="#173A2B" />
+      <rect x="292" y="25" width="56" height="47" fill="#FFF6DC" />
+      <circle cx="308" cy="42" r="13" fill="#F7C957" opacity="0.55" />
+      <!-- Minimalist 2x2 upper sash mullions -->
+      <path d="M320 26V72M292 52H348M292 72H348" stroke="#E5B23A" stroke-width="2" />
     </g>
 
-    <!-- Right open lattice shutter -->
-    <g>
-      <path
-        d="M355 37L378 34L376 115L355 118Z"
-        fill="#F7C957"
-        stroke="#1C1B19"
-        stroke-width="1.4"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M359 41.2L373.5 39L372 111L359 113.5Z"
-        fill="url(#mw-lattice-r)"
-        stroke="#1C1B19"
-        stroke-width="1.1"
-        stroke-linejoin="round"
-      />
-      <rect x="353.6" y="48" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
-      <rect x="353.6" y="98" width="3.2" height="4.5" rx="0.8" fill="#1C1B19" />
-    </g>
+    <!-- Open folding shutters -->
+    <path d="M266 34L284 36V113L267.5 111Z" fill="#F7C957" />
+    <path d="M269.5 38.5L280.5 40V108.5L270.5 107Z" fill="url(#mw-louver-l)" />
 
-    <!-- Sill & Wrought-iron flower box -->
-    <rect x="281" y="118" width="78" height="5" rx="1.5" fill="#E5B23A" stroke="#1C1B19" stroke-width="1.35" />
-    <g stroke="#1C1B19" stroke-width="1.15" stroke-linejoin="round">
-      <path d="M291 120C286 112 289 105 296 107C300 110 299 116 296 120Z" fill="#1F6F50" />
-      <path d="M304 120C301 109 309 102 316 107C318 112 314 117 310 120Z" fill="#2E8B67" />
-      <path d="M318 120C319 108 328 103 334 109C335 114 330 118 325 120Z" fill="#1F6F50" />
-      <path d="M332 120C336 109 345 106 350 112C350 117 344 120 338 120Z" fill="#17573E" />
-    </g>
-    <g stroke="#1C1B19" stroke-width="1">
-      <circle cx="294" cy="112" r="3.6" fill="#F06A36" />
-      <circle cx="305" cy="109" r="3.8" fill="#FAF8F4" />
-      <circle cx="315" cy="113" r="3.5" fill="#F7C957" />
-      <circle cx="325" cy="108" r="3.8" fill="#F06A36" />
-      <circle cx="335" cy="112" r="3.6" fill="#FAF8F4" />
-      <circle cx="344" cy="113" r="3.4" fill="#F7C957" />
-    </g>
-    <g fill="#1C1B19">
-      <circle cx="294" cy="112" r="1.1" />
-      <circle cx="305" cy="109" r="1.1" />
-      <circle cx="315" cy="113" r="1" />
-      <circle cx="325" cy="108" r="1.1" />
-      <circle cx="335" cy="112" r="1.1" />
-      <circle cx="344" cy="113" r="1" />
-    </g>
-    <g stroke="#1C1B19" stroke-width="1.45" stroke-linejoin="round">
-      <path d="M288 121H352L349 139H291Z" fill="#1C1B19" fill-opacity="0.16" />
-      <path d="M288 121H352M291 139H349M297 121L298.5 139M306 121L307 139M315 121V139M325 121V139M334 121L333 139M343 121L341.5 139" />
-    </g>
+    <path d="M356 36L374 34L372.5 111L356 113Z" fill="#F7C957" />
+    <path d="M359.5 40L370.5 38.5L369.5 107L359.5 108.5Z" fill="url(#mw-louver-r)" />
+
+    <!-- Minimalist foliage & blossoms -->
+    <path d="M296 115C294 106 301 102 307 107C309 102 317 101 321 107C326 101 334 103 336 109C341 106 346 109 344 115Z" fill="#2E8B67" />
+    <circle cx="302" cy="109" r="2.6" fill="#F06A36" />
+    <circle cx="315" cy="107" r="2.6" fill="#FAF8F4" />
+    <circle cx="328" cy="109" r="2.6" fill="#F7C957" />
+    <circle cx="338" cy="110" r="2.3" fill="#F06A36" />
+
+    <!-- Sleek graphite flower box -->
+    <path d="M291 116H349L346.5 131H293.5Z" fill="#1C1B19" />
+    <path d="M301 118V129M311 118V129M320 118V129M329 118V129M339 118V129" stroke="#FAF8F4" stroke-width="1.1" opacity="0.28" />
   </g>
 </svg>
