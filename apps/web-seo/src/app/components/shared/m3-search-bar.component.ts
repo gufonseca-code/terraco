@@ -70,6 +70,9 @@ function splitHighlight(
       <form
         (submit)="handleSubmit($event)"
         role="search"
+        toolname="search_launches"
+        tooldescription="Busca lançamentos imobiliários em Belo Horizonte por bairro, nome do empreendimento ou tipologia."
+        toolautosubmit
         [attr.aria-label]="ariaLabel()"
         [class]="barClasses()"
       >
@@ -103,7 +106,9 @@ function splitHighlight(
         <input
           #inputRef
           [id]="inputId()"
+          name="q"
           type="search"
+          toolparamdescription="Nome do bairro em BH (ex: Estoril, Buritis, Santa Efigênia, Serrano), nome do lançamento ou tipologia (ex: 2 quartos)."
           role="combobox"
           autocomplete="off"
           aria-autocomplete="list"

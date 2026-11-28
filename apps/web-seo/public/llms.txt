@@ -1,0 +1,29 @@
+# Terraço
+
+> Curadoria de lançamentos imobiliários residenciais em Belo Horizonte (MG), com plantas claras, informações transparentes de metragem, vagas e entrega, e atendimento direto no WhatsApp sem burocracia.
+
+O Terraço reúne lançamentos selecionados em bairros estratégicos de Belo Horizonte, permitindo comparar tipologias, áreas privativas, diferenciais de lazer e condições direto pelo site ou com um especialista via WhatsApp.
+
+## Páginas Principais
+
+- [Início](https://meuterraco.com.br/): Busca rápida por bairro ou lançamento e destaques selecionados em Belo Horizonte.
+- [Catálogo de Lançamentos](https://meuterraco.com.br/lancamentos): Lista completa de empreendimentos com filtros por bairro, tipologia e busca textual.
+- [Guia de Bairros](https://meuterraco.com.br/bairros): Panorama dos bairros com lançamentos ativos em Belo Horizonte.
+
+## Lançamentos em Belo Horizonte
+
+- [Prime View — Estoril](https://meuterraco.com.br/lancamentos/prime-view): 1 e 2 quartos com suíte, 49 a 103 m², 1 e 2 vagas, lazer completo entregue decorado na Rua Paulo Piedade Campos, 2160 (Novolar · Grupo Patrimar).
+- [Upside Square — Santa Efigênia](https://meuterraco.com.br/lancamentos/upside-square): 2 quartos com suíte e varanda na região hospitalar e centro-sul de Belo Horizonte.
+- [Horizon — Serrano](https://meuterraco.com.br/lancamentos/horizon): 2 quartos com lazer completo e acesso facilitado à região da Pampulha e Castelo.
+
+## Bairros Atendidos
+
+- [Estoril](https://meuterraco.com.br/bairros/estoril): Região oeste com vista panorâmica, gastronomia e acesso rápido à Raja Gabaglia e Buritis.
+- [Santa Efigênia](https://meuterraco.com.br/bairros/santa-efigenia): Região centro-sul tradicional, próxima à área hospitalar, Savassi e metrô.
+- [Serrano](https://meuterraco.com.br/bairros/serrano): Região em valorização com mobilidade para Pampulha, Castelo e Anel Rodoviário.
+- [Buritis](https://meuterraco.com.br/bairros/buritis): Bairro residencial consolidado com comércio completo, escolas e áreas verdes.
+
+## Descoberta para Agentes de IA
+
+- [ARD Manifest](https://meuterraco.com.br/.well-known/ard.json): Catálogo Agentic Resource Discovery (ARD v0.91) com os recursos estruturados do domínio.
+- [Sitemap XML](https://meuterraco.com.br/sitemap.xml): Mapa completo de URLs indexáveis do Terraço.

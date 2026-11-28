@@ -1,0 +1,95 @@
+{
+  "specVersion": "1.0",
+  "entries": [
+    {
+      "identifier": "urn:air:meuterraco.com.br:web:llms-txt",
+      "displayName": "Terraço — Índice de Conteúdo para LLMs (llms.txt)",
+      "type": "text/markdown; profile=\"urn:air:agent-skills\"",
+      "url": "https://meuterraco.com.br/llms.txt",
+      "representativeQueries": [
+        "Quais lançamentos imobiliários estão disponíveis no Terraço em Belo Horizonte?",
+        "Resumo dos bairros e empreendimentos residenciais do Terraço em BH",
+        "Como funciona o atendimento do Terraço para imóveis na planta em BH?"
+      ]
+    },
+    {
+      "identifier": "urn:air:meuterraco.com.br:web:launches-catalog",
+      "displayName": "Terraço — Catálogo de Lançamentos em Belo Horizonte",
+      "type": "application/ai-catalog+json",
+      "data": {
+        "catalogUrl": "https://meuterraco.com.br/lancamentos",
+        "city": "Belo Horizonte",
+        "state": "MG",
+        "launches": [
+          {
+            "slug": "prime-view",
+            "name": "Prime View",
+            "neighborhood": "Estoril",
+            "url": "https://meuterraco.com.br/lancamentos/prime-view"
+          },
+          {
+            "slug": "upside-square",
+            "name": "Upside Square",
+            "neighborhood": "Santa Efigênia",
+            "url": "https://meuterraco.com.br/lancamentos/upside-square"
+          },
+          {
+            "slug": "horizon",
+            "name": "Horizon",
+            "neighborhood": "Serrano",
+            "url": "https://meuterraco.com.br/lancamentos/horizon"
+          }
+        ]
+      },
+      "capabilities": [
+        "list_launches",
+        "get_launch_details",
+        "search_launches",
+        "filter_launches"
+      ],
+      "representativeQueries": [
+        "Buscar apartamentos de 2 quartos na planta no Estoril em BH",
+        "Detalhes de metragem, plantas e vagas do Prime View",
+        "Comparar lançamentos imobiliários em Santa Efigênia e Serrano"
+      ]
+    },
+    {
+      "identifier": "urn:air:meuterraco.com.br:web:neighborhood-guides",
+      "displayName": "Terraço — Guia de Bairros de Belo Horizonte",
+      "type": "application/ai-catalog+json",
+      "data": {
+        "indexUrl": "https://meuterraco.com.br/bairros",
+        "neighborhoods": [
+          {
+            "slug": "estoril",
+            "name": "Estoril",
+            "url": "https://meuterraco.com.br/bairros/estoril"
+          },
+          {
+            "slug": "santa-efigenia",
+            "name": "Santa Efigênia",
+            "url": "https://meuterraco.com.br/bairros/santa-efigenia"
+          },
+          {
+            "slug": "serrano",
+            "name": "Serrano",
+            "url": "https://meuterraco.com.br/bairros/serrano"
+          },
+          {
+            "slug": "buritis",
+            "name": "Buritis",
+            "url": "https://meuterraco.com.br/bairros/buritis"
+          }
+        ]
+      },
+      "capabilities": [
+        "list_neighborhoods"
+      ],
+      "representativeQueries": [
+        "Como é morar no bairro Estoril em Belo Horizonte?",
+        "Guia de bairros com lançamentos imobiliários em BH",
+        "Quais bairros o Terraço atende em Belo Horizonte?"
+      ]
+    }
+  ]
+}

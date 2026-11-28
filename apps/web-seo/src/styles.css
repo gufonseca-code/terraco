@@ -1,8 +1,26 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Fraunces Fallback";
+  src: local("Georgia"), local("Times New Roman"), local("Liberation Serif"), local("Noto Serif");
+  size-adjust: 94%;
+  ascent-override: 96%;
+  descent-override: 25%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Noto Sans"), local("DejaVu Sans");
+  size-adjust: 103.5%;
+  ascent-override: 101%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
 :root {
-  --font-fraunces: "Fraunces", Georgia, serif;
-  --font-plus-jakarta: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-fraunces: "Fraunces", "Fraunces Fallback", Georgia, serif;
+  --font-plus-jakarta: "Plus Jakarta Sans", "Plus Jakarta Sans Fallback", system-ui, -apple-system, sans-serif;
 
   /* Terraço — Paleta Bairro Arborizado & Warm Tech (branding/tokens.css) */
   --color-bg-canvas: #FAF8F4;
@@ -141,8 +159,8 @@
   --color-error-fg: var(--color-error-fg);
   --color-error-bg: var(--color-error-bg);
 
-  --font-display: var(--font-fraunces), Georgia, serif;
-  --font-sans: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-plus-jakarta);
 
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
@@ -194,7 +212,7 @@ h4 {
 
 /* Superfície base do footer com fundo SVG risograph de cobogó e folhagens */
 .terraco-cobogo-surface {
-  background-color: var(--color-bg-surface);
+  background-color: #103626;
 }
 
 .terraco-cobogo-band {

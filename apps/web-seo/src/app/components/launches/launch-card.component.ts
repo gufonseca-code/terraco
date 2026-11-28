@@ -70,6 +70,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
             data-testid="lancamentos-cover-image"
             [attr.data-slug]="item.slug"
             [ngSrc]="item.imagem"
+            sizes="(max-width: 767px) 200px, 640px"
             [alt]="item.imagemAlt"
             [width]="item.imagemWidth"
             [height]="item.imagemHeight"

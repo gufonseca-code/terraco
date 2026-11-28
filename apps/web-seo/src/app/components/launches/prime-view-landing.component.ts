@@ -430,6 +430,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                   } @else if (callbackOpen()) {
                     <form
                       (submit)="submitCallbackLead($event)"
+                      toolname="request_whatsapp_callback"
+                      tooldescription="Solicita retorno de um especialista do Terraço no WhatsApp sobre este lançamento imobiliário."
                       animate.enter="terraco-chip-enter"
                       class="space-y-2.5 rounded-[18px] border border-border-subtle bg-surface p-4"
                     >
@@ -448,6 +450,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                       <input
                         type="text"
+                        name="nome"
+                        toolparamdescription="Nome completo ou primeiro nome do interessado (opcional)."
                         [value]="callbackName()"
                         (input)="onCallbackNameInput($event)"
                         placeholder="Seu nome (opcional)"
@@ -459,6 +463,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                       <div class="flex flex-col gap-2 sm:flex-row">
                         <input
                           type="tel"
+                          name="telefone"
+                          toolparamdescription="Número de WhatsApp com DDD do interessado (ex: (31) 99999-9999)."
                           [value]="callbackPhone()"
                           (input)="onCallbackPhoneInput($event)"
                           placeholder="(31) 99999-9999"

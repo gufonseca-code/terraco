@@ -122,7 +122,7 @@ export class TerracoLogoComponent {
     () =>
       `h-7 w-7 transition-colors duration-200 ease-[var(--ease-expressive-return)] ${
         this.inverted()
-          ? 'text-highlight'
+          ? 'text-ink-inverse'
           : 'text-ink group-hover:text-highlight group-focus-visible:text-highlight'
       }`
   );

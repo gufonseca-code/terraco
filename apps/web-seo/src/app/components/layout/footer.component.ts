@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { buildWhatsAppUrl } from '../../core';
 import { M3ButtonDirective } from '../shared/m3-tactile.directives';
@@ -20,7 +23,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
     <footer
       id="contato"
       appViewTransition="footer"
-      class="terraco-cobogo-surface relative isolate mt-auto overflow-hidden border-t border-border-subtle bg-surface scroll-mt-24"
+      class="terraco-cobogo-surface relative isolate mt-auto overflow-hidden border-t border-border-subtle bg-[#103626] scroll-mt-24"
     >
       <app-footer-cobogo-backdrop />
       <div
@@ -43,7 +46,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
             routerLink="/lancamentos"
             appM3Button
             variant="tonal"
-            class="inline-flex min-h-[44px] items-center justify-center border border-ink/10 bg-canvas/88 px-5 py-3 text-[15px] leading-[1.35] backdrop-blur-[2px] hover:bg-elevated focus-visible:text-ink"
+            class="inline-flex min-h-[44px] items-center justify-center bg-canvas px-5 py-3 text-[15px] leading-[1.35] text-ink shadow-chip hover:bg-surface focus-visible:text-ink"
           >
             Lançamentos
           </a>
@@ -52,8 +55,8 @@ import { TerracoLogoComponent } from './terraco-logo.component';
             target="_blank"
             rel="noopener noreferrer"
             appM3Button
-            variant="primary"
-            class="inline-flex min-h-[44px] items-center justify-center px-6 py-3 text-[15px] leading-[1.35] shadow-chip"
+            variant="tonal"
+            class="inline-flex min-h-[44px] items-center justify-center bg-canvas px-6 py-3 text-[15px] leading-[1.35] text-ink shadow-chip hover:bg-surface focus-visible:text-ink"
           >
             Falar no WhatsApp
           </a>

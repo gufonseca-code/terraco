@@ -19,7 +19,6 @@ import {
 import { FavoriteButtonComponent } from '../launches/favorite-button.component';
 import { resolveLaunchThirdSpec } from '../launches/launch-card.component';
 import { ViewTransitionDirective } from '../shared/view-transition.directive';
-import { BotanicalArchMotifComponent } from './botanical-arch-motif.component';
 import { HeroSearchFormComponent } from './hero-search-form.component';
 
 @Component({
@@ -28,7 +27,6 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
     NgOptimizedImage,
     RouterLink,
     ViewTransitionDirective,
-    BotanicalArchMotifComponent,
     HeroSearchFormComponent,
     FavoriteButtonComponent,
   ],
@@ -38,23 +36,18 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
   template: `
     <section
       aria-labelledby="hero-heading"
-      class="bg-canvas pt-4 pb-6 sm:pt-7 sm:pb-10 lg:py-12 xl:py-14"
+      class="bg-canvas pt-5 pb-6 sm:pt-8 sm:pb-10 lg:pt-10 lg:pb-14 xl:pt-12 xl:pb-16"
     >
       <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
-          class="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12"
+          class="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-10 xl:gap-12"
         >
           <div class="space-y-4 sm:space-y-5 lg:col-span-6 lg:space-y-6">
             <div class="terraco-reveal space-y-3 sm:space-y-4">
-              <app-botanical-arch-motif
-                appViewTransition="botanical-arch"
-                class="h-32 sm:h-36 lg:h-40"
-              />
-
               <h1
                 id="hero-heading"
                 appViewTransition="page-heading"
-                class="max-w-[14ch] font-display text-[clamp(2rem,4.2vw,3.125rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink text-balance"
+                class="max-w-[29rem] font-display text-[clamp(2rem,4.2vw,3.125rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink text-balance"
               >
                 Seu próximo canto, sem burocracia.
               </h1>
@@ -71,12 +64,13 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
 
               <nav
                 aria-label="Atalhos de busca em BH"
-                class="flex flex-wrap items-center gap-2"
+                class="flex max-w-lg flex-wrap items-center gap-2"
               >
                 @for (bairro of quickNeighborhoods; track bairro) {
                   <a
                     [routerLink]="['/lancamentos']"
                     [queryParams]="{ q: bairro }"
+                    [attr.aria-label]="'Buscar lançamentos em ' + bairro"
                     class="inline-flex min-h-[36px] items-center rounded-pill border border-border-subtle bg-surface/80 px-3.5 py-1.5 text-[13px] font-normal leading-[1.3] text-ink transition-colors duration-150 hover:border-border-strong hover:bg-surface"
                   >
                     {{ bairro }}
@@ -130,10 +124,13 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
                     data-testid="hero-lead-cover-image"
                     [attr.data-slug]="lead.slug"
                     [ngSrc]="lead.imagem"
+                    sizes="(max-width: 767px) 200px, 640px"
                     [alt]="lead.imagemAlt"
                     [width]="lead.imagemWidth"
                     [height]="lead.imagemHeight"
                     priority
+                    fetchpriority="high"
+                    loading="eager"
                     (load)="markLeadImageLoaded()"
                     (error)="markLeadImageLoaded()"
                     class="h-full w-full rounded-[24px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"

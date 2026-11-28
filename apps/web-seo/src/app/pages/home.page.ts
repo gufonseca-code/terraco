@@ -57,44 +57,16 @@ const HOME_NEXT_DESTINATIONS: readonly JourneyDestination[] = [
       <main id="homepage" tabindex="-1" class="flex flex-1 flex-col">
         <app-hero-search />
         <app-featured-launches />
-        @defer (on viewport; hydrate on viewport) {
-          <app-guided-discovery />
-        } @placeholder {
-          <section
-            aria-hidden="true"
-            class="min-h-[420px] border-t border-border-subtle bg-surface py-12 sm:py-16 lg:py-24"
-          ></section>
-        }
-        @defer (on viewport; hydrate on viewport) {
-          <app-trust-concierge />
-        } @placeholder {
-          <section
-            aria-hidden="true"
-            class="min-h-[420px] bg-ink py-12 sm:py-16 lg:py-24"
-          ></section>
-        }
-        @defer (on viewport; hydrate on viewport) {
-          <app-next-journey
-            heading="Por onde seguir agora"
-            subtitle="Escolha um dos caminhos abaixo para continuar sua pesquisa em Belo Horizonte."
-            variant="editorial"
-            [destinations]="nextDestinations"
-          />
-        } @placeholder {
-          <section
-            aria-hidden="true"
-            class="min-h-[360px] border-t border-border-subtle bg-canvas py-12 sm:py-16"
-          ></section>
-        }
+        <app-guided-discovery />
+        <app-trust-concierge />
+        <app-next-journey
+          heading="Por onde seguir agora"
+          subtitle="Escolha um dos caminhos abaixo para continuar sua pesquisa em Belo Horizonte."
+          variant="editorial"
+          [destinations]="nextDestinations"
+        />
       </main>
-      @defer (on viewport; hydrate on viewport) {
-        <app-footer />
-      } @placeholder {
-        <div
-          aria-hidden="true"
-          class="min-h-[320px] border-t border-border-subtle bg-surface"
-        ></div>
-      }
+      <app-footer />
     </div>
   `,
 })

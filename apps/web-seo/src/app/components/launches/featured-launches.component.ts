@@ -143,10 +143,12 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                       data-testid="lancamentos-cover-image"
                       [attr.data-slug]="lead.slug"
                       [ngSrc]="lead.imagem"
+                      sizes="(max-width: 767px) 200px, 768px"
                       [alt]="lead.imagemAlt"
                       [width]="lead.imagemWidth"
                       [height]="lead.imagemHeight"
                       priority
+                      fetchpriority="high"
                       appViewTransition="launch-image"
                       [vtSlug]="lead.slug"
                       (load)="markLeadImageLoaded()"

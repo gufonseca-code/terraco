@@ -596,12 +596,6 @@ export const LANCAMENTOS: Lancamento[] = [
       'Oi! Gostaria de receber as plantas, valores e condições do Upside Square (Santa Efigênia).',
     galeria: [
       {
-        url: '/images/lancamentos/upside-square/fachada-tarde.webp',
-        alt: 'Fachada contemporânea da torre única do Upside Square ao entardecer no Santa Efigênia',
-        width: 803,
-        height: 1282,
-      },
-      {
         url: '/images/lancamentos/upside-square/piscina-climatizada.webp',
         alt: 'Piscina climatizada com vista panorâmica para Belo Horizonte no Upside Square',
         width: 800,
@@ -612,6 +606,12 @@ export const LANCAMENTOS: Lancamento[] = [
         alt: 'Área da piscina climatizada integrada ao espaço grill e academia no Upside Square',
         width: 803,
         height: 584,
+      },
+      {
+        url: '/images/lancamentos/upside-square/fachada-tarde.webp',
+        alt: 'Fachada contemporânea da torre única do Upside Square ao entardecer no Santa Efigênia',
+        width: 803,
+        height: 1282,
       },
       {
         url: '/images/lancamentos/upside-square/espaco-grill.webp',
@@ -1317,8 +1317,8 @@ export const LANCAMENTOS: Lancamento[] = [
       'Um empreendimento contemporâneo em uma esquina estratégica do Prado, pensado para quem valoriza praticidade, mobilidade e um jeito atual de viver a cidade. Reúne 31 unidades de studios compactos em torno de 29 m² com cinco alternativas ilustrativas de layout, elevador, rooftop de convivência e condomínio econômico, a apenas 3,9 km da Praça Sete. Conta ainda com 12 vagas de carro e 18 vagas de moto vendidas à parte.',
     corCapa: 'moss',
     imagem: '/images/lancamentos/brumadinho-165/cover.webp',
-    imagemWidth: 1400,
-    imagemHeight: 1833,
+    imagemWidth: 800,
+    imagemHeight: 1047,
     imagemAlt:
       'Fachada contemporânea do Brumadinho 165 na esquina da Rua Brumadinho com Rua Chapecó, no Prado, Belo Horizonte',
     diferenciais: [

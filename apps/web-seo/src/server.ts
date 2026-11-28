@@ -4,6 +4,7 @@ import {
   isMainModule,
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
+import compression from 'compression';
 import express from 'express';
 import { join } from 'node:path';
 import { handleCreateLead } from './server/leads.handler';
@@ -12,6 +13,7 @@ import { createLeadWebhookHandler } from './server/lead-webhook.handler';
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
+app.use(compression());
 const angularApp = new AngularNodeAppEngine({
   allowedHosts: [
     'localhost',
@@ -43,15 +45,84 @@ app.get('/robots.txt', (_req, res) => {
   res
     .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
     .type('text/plain')
-    .send(`User-Agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+    .send(
+      `User-Agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`,
+    );
 });
 
+app.get('/llms.txt', (_req, res) => {
+  res
+    .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
+    .type('text/plain; charset=utf-8')
+    .sendFile(join(browserDistFolder, 'llms.txt'), (err) => {
+      if (err && !res.headersSent) {
+        res
+          .type('text/plain; charset=utf-8')
+          .send(
+            `# Terraço\n\n> Curadoria de lançamentos imobiliários residenciais em Belo Horizonte (MG), com plantas claras e atendimento direto no WhatsApp.\n\n## Páginas Principais\n\n- [Início](${SITE_URL}/)\n- [Catálogo de Lançamentos](${SITE_URL}/lancamentos)\n- [Guia de Bairros](${SITE_URL}/bairros)\n`,
+          );
+      }
+    });
+});
+
+app.get(['/.well-known/ard.json', '/.well-known/ai-catalog.json'], (req, res) => {
+  const manifestFile = req.path.endsWith('ai-catalog.json')
+    ? 'ai-catalog.json'
+    : 'ard.json';
+  const sendArdFallback = () => {
+    const devArdPath = join(
+      process.cwd(),
+      `apps/web-seo/public/.well-known/${manifestFile}`,
+    );
+    res
+      .type('application/json; charset=utf-8')
+      .sendFile(devArdPath, { dotfiles: 'allow' }, (fallbackErr) => {
+        if (fallbackErr && !res.headersSent) {
+          res.status(404).json({ error: 'ARD manifest not found' });
+        }
+      });
+  };
+
+  res
+    .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
+    .type('application/json; charset=utf-8')
+    .sendFile(
+      join(browserDistFolder, `.well-known/${manifestFile}`),
+      { dotfiles: 'allow' },
+      (err) => {
+        if (err && !res.headersSent) {
+          sendArdFallback();
+        }
+      },
+    );
+});
+
+const SITEMAP_PATHS: ReadonlyArray<{ path: string; priority: string }> = [
+  { path: '', priority: '1' },
+  { path: '/lancamentos', priority: '0.9' },
+  { path: '/lancamentos/prime-view', priority: '0.8' },
+  { path: '/lancamentos/upside-square', priority: '0.8' },
+  { path: '/lancamentos/horizon', priority: '0.8' },
+  { path: '/lancamentos/brumadinho-165', priority: '0.8' },
+  { path: '/bairros', priority: '0.8' },
+  { path: '/bairros/estoril', priority: '0.8' },
+  { path: '/bairros/prado', priority: '0.8' },
+  { path: '/bairros/santa-efigenia', priority: '0.8' },
+  { path: '/bairros/serrano', priority: '0.8' },
+  { path: '/bairros/buritis', priority: '0.8' },
+];
+
 app.get('/sitemap.xml', (_req, res) => {
+  const urls = SITEMAP_PATHS.map(
+    ({ path, priority }) =>
+      `  <url>\n    <loc>${SITE_URL}${path}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>${priority}</priority>\n  </url>`,
+  ).join('\n');
+
   res
     .setHeader('Cache-Control', SEO_STATIC_CACHE_CONTROL)
     .type('application/xml')
     .send(
-      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${SITE_URL}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>1</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/prime-view</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/upside-square</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/lancamentos/horizon</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/estoril</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/santa-efigenia</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/serrano</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n  <url>\n    <loc>${SITE_URL}/bairros/buritis</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n</urlset>\n`,
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
     );
 });
 
@@ -93,6 +164,9 @@ app.use((req, res, next) => {
         } else if (response.status === 404) {
           headers.set('Cache-Control', SSR_NOT_FOUND_CACHE_CONTROL);
         }
+      }
+      if (response.status >= 200 && response.status < 300) {
+        headers.append('Link', '</.well-known/ard.json>; rel="ard"');
       }
       const cachedResponse = new Response(response.body, {
         status: response.status,

@@ -48,6 +48,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "public/.well-known",
+                "output": ".well-known"
               }
             ],
             "styles": [
@@ -88,6 +93,7 @@
                 },
                 "fonts": true
               },
+              "sourceMap": true,
               "budgets": [
                 {
                   "type": "initial",

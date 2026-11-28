@@ -174,6 +174,15 @@ export class BairrosService {
       return this.listInFlight;
     }
 
+    // On browser navigation, return static/cached bairros immediately so /bairros
+    // resolves without blocking on a Firestore network round-trip, then refresh
+    // in the background.
+    if (isPlatformBrowser(this.platformId) && this.initialData.length > 0) {
+      this.listLoaded = true;
+      void this.fetchBairrosFromFirestore();
+      return this.bairros();
+    }
+
     const request = this.fetchBairrosFromFirestore().finally(() => {
       this.listInFlight = null;
     });
@@ -209,6 +218,19 @@ export class BairrosService {
         this.upsertIntoSignal(transferred);
       }
       return transferred ?? undefined;
+    }
+
+    // On browser navigation, return known static bairro immediately without
+    // blocking route resolution on Firestore, then refresh in the background.
+    if (isPlatformBrowser(this.platformId)) {
+      const staticMatch = this.bairros().find(
+        (item) => item.slug === normalized
+      );
+      if (staticMatch) {
+        this.detailCache.set(normalized, staticMatch);
+        void this.fetchBairroBySlugFromFirestore(normalized);
+        return staticMatch;
+      }
     }
 
     const existingInFlight = this.detailInFlight.get(normalized);

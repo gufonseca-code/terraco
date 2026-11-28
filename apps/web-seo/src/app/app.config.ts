@@ -14,8 +14,10 @@ import {
   withEventReplay,
   withIncrementalHydration,
 } from '@angular/platform-browser';
+import { IMAGE_LOADER, type ImageLoaderConfig } from '@angular/common';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { routes } from './app.routes';
+import { provideTerracoWebMcpTools } from './core/webmcp.providers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -48,5 +50,33 @@ export const appConfig: ApplicationConfig = {
     ),
     provideClientHydration(withEventReplay(), withIncrementalHydration()),
     provideHttpClient(withFetch()),
+    {
+      provide: IMAGE_LOADER,
+      useValue: (config: ImageLoaderConfig) => {
+        if (
+          config.width &&
+          /^\/images\/lancamentos\/(prime-view|horizon|upside-square|brumadinho-165)\/cover\.webp$/.test(
+            config.src,
+          )
+        ) {
+          if (config.width <= 200) {
+            return config.src.replace(/\/cover\.webp$/, '/cover-200w.webp');
+          }
+          if (config.width <= 400) {
+            return config.src.replace(/\/cover\.webp$/, '/cover-400w.webp');
+          }
+          if (
+            config.width <= 640 &&
+            /^\/images\/lancamentos\/(prime-view|brumadinho-165)\/cover\.webp$/.test(
+              config.src,
+            )
+          ) {
+            return config.src.replace(/\/cover\.webp$/, '/cover-640w.webp');
+          }
+        }
+        return config.src;
+      },
+    },
+    provideTerracoWebMcpTools(),
   ],
 };
