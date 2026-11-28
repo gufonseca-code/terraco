@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { buildWhatsAppUrl } from '../../core';
+import { M3ButtonDirective } from '../shared/m3-tactile.directives';
 import { ViewTransitionDirective } from '../shared/view-transition.directive';
 import { FooterCobogoBackdropComponent } from './footer-cobogo-backdrop.component';
 import { TerracoLogoComponent } from './terraco-logo.component';
@@ -9,6 +10,7 @@ import { TerracoLogoComponent } from './terraco-logo.component';
   selector: 'app-footer',
   imports: [
     RouterLink,
+    M3ButtonDirective,
     ViewTransitionDirective,
     FooterCobogoBackdropComponent,
     TerracoLogoComponent,
@@ -39,7 +41,9 @@ import { TerracoLogoComponent } from './terraco-logo.component';
         <div class="flex flex-wrap items-center gap-4 sm:gap-6">
           <a
             routerLink="/lancamentos"
-            class="terraco-link-nav inline-flex min-h-[44px] items-center border border-ink/10 bg-canvas/82 px-4 text-[15px] font-medium leading-[1.35] text-ink backdrop-blur-[2px] hover:bg-elevated focus-visible:text-ink"
+            appM3Button
+            variant="tonal"
+            class="inline-flex min-h-[44px] items-center justify-center border border-ink/10 bg-canvas/88 px-5 py-3 text-[15px] leading-[1.35] backdrop-blur-[2px] hover:bg-elevated focus-visible:text-ink"
           >
             Lançamentos
           </a>
@@ -47,7 +51,9 @@ import { TerracoLogoComponent } from './terraco-logo.component';
             [href]="whatsappHref"
             target="_blank"
             rel="noopener noreferrer"
-            class="terraco-btn inline-flex min-h-[44px] items-center justify-center rounded-pill bg-action px-6 py-3 text-[15px] font-medium leading-[1.35] text-white shadow-chip hover:bg-action-hover"
+            appM3Button
+            variant="primary"
+            class="inline-flex min-h-[44px] items-center justify-center px-6 py-3 text-[15px] leading-[1.35] shadow-chip"
           >
             Falar no WhatsApp
           </a>
