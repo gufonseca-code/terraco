@@ -71,7 +71,7 @@ export function resolveLaunchThirdSpec(launch: Lancamento): LaunchThirdSpec {
             [attr.data-slug]="item.slug"
             [ngSrc]="item.imagem"
             ngSrcset="400w, 640w"
-            sizes="(max-width: 767px) 340px, 640px"
+            sizes="(max-width: 767px) 220px, 640px"
             [alt]="item.imagemAlt"
             [width]="item.imagemWidth"
             [height]="item.imagemHeight"

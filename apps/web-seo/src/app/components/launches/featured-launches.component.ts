@@ -144,7 +144,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                       [attr.data-slug]="lead.slug"
                       [ngSrc]="lead.imagem"
                       ngSrcset="400w, 800w"
-                      sizes="(max-width: 767px) 380px, 768px"
+                      sizes="(max-width: 767px) 220px, 768px"
                       [alt]="lead.imagemAlt"
                       [width]="lead.imagemWidth"
                       [height]="lead.imagemHeight"
@@ -272,22 +272,29 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
           }
 
           @if (secondaryLaunches().length > 0) {
-            <div
-              appScrollReveal
-              [class]="
-                secondaryLaunches().length >= 3
-                  ? 'terraco-no-scrollbar -mx-4 mt-8 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-10 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pt-10 md:pb-0 lg:mt-8 lg:grid-cols-3 lg:border-t-0 lg:pt-0'
-                  : 'terraco-no-scrollbar -mx-4 mt-8 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-10 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pt-10 md:pb-0 lg:mt-8 lg:border-t-0 lg:pt-0'
-              "
-            >
-              @for (launch of secondaryLaunches(); track launch.slug) {
-                <app-launch-card
-                  [launch]="launch"
-                  headingLevel="h3"
-                  class="w-[82vw] max-w-[332px] shrink-0 snap-start md:w-auto md:max-w-none"
-                />
-              }
-            </div>
+            @defer (on viewport; hydrate on viewport) {
+              <div
+                appScrollReveal
+                [class]="
+                  secondaryLaunches().length >= 3
+                    ? 'terraco-no-scrollbar -mx-4 mt-8 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-10 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pt-10 md:pb-0 lg:mt-8 lg:grid-cols-3 lg:border-t-0 lg:pt-0'
+                    : 'terraco-no-scrollbar -mx-4 mt-8 flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto border-t border-border-subtle px-4 pt-8 pb-2 sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-10 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pt-10 md:pb-0 lg:mt-8 lg:border-t-0 lg:pt-0'
+                "
+              >
+                @for (launch of secondaryLaunches(); track launch.slug) {
+                  <app-launch-card
+                    [launch]="launch"
+                    headingLevel="h3"
+                    class="w-[82vw] max-w-[332px] shrink-0 snap-start md:w-auto md:max-w-none"
+                  />
+                }
+              </div>
+            } @placeholder {
+              <div
+                aria-hidden="true"
+                class="mt-8 min-h-[380px] border-t border-border-subtle pt-8 md:mt-10 md:pt-10 lg:mt-8 lg:border-t-0 lg:pt-0"
+              ></div>
+            }
           }
 
           <div

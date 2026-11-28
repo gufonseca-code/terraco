@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  afterNextRender,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { buildWhatsAppUrl } from '../../core';
 import { M3ButtonDirective } from '../shared/m3-tactile.directives';
@@ -22,7 +27,9 @@ import { TerracoLogoComponent } from './terraco-logo.component';
       appViewTransition="footer"
       class="terraco-cobogo-surface relative isolate mt-auto overflow-hidden border-t border-border-subtle bg-surface scroll-mt-24"
     >
-      <app-footer-cobogo-backdrop />
+      @if (showBackdrop()) {
+        <app-footer-cobogo-backdrop />
+      }
       <div
         aria-hidden="true"
         class="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#103626]/40 via-[#103626]/30 to-[#103626]/20 md:hidden"
@@ -91,6 +98,14 @@ import { TerracoLogoComponent } from './terraco-logo.component';
   `,
 })
 export class FooterComponent {
+  readonly showBackdrop = signal(false);
+
+  constructor() {
+    afterNextRender(() => {
+      this.showBackdrop.set(true);
+    });
+  }
+
   readonly neighborhoodGuides = [
     { label: 'Estoril', route: '/bairros/estoril' },
     { label: 'Prado', route: '/bairros/prado' },

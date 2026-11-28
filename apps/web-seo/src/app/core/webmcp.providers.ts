@@ -1,9 +1,9 @@
 import {
   type EnvironmentProviders,
+  Injector,
   inject,
   provideExperimentalWebMcpTools,
 } from '@angular/core';
-import { BairrosService } from './bairros.service';
 import { filterLancamentos } from './lancamentos.data';
 import { LancamentosService } from './lancamentos.service';
 import { SITE_URL } from './site.config';
@@ -122,7 +122,9 @@ export function provideTerracoWebMcpTools(): EnvironmentProviders {
         readOnlyHint: true,
       },
       execute: async () => {
-        const bairrosService = inject(BairrosService);
+        const injector = inject(Injector);
+        const { BairrosService } = await import('./bairros.service');
+        const bairrosService = injector.get(BairrosService);
         const bairros = await bairrosService.loadBairros();
         return JSON.stringify(
           bairros.map((b) => ({
