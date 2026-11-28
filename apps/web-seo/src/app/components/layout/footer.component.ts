@@ -1,15 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { buildWhatsAppUrl } from '../../core';
+import { ViewTransitionDirective } from '../shared/view-transition.directive';
 import { TerracoLogoComponent } from './terraco-logo.component';
 
 @Component({
   selector: 'app-footer',
-  imports: [RouterLink, TerracoLogoComponent],
+  imports: [RouterLink, ViewTransitionDirective, TerracoLogoComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <footer
       id="contato"
+      appViewTransition="footer"
       class="terraco-cobogo-surface mt-auto border-t border-border-subtle bg-surface scroll-mt-24"
     >
       <div

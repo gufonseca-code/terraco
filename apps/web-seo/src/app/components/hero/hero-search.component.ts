@@ -18,6 +18,7 @@ import {
 } from '../../core';
 import { FavoriteButtonComponent } from '../launches/favorite-button.component';
 import { resolveLaunchThirdSpec } from '../launches/launch-card.component';
+import { ViewTransitionDirective } from '../shared/view-transition.directive';
 import { BotanicalArchMotifComponent } from './botanical-arch-motif.component';
 import { HeroSearchFormComponent } from './hero-search-form.component';
 
@@ -26,6 +27,7 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
   imports: [
     NgOptimizedImage,
     RouterLink,
+    ViewTransitionDirective,
     BotanicalArchMotifComponent,
     HeroSearchFormComponent,
     FavoriteButtonComponent,
@@ -44,10 +46,14 @@ import { HeroSearchFormComponent } from './hero-search-form.component';
         >
           <div class="space-y-4 sm:space-y-5 lg:col-span-6 lg:space-y-6">
             <div class="terraco-reveal space-y-3 sm:space-y-4">
-              <app-botanical-arch-motif class="h-32 sm:h-36 lg:h-40" />
+              <app-botanical-arch-motif
+                appViewTransition="botanical-arch"
+                class="h-32 sm:h-36 lg:h-40"
+              />
 
               <h1
                 id="hero-heading"
+                appViewTransition="page-heading"
                 class="max-w-[14ch] font-display text-[clamp(2rem,4.2vw,3.125rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink text-balance"
               >
                 Seu próximo canto, sem burocracia.

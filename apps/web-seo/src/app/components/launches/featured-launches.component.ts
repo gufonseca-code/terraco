@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LancamentosService, ScrollRevealDirective } from '../../core';
+import { ViewTransitionDirective } from '../shared/view-transition.directive';
 import { FavoriteButtonComponent } from './favorite-button.component';
 import {
   LaunchCardComponent,
@@ -34,6 +35,7 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
     LaunchCardComponent,
     LaunchCardSkeletonComponent,
     ScrollRevealDirective,
+    ViewTransitionDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -145,9 +147,8 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                       [width]="lead.imagemWidth"
                       [height]="lead.imagemHeight"
                       priority
-                      [style.view-transition-name]="
-                        'launch-image-' + lead.slug
-                      "
+                      appViewTransition="launch-image"
+                      [vtSlug]="lead.slug"
                       (load)="markLeadImageLoaded()"
                       (error)="markLeadImageLoaded()"
                       class="h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100"
@@ -179,7 +180,8 @@ const MAX_HOME_FEATURED_LAUNCHES = 6;
                   </div>
 
                   <h3
-                    [style.view-transition-name]="'launch-title-' + lead.slug"
+                    appViewTransition="launch-title"
+                    [vtSlug]="lead.slug"
                     class="mt-1 font-display text-[clamp(1.5rem,2.4vw,1.875rem)] font-medium not-italic leading-[1.14] tracking-[-0.02em] text-ink text-balance"
                   >
                     <a

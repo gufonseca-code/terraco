@@ -37,6 +37,7 @@ import {
   type JourneyDestination,
   NextJourneyComponent,
 } from '../shared/next-journey.component';
+import { ViewTransitionDirective } from '../shared/view-transition.directive';
 import { FavoriteButtonComponent } from './favorite-button.component';
 import { ImageLightboxComponent } from './image-lightbox.component';
 import { LaunchCardComponent } from './launch-card.component';
@@ -188,6 +189,7 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
     RouterLink,
     M3ButtonDirective,
     M3ChipDirective,
+    ViewTransitionDirective,
     FavoriteButtonComponent,
     ImageLightboxComponent,
     LaunchCardComponent,
@@ -264,7 +266,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
                     [width]="item().imagemWidth"
                     [height]="item().imagemHeight"
                     priority
-                    [style.view-transition-name]="'launch-image-' + item().slug"
+                    appViewTransition="launch-image"
+                    [vtSlug]="item().slug"
                     (load)="markImageLoaded()"
                     (error)="markImageLoaded()"
                     class="relative z-[1] h-full w-full rounded-[20px] object-cover object-center transition-transform duration-300 ease-out motion-reduce:transition-none group-hover:scale-[1.02] motion-reduce:group-hover:scale-100 lg:rounded-[24px]"
@@ -367,7 +370,8 @@ function buildJsonLd(item: Lancamento): Record<string, unknown> {
 
                 <h1
                   id="launch-heading"
-                  [style.view-transition-name]="'launch-title-' + item().slug"
+                  appViewTransition="launch-title"
+                  [vtSlug]="item().slug"
                   class="font-display text-[clamp(1.75rem,3.4vw,2.625rem)] font-medium not-italic leading-[1.08] tracking-[-0.025em] text-ink text-balance"
                 >
                   {{ item().nome }}

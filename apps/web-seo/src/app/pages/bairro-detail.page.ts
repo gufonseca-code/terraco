@@ -21,6 +21,7 @@ import {
   NextJourneyComponent,
 } from '../components/shared/next-journey.component';
 import { SectionHandoffComponent } from '../components/shared/section-handoff.component';
+import { ViewTransitionDirective } from '../components/shared/view-transition.directive';
 import {
   type BairroGuide,
   BairrosService,
@@ -148,6 +149,7 @@ function buildBairroJsonLd(
     LaunchCardComponent,
     NextJourneyComponent,
     SectionHandoffComponent,
+    ViewTransitionDirective,
     RouterLink,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -227,7 +229,8 @@ function buildBairroJsonLd(
 
                   <h1
                     id="bairro-heading"
-                    [style.view-transition-name]="'bairro-title-' + current.slug"
+                    appViewTransition="bairro-title"
+                    [vtSlug]="current.slug"
                     class="font-display text-[clamp(2rem,4.2vw,3rem)] font-medium not-italic leading-[1.06] tracking-[-0.03em] text-ink text-balance"
                   >
                     Morar em {{ current.nome }}, {{ current.cidade }}
@@ -272,7 +275,10 @@ function buildBairroJsonLd(
                 </div>
 
                 <div class="flex items-center justify-start lg:justify-end">
-                  <app-botanical-arch-motif class="h-16 sm:h-20 lg:h-24" />
+                  <app-botanical-arch-motif
+                    appViewTransition="botanical-arch"
+                    class="h-16 sm:h-20 lg:h-24"
+                  />
                 </div>
               </header>
             </div>

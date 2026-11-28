@@ -18,6 +18,7 @@ import {
   type JourneyDestination,
   NextJourneyComponent,
 } from '../components/shared/next-journey.component';
+import { ViewTransitionDirective } from '../components/shared/view-transition.directive';
 import {
   type BairroGuide,
   type BairroMedia,
@@ -194,6 +195,7 @@ function resolveBairroMedia(
     BotanicalArchMotifComponent,
     NavbarComponent,
     NextJourneyComponent,
+    ViewTransitionDirective,
     FooterComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -222,11 +224,12 @@ function resolveBairroMedia(
             </nav>
 
             <header
-              class="terraco-reveal flex flex-col gap-6 border-b border-border-subtle pb-8 sm:pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-12"
+              class="flex flex-col gap-6 border-b border-border-subtle pb-8 sm:pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-12"
             >
               <div class="max-w-2xl space-y-3">
                 <h1
                   id="bairros-heading"
+                  appViewTransition="page-heading"
                   class="font-display text-[clamp(2rem,4vw,3rem)] font-medium not-italic leading-[1.06] tracking-[-0.03em] text-ink text-balance"
                 >
                   Bairros em Belo Horizonte
@@ -240,7 +243,10 @@ function resolveBairroMedia(
               </div>
 
               <div class="flex items-center justify-start lg:justify-end">
-                <app-botanical-arch-motif class="h-16 sm:h-20 lg:h-24" />
+                <app-botanical-arch-motif
+                  appViewTransition="botanical-arch"
+                  class="h-16 sm:h-20 lg:h-24"
+                />
               </div>
             </header>
 
@@ -359,7 +365,8 @@ function resolveBairroMedia(
                     </div>
 
                     <h2
-                      [style.view-transition-name]="'bairro-title-' + row.bairro.slug"
+                      appViewTransition="bairro-title"
+                      [vtSlug]="row.bairro.slug"
                       class="font-display text-[clamp(1.5rem,2.4vw,1.875rem)] font-medium not-italic leading-[1.15] tracking-[-0.02em] text-ink text-balance"
                     >
                       <a
