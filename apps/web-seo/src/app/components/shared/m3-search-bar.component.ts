@@ -10,7 +10,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { LancamentosService } from '../../core';
+import { LancamentosService, normalizeSearchText } from '../../core';
 
 interface NeighborhoodSuggestion {
   readonly name: string;
@@ -18,14 +18,6 @@ interface NeighborhoodSuggestion {
   readonly prefix: string;
   readonly match: string;
   readonly suffix: string;
-}
-
-function normalizeSearchText(value: string): string {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim();
 }
 
 function splitHighlight(
@@ -42,10 +34,7 @@ function splitHighlight(
   const indexMap: number[] = [];
 
   for (let i = 0; i < chars.length; i++) {
-    const stripped = chars[i]
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase();
+    const stripped = normalizeSearchText(chars[i]);
     for (let j = 0; j < stripped.length; j++) {
       normalized += stripped[j];
       indexMap.push(i);

@@ -1711,34 +1711,6 @@ h4 {
   }
 }
 
-.svg-sway-a {
-  transform-box: fill-box;
-  transform-origin: 50% 94%;
-  will-change: transform;
-  animation: terraco-sway-a 11s ease-in-out infinite;
-}
-
-.svg-sway-b {
-  transform-box: fill-box;
-  transform-origin: 50% 94%;
-  will-change: transform;
-  animation: terraco-sway-b 12.5s ease-in-out infinite;
-}
-
-.svg-sway-fg {
-  transform-box: fill-box;
-  transform-origin: 65% 96%;
-  will-change: transform;
-  animation: terraco-sway-fg 12s ease-in-out infinite;
-}
-
-.svg-sway-vine {
-  transform-box: fill-box;
-  transform-origin: 55% 6%;
-  will-change: transform;
-  animation: terraco-vine-sway 10.5s ease-in-out infinite;
-}
-
 /* Brisa suave em 60fps (GPU-composited) para as folhagens e folhas caindo no footer SVG */
 @keyframes terraco-footer-breeze-a {
   0%,
@@ -1886,10 +1858,6 @@ h4 {
   .terraco-skeleton::after,
   .hero-enter-title,
   .hero-enter-form,
-  .svg-sway-a,
-  .svg-sway-b,
-  .svg-sway-fg,
-  .svg-sway-vine,
   .svg-footer-breeze-a,
   .svg-footer-breeze-b,
   .svg-footer-breeze-right {

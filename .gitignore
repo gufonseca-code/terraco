@@ -2,14 +2,6 @@
 
 # dependencies
 node_modules/
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
 
 # angular & firebase
 .angular/
@@ -18,9 +10,10 @@ dist/
 firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
+firebase-export-*
 
 # testing
-/coverage
+coverage/
 /playwright-report/
 /playwright-report-workers/
 /test-results/
@@ -28,10 +21,6 @@ ui-debug.log*
 /playwright/.cache/
 /playwright/.auth/
 /.playwright-mcp/
-
-# next.js
-/.next/
-/out/
 
 # production
 /build
@@ -62,20 +51,11 @@ yarn-error.log*
 .env*
 !.env.example
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
-next-env.d.ts
 
 # ai agent / skill artifacts & unused template assets
 /.agents/
 /.taste-skill/
-/public/assets/
-/public/images/standins/
 skills-lock.json
-/dist/
-.vinext/
-.cloudflare/
 scripts/.media-cache/
