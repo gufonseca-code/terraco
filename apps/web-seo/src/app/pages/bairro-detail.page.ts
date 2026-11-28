@@ -31,6 +31,7 @@ import {
   SITE_URL,
   SeoService,
   buildWhatsAppUrl,
+  normalizeSearchText,
 } from '../core';
 import { NotFoundPageComponent } from './not-found.page';
 
@@ -40,14 +41,6 @@ interface EditorialPillar {
   readonly index: string;
   readonly title: string;
   readonly content: string;
-}
-
-function normalizeNeighborhood(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
 }
 
 function buildBairroJsonLd(
@@ -710,10 +703,10 @@ export class BairroDetailPageComponent {
     if (!current) {
       return [];
     }
-    const allowed = new Set(current.matchBairros.map(normalizeNeighborhood));
+    const allowed = new Set(current.matchBairros.map(normalizeSearchText));
     return this.lancamentosService
       .lancamentos()
-      .filter((launch) => allowed.has(normalizeNeighborhood(launch.bairro)));
+      .filter((launch) => allowed.has(normalizeSearchText(launch.bairro)));
   });
 
   readonly nearbyLaunches = computed<Lancamento[]>(() => {
@@ -721,10 +714,10 @@ export class BairroDetailPageComponent {
     if (!current?.nearbyBairros?.length) {
       return [];
     }
-    const nearby = new Set(current.nearbyBairros.map(normalizeNeighborhood));
+    const nearby = new Set(current.nearbyBairros.map(normalizeSearchText));
     return this.lancamentosService
       .lancamentos()
-      .filter((launch) => nearby.has(normalizeNeighborhood(launch.bairro)));
+      .filter((launch) => nearby.has(normalizeSearchText(launch.bairro)));
   });
 
   readonly otherBairros = computed<BairroGuide[]>(() => {

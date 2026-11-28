@@ -64,44 +64,6 @@ const BAIRRO_FILTERS: readonly BairroFilterOption[] = [
   { id: 'com-lancamentos', label: 'Lançamentos no bairro' },
 ];
 
-const CURATED_BAIRRO_MEDIA: Record<string, BairroMedia> = {
-  estoril: {
-    url: '/images/lancamentos/prime-view/cover.webp',
-    alt: 'Fachada contemporânea do residencial Prime View no Estoril, Belo Horizonte',
-    width: 1024,
-    height: 614,
-    caption: 'Prime View · Estoril',
-  },
-  prado: {
-    url: '/images/lancamentos/brumadinho-165/localizacao-prado.webp',
-    alt: 'Vista aérea da localização estratégica do Brumadinho 165 no Prado, próximo ao Hospital Mater Dei, Hospital Felício Rocho, Colégio Pio XII, VerdeMar e Av. Amazonas',
-    width: 1600,
-    height: 1139,
-    caption: 'Brumadinho 165 · Prado',
-  },
-  'santa-efigenia': {
-    url: '/images/lancamentos/upside-square/piscina-vista-ampla.webp',
-    alt: 'Área da piscina climatizada com vista panorâmica do Upside Square em Santa Efigênia',
-    width: 803,
-    height: 584,
-    caption: 'Upside Square · Santa Efigênia',
-  },
-  serrano: {
-    url: '/images/lancamentos/horizon/cover.webp',
-    alt: 'Fachada do residencial Horizon cercado por área verde no Serrano, Belo Horizonte',
-    width: 641,
-    height: 576,
-    caption: 'Horizon · Serrano',
-  },
-  buritis: {
-    url: '/images/lancamentos/prime-view/piscina.webp',
-    alt: 'Piscina e área de lazer do Prime View na divisa entre Estoril e Buritis',
-    width: 800,
-    height: 550,
-    caption: 'Divisa Buritis / Estoril · Prime View',
-  },
-};
-
 const DECISION_PROFILES: readonly DecisionProfileOption[] = [
   {
     id: 'vista-calma',

@@ -1,3 +1,5 @@
+import { normalizeSearchText } from './format.utils';
+
 export interface LaunchMediaItem {
   url: string;
   alt: string;
@@ -1478,14 +1480,6 @@ export const QUICK_NEIGHBORHOODS: string[] = [
   'Santa Efigênia',
   'Serrano',
 ];
-
-function normalizeSearchText(value: string): string {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim();
-}
 
 export function scoreLancamentoForObjetivo(
   item: Lancamento,

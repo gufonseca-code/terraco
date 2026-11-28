@@ -6,7 +6,11 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LancamentosService, rankLancamentosByObjetivo } from '../../core';
+import {
+  LancamentosService,
+  normalizeSearchText,
+  rankLancamentosByObjetivo,
+} from '../../core';
 import { SectionHandoffComponent } from '../shared/section-handoff.component';
 
 type ObjetivoOption = 'Sair do aluguel' | 'Dar um upgrade' | 'Investir';
@@ -90,13 +94,6 @@ const NEIGHBORHOOD_GUIDES: readonly NeighborhoodGuideLink[] = [
   { label: 'Serrano', route: '/bairros/serrano' },
   { label: 'Buritis', route: '/bairros/buritis' },
 ];
-
-function normalizeText(value: string): string {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase();
-}
 
 @Component({
   selector: 'app-guided-discovery',
@@ -302,7 +299,7 @@ export class GuidedDiscoveryComponent {
 
     const filtered = items.filter((item) => {
       if (selectedRegiao && selectedRegiao !== 'Qualquer região') {
-        const regiaoText = normalizeText(
+        const regiaoText = normalizeSearchText(
           `${item.bairro} ${item.endereco} ${item.resumo}`
         );
         const regiaoKeywords = REGIAO_MATCHERS[selectedRegiao].keywords;
@@ -315,7 +312,7 @@ export class GuidedDiscoveryComponent {
       }
 
       if (selectedTipologia) {
-        const tipologiaText = normalizeText(
+        const tipologiaText = normalizeSearchText(
           `${item.quartos} ${item.tipologias} ${item.resumo}`
         );
         const tipologiaKeywords = TIPOLOGIA_MATCHERS[selectedTipologia].keywords;

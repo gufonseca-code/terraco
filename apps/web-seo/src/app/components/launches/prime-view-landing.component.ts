@@ -23,6 +23,7 @@ import {
   SITE_NAME,
   SITE_URL,
   buildWhatsAppUrl,
+  formatBrazilianPhone,
   formatCurrencyBRL,
   type Lancamento,
   type LaunchEntornoItem,
@@ -43,7 +44,6 @@ import { ImageLightboxComponent } from './image-lightbox.component';
 import { LaunchCardComponent } from './launch-card.component';
 import { LaunchFloorPlansComponent } from './launch-floor-plans.component';
 import { LaunchSimulatorComponent } from './launch-simulator.component';
-import { formatBrazilianPhone } from './whatsapp-alert-form.component';
 
 export type LaunchIntentKey =
   | 'tabela_condicoes'

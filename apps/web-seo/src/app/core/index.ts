@@ -1,4 +1,6 @@
 export * from './site.config';
+export * from './firestore.utils';
+export * from './format.utils';
 export * from './firebase.service';
 export * from './lancamentos.data';
 export * from './bairros.data';

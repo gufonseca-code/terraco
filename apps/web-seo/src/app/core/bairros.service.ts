@@ -24,6 +24,13 @@ import {
   type BairroMedia,
   getBairroBySlug,
 } from './bairros.data';
+import {
+  FIRESTORE_READ_TIMEOUT_MS,
+  pickNonEmptyArray,
+  pickNonEmptyString,
+  serializeTimestamp,
+  withTimeout,
+} from './firestore.utils';
 import { FirebaseService } from './firebase.service';
 
 export const BAIRROS_DATA_SOURCE = new InjectionToken<readonly BairroGuide[]>(
@@ -35,7 +42,6 @@ export const BAIRROS_DATA_SOURCE = new InjectionToken<readonly BairroGuide[]>(
 );
 
 const BAIRROS_COLLECTION = 'bairros';
-const FIRESTORE_READ_TIMEOUT_MS = 3500;
 
 const BAIRROS_LIST_STATE_KEY = makeStateKey<BairroGuide[]>(
   'terraco:firestore:bairros:list'
@@ -45,57 +51,6 @@ function bairroDetailStateKey(slug: string) {
   return makeStateKey<BairroGuide | null>(
     `terraco:firestore:bairros:detail:${slug}`
   );
-}
-
-function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(new Error(`Firestore read timed out after ${timeoutMs}ms`));
-    }, timeoutMs);
-
-    promise.then(
-      (value) => {
-        clearTimeout(timer);
-        resolve(value);
-      },
-      (error) => {
-        clearTimeout(timer);
-        reject(error);
-      }
-    );
-  });
-}
-
-function serializeTimestamp(value: unknown): string | null | undefined {
-  if (value === null || value === undefined) {
-    return value as null | undefined;
-  }
-  if (typeof value === 'string') {
-    return value;
-  }
-  if (
-    typeof value === 'object' &&
-    'toDate' in value &&
-    typeof (value as { toDate: unknown }).toDate === 'function'
-  ) {
-    return (value as { toDate: () => Date }).toDate().toISOString();
-  }
-  return undefined;
-}
-
-function pickNonEmptyString(
-  remote: unknown,
-  fallback?: string
-): string {
-  return typeof remote === 'string' && remote.trim().length > 0
-    ? remote
-    : (fallback ?? '');
-}
-
-function pickNonEmptyArray<T>(remote: unknown, fallback?: T[]): T[] {
-  return Array.isArray(remote) && remote.length > 0
-    ? (remote as T[])
-    : (fallback ?? []);
 }
 
 function normalizeBairro(
