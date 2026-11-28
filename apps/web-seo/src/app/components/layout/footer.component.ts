@@ -55,8 +55,8 @@ import { TerracoLogoComponent } from './terraco-logo.component';
             target="_blank"
             rel="noopener noreferrer"
             appM3Button
-            variant="primary"
-            class="inline-flex min-h-[44px] items-center justify-center px-6 py-3 text-[15px] leading-[1.35] shadow-chip"
+            variant="tonal"
+            class="inline-flex min-h-[44px] items-center justify-center bg-canvas px-6 py-3 text-[15px] leading-[1.35] text-ink shadow-chip hover:bg-surface focus-visible:text-ink"
           >
             Falar no WhatsApp
           </a>
